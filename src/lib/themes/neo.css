@@ -1,0 +1,46 @@
+/* Neumorphism Theme: Soft UI, light extruded forms, dual directional shadows */
+.theme-neo,
+[data-theme="neo"] {
+  --theme-name: 'Neumorphism';
+  --bg: #e6ecf5;
+  --bg-gradient: linear-gradient(135deg, #e6ecf5 0%, #e2e8f0 100%);
+  --text: #334155;
+  --text-muted: #64748b;
+
+  /* Surfaces */
+  --surface: #e6ecf5;
+  --surface-subtle: #e2e8f0;
+  --border: transparent;
+  --radius: 14px;
+  --radius-pill: 9999px;
+
+  /* Colors */
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --primary-text: #ffffff;
+  --secondary: #0ea5e9;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Neumorphic Extrusion Shadows */
+  --clay-shadow: 
+    6px 6px 12px #c4cad3,
+    -6px -6px 12px #ffffff;
+
+  --clay-shadow-hover: 
+    8px 8px 16px #c4cad3,
+    -8px -8px 16px #ffffff;
+
+  --clay-shadow-active: 
+    inset 4px 4px 8px #c4cad3,
+    inset -4px -4px 8px #ffffff;
+
+  --card-shadow: 
+    10px 10px 20px #c4cad3,
+    -10px -10px 20px #ffffff;
+
+  --input-shadow: 
+    inset 4px 4px 8px #c4cad3,
+    inset -4px -4px 8px #ffffff;
+}

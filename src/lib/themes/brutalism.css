@@ -1,0 +1,40 @@
+/* Neo-Brutalism Theme: Vibrant electric accents, 3px solid border, hard offset shadows, 4px radius */
+.theme-brutalism,
+[data-theme="brutalism"] {
+  --theme-name: 'Neo-Brutalism';
+  --bg: #fef9c3;
+  --bg-gradient: linear-gradient(135deg, #fef9c3 0%, #fde047 100%);
+  --text: #111827;
+  --text-muted: #374151;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #fef08a;
+  --border: #111827;
+  --border-width: 3px;
+  --radius: 4px;
+  --radius-pill: 4px;
+
+  /* Colors */
+  --primary: #facc15;
+  --primary-hover: #eab308;
+  --primary-text: #111827;
+  --secondary: #3b82f6;
+  --success: #22c55e;
+  --warning: #f97316;
+  --danger: #ef4444;
+
+  /* Shadows & Effects */
+  --clay-shadow: 4px 4px 0 #111827;
+  --clay-shadow-hover: 6px 6px 0 #111827;
+  --clay-shadow-active: 1px 1px 0 #111827;
+  --card-shadow: 4px 4px 0 #111827;
+  --input-shadow: 2px 2px 0 #111827;
+  --shadow: 4px 4px 0 #111827;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --glow: none;
+  --bevel-light: none;
+  --bevel-dark: none;
+  --grid-gap: 16px;
+  --backdrop-blur: none;
+}

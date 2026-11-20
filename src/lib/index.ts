@@ -1,0 +1,351 @@
+import type { App, Component, Directive, Plugin } from 'vue'
+// Fase 1
+import Button from './components/Button.vue'
+import Card from './components/Card.vue'
+import Input from './components/Input.vue'
+import Badge from './components/Badge.vue'
+import Switch from './components/Switch.vue'
+import Modal from './components/Modal.vue'
+// Fase 2
+import Textarea from './components/Textarea.vue'
+import InputNumber from './components/InputNumber.vue'
+import Password from './components/Password.vue'
+import Checkbox from './components/Checkbox.vue'
+import RadioButton from './components/RadioButton.vue'
+import Select from './components/Select.vue'
+import MultiSelect from './components/MultiSelect.vue'
+import Slider from './components/Slider.vue'
+import Rating from './components/Rating.vue'
+import ColorPicker from './components/ColorPicker.vue'
+import DatePicker from './components/DatePicker.vue'
+// Fase 3
+import Avatar from './components/Avatar.vue'
+import Chip from './components/Chip.vue'
+import Divider from './components/Divider.vue'
+import Accordion from './components/Accordion.vue'
+import Timeline from './components/Timeline.vue'
+import Carousel from './components/Carousel.vue'
+import Image from './components/Image.vue'
+// Fase 4
+import Toast from './components/Toast.vue'
+import Alert from './components/Alert.vue'
+import Tooltip from './components/Tooltip.vue'
+import Drawer from './components/Drawer.vue'
+import Popover from './components/Popover.vue'
+import Skeleton from './components/Skeleton.vue'
+import ProgressBar from './components/ProgressBar.vue'
+import ProgressSpinner from './components/ProgressSpinner.vue'
+import ConfirmDialog from './components/ConfirmDialog.vue'
+// Fase 5
+import Navbar from './components/Navbar.vue'
+import Tabs from './components/Tabs.vue'
+import Breadcrumb from './components/Breadcrumb.vue'
+import Pagination from './components/Pagination.vue'
+import Steps from './components/Steps.vue'
+import ContextMenu from './components/ContextMenu.vue'
+import ScrollTop from './components/ScrollTop.vue'
+// Fase 6
+import DataTable from './components/DataTable.vue'
+import DataView from './components/DataView.vue'
+import Tree from './components/Tree.vue'
+// Fase 7
+import AutoComplete from './components/AutoComplete.vue'
+import Cascader from './components/Cascader.vue'
+import TreeSelect from './components/TreeSelect.vue'
+import Knob from './components/Knob.vue'
+import SelectButton from './components/SelectButton.vue'
+import ToggleButton from './components/ToggleButton.vue'
+import InputOtp from './components/InputOtp.vue'
+import InputMask from './components/InputMask.vue'
+import InputGroup from './components/InputGroup.vue'
+import IconField from './components/IconField.vue'
+import Listbox from './components/Listbox.vue'
+import FloatLabel from './components/FloatLabel.vue'
+import IftaLabel from './components/IftaLabel.vue'
+import Editor from './components/Editor.vue'
+// Fase 8
+import SplitButton from './components/SplitButton.vue'
+import SpeedDial from './components/SpeedDial.vue'
+import Panel from './components/Panel.vue'
+import Fieldset from './components/Fieldset.vue'
+import Splitter from './components/Splitter.vue'
+import Toolbar from './components/Toolbar.vue'
+import ScrollPanel from './components/ScrollPanel.vue'
+import Fluid from './components/Fluid.vue'
+import Deferred from './components/Deferred.vue'
+// Fase 9
+import Menu from './components/Menu.vue'
+import TieredMenu from './components/TieredMenu.vue'
+import SlideMenu from './components/SlideMenu.vue'
+import PanelMenu from './components/PanelMenu.vue'
+import MegaMenu from './components/MegaMenu.vue'
+import Dock from './components/Dock.vue'
+import TabMenu from './components/TabMenu.vue'
+// Fase 10
+import OrderList from './components/OrderList.vue'
+import PickList from './components/PickList.vue'
+import TreeTable from './components/TreeTable.vue'
+import OrganizationChart from './components/OrganizationChart.vue'
+import VirtualScroller from './components/VirtualScroller.vue'
+import MeterGroup from './components/MeterGroup.vue'
+import Inplace from './components/Inplace.vue'
+// Fase 11
+import ConfirmPopup from './components/ConfirmPopup.vue'
+import InlineMessage from './components/InlineMessage.vue'
+import BlockUI from './components/BlockUI.vue'
+import Galleria from './components/Galleria.vue'
+import FileUpload from './components/FileUpload.vue'
+import Terminal from './components/Terminal.vue'
+import Chart from './components/Chart.vue'
+
+import { useTheme, type ThemeType, THEME_OPTIONS } from './composables/useTheme'
+import { useToast } from './composables/useToast'
+import { useConfirm } from './composables/useConfirm'
+import { vRipple } from './directives/ripple'
+import { vFocusTrap } from './directives/focusTrap'
+import { vAnimateOnScroll } from './directives/animateOnScroll'
+import { vStyleClass } from './directives/styleClass'
+import './themes/index.css'
+
+export {
+  Button,
+  Card,
+  Input,
+  Input as InputText,
+  Badge,
+  Switch,
+  Switch as ToggleSwitch,
+  Modal,
+  Modal as Dialog,
+  Textarea,
+  InputNumber,
+  Password,
+  Checkbox,
+  RadioButton,
+  Select,
+  Select as Dropdown,
+  MultiSelect,
+  Slider,
+  Rating,
+  ColorPicker,
+  DatePicker,
+  DatePicker as Calendar,
+  Avatar,
+  Chip,
+  Chip as Tag,
+  Divider,
+  Accordion,
+  Timeline,
+  Carousel,
+  Image,
+  Toast,
+  Alert,
+  Alert as Message,
+  Tooltip,
+  Drawer,
+  Drawer as Sidebar,
+  Popover,
+  Skeleton,
+  ProgressBar,
+  ProgressSpinner,
+  ConfirmDialog,
+  Navbar,
+  Navbar as Menubar,
+  Tabs,
+  Breadcrumb,
+  Pagination,
+  Pagination as Paginator,
+  Steps,
+  Steps as Stepper,
+  ContextMenu,
+  ScrollTop,
+  DataTable,
+  DataView,
+  Tree,
+  AutoComplete,
+  Cascader,
+  TreeSelect,
+  Knob,
+  SelectButton,
+  ToggleButton,
+  InputOtp,
+  InputMask,
+  InputGroup,
+  IconField,
+  Listbox,
+  FloatLabel,
+  IftaLabel,
+  Editor,
+  SplitButton,
+  SpeedDial,
+  Panel,
+  Fieldset,
+  Splitter,
+  Toolbar,
+  ScrollPanel,
+  Fluid,
+  Deferred,
+  Deferred as DeferredContent,
+  Menu,
+  TieredMenu,
+  SlideMenu,
+  PanelMenu,
+  MegaMenu,
+  Dock,
+  TabMenu,
+  OrderList,
+  PickList,
+  TreeTable,
+  OrganizationChart,
+  VirtualScroller,
+  MeterGroup,
+  Inplace,
+  ConfirmPopup,
+  InlineMessage,
+  BlockUI,
+  Galleria,
+  FileUpload,
+  Terminal,
+  Chart,
+  useTheme,
+  useToast,
+  useConfirm,
+  vRipple,
+  vFocusTrap,
+  vAnimateOnScroll,
+  vStyleClass,
+  THEME_OPTIONS,
+  type ThemeType
+}
+
+const components: Record<string, Component> = {
+  Button,
+  Card,
+  Input,
+  InputText: Input,
+  Badge,
+  Switch,
+  ToggleSwitch: Switch,
+  Modal,
+  Dialog: Modal,
+  Textarea,
+  InputNumber,
+  Password,
+  Checkbox,
+  RadioButton,
+  Select,
+  Dropdown: Select,
+  MultiSelect,
+  Slider,
+  Rating,
+  ColorPicker,
+  DatePicker,
+  Calendar: DatePicker,
+  Avatar,
+  Chip,
+  Tag: Chip,
+  Divider,
+  Accordion,
+  Timeline,
+  Carousel,
+  Image,
+  Toast,
+  Alert,
+  Message: Alert,
+  Tooltip,
+  Drawer,
+  Sidebar: Drawer,
+  Popover,
+  Skeleton,
+  ProgressBar,
+  ProgressSpinner,
+  ConfirmDialog,
+  Navbar,
+  Menubar: Navbar,
+  Tabs,
+  Breadcrumb,
+  Pagination,
+  Paginator: Pagination,
+  Steps,
+  Stepper: Steps,
+  ContextMenu,
+  ScrollTop,
+  DataTable,
+  DataView,
+  Tree,
+  AutoComplete,
+  Cascader,
+  TreeSelect,
+  Knob,
+  SelectButton,
+  ToggleButton,
+  InputOtp,
+  InputMask,
+  InputGroup,
+  IconField,
+  Listbox,
+  FloatLabel,
+  IftaLabel,
+  Editor,
+  SplitButton,
+  SpeedDial,
+  Panel,
+  Fieldset,
+  Splitter,
+  Toolbar,
+  ScrollPanel,
+  Fluid,
+  Deferred,
+  DeferredContent: Deferred,
+  Menu,
+  TieredMenu,
+  SlideMenu,
+  PanelMenu,
+  MegaMenu,
+  Dock,
+  TabMenu,
+  OrderList,
+  PickList,
+  TreeTable,
+  OrganizationChart,
+  VirtualScroller,
+  MeterGroup,
+  Inplace,
+  ConfirmPopup,
+  InlineMessage,
+  BlockUI,
+  Galleria,
+  FileUpload,
+  Terminal,
+  Chart
+}
+
+const directives: Record<string, Directive> = {
+  ripple: vRipple,
+  focustrap: vFocusTrap,
+  animateonscroll: vAnimateOnScroll,
+  styleclass: vStyleClass
+}
+
+export interface ThemePluginOptions {
+  defaultTheme?: ThemeType
+}
+
+const ThemePlugin: Plugin = {
+  install(app: App, options: ThemePluginOptions = {}) {
+    for (const [name, component] of Object.entries(components)) {
+      app.component(name, component)
+    }
+
+    for (const [name, directive] of Object.entries(directives)) {
+      app.directive(name, directive)
+    }
+
+    if (typeof window !== 'undefined') {
+      const { initTheme } = useTheme()
+      initTheme(options.defaultTheme || 'clay')
+    }
+  }
+}
+
+export default ThemePlugin

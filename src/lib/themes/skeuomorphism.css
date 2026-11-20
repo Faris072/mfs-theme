@@ -1,0 +1,65 @@
+/* Skeuomorphism Theme: Tactile metallic & warm paper surfaces, linear gradients, realistic bevels */
+.theme-skeuomorphism,
+[data-theme="skeuomorphism"] {
+  --theme-name: 'Skeuomorphism';
+  --bg: #d9d4cc;
+  --bg-gradient: linear-gradient(180deg, #e7e3dc 0%, #cfc9be 100%);
+  --text: #1f242b;
+  --text-muted: #586069;
+
+  /* Surfaces */
+  --surface: #f4f1ea;
+  --surface-subtle: #e5e0d5;
+  --border: rgba(0, 0, 0, 0.22);
+  --border-width: 1px;
+  --radius: 10px;
+  --radius-pill: 9999px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-text: #ffffff;
+  --secondary: #475569;
+  --success: #15803d;
+  --warning: #b45309;
+  --danger: #b91c1c;
+
+  /* Typography & Layout */
+  --font-display: Georgia, "Times New Roman", serif;
+  --grid-gap: 16px;
+
+  /* Tactile Drop & Bevel Tokens */
+  --glow: none;
+  --bevel-light: rgba(255, 255, 255, 0.85);
+  --bevel-dark: rgba(0, 0, 0, 0.22);
+  --shadow:
+    0 4px 10px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  --clay-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.22),
+    0 1px 2px rgba(0, 0, 0, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+
+  --clay-shadow-hover:
+    0 5px 12px rgba(0, 0, 0, 0.26),
+    0 2px 4px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16);
+
+  --clay-shadow-active:
+    inset 0 3px 6px rgba(0, 0, 0, 0.3),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.65);
+
+  --card-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.2),
+    0 2px 5px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.08);
+
+  --input-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.24),
+    0 1px 0 rgba(255, 255, 255, 0.85);
+}

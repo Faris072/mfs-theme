@@ -1,0 +1,40 @@
+/* Bento Grid Theme: Soft modular tiles, 20px radius, subtle 1px border, clean elevation */
+.theme-bento,
+[data-theme="bento"] {
+  --theme-name: 'Bento Grid';
+  --bg: #f1f5f9;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #eef2ff 50%, #f1f5f9 100%);
+  --text: #0f172a;
+  --text-muted: #64748b;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f8fafc;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-width: 1px;
+  --radius: 20px;
+  --radius-pill: 9999px;
+
+  /* Colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-text: #ffffff;
+  --secondary: #8b5cf6;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Shadows & Effects */
+  --clay-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  --clay-shadow-hover: 0 8px 20px rgba(15, 23, 42, 0.1);
+  --clay-shadow-active: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --card-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+  --input-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --glow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+  --bevel-light: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --bevel-dark: inset 0 -1px 0 rgba(15, 23, 42, 0.04);
+  --grid-gap: 16px;
+  --backdrop-blur: none;
+}

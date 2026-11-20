@@ -1,0 +1,40 @@
+/* Swiss Editorial Theme: Stark off-white, sharp 0-2px radius, bold red/black accents, strong grid contrast */
+.theme-swiss,
+[data-theme="swiss"] {
+  --theme-name: 'Swiss Editorial';
+  --bg: #f7f6f2;
+  --bg-gradient: linear-gradient(180deg, #f7f6f2 0%, #efede6 100%);
+  --text: #111111;
+  --text-muted: #57534e;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #edeae2;
+  --border: #111111;
+  --border-width: 1px;
+  --radius: 2px;
+  --radius-pill: 2px;
+
+  /* Colors */
+  --primary: #e11d48;
+  --primary-hover: #be123c;
+  --primary-text: #ffffff;
+  --secondary: #111111;
+  --success: #15803d;
+  --warning: #b45309;
+  --danger: #dc2626;
+
+  /* Shadows & Effects */
+  --clay-shadow: none;
+  --clay-shadow-hover: 2px 2px 0 #111111;
+  --clay-shadow-active: inset 1px 1px 0 #111111;
+  --card-shadow: none;
+  --input-shadow: none;
+  --shadow: none;
+  --font-display: 'Helvetica Neue', 'Inter', Arial, sans-serif;
+  --glow: none;
+  --bevel-light: none;
+  --bevel-dark: none;
+  --grid-gap: 12px;
+  --backdrop-blur: none;
+}

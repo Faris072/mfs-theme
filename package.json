@@ -1,0 +1,56 @@
+{
+  "name": "mfs-theme",
+  "version": "0.9.0",
+  "description": "Adaptive multi-theme Vue 3 UI component library with Claymorphism, Glassmorphism, and Neumorphism styles",
+  "type": "module",
+  "main": "./dist/mfs-theme.umd.cjs",
+  "module": "./dist/mfs-theme.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mfs-theme.js",
+      "require": "./dist/mfs-theme.umd.cjs"
+    },
+    "./style.css": "./dist/mfs-theme.css",
+    "./dist/mfs-theme.css": "./dist/mfs-theme.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "vue",
+    "vue3",
+    "ui-library",
+    "components",
+    "claymorphism",
+    "glassmorphism",
+    "neumorphism",
+    "theme",
+    "responsive"
+  ],
+  "author": "MFS",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "build:lib": "vue-tsc -b && vite build --config vite.lib.config.ts",
+    "preview": "vite preview"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "lucide-vue-next": "^0.460.0",
+    "typescript": "~5.6.3",
+    "vite": "^6.0.1",
+    "vite-plugin-dts": "^4.3.0",
+    "vue": "^3.5.13",
+    "vue-tsc": "^2.1.10"
+  },
+  "dependencies": {
+    "vue-router": "^4.6.5"
+  }
+}

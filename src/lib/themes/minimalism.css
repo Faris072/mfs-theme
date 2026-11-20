@@ -1,0 +1,40 @@
+/* Minimalism Theme: Clean monochrome/slate, 1px hairline border, shadow: none, crisp 8px radius */
+.theme-minimalism,
+[data-theme="minimalism"] {
+  --theme-name: 'Minimalism';
+  --bg: #fafafa;
+  --bg-gradient: linear-gradient(180deg, #fafafa 0%, #f4f4f5 100%);
+  --text: #09090b;
+  --text-muted: #71717a;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f4f4f5;
+  --border: #e4e4e7;
+  --border-width: 1px;
+  --radius: 8px;
+  --radius-pill: 9999px;
+
+  /* Colors */
+  --primary: #18181b;
+  --primary-hover: #27272a;
+  --primary-text: #ffffff;
+  --secondary: #52525b;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  /* Shadows & Effects */
+  --clay-shadow: none;
+  --clay-shadow-hover: 0 1px 2px rgba(9, 9, 11, 0.06);
+  --clay-shadow-active: inset 0 1px 2px rgba(9, 9, 11, 0.08);
+  --card-shadow: none;
+  --input-shadow: none;
+  --shadow: none;
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --glow: none;
+  --bevel-light: none;
+  --bevel-dark: none;
+  --grid-gap: 16px;
+  --backdrop-blur: none;
+}

@@ -1,0 +1,18 @@
+@import './base.css';
+@import './clay.css';
+@import './glass.css';
+@import './neo.css';
+@import './minimalism.css';
+@import './brutalism.css';
+@import './bento.css';
+@import './cyberpunk.css';
+@import './retro.css';
+@import './swiss.css';
+@import './skeuomorphism.css';
+@import './utilities.css';
+
+/* Common utility classes */
+.theme-bg {
+  background: var(--bg-gradient, var(--bg));
+  min-height: 100vh;
+}

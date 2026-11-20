@@ -1,0 +1,64 @@
+/* Retro Theme: Classic Windows 95 / 98 desktop, crisp 0px corners, 3D outset/inset bevels */
+.theme-retro,
+[data-theme="retro"] {
+  --theme-name: 'Retro 95';
+  --bg: #008080;
+  --bg-gradient: linear-gradient(180deg, #008080 0%, #006b6b 100%);
+  --text: #000000;
+  --text-muted: #404040;
+
+  /* Surfaces */
+  --surface: #c0c0c0;
+  --surface-subtle: #d4d0c8;
+  --border: #808080;
+  --border-width: 2px;
+  --radius: 0px;
+  --radius-pill: 0px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #000080;
+  --primary-hover: #1084d0;
+  --primary-text: #ffffff;
+  --secondary: #008080;
+  --success: #008000;
+  --warning: #808000;
+  --danger: #800000;
+
+  /* Typography & Layout */
+  --font-display: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+  --grid-gap: 10px;
+
+  /* Classic 3D Bevel Tokens */
+  --glow: none;
+  --bevel-light: #ffffff;
+  --bevel-dark: #808080;
+  --shadow:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #404040,
+    2px 2px 0 rgba(0, 0, 0, 0.35);
+
+  --clay-shadow:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #808080,
+    1px 1px 0 #000000;
+
+  --clay-shadow-hover:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #404040,
+    2px 2px 0 #000000;
+
+  --clay-shadow-active:
+    inset 2px 2px 0 #404040,
+    inset -2px -2px 0 #ffffff;
+
+  --card-shadow:
+    inset 2px 2px 0 #ffffff,
+    inset -2px -2px 0 #808080,
+    3px 3px 0 #000000;
+
+  --input-shadow:
+    inset 2px 2px 0 #808080,
+    inset -2px -2px 0 #ffffff,
+    inset 3px 3px 0 #404040;
+}

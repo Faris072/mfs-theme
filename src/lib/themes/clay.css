@@ -1,0 +1,50 @@
+/* Claymorphism Theme: 3D, inflated pill, friendly pastel, dual inset & outer soft shadows */
+.theme-clay,
+[data-theme="clay"] {
+  --theme-name: 'Claymorphism';
+  --bg: #ecebf8;
+  --bg-gradient: linear-gradient(135deg, #e4e7ff 0%, #ece8ff 50%, #fde7f3 100%);
+  --text: #241442;
+  --text-muted: #645e78;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f3f1fd;
+  --border: rgba(139, 92, 246, 0.08);
+  --radius: 22px;
+  --radius-pill: 9999px;
+
+  /* Colors */
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --primary-text: #ffffff;
+  --secondary: #06b6d4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #f43f5e;
+
+  /* Clay Shadows (Exterior soft blur + Interior 3D bevel) */
+  --clay-shadow: 
+    8px 14px 24px rgba(109, 40, 217, 0.14),
+    inset -3px -3px 7px rgba(109, 40, 217, 0.2),
+    inset 3px 3px 7px rgba(255, 255, 255, 0.95);
+
+  --clay-shadow-hover: 
+    12px 20px 30px rgba(109, 40, 217, 0.2),
+    inset -4px -4px 8px rgba(109, 40, 217, 0.25),
+    inset 4px 4px 8px rgba(255, 255, 255, 1);
+
+  --clay-shadow-active: 
+    4px 6px 12px rgba(109, 40, 217, 0.18),
+    inset 3px 3px 6px rgba(109, 40, 217, 0.35),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.7);
+
+  --card-shadow: 
+    14px 24px 38px rgba(109, 40, 217, 0.12),
+    inset -6px -6px 14px rgba(139, 92, 246, 0.1),
+    inset 6px 6px 14px rgba(255, 255, 255, 1);
+
+  --input-shadow: 
+    inset 3px 3px 7px rgba(109, 40, 217, 0.16),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.95);
+}
