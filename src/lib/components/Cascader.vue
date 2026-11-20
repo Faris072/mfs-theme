@@ -1,11 +1,11 @@
 <template>
-  <div ref="rootRef" class="cas-wrapper" :class="{ 'cas-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="cas-wrapper" :class="{ 'cas-wrapper--disabled mfs-disabled': disabled }">
     <span v-if="label" class="cas-label mfs-text">{{ label }}</span>
 
     <div class="cas-container">
       <button
         type="button"
-        class="cas-trigger mfs-surface mfs-rounded mfs-shadow-inset"
+        class="cas-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring"
         :disabled="disabled"
         :aria-expanded="isOpen"
         @click="isOpen = !isOpen"

@@ -5,13 +5,14 @@
       `btn--${variant}`,
       `btn--${size}`,
       'mfs-shadow',
+      'mfs-focus-ring',
       variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`,
       {
         'mfs-pill': pill,
         'mfs-rounded': !pill,
         'btn--block': block,
         'btn--loading': loading,
-        'btn--disabled': disabled || loading
+        'btn--disabled mfs-disabled': disabled || loading
       }
     ]"
     :disabled="disabled || loading"

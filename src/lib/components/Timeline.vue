@@ -24,8 +24,8 @@
       <div class="timeline__content mfs-surface mfs-rounded mfs-shadow-card">
         <slot name="item" :item="item" :index="index">
           <div class="timeline__header">
-            <h4 class="timeline__title">{{ item.title }}</h4>
-            <time v-if="item.timestamp" class="timeline__time mfs-text-muted">{{ item.timestamp }}</time>
+            <h4 class="timeline__title mfs-title">{{ item.title }}</h4>
+            <time v-if="item.timestamp" class="timeline__time mfs-caption">{{ item.timestamp }}</time>
           </div>
           <p v-if="item.description" class="timeline__desc mfs-text-muted">{{ item.description }}</p>
         </slot>

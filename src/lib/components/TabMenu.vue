@@ -7,7 +7,7 @@
       role="tablist"
       @keydown="handleKeydown"
     >
-      <span class="tab-menu__indicator mfs-pill mfs-shadow" :style="indicatorStyle" aria-hidden="true" />
+      <span class="tab-menu__indicator mfs-rounded-sm" :style="indicatorStyle" aria-hidden="true" />
       <component
         :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
         v-for="(item, idx) in items"
@@ -17,10 +17,10 @@
         :href="item.href"
         :type="!item.to && !item.href ? 'button' : undefined"
         role="tab"
-        class="tab-menu__item mfs-pill"
+        class="tab-menu__item mfs-rounded-sm mfs-text"
         :class="{
           'tab-menu__item--active': idx === modelValue,
-          'tab-menu__item--disabled': item.disabled
+          'tab-menu__item--disabled mfs-disabled': item.disabled
         }"
         :aria-selected="idx === modelValue"
         :aria-disabled="item.disabled || undefined"
@@ -199,8 +199,9 @@ onUnmounted(() => {
   padding: 8px 16px;
   min-height: 36px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
   background: transparent;
-  color: var(--text-muted);
+  color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
   font-weight: 600;

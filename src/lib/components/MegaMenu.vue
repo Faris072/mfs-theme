@@ -1,7 +1,7 @@
 <template>
   <nav
     ref="rootRef"
-    class="mega-menu mfs-surface mfs-shadow mfs-rounded mfs-blur"
+    class="mega-menu mfs-surface mfs-rounded mfs-blur"
     :class="`mega-menu--${orientation}`"
     aria-label="Mega menu"
   >
@@ -40,10 +40,10 @@
             :href="!item.columns?.length ? item.href : undefined"
             :type="item.columns?.length || (!item.to && !item.href) ? 'button' : undefined"
             role="menuitem"
-            class="mega-menu__trigger mfs-pill mfs-text"
+            class="mega-menu__trigger mfs-rounded-sm mfs-text"
             :class="{
               'mega-menu__trigger--active': activeIndex === idx,
-              'mega-menu__trigger--disabled': item.disabled
+              'mega-menu__trigger--disabled mfs-disabled': item.disabled
             }"
             :aria-haspopup="item.columns?.length ? 'true' : undefined"
             :aria-expanded="item.columns?.length ? activeIndex === idx : undefined"
@@ -223,6 +223,10 @@ onUnmounted(() => {
   gap: 8px;
   align-self: flex-start;
   padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
+  background: transparent;
   font-family: inherit;
   font-size: 0.9rem;
   font-weight: 600;
@@ -250,6 +254,8 @@ onUnmounted(() => {
   padding: 8px 14px;
   min-height: 38px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.92rem;
@@ -305,6 +311,8 @@ onUnmounted(() => {
   gap: 2px;
   padding: 8px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   text-align: left;

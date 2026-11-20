@@ -13,15 +13,15 @@
           @keydown="handleMenuKeydown"
         >
           <template v-for="(item, index) in items" :key="index">
-            <li v-if="item.divider" class="ctx-menu__divider" role="separator" />
+            <li v-if="item.divider" class="ctx-menu__divider mfs-divider" role="separator" />
             <li v-else role="none">
               <button
                 ref="(el) => setItemRef(index, el as HTMLButtonElement | null)"
                 type="button"
                 role="menuitem"
-                class="ctx-menu__item mfs-rounded-sm"
+                class="ctx-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                 :class="{
-                  'ctx-menu__item--disabled': item.disabled,
+                  'ctx-menu__item--disabled mfs-disabled': item.disabled,
                   'ctx-menu__item--danger': item.danger
                 }"
                 :disabled="item.disabled"

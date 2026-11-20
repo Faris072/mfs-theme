@@ -2,7 +2,7 @@
   <div :class="['speed-dial', `speed-dial--${direction}`]">
     <button
       type="button"
-      class="speed-dial__fab mfs-bg-primary mfs-pill mfs-shadow mfs-interactive"
+      class="speed-dial__fab mfs-bg-primary mfs-pill mfs-shadow mfs-interactive mfs-focus-ring"
       :aria-expanded="isOpen"
       aria-label="Toggle quick actions"
       @click="toggle"
@@ -30,7 +30,7 @@
         <button
           type="button"
           role="menuitem"
-          class="speed-dial__item mfs-surface mfs-pill mfs-shadow mfs-interactive"
+          :class="['speed-dial__item', 'mfs-surface', 'mfs-pill', 'mfs-shadow', 'mfs-interactive', 'mfs-focus-ring', { 'mfs-disabled': item.disabled }]"
           :title="item.label"
           :aria-label="item.label"
           :disabled="item.disabled"

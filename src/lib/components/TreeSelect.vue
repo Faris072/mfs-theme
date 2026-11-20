@@ -1,11 +1,11 @@
 <template>
-  <div ref="rootRef" class="ts-wrapper" :class="{ 'ts-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="ts-wrapper" :class="{ 'ts-wrapper--disabled mfs-disabled': disabled }">
     <span v-if="label" class="ts-label mfs-text">{{ label }}</span>
 
     <div class="ts-container">
       <button
         type="button"
-        class="ts-trigger mfs-surface mfs-rounded mfs-shadow-inset"
+        class="ts-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring"
         :disabled="disabled"
         :aria-expanded="isOpen"
         @click="isOpen = !isOpen"

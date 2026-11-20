@@ -1,5 +1,5 @@
 <template>
-  <div class="lb-wrapper mfs-surface mfs-rounded mfs-shadow" :class="{ 'lb-wrapper--disabled': disabled }">
+  <div class="lb-wrapper mfs-surface mfs-rounded mfs-shadow" :class="{ 'lb-wrapper--disabled mfs-disabled': disabled }">
     <div v-if="filter" class="lb-filter-box">
       <input v-model="query" type="text" class="lb-filter mfs-inset mfs-text" placeholder="Filter..." :disabled="disabled" />
     </div>
@@ -10,7 +10,7 @@
         :key="String(opt.value) + idx"
         role="option"
         :aria-selected="isSelected(opt.value)"
-        class="lb-item mfs-text"
+        class="lb-item mfs-text mfs-focus-ring"
         :class="{ 'lb-item--selected': isSelected(opt.value), 'lb-item--disabled': opt.disabled }"
         tabindex="0"
         @click="select(opt)"

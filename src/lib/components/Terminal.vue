@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mfs-terminal mfs-rounded mfs-shadow-card mfs-blur"
+    class="mfs-terminal mfs-font-mono mfs-rounded mfs-shadow-card mfs-blur"
     @click="focusInput"
   >
     <div v-if="welcomeMessage" class="mfs-terminal__welcome">{{ welcomeMessage }}</div>

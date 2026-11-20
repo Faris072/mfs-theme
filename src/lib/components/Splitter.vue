@@ -8,7 +8,7 @@
     </div>
 
     <div
-      class="splitter__gutter mfs-surface-subtle"
+      class="splitter__gutter mfs-surface-subtle mfs-focus-ring"
       role="separator"
       tabindex="0"
       :aria-orientation="layout === 'horizontal' ? 'vertical' : 'horizontal'"

@@ -17,7 +17,7 @@
         class="tabs__tab mfs-pill"
         :class="{
           'tabs__tab--active': item.key === activeKey,
-          'tabs__tab--disabled': item.disabled
+          'tabs__tab--disabled mfs-disabled': item.disabled
         }"
         :aria-selected="item.key === activeKey"
         :aria-disabled="item.disabled || undefined"

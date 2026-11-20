@@ -6,7 +6,7 @@
       <Transition name="mfs-blockui-fade">
         <div
           v-if="blocked"
-          class="mfs-blockui__overlay mfs-blur"
+          class="mfs-blockui__overlay mfs-backdrop"
           :class="{ 'mfs-blockui__overlay--fullscreen': fullScreen, 'mfs-rounded': !fullScreen }"
           role="status"
           :aria-label="label || 'Loading'"

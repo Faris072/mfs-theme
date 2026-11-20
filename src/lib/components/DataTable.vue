@@ -47,7 +47,7 @@
               <button
                 v-if="col.sortable"
                 type="button"
-                class="data-table__sort-btn"
+                class="data-table__sort-btn mfs-focus-ring"
                 @click="toggleSort(col.key)"
               >
                 <span>{{ col.label }}</span>

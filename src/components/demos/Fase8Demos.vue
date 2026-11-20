@@ -341,8 +341,8 @@ type ApiSpec = {
 // ── SplitButton ────────────────────────────────────────────────────────
 const lastSplitEvent = ref('None')
 const deployItems: SplitButtonItem[] = [
-  { label: 'Deploy to Staging', value: 'staging', icon: '🚀' },
-  { label: 'Schedule Release', value: 'schedule', icon: '🗓️' },
+  { label: 'Deploy to Staging', value: 'staging' },
+  { label: 'Schedule Release', value: 'schedule' },
   { label: 'Rollback (Disabled)', value: 'rollback', disabled: true }
 ]
 const exportItems: SplitButtonItem[] = [
@@ -384,10 +384,10 @@ const dialType = ref<'linear' | 'radial'>('linear')
 const dialDir = ref<'up' | 'down' | 'left' | 'right'>('right')
 const lastDialAction = ref('None')
 const dialItems: SpeedDialItem[] = [
-  { label: 'Edit', icon: '✏️' },
-  { label: 'Share', icon: '🔗' },
-  { label: 'Star', icon: '⭐' },
-  { label: 'Delete', icon: '🗑️' }
+  { label: 'Edit' },
+  { label: 'Share' },
+  { label: 'Star' },
+  { label: 'Delete' }
 ]
 
 const speedDialCode = `<script setup lang="ts">
@@ -396,9 +396,9 @@ import { SpeedDial } from 'mfs-theme'
 
 const open = ref(false)
 const items = [
-  { label: 'Edit', icon: '✏️' },
-  { label: 'Share', icon: '🔗' },
-  { label: 'Star', icon: '⭐' }
+  { label: 'Edit' },
+  { label: 'Share' },
+  { label: 'Star' }
 ]
 <\/script>
 

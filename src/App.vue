@@ -47,22 +47,15 @@
 
             <!-- Active Theme Selector Dropdown -->
             <div class="theme-selector-bar">
-              <label for="navbar-theme-select" class="theme-selector-label">Theme:</label>
-              <select
-                id="navbar-theme-select"
-                class="theme-select"
-                :value="currentTheme"
-                aria-label="Select active theme"
-                @change="onThemeSelect"
-              >
-                <option
-                  v-for="item in themeOptions"
-                  :key="item.id"
-                  :value="item.id"
-                >
-                  {{ item.name }}
-                </option>
-              </select>
+              <span class="theme-selector-label">Theme:</span>
+              <Select
+                class="navbar-theme-select"
+                :model-value="currentTheme"
+                :options="themeSelectOptions"
+                :searchable="false"
+                :clearable="false"
+                @update:model-value="onThemeSelect"
+              />
             </div>
           </template>
 
@@ -185,7 +178,7 @@ import {
   Box,
   ArrowRight
 } from 'lucide-vue-next'
-import { useTheme, Toast, ConfirmDialog, type ThemeType } from './lib'
+import { useTheme, Select, Toast, ConfirmDialog, type ThemeType } from './lib'
 
 const route = useRoute()
 const router = useRouter()
@@ -216,13 +209,16 @@ const handleSelectTheme = (themeId: ThemeType) => {
   }
 }
 
-const onThemeSelect = (e: Event) => {
-  const val = (e.target as HTMLSelectElement).value as ThemeType
-  if (val) handleSelectTheme(val)
+const themeSelectOptions = computed(() =>
+  themeOptions.map((item) => ({ label: item.name, value: item.id }))
+)
+
+const onThemeSelect = (val: string | number | null) => {
+  if (val) handleSelectTheme(val as ThemeType)
 }
 </script>
 
-<style>
+<style scoped>
 /* Hallmark · theme: mfs-theme · App.vue */
 :focus-visible {
   outline: 2px solid var(--primary);
@@ -409,16 +405,22 @@ const onThemeSelect = (e: Event) => {
   user-select: none;
 }
 
-.theme-select {
-  border: none;
-  background: var(--surface);
-  color: var(--primary);
-  font-size: 0.82rem;
-  font-weight: 700;
+.navbar-theme-select {
+  width: 158px;
+}
+
+.navbar-theme-select :deep(.select-trigger) {
   padding: 5px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
   border-radius: var(--radius-pill, 9999px);
-  cursor: pointer;
-  box-shadow: var(--clay-shadow);
+}
+
+.navbar-theme-select :deep(.select-dropdown) {
+  z-index: 220;
+  min-width: 185px;
+  right: 0;
+  left: auto;
 }
 
 .mobile-theme-grid {

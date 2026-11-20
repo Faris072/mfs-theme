@@ -3,7 +3,7 @@
     <Transition name="mfs-drawer-fade">
       <div
         v-if="modelValue"
-        class="mfs-drawer-backdrop"
+        class="mfs-drawer-backdrop mfs-backdrop"
         @click="handleBackdropClick"
       >
         <aside
@@ -17,11 +17,11 @@
         >
           <div v-if="title || $slots.header" class="mfs-drawer__header">
             <slot name="header">
-              <h3 class="mfs-drawer__title">{{ title }}</h3>
+              <h3 class="mfs-drawer__title mfs-title">{{ title }}</h3>
             </slot>
             <button
               type="button"
-              class="mfs-drawer__close mfs-surface-subtle mfs-pill"
+              class="mfs-drawer__close mfs-surface-subtle mfs-pill mfs-focus-ring"
               aria-label="Close drawer"
               @click="close"
             >

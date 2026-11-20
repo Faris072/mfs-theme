@@ -339,7 +339,6 @@ const viewColumns = ref<number>(2)
 const filteredCatalog = [
   {
     id: 'clay',
-    icon: '🫧',
     name: 'Claymorphism',
     tag: 'Soft 3D',
     badgeVariant: 'primary' as const,
@@ -347,7 +346,6 @@ const filteredCatalog = [
   },
   {
     id: 'glass',
-    icon: '🪟',
     name: 'Glassmorphism',
     tag: 'Frosted',
     badgeVariant: 'secondary' as const,
@@ -355,7 +353,6 @@ const filteredCatalog = [
   },
   {
     id: 'neo',
-    icon: '🎛️',
     name: 'Neumorphism',
     tag: 'Extruded',
     badgeVariant: 'success' as const,
@@ -363,7 +360,6 @@ const filteredCatalog = [
   },
   {
     id: 'tokens',
-    icon: '🎨',
     name: 'CSS Variables',
     tag: 'Runtime',
     badgeVariant: 'warning' as const,
@@ -423,25 +419,22 @@ const treeNodes: TreeNode[] = [
   {
     key: 'src',
     label: 'src',
-    icon: '📁',
     children: [
       {
         key: 'components',
         label: 'components',
-        icon: '📁',
         children: [
-          { key: 'DataTable.vue', label: 'DataTable.vue', icon: '🧩' },
-          { key: 'DataView.vue', label: 'DataView.vue', icon: '🧩' },
-          { key: 'Tree.vue', label: 'Tree.vue', icon: '🧩' }
+          { key: 'DataTable.vue', label: 'DataTable.vue' },
+          { key: 'DataView.vue', label: 'DataView.vue' },
+          { key: 'Tree.vue', label: 'Tree.vue' }
         ]
       },
       {
         key: 'composables',
         label: 'composables',
-        icon: '📁',
         children: [
-          { key: 'useTheme.ts', label: 'useTheme.ts', icon: '⚡' },
-          { key: 'useToast.ts', label: 'useToast.ts', icon: '⚡' }
+          { key: 'useTheme.ts', label: 'useTheme.ts' },
+          { key: 'useToast.ts', label: 'useToast.ts' }
         ]
       }
     ]
@@ -449,13 +442,11 @@ const treeNodes: TreeNode[] = [
   {
     key: 'docs',
     label: 'docs (archived)',
-    icon: '🔒',
     disabled: true
   },
   {
     key: 'package.json',
-    label: 'package.json',
-    icon: '📄'
+    label: 'package.json'
   }
 ]
 
@@ -496,10 +487,9 @@ const nodes = [
   {
     key: 'src',
     label: 'src',
-    icon: '📁',
     children: [
-      { key: 'DataTable.vue', label: 'DataTable.vue', icon: '🧩' },
-      { key: 'Tree.vue', label: 'Tree.vue', icon: '🧩' }
+      { key: 'DataTable.vue', label: 'DataTable.vue' },
+      { key: 'Tree.vue', label: 'Tree.vue' }
     ]
   }
 ]

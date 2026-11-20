@@ -15,17 +15,17 @@ export interface ComponentNavItem {
 
 export const PHASE_TITLES: Record<ComponentNavItem['phase'], string> = {
   0: 'Foundation',
-  1: 'Phase 1 · Core & Layout',
-  2: 'Phase 2 · Form Inputs',
-  3: 'Phase 3 · Data Display',
-  4: 'Phase 4 · Feedback & Overlay',
-  5: 'Phase 5 · Navigation',
-  6: 'Phase 6 · Advanced Data',
-  7: 'Phase 7 · Forms Advanced',
-  8: 'Phase 8 · Panels & Layout',
-  9: 'Phase 9 · Menus',
-  10: 'Phase 10 · Data Advanced',
-  11: 'Phase 11 · Overlays, Media & Directives'
+  1: 'Core & Layout',
+  2: 'Form Inputs',
+  3: 'Data Display',
+  4: 'Feedback & Overlay',
+  5: 'Navigation',
+  6: 'Advanced Data',
+  7: 'Forms Advanced',
+  8: 'Panels & Layout',
+  9: 'Menus',
+  10: 'Data Advanced',
+  11: 'Overlays, Media & Directives'
 }
 
 export const COMPONENT_NAV: ComponentNavItem[] = [

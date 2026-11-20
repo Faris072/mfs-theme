@@ -12,8 +12,8 @@
     <div v-if="$slots.header || title" class="card__header">
       <slot name="header">
         <div>
-          <h3 v-if="title" class="card__title mfs-text">{{ title }}</h3>
-          <p v-if="subtitle" class="card__subtitle mfs-text-muted">{{ subtitle }}</p>
+          <h3 v-if="title" class="card__title mfs-title">{{ title }}</h3>
+          <p v-if="subtitle" class="card__subtitle mfs-caption">{{ subtitle }}</p>
         </div>
       </slot>
     </div>

@@ -1,7 +1,7 @@
 <template>
   <section :class="['panel', 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card', { 'is-collapsed': isCollapsed }]">
     <header v-if="header || $slots.header || toggleable" class="panel__header">
-      <div class="panel__title mfs-text">
+      <div class="panel__title mfs-title">
         <slot name="header">{{ header }}</slot>
       </div>
       <div class="panel__actions">
@@ -9,7 +9,7 @@
         <button
           v-if="toggleable"
           type="button"
-          class="panel__toggle mfs-surface-subtle mfs-pill mfs-interactive"
+          class="panel__toggle mfs-surface-subtle mfs-pill mfs-interactive mfs-focus-ring"
           :aria-expanded="!isCollapsed"
           aria-label="Toggle panel"
           @click="toggle"
@@ -33,7 +33,7 @@
         <div class="panel__body">
           <slot />
         </div>
-        <footer v-if="$slots.footer" class="panel__footer mfs-surface-subtle mfs-text-muted">
+        <footer v-if="$slots.footer" class="panel__footer mfs-surface-subtle mfs-caption">
           <slot name="footer" />
         </footer>
       </div>

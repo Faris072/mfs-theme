@@ -1,8 +1,8 @@
 <template>
   <button
     type="button"
-    class="tb-btn mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-text"
-    :class="{ 'tb-btn--active': modelValue }"
+    class="tb-btn mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-text mfs-focus-ring"
+    :class="{ 'tb-btn--active mfs-border-primary': modelValue }"
     :aria-pressed="modelValue"
     :disabled="disabled"
     @click="toggle"

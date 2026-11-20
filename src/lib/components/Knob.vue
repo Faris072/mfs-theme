@@ -1,10 +1,10 @@
 <template>
-  <div class="knob-wrapper" :class="{ 'knob-wrapper--disabled': disabled }">
+  <div class="knob-wrapper" :class="{ 'knob-wrapper--disabled mfs-disabled': disabled }">
     <div
       ref="svgBoxRef"
       role="slider"
       tabindex="0"
-      class="knob-control mfs-surface mfs-shadow"
+      class="knob-control mfs-surface mfs-shadow mfs-focus-ring"
       :style="{ width: `${size}px`, height: `${size}px` }"
       :aria-valuemin="min"
       :aria-valuemax="max"
@@ -29,9 +29,9 @@
           stroke-linecap="round"
         />
       </svg>
-      <span class="knob-value mfs-text">{{ formattedValue }}</span>
+      <span class="knob-value mfs-text mfs-font-mono">{{ formattedValue }}</span>
     </div>
-    <span v-if="label" class="knob-label mfs-text-muted">{{ label }}</span>
+    <span v-if="label" class="knob-label mfs-caption">{{ label }}</span>
   </div>
 </template>
 

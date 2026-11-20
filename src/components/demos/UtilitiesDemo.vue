@@ -46,6 +46,48 @@
       </div>
     </ComponentPreview>
 
+    <ComponentPreview
+      title="Typography, Effects, Soft Tints & States"
+      description="Extended .mfs-* utilities for display/mono fonts, theme glow/bevel effects, soft semantic tints, focus rings, dividers, and disabled states."
+      :code="extendedSnippetCode"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-grid">
+          <div class="mfs-card mfs-glow mfs-border-primary mfs-stack">
+            <h4 class="mfs-title mfs-font-display">Display Title</h4>
+            <p class="mfs-caption">Caption text paired with <code class="mfs-font-mono">.mfs-font-mono</code></p>
+            <hr class="mfs-divider" />
+            <div class="mfs-row">
+              <span class="mfs-pill mfs-soft-primary demo-badge">Soft Primary</span>
+              <span class="mfs-pill mfs-soft-success demo-badge">Soft Success</span>
+              <span class="mfs-pill mfs-soft-warning demo-badge">Soft Warning</span>
+              <span class="mfs-pill mfs-soft-danger demo-badge">Soft Danger</span>
+            </div>
+          </div>
+
+          <div class="mfs-surface mfs-bevel mfs-backdrop mfs-rounded-lg mfs-stack demo-pad">
+            <span class="mfs-title">Bevel &amp; Interactive States</span>
+            <p class="mfs-caption">Focus the button below to test <code class="mfs-font-mono">.mfs-focus-ring</code>.</p>
+            <div class="mfs-row">
+              <button
+                type="button"
+                class="mfs-surface-subtle mfs-rounded-md mfs-bevel mfs-focus-ring mfs-interactive demo-btn"
+              >
+                Focus Ring
+              </button>
+              <button
+                type="button"
+                class="mfs-surface-subtle mfs-rounded-md mfs-disabled demo-btn"
+                disabled
+              >
+                Disabled
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ComponentPreview>
+
     <section class="cheatsheet-card">
       <header class="cheatsheet-header">
         <div>
@@ -138,6 +180,23 @@ const snippetCode = `<div class="mfs-grid">
   </div>
 </div>`
 
+const extendedSnippetCode = `<div class="mfs-card mfs-glow mfs-border-primary mfs-stack">
+  <h4 class="mfs-title mfs-font-display">Display Title</h4>
+  <p class="mfs-caption">Monospace: <code class="mfs-font-mono">v0.1.0</code></p>
+  <hr class="mfs-divider" />
+  <div class="mfs-row">
+    <span class="mfs-pill mfs-soft-primary">Soft Primary</span>
+    <span class="mfs-pill mfs-soft-success">Soft Success</span>
+    <span class="mfs-pill mfs-soft-warning">Soft Warning</span>
+    <span class="mfs-pill mfs-soft-danger">Soft Danger</span>
+  </div>
+</div>
+
+<div class="mfs-surface mfs-bevel mfs-backdrop mfs-rounded-lg mfs-row">
+  <button class="mfs-bevel mfs-focus-ring mfs-interactive">Focus Ring</button>
+  <button class="mfs-disabled" disabled>Disabled</button>
+</div>`
+
 const utilityRows = [
   { name: 'mfs-bg', category: 'Surface', purpose: 'Theme page background gradient and base text color' },
   { name: 'mfs-surface', category: 'Surface', purpose: 'Primary surface background, border, and backdrop blur' },
@@ -170,7 +229,22 @@ const utilityRows = [
   { name: 'mfs-container', category: 'Layout', purpose: 'Centered max-width container with inline padding' },
   { name: 'mfs-stack', category: 'Layout', purpose: 'Vertical flex column with 16px gap' },
   { name: 'mfs-row', category: 'Layout', purpose: 'Horizontal wrapping flex row with 12px gap' },
-  { name: 'mfs-grid', category: 'Layout', purpose: 'Responsive auto-fit CSS grid (min 220px)' }
+  { name: 'mfs-grid', category: 'Layout', purpose: 'Responsive auto-fit CSS grid (min 220px)' },
+  { name: 'mfs-font-display', category: 'Typography', purpose: 'Theme display font family (--font-display)' },
+  { name: 'mfs-font-mono', category: 'Typography', purpose: 'Monospace font family (--font-mono)' },
+  { name: 'mfs-title', category: 'Typography', purpose: 'Display heading size, weight, and tight line-height' },
+  { name: 'mfs-caption', category: 'Typography', purpose: 'Compact muted caption text style' },
+  { name: 'mfs-glow', category: 'Effect', purpose: 'Theme-adaptive outer glow shadow (--glow)' },
+  { name: 'mfs-bevel', category: 'Effect', purpose: '3D top/bottom specular bevel highlight' },
+  { name: 'mfs-backdrop', category: 'Effect', purpose: 'Translucent surface backdrop blur' },
+  { name: 'mfs-border-primary', category: 'Border', purpose: '1px solid primary accent border' },
+  { name: 'mfs-soft-primary', category: 'Color', purpose: 'Soft tinted primary background + primary text' },
+  { name: 'mfs-soft-success', category: 'Color', purpose: 'Soft tinted success background + success text' },
+  { name: 'mfs-soft-warning', category: 'Color', purpose: 'Soft tinted warning background + warning text' },
+  { name: 'mfs-soft-danger', category: 'Color', purpose: 'Soft tinted danger background + danger text' },
+  { name: 'mfs-focus-ring', category: 'State', purpose: 'Accessible :focus-visible outline using --primary' },
+  { name: 'mfs-disabled', category: 'State', purpose: 'Muted opacity and pointer-events: none state' },
+  { name: 'mfs-divider', category: 'Layout', purpose: 'Horizontal 1px theme-colored hairline separator' }
 ]
 </script>
 

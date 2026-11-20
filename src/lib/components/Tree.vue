@@ -14,10 +14,10 @@
       :aria-disabled="node.disabled || undefined"
     >
       <div
-        class="tree__row mfs-rounded-sm"
+        class="tree__row mfs-rounded-sm mfs-focus-ring"
         :class="{
           'tree__row--selected': isSelected(node.key),
-          'tree__row--disabled': node.disabled
+          'tree__row--disabled mfs-disabled': node.disabled
         }"
         :style="{ paddingLeft: `${level * 20 + 8}px` }"
         tabindex="0"

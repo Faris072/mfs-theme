@@ -1,5 +1,5 @@
 <template>
-  <div class="slider-wrapper" :class="{ 'slider-wrapper--disabled': disabled }">
+  <div class="slider-wrapper" :class="{ 'slider-wrapper--disabled mfs-disabled': disabled }">
     <div v-if="label" class="slider-header">
       <span class="slider-label mfs-text">{{ label }}</span>
       <span class="slider-readout">
@@ -18,7 +18,7 @@
         v-if="range"
         role="slider"
         tabindex="0"
-        class="slider-thumb mfs-shadow"
+        class="slider-thumb mfs-shadow mfs-focus-ring"
         :class="{ 'slider-thumb--active': activeHandle === 0 }"
         :style="{ left: `${pct(lowVal)}%` }"
         :aria-valuemin="min"
@@ -34,7 +34,7 @@
       <div
         role="slider"
         tabindex="0"
-        class="slider-thumb mfs-shadow"
+        class="slider-thumb mfs-shadow mfs-focus-ring"
         :class="{ 'slider-thumb--active': activeHandle === (range ? 1 : 0) }"
         :style="{ left: `${pct(range ? highVal : currentSingle)}%` }"
         :aria-valuemin="range ? lowVal : min"

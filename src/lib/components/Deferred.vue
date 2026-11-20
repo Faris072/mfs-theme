@@ -2,7 +2,7 @@
   <div ref="targetRef" class="deferred">
     <slot v-if="loaded" />
     <slot v-else name="placeholder">
-      <div class="deferred__placeholder mfs-surface-subtle mfs-rounded mfs-text-muted">
+      <div class="deferred__placeholder mfs-surface-subtle mfs-rounded mfs-caption">
         Loading...
       </div>
     </slot>

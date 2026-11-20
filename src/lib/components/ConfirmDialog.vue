@@ -3,7 +3,7 @@
     <Transition name="mfs-confirm-fade">
       <div
         v-if="state.isOpen && state.options"
-        class="mfs-confirm-backdrop"
+        class="mfs-confirm-backdrop mfs-backdrop"
         @click="reject"
       >
         <div
@@ -15,7 +15,7 @@
           @click.stop
         >
           <div class="mfs-confirm__header">
-            <h3 :id="titleId" class="mfs-confirm__title">
+            <h3 :id="titleId" class="mfs-confirm__title mfs-title">
               {{ state.options.title }}
             </h3>
           </div>
@@ -27,14 +27,14 @@
           <div class="mfs-confirm__actions">
             <button
               type="button"
-              class="mfs-confirm__btn mfs-confirm__btn--cancel mfs-surface-subtle mfs-pill mfs-shadow"
+              class="mfs-confirm__btn mfs-confirm__btn--cancel mfs-surface-subtle mfs-pill mfs-shadow mfs-focus-ring"
               @click="reject"
             >
               {{ state.options.cancelLabel ?? 'Cancel' }}
             </button>
             <button
               type="button"
-              class="mfs-confirm__btn mfs-confirm__btn--accept mfs-pill mfs-shadow"
+              class="mfs-confirm__btn mfs-confirm__btn--accept mfs-pill mfs-shadow mfs-focus-ring"
               :class="[`mfs-confirm__btn--${state.options.variant ?? 'primary'}`]"
               @click="accept"
             >

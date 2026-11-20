@@ -1,5 +1,5 @@
 <template>
-  <label class="radio mfs-text" :class="{ 'radio--disabled': disabled }">
+  <label class="radio mfs-text" :class="{ 'radio--disabled mfs-disabled': disabled }">
     <input
       :id="id"
       type="radio"

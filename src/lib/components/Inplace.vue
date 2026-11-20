@@ -2,8 +2,8 @@
   <div class="inplace">
     <div
       v-if="!isActive"
-      class="inplace__display mfs-surface-subtle mfs-rounded-sm mfs-interactive"
-      :class="{ 'inplace__display--disabled': disabled }"
+      class="inplace__display mfs-surface-subtle mfs-rounded-sm mfs-interactive mfs-focus-ring"
+      :class="{ 'inplace__display--disabled mfs-disabled': disabled }"
       role="button"
       :tabindex="disabled ? -1 : 0"
       :aria-disabled="disabled || undefined"

@@ -23,14 +23,14 @@
         <div class="mfs-confirm-popup__actions">
           <button
             type="button"
-            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--reject mfs-surface-subtle mfs-pill"
+            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--reject mfs-surface-subtle mfs-pill mfs-focus-ring"
             @click="onReject"
           >
             {{ activeRejectLabel }}
           </button>
           <button
             type="button"
-            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--accept mfs-pill mfs-shadow"
+            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--accept mfs-pill mfs-shadow mfs-focus-ring"
             :class="[`mfs-confirm-popup__btn--${activeVariant}`]"
             @click="onAccept"
           >

@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="ac-wrapper" :class="{ 'ac-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="ac-wrapper" :class="{ 'ac-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="ac-label mfs-text">{{ label }}</label>
 
     <div class="ac-container">

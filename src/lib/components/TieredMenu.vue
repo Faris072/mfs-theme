@@ -1,8 +1,8 @@
 <template>
-  <nav class="tiered-menu mfs-surface mfs-shadow mfs-rounded-md mfs-blur" aria-label="Tiered menu">
+  <nav class="tiered-menu mfs-surface mfs-rounded-md mfs-blur" aria-label="Tiered menu">
     <ul class="tiered-menu__list" role="menubar">
       <template v-for="(item, idx) in items" :key="idx">
-        <li v-if="item.separator" class="tiered-menu__separator" role="separator" />
+        <li v-if="item.separator" class="tiered-menu__separator mfs-divider" role="separator" />
         <li
           v-else
           class="tiered-menu__node"
@@ -16,10 +16,10 @@
             :href="!item.items?.length ? item.href : undefined"
             :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
             role="menuitem"
-            class="tiered-menu__item mfs-rounded-sm mfs-text"
+            class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
             :class="{
               'tiered-menu__item--active': openLevel1 === idx,
-              'tiered-menu__item--disabled': item.disabled
+              'tiered-menu__item--disabled mfs-disabled': item.disabled
             }"
             :aria-haspopup="item.items?.length ? 'true' : undefined"
             :aria-expanded="item.items?.length ? openLevel1 === idx : undefined"
@@ -51,7 +51,7 @@
             role="menu"
           >
             <template v-for="(sub, sIdx) in item.items" :key="sIdx">
-              <li v-if="sub.separator" class="tiered-menu__separator" role="separator" />
+              <li v-if="sub.separator" class="tiered-menu__separator mfs-divider" role="separator" />
               <li
                 v-else
                 class="tiered-menu__node"
@@ -65,10 +65,10 @@
                   :href="!sub.items?.length ? sub.href : undefined"
                   :type="sub.items?.length || (!sub.to && !sub.href) ? 'button' : undefined"
                   role="menuitem"
-                  class="tiered-menu__item mfs-rounded-sm mfs-text"
+                  class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                   :class="{
                     'tiered-menu__item--active': openLevel2 === sIdx,
-                    'tiered-menu__item--disabled': sub.disabled
+                    'tiered-menu__item--disabled mfs-disabled': sub.disabled
                   }"
                   :aria-haspopup="sub.items?.length ? 'true' : undefined"
                   :aria-expanded="sub.items?.length ? openLevel2 === sIdx : undefined"
@@ -100,7 +100,7 @@
                   role="menu"
                 >
                   <template v-for="(leaf, lIdx) in sub.items" :key="lIdx">
-                    <li v-if="leaf.separator" class="tiered-menu__separator" role="separator" />
+                    <li v-if="leaf.separator" class="tiered-menu__separator mfs-divider" role="separator" />
                     <li v-else role="none">
                       <component
                         :is="leaf.to ? 'router-link' : leaf.href ? 'a' : 'button'"
@@ -108,8 +108,8 @@
                         :href="leaf.href"
                         :type="!leaf.to && !leaf.href ? 'button' : undefined"
                         role="menuitem"
-                        class="tiered-menu__item mfs-rounded-sm mfs-text"
-                        :class="{ 'tiered-menu__item--disabled': leaf.disabled }"
+                        class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                        :class="{ 'tiered-menu__item--disabled mfs-disabled': leaf.disabled }"
                         :disabled="leaf.disabled"
                         @click="onClickItem(leaf, 3, lIdx)"
                       >
@@ -206,6 +206,8 @@ const onClickItem = (item: TieredMenuItem, level: number, idx: number) => {
   padding: 9px 12px;
   min-height: 38px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.9rem;

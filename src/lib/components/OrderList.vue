@@ -2,7 +2,7 @@
   <div class="order-list mfs-surface mfs-rounded mfs-shadow-card">
     <div v-if="header || $slots.header" class="order-list__header">
       <slot name="header">
-        <span class="order-list__title mfs-text">{{ header }}</span>
+        <span class="order-list__title mfs-title">{{ header }}</span>
       </slot>
     </div>
 

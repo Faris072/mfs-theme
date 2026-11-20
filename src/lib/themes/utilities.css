@@ -178,6 +178,89 @@
   gap: var(--grid-gap, 16px);
 }
 
+/* Typography */
+.mfs-font-display {
+  font-family: var(--font-display, var(--font-sans));
+}
+
+.mfs-font-mono {
+  font-family: var(--font-mono);
+}
+
+.mfs-title {
+  font-family: var(--font-display, var(--font-sans));
+  font-weight: 700;
+  color: var(--text);
+}
+
+.mfs-caption {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Theme Effects & Borders */
+.mfs-glow {
+  box-shadow: var(--glow, none);
+}
+
+.mfs-bevel {
+  box-shadow:
+    inset 1px 1px 0 var(--bevel-light, rgba(255, 255, 255, 0.45)),
+    inset -1px -1px 0 var(--bevel-dark, rgba(0, 0, 0, 0.18));
+}
+
+.mfs-border-primary {
+  border: var(--border-width, 1px) solid var(--primary);
+}
+
+/* Semantic Soft Tints */
+.mfs-soft-primary {
+  background-color: var(--surface-subtle);
+  background-color: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+}
+
+.mfs-soft-success {
+  background-color: var(--surface-subtle);
+  background-color: color-mix(in srgb, var(--success) 14%, transparent);
+  color: var(--success);
+}
+
+.mfs-soft-warning {
+  background-color: var(--surface-subtle);
+  background-color: color-mix(in srgb, var(--warning) 16%, transparent);
+  color: var(--warning);
+}
+
+.mfs-soft-danger {
+  background-color: var(--surface-subtle);
+  background-color: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger);
+}
+
+/* States & Structure */
+.mfs-focus-ring:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.mfs-disabled {
+  opacity: 0.55;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.mfs-divider {
+  height: 1px;
+  width: 100%;
+  background: var(--border);
+}
+
+.mfs-backdrop {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(6px);
+}
+
 /* Theme-specific refinements */
 [data-theme='clay'] .mfs-card,
 .theme-clay .mfs-card {

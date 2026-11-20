@@ -1,5 +1,5 @@
 <template>
-  <div class="otp-wrapper" :class="{ 'otp-wrapper--disabled': disabled }" role="group" aria-label="One-time password">
+  <div class="otp-wrapper" :class="{ 'otp-wrapper--disabled mfs-disabled': disabled }" role="group" aria-label="One-time password">
     <input
       v-for="idx in length"
       :key="idx"
@@ -10,7 +10,7 @@
       :value="chars[idx - 1]"
       :disabled="disabled"
       :aria-label="`Digit ${idx} of ${length}`"
-      class="otp-cell mfs-surface mfs-rounded mfs-shadow-inset mfs-text"
+      class="otp-cell mfs-surface mfs-rounded mfs-shadow-inset mfs-text mfs-font-mono"
       @input="onInput(idx - 1, $event)"
       @keydown="onKeydown(idx - 1, $event)"
       @paste="onPaste(idx - 1, $event)"

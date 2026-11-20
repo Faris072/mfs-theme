@@ -42,14 +42,14 @@
           </span>
 
           <div class="mfs-toast__body">
-            <div v-if="item.title" class="mfs-toast__title">{{ item.title }}</div>
+            <div v-if="item.title" class="mfs-toast__title mfs-title">{{ item.title }}</div>
             <div class="mfs-toast__message mfs-text-muted">{{ item.message }}</div>
           </div>
 
           <button
             v-if="item.closable"
             type="button"
-            class="mfs-toast__close mfs-surface-subtle mfs-pill"
+            class="mfs-toast__close mfs-surface-subtle mfs-pill mfs-focus-ring"
             aria-label="Close notification"
             @click="remove(item.id)"
           >

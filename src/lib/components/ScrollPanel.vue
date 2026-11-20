@@ -1,6 +1,6 @@
 <template>
   <div
-    class="scroll-panel mfs-surface mfs-rounded mfs-shadow-card"
+    class="scroll-panel mfs-surface mfs-rounded mfs-shadow-card mfs-focus-ring"
     :style="panelStyle"
     tabindex="0"
   >

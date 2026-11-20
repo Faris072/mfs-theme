@@ -1,10 +1,10 @@
 <template>
-  <div class="sb-group mfs-surface mfs-rounded mfs-shadow-inset" role="group" :class="{ 'sb-group--disabled': disabled }">
+  <div class="sb-group mfs-surface mfs-rounded mfs-shadow-inset" role="group" :class="{ 'sb-group--disabled mfs-disabled': disabled }">
     <button
       v-for="(opt, idx) in normalizedOptions"
       :key="String(opt.value) + idx"
       type="button"
-      class="sb-btn mfs-text"
+      class="sb-btn mfs-text mfs-focus-ring"
       :class="{ 'sb-btn--active mfs-shadow': isSelected(opt.value) }"
       :disabled="disabled || opt.disabled"
       :aria-pressed="isSelected(opt.value)"

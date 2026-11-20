@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div v-if="modelValue" class="modal-backdrop" @click="handleBackdropClick">
+      <div v-if="modelValue" class="modal-backdrop mfs-backdrop" @click="handleBackdropClick">
         <div
           class="modal-dialog mfs-card"
           :class="[`modal--${size}`]"
@@ -11,9 +11,9 @@
         >
           <div v-if="title || $slots.header" class="modal-header">
             <slot name="header">
-              <h3 class="modal-title">{{ title }}</h3>
+              <h3 class="modal-title mfs-title">{{ title }}</h3>
             </slot>
-            <button class="modal-close mfs-text-muted" @click="close" aria-label="Close modal">
+            <button class="modal-close mfs-text-muted mfs-focus-ring" @click="close" aria-label="Close modal">
               ✕
             </button>
           </div>

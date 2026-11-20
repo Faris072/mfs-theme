@@ -11,7 +11,7 @@
       >
         <ul class="menu__list">
           <template v-for="(item, idx) in items" :key="idx">
-            <li v-if="item.separator" class="menu__separator" role="separator" />
+            <li v-if="item.separator" class="menu__separator mfs-divider" role="separator" />
             <li v-else-if="item.items?.length" class="menu__group" role="presentation">
               <div v-if="item.label" class="menu__group-label mfs-text-muted">{{ item.label }}</div>
               <ul class="menu__sublist">
@@ -22,8 +22,8 @@
                     :href="sub.href"
                     :type="!sub.to && !sub.href ? 'button' : undefined"
                     role="menuitem"
-                    class="menu__item mfs-rounded-sm mfs-text"
-                    :class="{ 'menu__item--disabled': sub.disabled }"
+                    class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                    :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
                     :disabled="sub.disabled"
                     @click="handleSelect(sub)"
                   >
@@ -42,8 +42,8 @@
                 :href="item.href"
                 :type="!item.to && !item.href ? 'button' : undefined"
                 role="menuitem"
-                class="menu__item mfs-rounded-sm mfs-text"
-                :class="{ 'menu__item--disabled': item.disabled }"
+                class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
                 :disabled="item.disabled"
                 @click="handleSelect(item)"
               >
@@ -59,10 +59,10 @@
     </Transition>
   </Teleport>
 
-  <div v-else class="menu mfs-surface mfs-shadow mfs-rounded-md mfs-blur" role="menu" @keydown="onKeydown">
+  <div v-else class="menu mfs-surface mfs-rounded-md mfs-blur" role="menu" @keydown="onKeydown">
     <ul class="menu__list">
       <template v-for="(item, idx) in items" :key="idx">
-        <li v-if="item.separator" class="menu__separator" role="separator" />
+        <li v-if="item.separator" class="menu__separator mfs-divider" role="separator" />
         <li v-else-if="item.items?.length" class="menu__group" role="presentation">
           <div v-if="item.label" class="menu__group-label mfs-text-muted">{{ item.label }}</div>
           <ul class="menu__sublist">
@@ -73,8 +73,8 @@
                 :href="sub.href"
                 :type="!sub.to && !sub.href ? 'button' : undefined"
                 role="menuitem"
-                class="menu__item mfs-rounded-sm mfs-text"
-                :class="{ 'menu__item--disabled': sub.disabled }"
+                class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
                 :disabled="sub.disabled"
                 @click="handleSelect(sub)"
               >
@@ -93,8 +93,8 @@
             :href="item.href"
             :type="!item.to && !item.href ? 'button' : undefined"
             role="menuitem"
-            class="menu__item mfs-rounded-sm mfs-text"
-            :class="{ 'menu__item--disabled': item.disabled }"
+            class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+            :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
             :disabled="item.disabled"
             @click="handleSelect(item)"
           >
@@ -236,6 +236,8 @@ defineExpose({ open, close, toggle })
   padding: 9px 12px;
   min-height: 38px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.9rem;

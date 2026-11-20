@@ -34,7 +34,7 @@
     <template v-if="items.length > 1">
       <button
         type="button"
-        class="carousel__btn carousel__btn--prev mfs-surface mfs-shadow mfs-pill"
+        class="carousel__btn carousel__btn--prev mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
         aria-label="Previous slide"
         :disabled="!loop && currentIndex === 0"
         @click="prev"
@@ -46,7 +46,7 @@
 
       <button
         type="button"
-        class="carousel__btn carousel__btn--next mfs-surface mfs-shadow mfs-pill"
+        class="carousel__btn carousel__btn--next mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
         aria-label="Next slide"
         :disabled="!loop && currentIndex === items.length - 1"
         @click="next"
@@ -64,7 +64,7 @@
           role="tab"
           :aria-selected="index === currentIndex"
           :aria-label="`Go to slide ${index + 1}`"
-          :class="['carousel__dot', { 'is-active': index === currentIndex }]"
+          :class="['carousel__dot', 'mfs-focus-ring', { 'is-active': index === currentIndex }]"
           @click="goTo(index)"
         />
       </div>

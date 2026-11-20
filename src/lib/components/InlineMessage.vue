@@ -1,7 +1,10 @@
 <template>
   <span
     class="mfs-inline-msg mfs-rounded-sm"
-    :class="[`mfs-inline-msg--${severity}`]"
+    :class="[
+      `mfs-inline-msg--${severity}`,
+      severity === 'info' ? 'mfs-soft-primary' : `mfs-soft-${severity}`
+    ]"
     role="status"
   >
     <span class="mfs-inline-msg__icon" aria-hidden="true">

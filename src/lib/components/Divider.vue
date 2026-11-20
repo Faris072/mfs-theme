@@ -10,7 +10,7 @@
     role="separator"
     :aria-orientation="orientation"
   >
-    <span v-if="hasLabel && orientation === 'horizontal'" class="divider__label">
+    <span v-if="hasLabel && orientation === 'horizontal'" class="divider__label mfs-caption">
       <slot />
     </span>
   </div>

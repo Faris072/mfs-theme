@@ -18,7 +18,7 @@
       <button
         v-if="images.length > 1"
         type="button"
-        class="mfs-galleria__nav mfs-galleria__nav--prev mfs-surface-subtle mfs-pill"
+        class="mfs-galleria__nav mfs-galleria__nav--prev mfs-surface-subtle mfs-pill mfs-focus-ring"
         aria-label="Previous image"
         @click="prev"
       >
@@ -30,7 +30,7 @@
       <button
         v-if="images.length > 1"
         type="button"
-        class="mfs-galleria__nav mfs-galleria__nav--next mfs-surface-subtle mfs-pill"
+        class="mfs-galleria__nav mfs-galleria__nav--next mfs-surface-subtle mfs-pill mfs-focus-ring"
         aria-label="Next image"
         @click="next"
       >
@@ -41,7 +41,7 @@
 
       <button
         type="button"
-        class="mfs-galleria__fs mfs-surface-subtle mfs-pill"
+        class="mfs-galleria__fs mfs-surface-subtle mfs-pill mfs-focus-ring"
         :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
         @click="isFullscreen = !isFullscreen"
       >

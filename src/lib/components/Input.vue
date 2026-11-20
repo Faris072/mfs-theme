@@ -28,8 +28,8 @@
       </span>
     </div>
 
-    <p v-if="error" class="input-msg input-msg--error">{{ error }}</p>
-    <p v-else-if="hint" class="input-msg mfs-text-muted">{{ hint }}</p>
+    <p v-if="error" class="input-msg input-msg--error mfs-text-danger">{{ error }}</p>
+    <p v-else-if="hint" class="input-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

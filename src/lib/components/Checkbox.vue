@@ -1,5 +1,5 @@
 <template>
-  <label class="checkbox mfs-text" :class="{ 'checkbox--disabled': disabled }">
+  <label class="checkbox mfs-text" :class="{ 'checkbox--disabled mfs-disabled': disabled }">
     <input
       ref="inputRef"
       :id="id"

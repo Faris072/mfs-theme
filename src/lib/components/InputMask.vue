@@ -1,5 +1,5 @@
 <template>
-  <div class="mask-wrapper" :class="{ 'mask-wrapper--disabled': disabled }">
+  <div class="mask-wrapper" :class="{ 'mask-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="mask-label mfs-text">{{ label }}</label>
     <div class="mask-box mfs-surface mfs-rounded mfs-shadow-inset">
       <input
@@ -8,7 +8,7 @@
         :value="modelValue"
         :placeholder="placeholder || mask"
         :disabled="disabled"
-        class="mask-input mfs-text"
+        class="mask-input mfs-text mfs-font-mono"
         @input="onInput"
       />
     </div>

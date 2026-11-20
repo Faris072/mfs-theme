@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="dp-wrapper" :class="{ 'dp-wrapper--error': !!error, 'dp-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="dp-wrapper" :class="{ 'dp-wrapper--error': !!error, 'dp-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" class="dp-label mfs-text">
       {{ label }}
       <span v-if="required" class="dp-required mfs-text-danger">*</span>
@@ -70,7 +70,7 @@
     </div>
 
     <p v-if="error" class="dp-msg dp-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="dp-msg mfs-text-muted">{{ hint }}</p>
+    <p v-else-if="hint" class="dp-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

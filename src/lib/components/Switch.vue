@@ -1,5 +1,5 @@
 <template>
-  <label class="switch mfs-text" :class="{ 'switch--disabled': disabled }">
+  <label class="switch mfs-text" :class="{ 'switch--disabled mfs-disabled': disabled }">
     <input
       type="checkbox"
       class="switch__input"

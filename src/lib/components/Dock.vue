@@ -19,10 +19,10 @@
           :href="item.href"
           :type="!item.to && !item.href ? 'button' : undefined"
           role="menuitem"
-          class="dock__item mfs-surface-subtle mfs-shadow mfs-rounded-md"
+          class="dock__item mfs-rounded-sm mfs-text"
           :class="{
             'dock__item--active': item.active,
-            'dock__item--disabled': item.disabled
+            'dock__item--disabled mfs-disabled': item.disabled
           }"
           :style="getItemStyle(idx)"
           :aria-label="item.label"
@@ -141,6 +141,10 @@ const handleSelect = (item: DockItem, index: number) => {
   justify-content: center;
   width: 46px;
   height: 46px;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
+  background: transparent;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;

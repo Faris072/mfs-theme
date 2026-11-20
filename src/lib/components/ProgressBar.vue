@@ -17,7 +17,7 @@
         :style="indeterminate ? undefined : { width: `${clampedValue}%` }"
       />
     </div>
-    <span v-if="showValue && !indeterminate" class="mfs-progress__label mfs-text-muted">
+    <span v-if="showValue && !indeterminate" class="mfs-progress__label mfs-caption">
       {{ Math.round(clampedValue) }}%
     </span>
   </div>

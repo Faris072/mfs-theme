@@ -1,9 +1,9 @@
 <template>
-  <div class="rating-wrapper" :class="{ 'rating-wrapper--disabled': disabled, 'rating-wrapper--readonly': readonly }">
+  <div class="rating-wrapper" :class="{ 'rating-wrapper--disabled mfs-disabled': disabled, 'rating-wrapper--readonly': readonly }">
     <span v-if="label" class="rating-label mfs-text">{{ label }}</span>
 
     <div
-      class="rating-stars mfs-surface mfs-pill mfs-shadow"
+      class="rating-stars mfs-surface mfs-pill mfs-shadow mfs-focus-ring"
       role="slider"
       tabindex="0"
       :aria-label="label || 'Rating'"

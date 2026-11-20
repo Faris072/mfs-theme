@@ -1,10 +1,10 @@
 <template>
   <div class="mfs-upload mfs-surface mfs-rounded mfs-shadow-card mfs-blur">
     <div
-      class="mfs-upload__dropzone mfs-surface-subtle mfs-rounded"
+      class="mfs-upload__dropzone mfs-surface-subtle mfs-rounded mfs-focus-ring"
       :class="{
         'mfs-upload__dropzone--dragging': isDragging,
-        'mfs-upload__dropzone--disabled': disabled
+        'mfs-upload__dropzone--disabled mfs-disabled': disabled
       }"
       role="button"
       tabindex="0"
@@ -33,10 +33,10 @@
           <line x1="12" x2="12" y1="3" y2="15" />
         </svg>
       </span>
-      <p class="mfs-upload__title mfs-text">
+      <p class="mfs-upload__title mfs-title">
         Drag &amp; drop files here or <span class="mfs-upload__link">browse</span>
       </p>
-      <p v-if="accept || maxFileSize" class="mfs-upload__hint mfs-text-muted">
+      <p v-if="accept || maxFileSize" class="mfs-upload__hint mfs-caption">
         <span v-if="accept">Accepted: {{ accept }}</span>
         <span v-if="accept && maxFileSize"> · </span>
         <span v-if="maxFileSize">Max: {{ formatSize(maxFileSize) }}</span>
@@ -54,11 +54,11 @@
       <li v-for="(file, idx) in files" :key="`${file.name}-${file.size}-${idx}`" class="mfs-upload__item mfs-surface-subtle mfs-rounded-sm">
         <div class="mfs-upload__file-info">
           <span class="mfs-upload__file-name mfs-text">{{ file.name }}</span>
-          <span class="mfs-upload__file-size mfs-text-muted">{{ formatSize(file.size) }}</span>
+          <span class="mfs-upload__file-size mfs-caption">{{ formatSize(file.size) }}</span>
         </div>
         <button
           type="button"
-          class="mfs-upload__remove mfs-pill"
+          class="mfs-upload__remove mfs-pill mfs-focus-ring"
           aria-label="Remove file"
           @click="removeFile(idx)"
         >

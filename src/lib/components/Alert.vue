@@ -29,7 +29,7 @@
     </span>
 
     <div class="mfs-alert__content">
-      <div v-if="title" class="mfs-alert__title">{{ title }}</div>
+      <div v-if="title" class="mfs-alert__title mfs-title">{{ title }}</div>
       <div class="mfs-alert__body mfs-text-muted">
         <slot />
       </div>
@@ -38,7 +38,7 @@
     <button
       v-if="closable"
       type="button"
-      class="mfs-alert__close mfs-surface-subtle mfs-pill"
+      class="mfs-alert__close mfs-surface-subtle mfs-pill mfs-focus-ring"
       aria-label="Close alert"
       @click="emit('close')"
     >

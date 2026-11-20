@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="select-wrapper" :class="{ 'select-wrapper--error': !!error, 'select-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="select-wrapper" :class="{ 'select-wrapper--error': !!error, 'select-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="triggerId" class="select-label mfs-text">
       {{ label }}
       <span v-if="required" class="select-required mfs-text-danger">*</span>
@@ -96,7 +96,7 @@
     </div>
 
     <p v-if="error" class="select-msg select-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="select-msg mfs-text-muted">{{ hint }}</p>
+    <p v-else-if="hint" class="select-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

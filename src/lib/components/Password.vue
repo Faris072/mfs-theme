@@ -1,5 +1,5 @@
 <template>
-  <div class="pwd-wrapper" :class="{ 'pwd-wrapper--error': !!error, 'pwd-wrapper--disabled': disabled }">
+  <div class="pwd-wrapper" :class="{ 'pwd-wrapper--error': !!error, 'pwd-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="pwd-label mfs-text">
       {{ label }}
       <span v-if="required" class="pwd-required mfs-text-danger">*</span>
@@ -54,7 +54,7 @@
     </div>
 
     <p v-if="error" class="pwd-msg pwd-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="pwd-msg mfs-text-muted">{{ hint }}</p>
+    <p v-else-if="hint" class="pwd-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

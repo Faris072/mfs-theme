@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="ms-wrapper" :class="{ 'ms-wrapper--error': !!error, 'ms-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="ms-wrapper" :class="{ 'ms-wrapper--error': !!error, 'ms-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" class="ms-label mfs-text">
       {{ label }}
       <span v-if="required" class="ms-required mfs-text-danger">*</span>
@@ -11,7 +11,7 @@
         role="combobox"
         :aria-expanded="isOpen"
         :aria-invalid="!!error"
-        class="ms-trigger mfs-surface mfs-rounded mfs-shadow-inset"
+        class="ms-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring"
         @click="toggle"
         @keydown.escape="close"
         @keydown.enter.prevent="toggle"
@@ -104,7 +104,7 @@
     </div>
 
     <p v-if="error" class="ms-msg ms-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="ms-msg mfs-text-muted">{{ hint }}</p>
+    <p v-else-if="hint" class="ms-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

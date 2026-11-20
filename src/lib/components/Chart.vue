@@ -102,7 +102,7 @@
     </div>
 
     <div v-if="legendItems.length > 0" class="mfs-chart__legend">
-      <span v-for="(item, idx) in legendItems" :key="idx" class="mfs-chart__legend-item mfs-text-muted">
+      <span v-for="(item, idx) in legendItems" :key="idx" class="mfs-chart__legend-item mfs-caption">
         <span class="mfs-chart__swatch" :style="{ backgroundColor: item.color }" />
         {{ item.label }}
       </span>

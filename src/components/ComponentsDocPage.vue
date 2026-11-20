@@ -77,27 +77,19 @@
             <div class="docs-title-row">
               <h1 class="docs-title">{{ activeItem.name }}</h1>
               <span class="docs-category-badge">{{ activeItem.category }}</span>
-              <span class="docs-phase-badge">Phase {{ activeItem.phase }}</span>
             </div>
 
             <!-- Inline quick theme switcher -->
             <div class="docs-theme-switcher">
-              <label for="docs-theme-select" class="docs-theme-label">Theme:</label>
-              <select
-                id="docs-theme-select"
-                class="docs-theme-select"
-                :value="currentTheme"
-                aria-label="Quick theme switcher"
-                @change="onThemeSelect"
-              >
-                <option
-                  v-for="opt in themeOptions"
-                  :key="opt.id"
-                  :value="opt.id"
-                >
-                  {{ opt.name }}
-                </option>
-              </select>
+              <span class="docs-theme-label">Theme:</span>
+              <Select
+                class="docs-theme-select-comp"
+                :model-value="currentTheme"
+                :options="themeSelectOptions"
+                :searchable="false"
+                :clearable="false"
+                @update:model-value="onThemeSelect"
+              />
             </div>
           </div>
 
@@ -144,7 +136,7 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { ChevronLeft, ChevronRight, Circle, Layers, Search, Sparkles } from 'lucide-vue-next'
-import { useTheme, type ThemeType } from '../lib'
+import { Select, useTheme, type ThemeType } from '../lib'
 import {
   COMPONENT_NAV,
   PHASE_TITLES,
@@ -239,10 +231,13 @@ const getThemeIcon = (id: ThemeType) => {
   return Layers
 }
 
-const onThemeSelect = (e: Event) => {
-  const target = e.target as HTMLSelectElement
-  if (target.value) {
-    setTheme(target.value as ThemeType)
+const themeSelectOptions = computed(() =>
+  themeOptions.map((opt) => ({ label: opt.name, value: opt.id }))
+)
+
+const onThemeSelect = (val: string | number | null) => {
+  if (val) {
+    setTheme(val as ThemeType)
   }
 }
 
@@ -487,15 +482,22 @@ const onMobileSelect = (e: Event) => {
   color: var(--text-muted);
 }
 
-.docs-theme-select {
-  border: none;
-  background: var(--surface);
-  color: var(--primary);
-  font-size: 0.8rem;
-  font-weight: 700;
+.docs-theme-select-comp {
+  width: 162px;
+}
+
+.docs-theme-select-comp :deep(.select-trigger) {
   padding: 5px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
   border-radius: var(--radius-pill, 9999px);
-  cursor: pointer;
+}
+
+.docs-theme-select-comp :deep(.select-dropdown) {
+  z-index: 180;
+  min-width: 185px;
+  right: 0;
+  left: auto;
 }
 
 .docs-theme-pills {

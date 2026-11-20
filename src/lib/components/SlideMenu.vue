@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-menu mfs-surface mfs-shadow mfs-rounded-md mfs-blur" :style="{ width: menuWidth }">
+  <div class="slide-menu mfs-surface mfs-rounded-md mfs-blur" :style="{ width: menuWidth }">
     <div v-if="stack.length > 0" class="slide-menu__header">
       <button
         type="button"
@@ -11,7 +11,7 @@
         </svg>
         <span>{{ backLabel }}</span>
       </button>
-      <span class="slide-menu__title mfs-text">{{ currentTitle }}</span>
+      <span class="slide-menu__title mfs-title">{{ currentTitle }}</span>
     </div>
 
     <div class="slide-menu__viewport">
@@ -25,7 +25,7 @@
               :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
               role="menuitem"
               class="slide-menu__item mfs-rounded-sm mfs-text"
-              :class="{ 'slide-menu__item--disabled': item.disabled }"
+              :class="{ 'slide-menu__item--disabled mfs-disabled': item.disabled }"
               :disabled="item.disabled"
               @click="handleItem(item)"
             >
@@ -131,6 +131,10 @@ const goBack = () => {
   align-items: center;
   gap: 4px;
   padding: 5px 10px;
+  border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
+  background: transparent;
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
@@ -163,6 +167,8 @@ const goBack = () => {
   padding: 9px 12px;
   min-height: 38px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.9rem;

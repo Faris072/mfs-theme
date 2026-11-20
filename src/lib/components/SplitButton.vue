@@ -3,7 +3,7 @@
     <div :class="['split-btn__group', 'mfs-pill', 'mfs-shadow', `split-btn--${variant}`, `split-btn--${size}`]">
       <button
         type="button"
-        :class="['split-btn__main', 'mfs-interactive', variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`]"
+        :class="['split-btn__main', 'mfs-interactive', 'mfs-focus-ring', variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`, { 'mfs-disabled': disabled }]"
         :disabled="disabled"
         @click="emit('click', $event)"
       >
@@ -12,7 +12,7 @@
 
       <button
         type="button"
-        :class="['split-btn__toggle', 'mfs-interactive', variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`]"
+        :class="['split-btn__toggle', 'mfs-interactive', 'mfs-focus-ring', variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`, { 'mfs-disabled': disabled }]"
         :disabled="disabled"
         aria-haspopup="menu"
         :aria-expanded="open"

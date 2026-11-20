@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="cp-wrapper" :class="{ 'cp-wrapper--disabled': disabled }">
+  <div ref="rootRef" class="cp-wrapper" :class="{ 'cp-wrapper--disabled mfs-disabled': disabled }">
     <span v-if="label" class="cp-label mfs-text">{{ label }}</span>
 
     <div class="cp-container">
@@ -12,7 +12,7 @@
         @click="isOpen = !isOpen"
       >
         <span class="cp-swatch" :style="{ backgroundColor: modelValue }" />
-        <span class="cp-hex">{{ modelValue.toUpperCase() }}</span>
+        <span class="cp-hex mfs-font-mono">{{ modelValue.toUpperCase() }}</span>
       </button>
 
       <Transition name="cp-pop">
@@ -27,7 +27,7 @@
             />
             <input
               type="text"
-              class="cp-input mfs-inset"
+              class="cp-input mfs-inset mfs-font-mono"
               :value="modelValue"
               maxlength="7"
               aria-label="Hex color"

@@ -448,11 +448,11 @@ const stepsApi = {
 const contextMenuRef = ref<InstanceType<typeof ContextMenu> | null>(null)
 const lastContextAction = ref('None yet')
 const contextItems: ContextMenuItem[] = [
-  { label: 'Edit Item', icon: '✏️' },
-  { label: 'Duplicate', icon: '📄' },
-  { label: 'Share Link', icon: '🔗', disabled: true },
+  { label: 'Edit Item' },
+  { label: 'Duplicate' },
+  { label: 'Share Link', disabled: true },
   { divider: true },
-  { label: 'Delete', icon: '🗑️', danger: true }
+  { label: 'Delete', danger: true }
 ]
 
 const onContextSelect = (item: ContextMenuItem) => {
@@ -473,10 +473,10 @@ const contextMenuCode = `<template>
 import { ContextMenu } from 'mfs-theme'
 
 const items = [
-  { label: 'Edit Item', icon: '✏️' },
-  { label: 'Duplicate', icon: '📄' },
+  { label: 'Edit Item' },
+  { label: 'Duplicate' },
   { divider: true },
-  { label: 'Delete', icon: '🗑️', danger: true }
+  { label: 'Delete', danger: true }
 ]
 const onSelect = (item: { label?: string }) => console.log(item.label)
 <\/script>`

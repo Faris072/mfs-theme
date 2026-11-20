@@ -9,18 +9,18 @@
         'mfs-surface',
         'mfs-rounded',
         'mfs-shadow-card',
-        { 'is-open': isOpen(item.key), 'is-disabled': item.disabled }
+        { 'is-open': isOpen(item.key), 'is-disabled mfs-disabled': item.disabled }
       ]"
     >
       <button
         type="button"
-        class="accordion__trigger"
+        class="accordion__trigger mfs-focus-ring"
         :aria-expanded="isOpen(item.key)"
         :aria-controls="`acc-panel-${item.key}`"
         :disabled="item.disabled"
         @click="toggle(item.key)"
       >
-        <span class="accordion__title">{{ item.title }}</span>
+        <span class="accordion__title mfs-title">{{ item.title }}</span>
         <svg
           class="accordion__chevron"
           viewBox="0 0 20 20"

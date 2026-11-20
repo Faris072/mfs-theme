@@ -3,7 +3,7 @@
     <div
       v-for="(item, idx) in items"
       :key="getKey(item, idx)"
-      class="panel-menu__panel mfs-surface mfs-shadow mfs-rounded-md mfs-blur"
+      class="panel-menu__panel mfs-surface mfs-rounded-md mfs-blur"
     >
       <component
         :is="item.items?.length ? 'button' : item.to ? 'router-link' : item.href ? 'a' : 'button'"
@@ -11,7 +11,7 @@
         :href="!item.items?.length ? item.href : undefined"
         :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
         class="panel-menu__header mfs-text"
-        :class="{ 'panel-menu__header--disabled': item.disabled }"
+        :class="{ 'panel-menu__header--disabled mfs-disabled': item.disabled }"
         :aria-expanded="item.items?.length ? isExpanded(getKey(item, idx)) : undefined"
         :disabled="item.disabled"
         @click="onHeaderClick(item, idx)"
@@ -44,8 +44,8 @@
               :to="sub.to"
               :href="sub.href"
               :type="!sub.to && !sub.href ? 'button' : undefined"
-              class="panel-menu__subitem mfs-rounded-sm mfs-text-muted"
-              :class="{ 'panel-menu__subitem--disabled': sub.disabled }"
+              class="panel-menu__subitem mfs-rounded-sm mfs-text"
+              :class="{ 'panel-menu__subitem--disabled mfs-disabled': sub.disabled }"
               :disabled="sub.disabled"
               @click="onLeafClick(sub)"
             >
@@ -145,6 +145,8 @@ const onLeafClick = (sub: PanelMenuItem) => {
   gap: 10px;
   padding: 12px 14px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.94rem;
@@ -194,6 +196,8 @@ const onLeafClick = (sub: PanelMenuItem) => {
   padding: 8px 12px;
   min-height: 36px;
   border: none;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
   background: transparent;
   font-family: inherit;
   font-size: 0.88rem;

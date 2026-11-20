@@ -6,7 +6,7 @@
       'mfs-shadow',
       variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`,
       `chip--${variant}`,
-      { 'chip--clickable mfs-interactive': clickable, 'chip--active': active }
+      { 'chip--clickable mfs-interactive mfs-focus-ring': clickable, 'chip--active': active }
     ]"
     :role="clickable ? 'button' : undefined"
     :tabindex="clickable ? 0 : undefined"

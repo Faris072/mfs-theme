@@ -2,14 +2,14 @@
   <div class="org-chart" :class="{ 'org-chart--root': level === 0 }">
     <div class="org-chart__node-wrap">
       <div
-        class="org-chart__node mfs-surface mfs-rounded mfs-shadow mfs-interactive"
+        class="org-chart__node mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-focus-ring"
         tabindex="0"
         @click="$emit('node-click', value)"
         @keydown.enter.prevent="$emit('node-click', value)"
       >
         <slot name="node" :node="value" :expanded="isExpanded">
-          <div class="org-chart__label mfs-text">{{ value.label }}</div>
-          <div v-if="value.title" class="org-chart__title mfs-text-muted">{{ value.title }}</div>
+          <div class="org-chart__label mfs-title">{{ value.label }}</div>
+          <div v-if="value.title" class="org-chart__title mfs-caption">{{ value.title }}</div>
         </slot>
       </div>
 

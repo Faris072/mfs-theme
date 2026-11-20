@@ -1,5 +1,5 @@
 <template>
-  <div class="num-wrapper" :class="{ 'num-wrapper--error': !!error, 'num-wrapper--disabled': disabled }">
+  <div class="num-wrapper" :class="{ 'num-wrapper--error': !!error, 'num-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="num-label mfs-text">
       {{ label }}
       <span v-if="required" class="num-required mfs-text-danger">*</span>
@@ -33,7 +33,7 @@
           :aria-valuemax="max"
           :aria-valuenow="modelValue ?? undefined"
           role="spinbutton"
-          class="num-field"
+          class="num-field mfs-font-mono"
           @focus="handleFocus"
           @blur="handleBlur"
           @input="handleInput"
@@ -57,7 +57,7 @@
     </div>
 
     <p v-if="error" class="num-msg num-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="num-msg mfs-text-muted">{{ hint }}</p>
+    <p v-else-if="hint" class="num-msg mfs-caption">{{ hint }}</p>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="textarea-wrapper" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled': disabled }">
+  <div class="textarea-wrapper" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="textarea-label mfs-text">
       {{ label }}
       <span v-if="required" class="textarea-required mfs-text-danger">*</span>
@@ -25,10 +25,10 @@
 
     <div v-if="error || hint || showCount || maxlength !== undefined" class="textarea-footer">
       <p v-if="error" class="textarea-msg textarea-msg--error mfs-text-danger">{{ error }}</p>
-      <p v-else-if="hint" class="textarea-msg mfs-text-muted">{{ hint }}</p>
+      <p v-else-if="hint" class="textarea-msg mfs-caption">{{ hint }}</p>
       <span v-else class="textarea-spacer" />
 
-      <span v-if="showCount || maxlength !== undefined" class="textarea-count mfs-text-muted">
+      <span v-if="showCount || maxlength !== undefined" class="textarea-count mfs-caption">
         {{ currentLength }}<template v-if="maxlength !== undefined"> / {{ maxlength }}</template>
       </span>
     </div>

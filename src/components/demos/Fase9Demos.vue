@@ -229,17 +229,17 @@ const menuItems: MenuItem[] = [
   {
     label: 'Documents',
     items: [
-      { label: 'New File', icon: '📄' },
-      { label: 'Search', icon: '🔍' }
+      { label: 'New File' },
+      { label: 'Search' }
     ]
   },
   { separator: true },
   {
     label: 'Account',
     items: [
-      { label: 'Profile', icon: '👤' },
-      { label: 'Settings', icon: '⚙️' },
-      { label: 'Billing (Locked)', icon: '🔒', disabled: true }
+      { label: 'Profile' },
+      { label: 'Settings' },
+      { label: 'Billing (Locked)', disabled: true }
     ]
   }
 ]
@@ -252,32 +252,29 @@ const tieredSelected = ref('None')
 const tieredItems: TieredMenuItem[] = [
   {
     label: 'File',
-    icon: '📁',
     items: [
       {
         label: 'New',
-        icon: '✨',
         items: [
-          { label: 'Project', icon: '📦' },
-          { label: 'Component', icon: '🧩' }
+          { label: 'Project' },
+          { label: 'Component' }
         ]
       },
-      { label: 'Open Recent', icon: '🕒' },
+      { label: 'Open Recent' },
       { separator: true },
-      { label: 'Save', icon: '💾' }
+      { label: 'Save' }
     ]
   },
   {
     label: 'Edit',
-    icon: '✏️',
     items: [
-      { label: 'Undo', icon: '↩️' },
-      { label: 'Redo', icon: '↪️' }
+      { label: 'Undo' },
+      { label: 'Redo' }
     ]
   },
   { separator: true },
-  { label: 'Archive', icon: '🗄️', disabled: true },
-  { label: 'Quit', icon: '🚪' }
+  { label: 'Archive', disabled: true },
+  { label: 'Quit' }
 ]
 
 // SlideMenu state
@@ -285,28 +282,25 @@ const slideSelected = ref('None')
 const slideItems: SlideMenuItem[] = [
   {
     label: 'Workspace',
-    icon: '🗂️',
     items: [
       {
         label: 'Design System',
-        icon: '🎨',
         items: [
-          { label: 'Tokens', icon: '🎯' },
-          { label: 'Typography', icon: '🔤' }
+          { label: 'Tokens' },
+          { label: 'Typography' }
         ]
       },
-      { label: 'Components', icon: '🧩' }
+      { label: 'Components' }
     ]
   },
   {
     label: 'Team',
-    icon: '👥',
     items: [
-      { label: 'Members', icon: '👤' },
-      { label: 'Permissions', icon: '🔑' }
+      { label: 'Members' },
+      { label: 'Permissions' }
     ]
   },
-  { label: 'Billing', icon: '💳', disabled: true }
+  { label: 'Billing', disabled: true }
 ]
 
 // PanelMenu state
@@ -317,25 +311,22 @@ const panelItems: PanelMenuItem[] = [
   {
     key: 'files',
     label: 'Files',
-    icon: '📁',
     items: [
-      { label: 'New Document', icon: '📄' },
-      { label: 'Shared Drives', icon: '☁️' }
+      { label: 'New Document' },
+      { label: 'Shared Drives' }
     ]
   },
   {
     key: 'analytics',
     label: 'Analytics',
-    icon: '📊',
     items: [
-      { label: 'Traffic', icon: '📈' },
-      { label: 'Conversions', icon: '🎯' }
+      { label: 'Traffic' },
+      { label: 'Conversions' }
     ]
   },
   {
     key: 'security',
     label: 'Security',
-    icon: '🛡️',
     disabled: true
   }
 ]
@@ -352,7 +343,6 @@ const megaSelected = ref('None')
 const megaItems: MegaMenuItem[] = [
   {
     label: 'Products',
-    icon: '📦',
     columns: [
       {
         title: 'UI Kits',
@@ -373,7 +363,6 @@ const megaItems: MegaMenuItem[] = [
   },
   {
     label: 'Resources',
-    icon: '📚',
     columns: [
       {
         title: 'Learn',
@@ -384,7 +373,7 @@ const megaItems: MegaMenuItem[] = [
       }
     ]
   },
-  { label: 'Pricing', icon: '💎' }
+  { label: 'Pricing' }
 ]
 
 // Dock state
@@ -393,11 +382,11 @@ const dockPosition = ref<'bottom' | 'top' | 'left' | 'right'>('bottom')
 const dockMagnify = ref(true)
 const dockActiveIndex = ref(0)
 const dockItems = ref<DockItem[]>([
-  { label: 'Finder', icon: '🗂️', active: true },
-  { label: 'Terminal', icon: '⌨️', active: false },
-  { label: 'Browser', icon: '🌐', active: false },
-  { label: 'Music', icon: '🎵', active: false },
-  { label: 'Settings', icon: '⚙️', active: false }
+  { label: 'Finder', active: true },
+  { label: 'Terminal', active: false },
+  { label: 'Browser', active: false },
+  { label: 'Music', active: false },
+  { label: 'Settings', active: false }
 ])
 const onDockSelect = (_item: DockItem, index: number) => {
   dockActiveIndex.value = index
@@ -407,10 +396,10 @@ const onDockSelect = (_item: DockItem, index: number) => {
 // TabMenu state
 const activeTab = ref(0)
 const tabItems: TabMenuItem[] = [
-  { key: 'overview', label: 'Overview', icon: '🏠' },
-  { key: 'components', label: 'Components', icon: '🧩' },
-  { key: 'themes', label: 'Themes', icon: '🎨' },
-  { key: 'locked', label: 'Archive', icon: '🔒', disabled: true }
+  { key: 'overview', label: 'Overview' },
+  { key: 'components', label: 'Components' },
+  { key: 'themes', label: 'Themes' },
+  { key: 'locked', label: 'Archive', disabled: true }
 ]
 const tabDescriptions = [
   'Unified multi-theme dashboard summary and quick links.',

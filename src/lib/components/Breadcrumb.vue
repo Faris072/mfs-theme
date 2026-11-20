@@ -1,5 +1,5 @@
 <template>
-  <nav class="breadcrumb mfs-surface mfs-shadow mfs-pill" aria-label="Breadcrumb">
+  <nav class="breadcrumb mfs-surface mfs-pill" aria-label="Breadcrumb">
     <ol class="breadcrumb__list">
       <li
         v-for="(item, index) in items"
@@ -33,7 +33,7 @@
           <span
             v-if="index === items.length - 1 || item.disabled"
             class="breadcrumb__leaf mfs-text"
-            :class="{ 'breadcrumb__leaf--disabled': item.disabled }"
+            :class="{ 'breadcrumb__leaf--disabled mfs-disabled': item.disabled }"
             :aria-current="index === items.length - 1 ? 'page' : undefined"
           >
             {{ item.label }}
@@ -45,7 +45,7 @@
             :to="item.to"
             :href="item.href"
             :type="!item.to && !item.href ? 'button' : undefined"
-            class="breadcrumb__link"
+            class="breadcrumb__link mfs-text"
             @click="emit('navigate', item, $event)"
           >
             {{ item.label }}
@@ -87,7 +87,6 @@ const emit = defineEmits<{
   border-radius: var(--radius-pill, 9999px);
   background-color: var(--surface);
   border: 1px solid var(--border, transparent);
-  box-shadow: var(--clay-shadow);
   backdrop-filter: var(--backdrop-blur, none);
   max-width: 100%;
 }
@@ -120,7 +119,7 @@ const emit = defineEmits<{
   align-items: center;
   padding: 3px 8px;
   border-radius: var(--radius-sm, 8px);
-  color: var(--text-muted);
+  color: var(--text);
   background: transparent;
   border: none;
   font-family: inherit;

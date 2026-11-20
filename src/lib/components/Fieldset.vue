@@ -1,10 +1,10 @@
 <template>
   <fieldset :class="['fieldset', 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card', { 'is-collapsed': isCollapsed }]">
-    <legend v-if="legend || $slots.legend" class="fieldset__legend mfs-surface-subtle mfs-pill mfs-shadow">
+    <legend v-if="legend || $slots.legend" class="fieldset__legend mfs-surface-subtle mfs-pill mfs-shadow mfs-title">
       <button
         v-if="toggleable"
         type="button"
-        class="fieldset__btn mfs-text"
+        class="fieldset__btn mfs-text mfs-focus-ring"
         :aria-expanded="!isCollapsed"
         @click="toggle"
       >

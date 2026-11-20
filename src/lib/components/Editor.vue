@@ -1,5 +1,5 @@
 <template>
-  <div class="ed-wrapper mfs-surface mfs-rounded mfs-shadow-inset" :class="{ 'ed-wrapper--disabled': disabled }">
+  <div class="ed-wrapper mfs-surface mfs-rounded mfs-shadow-inset" :class="{ 'ed-wrapper--disabled mfs-disabled': disabled }">
     <div v-if="!readonly" class="ed-toolbar mfs-surface-subtle" role="toolbar" aria-label="Formatting">
       <button type="button" class="ed-btn mfs-text" title="Bold" aria-label="Bold" @mousedown.prevent="exec('bold')">
         <strong>B</strong>

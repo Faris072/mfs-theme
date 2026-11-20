@@ -324,7 +324,7 @@ interface TagItem {
 }
 
 const initialTags: TagItem[] = [
-  { label: 'Vue 3', variant: 'primary', icon: '⚡' },
+  { label: 'Vue 3', variant: 'primary' },
   { label: 'Clay', variant: 'secondary' },
   { label: 'Accessible', variant: 'success' },
   { label: 'Beta', variant: 'warning' },
@@ -435,7 +435,7 @@ const chipCode = `<template>
     @click="selected = 'Design'"
   />
   <Chip label="Vue 3" variant="primary" removable @remove="onRemove">
-    <template #prepend>⚡</template>
+    <template #prepend>•</template>
   </Chip>
 </template>`
 
