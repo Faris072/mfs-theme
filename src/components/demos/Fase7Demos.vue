@@ -1,5 +1,5 @@
 <template>
-  <div class="demo-stack">
+  <div class="mfs-stack mfs-w-full">
     <!-- AUTO COMPLETE -->
     <template v-if="activeSlug === 'auto-complete'">
       <ComponentPreview
@@ -8,7 +8,7 @@
         :code="autoCompleteCode"
         :api="autoCompleteApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <AutoComplete
             v-model="acFramework"
             label="Framework"
@@ -24,7 +24,7 @@
             loading
           />
         </div>
-        <p class="demo-muted demo-mt">
+        <p class="mfs-caption mfs-mt-3 mfs-mb-0">
           Selected: <strong>{{ acSelected || 'None' }}</strong>
         </p>
       </ComponentPreview>
@@ -38,7 +38,7 @@
         :code="cascaderCode"
         :api="cascaderApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <Cascader
             v-model="cascaderVal"
             label="Region & City"
@@ -52,7 +52,7 @@
             disabled
           />
         </div>
-        <p class="demo-muted demo-mt">
+        <p class="mfs-caption mfs-mt-3 mfs-mb-0">
           Value: <code>{{ JSON.stringify(cascaderVal) }}</code>
         </p>
       </ComponentPreview>
@@ -66,7 +66,7 @@
         :code="treeSelectCode"
         :api="treeSelectApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <TreeSelect
             v-model="treeSingle"
             label="Single Node"
@@ -92,7 +92,7 @@
         :code="knobCode"
         :api="knobApi"
       >
-        <div class="demo-row demo-row--spaced">
+        <div class="mfs-row mfs-gap-6">
           <Knob v-model="knobVolume" label="Volume" value-template="{value}%" />
           <Knob
             v-model="knobTemp"
@@ -117,13 +117,13 @@
         :code="selectButtonCode"
         :api="selectButtonApi"
       >
-        <div class="demo-col">
-          <div class="demo-field">
-            <span class="demo-label">View Mode (Single)</span>
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">View Mode (Single)</span>
             <SelectButton v-model="sbView" :options="['List', 'Grid', 'Board']" />
           </div>
-          <div class="demo-field">
-            <span class="demo-label">Text Style (Multiple)</span>
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Text Style (Multiple)</span>
             <SelectButton
               v-model="sbStyles"
               multiple
@@ -146,7 +146,7 @@
         :code="toggleButtonCode"
         :api="toggleButtonApi"
       >
-        <div class="demo-row">
+        <div class="mfs-row">
           <ToggleButton v-model="tbDark" on-label="Notifications On" off-label="Notifications Off" />
           <ToggleButton v-model="tbPin">
             <span>{{ tbPin ? 'Pinned ★' : 'Pin Item ☆' }}</span>
@@ -164,17 +164,17 @@
         :code="inputOtpCode"
         :api="inputOtpApi"
       >
-        <div class="demo-col">
-          <div class="demo-field">
-            <span class="demo-label">4-Digit Code</span>
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">4-Digit Code</span>
             <InputOtp v-model="otpCode" :length="4" @complete="(v) => (otpCompleted = v)" />
-            <span class="demo-muted">
+            <span class="mfs-caption mfs-m-0">
               Value: <code>{{ otpCode || '—' }}</code>
               <template v-if="otpCompleted"> · Completed: <strong>{{ otpCompleted }}</strong></template>
             </span>
           </div>
-          <div class="demo-field">
-            <span class="demo-label">6-Digit Masked PIN</span>
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">6-Digit Masked PIN</span>
             <InputOtp v-model="otpPin" :length="6" mask />
           </div>
         </div>
@@ -189,7 +189,7 @@
         :code="inputMaskCode"
         :api="inputMaskApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <InputMask
             v-model="maskPhone"
             label="Phone Number"
@@ -220,16 +220,16 @@
         :code="inputGroupCode"
         :api="inputGroupApi"
       >
-        <div class="demo-col">
+        <div class="mfs-stack mfs-w-full">
           <InputGroup>
             <span class="ig-addon">https://</span>
-            <input v-model="igDomain" type="text" class="demo-raw-input" placeholder="yourdomain.com" />
+            <input v-model="igDomain" type="text" class="mfs-flex-1 mfs-px-3 mfs-py-2 mfs-text-base mfs-text demo-raw-input" placeholder="yourdomain.com" />
             <span class="ig-addon">.app</span>
           </InputGroup>
 
           <InputGroup>
             <span class="ig-addon">$</span>
-            <input v-model="igAmount" type="text" class="demo-raw-input" placeholder="0.00" />
+            <input v-model="igAmount" type="text" class="mfs-flex-1 mfs-px-3 mfs-py-2 mfs-text-base mfs-text demo-raw-input" placeholder="0.00" />
             <Button size="sm">Pay</Button>
           </InputGroup>
         </div>
@@ -244,13 +244,13 @@
         :code="listboxCode"
         :api="listboxApi"
       >
-        <div class="demo-grid">
-          <div class="demo-field">
-            <span class="demo-label">Single with Filter</span>
+        <div class="mfs-grid mfs-w-full">
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Single with Filter</span>
             <Listbox v-model="lbCity" :options="lbCities" filter />
           </div>
-          <div class="demo-field">
-            <span class="demo-label">Multiple Selection</span>
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Multiple Selection</span>
             <Listbox v-model="lbTags" :options="lbTagOptions" multiple />
           </div>
         </div>
@@ -265,12 +265,12 @@
         :code="floatLabelCode"
         :api="floatLabelApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <FloatLabel label="Username" for-id="fl-user" :active="!!flUser">
-            <input id="fl-user" v-model="flUser" type="text" placeholder=" " class="demo-fl-input" />
+            <input id="fl-user" v-model="flUser" type="text" placeholder=" " class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
           </FloatLabel>
           <FloatLabel label="Email Address" for-id="fl-email" :active="!!flEmail">
-            <input id="fl-email" v-model="flEmail" type="email" placeholder=" " class="demo-fl-input" />
+            <input id="fl-email" v-model="flEmail" type="email" placeholder=" " class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
           </FloatLabel>
         </div>
       </ComponentPreview>
@@ -284,7 +284,7 @@
         :code="iftaLabelCode"
         :api="iftaLabelApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <IftaLabel label="Project Name" for-id="ifta-project">
             <input id="ifta-project" v-model="iftaProject" type="text" placeholder="mfs-theme" />
           </IftaLabel>
@@ -307,9 +307,9 @@
         :code="editorCode"
         :api="editorApi"
       >
-        <div class="demo-col">
+        <div class="mfs-stack mfs-w-full">
           <Editor v-model="editorHtml" placeholder="Write release notes..." min-height="130px" />
-          <p class="demo-muted">
+          <p class="mfs-caption mfs-m-0">
             HTML Output: <code>{{ editorHtml }}</code>
           </p>
         </div>
@@ -324,14 +324,14 @@
         :code="iconFieldCode"
         :api="iconFieldApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <IconField icon-position="left" fluid>
             <template #icon><Search :size="16" /></template>
-            <input v-model="iconFieldSearch" type="text" placeholder="Search components..." class="demo-fl-input" />
+            <input v-model="iconFieldSearch" type="text" placeholder="Search components..." class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
           </IconField>
           <IconField icon-position="right" fluid>
             <template #icon><Mail :size="16" /></template>
-            <input v-model="iconFieldEmail" type="email" placeholder="you@example.com" class="demo-fl-input" />
+            <input v-model="iconFieldEmail" type="email" placeholder="you@example.com" class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
           </IconField>
         </div>
       </ComponentPreview>
@@ -856,85 +856,18 @@ const iconFieldApi: { props: ApiRow[]; slots: ApiRow[] } = {
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 100%;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  max-width: 100%;
-}
-
-.demo-row--spaced {
-  gap: 24px;
-}
-
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-.demo-col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-
-.demo-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.demo-label {
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.demo-muted {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.demo-mt {
-  margin-top: 10px;
-}
-
 .demo-raw-input {
-  flex: 1;
   min-width: 0;
   background: transparent;
   border: none;
   outline: none;
-  padding: 10px 12px;
   font-family: inherit;
-  font-size: 0.95rem;
-  color: var(--text);
 }
 
 .demo-fl-input {
-  width: 100%;
   box-sizing: border-box;
-  padding: 12px 14px;
-  border-radius: var(--radius, 14px);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
   font-family: inherit;
-  font-size: 0.95rem;
   outline: none;
-  box-shadow: var(--input-shadow);
 }
 
 .demo-fl-input:focus {

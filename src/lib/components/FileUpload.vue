@@ -1,7 +1,7 @@
 <template>
-  <div class="mfs-upload mfs-surface mfs-rounded mfs-shadow-card mfs-blur">
+  <div class="mfs-upload mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-p-4 mfs-flex mfs-flex-col mfs-gap-3">
     <div
-      class="mfs-upload__dropzone mfs-surface-subtle mfs-rounded mfs-focus-ring"
+      class="mfs-upload__dropzone mfs-surface-subtle mfs-rounded mfs-focus-ring mfs-relative mfs-text-center mfs-cursor-pointer"
       :class="{
         'mfs-upload__dropzone--dragging': isDragging,
         'mfs-upload__dropzone--disabled mfs-disabled': disabled
@@ -26,39 +26,39 @@
         @change="onFileChange"
       />
 
-      <span class="mfs-upload__icon" aria-hidden="true">
+      <span class="mfs-upload__icon mfs-inline-flex mfs-text-primary mfs-mb-2" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
           <polyline points="17 8 12 3 7 8" />
           <line x1="12" x2="12" y1="3" y2="15" />
         </svg>
       </span>
-      <p class="mfs-upload__title mfs-title">
-        Drag &amp; drop files here or <span class="mfs-upload__link">browse</span>
+      <p class="mfs-upload__title mfs-title mfs-m-0 mfs-font-semibold">
+        Drag &amp; drop files here or <span class="mfs-upload__link mfs-text-primary">browse</span>
       </p>
-      <p v-if="accept || maxFileSize" class="mfs-upload__hint mfs-caption">
+      <p v-if="accept || maxFileSize" class="mfs-upload__hint mfs-caption mfs-m-0">
         <span v-if="accept">Accepted: {{ accept }}</span>
         <span v-if="accept && maxFileSize"> · </span>
         <span v-if="maxFileSize">Max: {{ formatSize(maxFileSize) }}</span>
       </p>
     </div>
 
-    <div v-if="typeof progress === 'number' && progress > 0" class="mfs-upload__progress-wrap">
-      <div class="mfs-upload__progress-track mfs-pill mfs-shadow-inset">
-        <div class="mfs-upload__progress-bar mfs-pill" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
+    <div v-if="typeof progress === 'number' && progress > 0" class="mfs-upload__progress-wrap mfs-flex mfs-items-center mfs-gap-2-5">
+      <div class="mfs-upload__progress-track mfs-pill mfs-shadow-inset mfs-flex-1 mfs-overflow-hidden">
+        <div class="mfs-upload__progress-bar mfs-pill mfs-h-full mfs-bg-primary" :style="{ width: `${Math.min(100, Math.max(0, progress))}%` }" />
       </div>
-      <span class="mfs-upload__progress-text mfs-text-muted">{{ Math.round(progress) }}%</span>
+      <span class="mfs-upload__progress-text mfs-text-muted mfs-font-bold">{{ Math.round(progress) }}%</span>
     </div>
 
-    <ul v-if="files.length > 0" class="mfs-upload__list">
-      <li v-for="(file, idx) in files" :key="`${file.name}-${file.size}-${idx}`" class="mfs-upload__item mfs-surface-subtle mfs-rounded-sm">
-        <div class="mfs-upload__file-info">
-          <span class="mfs-upload__file-name mfs-text">{{ file.name }}</span>
+    <ul v-if="files.length > 0" class="mfs-upload__list mfs-m-0 mfs-p-0 mfs-flex mfs-flex-col mfs-gap-2">
+      <li v-for="(file, idx) in files" :key="`${file.name}-${file.size}-${idx}`" class="mfs-upload__item mfs-surface-subtle mfs-rounded-sm mfs-flex mfs-items-center mfs-justify-between mfs-gap-2-5 mfs-py-2 mfs-px-3">
+        <div class="mfs-upload__file-info mfs-flex mfs-flex-col mfs-min-w-0">
+          <span class="mfs-upload__file-name mfs-text mfs-font-semibold mfs-truncate">{{ file.name }}</span>
           <span class="mfs-upload__file-size mfs-caption">{{ formatSize(file.size) }}</span>
         </div>
         <button
           type="button"
-          class="mfs-upload__remove mfs-pill mfs-focus-ring"
+          class="mfs-upload__remove mfs-pill mfs-focus-ring mfs-shrink-0 mfs-border-none mfs-bg-transparent mfs-text-muted mfs-inline-flex mfs-items-center mfs-justify-center mfs-cursor-pointer"
           aria-label="Remove file"
           @click="removeFile(idx)"
         >
@@ -165,19 +165,9 @@ const removeFile = (idx: number) => {
 </script>
 
 <style scoped>
-.mfs-upload {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .mfs-upload__dropzone {
-  position: relative;
   padding: 26px 16px;
-  text-align: center;
   border: 2px dashed var(--border, rgba(100, 116, 139, 0.3));
-  cursor: pointer;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -196,11 +186,8 @@ const removeFile = (idx: number) => {
 }
 
 .mfs-upload__icon {
-  display: inline-flex;
   width: 34px;
   height: 34px;
-  color: var(--primary);
-  margin-bottom: 8px;
 }
 
 .mfs-upload__icon svg {
@@ -209,74 +196,37 @@ const removeFile = (idx: number) => {
 }
 
 .mfs-upload__title {
-  margin: 0;
   font-size: 0.92rem;
-  font-weight: 600;
 }
 
 .mfs-upload__link {
-  color: var(--primary);
   text-decoration: underline;
 }
 
 .mfs-upload__hint {
-  margin: 4px 0 0;
+  margin-top: 4px;
   font-size: 0.78rem;
 }
 
-.mfs-upload__progress-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .mfs-upload__progress-track {
-  flex: 1;
   height: 8px;
   background-color: var(--surface-subtle);
-  overflow: hidden;
 }
 
 .mfs-upload__progress-bar {
-  height: 100%;
-  background-color: var(--primary);
   transition: width 0.25s ease;
 }
 
 .mfs-upload__progress-text {
   font-size: 0.78rem;
-  font-weight: 700;
 }
 
 .mfs-upload__list {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mfs-upload__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 8px 12px;
-}
-
-.mfs-upload__file-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
 }
 
 .mfs-upload__file-name {
   font-size: 0.86rem;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .mfs-upload__file-size {
@@ -284,16 +234,8 @@ const removeFile = (idx: number) => {
 }
 
 .mfs-upload__remove {
-  flex-shrink: 0;
   width: 26px;
   height: 26px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
 }
 
 .mfs-upload__remove svg {

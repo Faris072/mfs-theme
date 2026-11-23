@@ -47,7 +47,7 @@
 
           <ul
             v-if="item.items?.length && openLevel1 === idx"
-            class="tiered-menu__submenu mfs-surface mfs-shadow-card mfs-rounded-md mfs-blur"
+            class="tiered-menu__submenu mfs-surface mfs-overlay mfs-shadow-card mfs-rounded-md mfs-blur"
             role="menu"
           >
             <template v-for="(sub, sIdx) in item.items" :key="sIdx">
@@ -96,7 +96,7 @@
 
                 <ul
                   v-if="sub.items?.length && openLevel2 === sIdx"
-                  class="tiered-menu__submenu mfs-surface mfs-shadow-card mfs-rounded-md mfs-blur"
+                  class="tiered-menu__submenu mfs-surface mfs-overlay mfs-shadow-card mfs-rounded-md mfs-blur"
                   role="menu"
                 >
                   <template v-for="(leaf, lIdx) in sub.items" :key="lIdx">
@@ -256,7 +256,4 @@ const onClickItem = (item: TieredMenuItem, level: number, idx: number) => {
   }
 }
 
-[data-theme="glass"] .tiered-menu__submenu {
-  background-color: rgba(15, 23, 42, 0.88);
-}
 </style>

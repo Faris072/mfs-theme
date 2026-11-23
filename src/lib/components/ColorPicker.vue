@@ -1,33 +1,33 @@
 <template>
-  <div ref="rootRef" class="cp-wrapper" :class="{ 'cp-wrapper--disabled mfs-disabled': disabled }">
-    <span v-if="label" class="cp-label mfs-text">{{ label }}</span>
+  <div ref="rootRef" class="cp-wrapper mfs-inline-flex mfs-flex-col mfs-gap-1-5" :class="{ 'cp-wrapper--disabled mfs-disabled': disabled }">
+    <span v-if="label" class="cp-label mfs-text mfs-text-sm mfs-font-semibold">{{ label }}</span>
 
-    <div class="cp-container">
+    <div class="cp-container mfs-relative">
       <button
         type="button"
-        class="cp-trigger mfs-surface mfs-rounded mfs-shadow mfs-interactive"
+        class="cp-trigger mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-font-semibold"
         :disabled="disabled"
         :aria-expanded="isOpen"
         aria-label="Pick a color"
         @click="isOpen = !isOpen"
       >
-        <span class="cp-swatch" :style="{ backgroundColor: modelValue }" />
+        <span class="cp-swatch mfs-rounded-full" :style="{ backgroundColor: modelValue }" />
         <span class="cp-hex mfs-font-mono">{{ modelValue.toUpperCase() }}</span>
       </button>
 
       <Transition name="cp-pop">
-        <div v-if="isOpen" class="cp-popover mfs-surface mfs-rounded mfs-blur mfs-shadow" role="dialog" aria-label="Color picker">
-          <div class="cp-native-row">
+        <div v-if="isOpen" class="cp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-absolute mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2-5" role="dialog" aria-label="Color picker">
+          <div class="cp-native-row mfs-flex mfs-items-center mfs-gap-2">
             <input
               type="color"
-              class="cp-native"
+              class="cp-native mfs-p-0 mfs-border-none mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer"
               :value="normalizedHex"
               aria-label="Color palette"
               @input="onHexInput(($event.target as HTMLInputElement).value)"
             />
             <input
               type="text"
-              class="cp-input mfs-inset mfs-font-mono"
+              class="cp-input mfs-inset mfs-font-mono mfs-flex-1 mfs-min-w-0 mfs-rounded-sm mfs-text-sm"
               :value="modelValue"
               maxlength="7"
               aria-label="Hex color"
@@ -35,27 +35,27 @@
             />
           </div>
 
-          <div class="cp-rgb">
-            <label class="cp-rgb-item">
+          <div class="cp-rgb mfs-grid mfs-grid-cols-3 mfs-gap-1-5">
+            <label class="cp-rgb-item mfs-flex mfs-flex-col mfs-font-semibold mfs-text-muted">
               <span>R</span>
               <input type="number" min="0" max="255" :value="rgb.r" @input="onRgbChange('r', $event)" />
             </label>
-            <label class="cp-rgb-item">
+            <label class="cp-rgb-item mfs-flex mfs-flex-col mfs-font-semibold mfs-text-muted">
               <span>G</span>
               <input type="number" min="0" max="255" :value="rgb.g" @input="onRgbChange('g', $event)" />
             </label>
-            <label class="cp-rgb-item">
+            <label class="cp-rgb-item mfs-flex mfs-flex-col mfs-font-semibold mfs-text-muted">
               <span>B</span>
               <input type="number" min="0" max="255" :value="rgb.b" @input="onRgbChange('b', $event)" />
             </label>
           </div>
 
-          <div v-if="presets.length" class="cp-presets">
+          <div v-if="presets.length" class="cp-presets mfs-grid mfs-grid-cols-4 mfs-gap-2">
             <button
               v-for="color in presets"
               :key="color"
               type="button"
-              class="cp-preset"
+              class="cp-preset mfs-rounded-sm mfs-cursor-pointer"
               :class="{ 'cp-preset--active': color.toLowerCase() === normalizedHex.toLowerCase() }"
               :style="{ backgroundColor: color }"
               :aria-label="`Select color ${color}`"
@@ -144,48 +144,15 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.cp-wrapper {
-  display: inline-flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.cp-wrapper--disabled {
-  opacity: 0.55;
-  pointer-events: none;
-}
-
-.cp-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.cp-container {
-  position: relative;
-}
-
 .cp-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
   padding: 8px 14px;
-  border-radius: var(--radius, 14px);
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--clay-shadow);
-  color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .cp-swatch {
   width: 22px;
   height: 22px;
-  border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.85);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 }
@@ -195,63 +162,26 @@ onBeforeUnmount(() => {
 }
 
 .cp-popover {
-  position: absolute;
   top: calc(100% + 8px);
   left: 0;
   z-index: 45;
   width: 236px;
-  padding: 12px;
-  border-radius: var(--radius, 16px);
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
   box-shadow: var(--clay-shadow-hover);
-  backdrop-filter: var(--backdrop-blur, blur(14px));
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cp-native-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .cp-native {
   width: 40px;
   height: 36px;
-  padding: 0;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  background: transparent;
-  cursor: pointer;
 }
 
 .cp-input {
-  flex: 1;
-  min-width: 0;
   padding: 7px 10px;
-  border-radius: var(--radius-sm, 8px);
-  background-color: var(--surface-subtle, rgba(148, 163, 184, 0.12));
-  border: 1px solid var(--border, transparent);
-  color: var(--text);
   font-family: inherit;
-  font-size: 0.875rem;
-}
-
-.cp-rgb {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
 }
 
 .cp-rgb-item {
-  display: flex;
-  flex-direction: column;
   gap: 2px;
   font-size: 0.72rem;
-  font-weight: 600;
-  color: var(--text-muted);
 }
 
 .cp-rgb-item input {
@@ -266,17 +196,9 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
-.cp-presets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-}
-
 .cp-preset {
   height: 26px;
-  border-radius: var(--radius-sm, 8px);
   border: 2px solid transparent;
-  cursor: pointer;
   transition: transform 0.15s ease;
 }
 

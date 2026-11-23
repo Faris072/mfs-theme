@@ -1,14 +1,14 @@
 <template>
-  <div class="num-wrapper" :class="{ 'num-wrapper--error': !!error, 'num-wrapper--disabled mfs-disabled': disabled }">
-    <label v-if="label" :for="inputId" class="num-label mfs-text">
+  <div class="num-wrapper mfs-flex mfs-flex-col mfs-gap-1-5 mfs-w-full" :class="{ 'num-wrapper--error': !!error, 'num-wrapper--disabled mfs-disabled': disabled }">
+    <label v-if="label" :for="inputId" class="num-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
       <span v-if="required" class="num-required mfs-text-danger">*</span>
     </label>
 
-    <div class="num-box mfs-surface mfs-rounded mfs-shadow-inset">
+    <div class="num-box mfs-surface mfs-rounded mfs-shadow-inset mfs-flex mfs-items-center mfs-gap-1-5">
       <button
         type="button"
-        class="num-btn mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-interactive"
+        class="num-btn mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-interactive mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0 mfs-border-none mfs-text"
         aria-label="Decrease value"
         :disabled="disabled || readonly || isAtMin"
         @click="stepBy(-1)"
@@ -18,8 +18,8 @@
         </svg>
       </button>
 
-      <div class="num-input-area">
-        <span v-if="prefix" class="num-prefix mfs-text-muted">{{ prefix }}</span>
+      <div class="num-input-area mfs-flex-1 mfs-flex mfs-items-center mfs-gap-1 mfs-min-w-0 mfs-px-1">
+        <span v-if="prefix" class="num-prefix mfs-text-muted mfs-font-semibold mfs-select-none">{{ prefix }}</span>
         <input
           :id="inputId"
           type="text"
@@ -33,7 +33,7 @@
           :aria-valuemax="max"
           :aria-valuenow="modelValue ?? undefined"
           role="spinbutton"
-          class="num-field mfs-font-mono"
+          class="num-field mfs-font-mono mfs-w-full mfs-bg-transparent mfs-border-none mfs-outline-none mfs-text-center mfs-text mfs-py-2"
           @focus="handleFocus"
           @blur="handleBlur"
           @input="handleInput"
@@ -44,7 +44,7 @@
 
       <button
         type="button"
-        class="num-btn mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-interactive"
+        class="num-btn mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-interactive mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0 mfs-border-none mfs-text"
         aria-label="Increase value"
         :disabled="disabled || readonly || isAtMax"
         @click="stepBy(1)"
@@ -56,8 +56,8 @@
       </button>
     </div>
 
-    <p v-if="error" class="num-msg num-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="num-msg mfs-caption">{{ hint }}</p>
+    <p v-if="error" class="num-msg num-msg--error mfs-text-danger mfs-font-medium mfs-m-0">{{ error }}</p>
+    <p v-else-if="hint" class="num-msg mfs-caption mfs-m-0">{{ hint }}</p>
   </div>
 </template>
 
@@ -165,37 +165,9 @@ const stepBy = (dir: 1 | -1) => {
 </script>
 
 <style scoped>
-.num-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.num-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.num-required {
-  color: var(--danger);
-}
-
 .num-box {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
-  box-shadow: var(--input-shadow);
   padding: 4px 6px;
   transition: all 0.25s ease;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .num-box:focus-within {
@@ -214,18 +186,8 @@ const stepBy = (dir: 1 | -1) => {
 }
 
 .num-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 34px;
   height: 34px;
-  flex-shrink: 0;
-  border: none;
-  border-radius: var(--radius-sm, 10px);
-  background-color: var(--surface-subtle, var(--surface));
-  color: var(--text);
-  cursor: pointer;
-  box-shadow: var(--clay-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 }
 
@@ -245,33 +207,14 @@ const stepBy = (dir: 1 | -1) => {
   box-shadow: none;
 }
 
-.num-input-area {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 0;
-  padding: 0 4px;
-}
-
 .num-prefix {
   font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  user-select: none;
 }
 
 .num-field {
-  width: 100%;
-  background: transparent;
-  border: none;
-  outline: none;
   font-family: inherit;
   font-size: 0.95rem;
   font-variant-numeric: tabular-nums;
-  text-align: center;
-  color: var(--text);
-  padding: 8px 0;
 }
 
 .num-field::placeholder {
@@ -281,13 +224,6 @@ const stepBy = (dir: 1 | -1) => {
 
 .num-msg {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.num-msg--error {
-  color: var(--danger);
-  font-weight: 500;
 }
 
 [data-theme="clay"] .num-btn {

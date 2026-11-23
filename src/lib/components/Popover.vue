@@ -12,7 +12,7 @@
     <Transition name="mfs-popover">
       <div
         v-if="isOpen"
-        class="mfs-popover mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+        class="mfs-popover mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
         :class="[`mfs-popover--${placement}`]"
         role="dialog"
       >
@@ -137,12 +137,6 @@ onBeforeUnmount(() => {
 }
 
 /* Theme Overrides */
-[data-theme="glass"] .mfs-popover {
-  background-color: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(18px);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
 [data-theme="neo"] .mfs-popover {
   border: none;
   box-shadow: var(--clay-shadow);

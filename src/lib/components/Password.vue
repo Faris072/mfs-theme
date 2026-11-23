@@ -1,11 +1,11 @@
 <template>
-  <div class="pwd-wrapper" :class="{ 'pwd-wrapper--error': !!error, 'pwd-wrapper--disabled mfs-disabled': disabled }">
-    <label v-if="label" :for="inputId" class="pwd-label mfs-text">
+  <div class="pwd-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'pwd-wrapper--error': !!error, 'pwd-wrapper--disabled mfs-disabled': disabled }">
+    <label v-if="label" :for="inputId" class="pwd-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
-      <span v-if="required" class="pwd-required mfs-text-danger">*</span>
+      <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="pwd-box mfs-surface mfs-rounded mfs-shadow-inset">
+    <div class="pwd-box mfs-flex mfs-items-center mfs-surface mfs-rounded mfs-shadow-inset">
       <input
         :id="inputId"
         :type="visible ? 'text' : 'password'"
@@ -14,7 +14,7 @@
         :disabled="disabled"
         :readonly="readonly"
         :aria-invalid="!!error"
-        class="pwd-field"
+        class="pwd-field mfs-flex-1 mfs-border-none mfs-text"
         @input="handleInput"
         @focus="$emit('focus', $event)"
         @blur="$emit('blur', $event)"
@@ -22,7 +22,7 @@
 
       <button
         type="button"
-        class="pwd-toggle"
+        class="pwd-toggle mfs-inline-flex mfs-items-center mfs-justify-center mfs-border-none mfs-rounded-sm mfs-text-muted"
         :aria-label="visible ? 'Hide password' : 'Show password'"
         :aria-pressed="visible"
         :disabled="disabled"
@@ -40,17 +40,17 @@
       </button>
     </div>
 
-    <div v-if="showStrength && modelValue" class="pwd-strength" aria-live="polite">
-      <div class="pwd-bars">
+    <div v-if="showStrength && modelValue" class="pwd-strength mfs-flex mfs-items-center mfs-gap-2" aria-live="polite">
+      <div class="pwd-bars mfs-flex-1">
         <span
           v-for="idx in 4"
           :key="idx"
-          class="pwd-bar"
+          class="pwd-bar mfs-pill"
           :class="{ 'pwd-bar--active': idx <= strength.score }"
           :style="{ backgroundColor: idx <= strength.score ? strength.color : undefined }"
         />
       </div>
-      <span class="pwd-strength-label" :style="{ color: strength.color }">{{ strength.label }}</span>
+      <span class="pwd-strength-label mfs-text-xs mfs-font-semibold mfs-text-right" :style="{ color: strength.color }">{{ strength.label }}</span>
     </div>
 
     <p v-if="error" class="pwd-msg pwd-msg--error mfs-text-danger">{{ error }}</p>
@@ -119,35 +119,12 @@ const strength = computed(() => {
 
 <style scoped>
 .pwd-wrapper {
-  display: flex;
-  flex-direction: column;
   gap: 6px;
-  width: 100%;
-}
-
-.pwd-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.pwd-required {
-  color: var(--danger);
 }
 
 .pwd-box {
-  display: flex;
-  align-items: center;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
-  box-shadow: var(--input-shadow);
   padding: 2px 8px 2px 14px;
   transition: all 0.25s ease;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .pwd-box:focus-within {
@@ -166,13 +143,10 @@ const strength = computed(() => {
 }
 
 .pwd-field {
-  flex: 1;
   background: transparent;
-  border: none;
   outline: none;
   font-family: inherit;
   font-size: 0.95rem;
-  color: var(--text);
   padding: 10px 4px;
   min-width: 0;
 }
@@ -183,15 +157,9 @@ const strength = computed(() => {
 }
 
 .pwd-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 34px;
   height: 34px;
-  border: none;
-  border-radius: var(--radius-sm, 10px);
   background: transparent;
-  color: var(--text-muted);
   cursor: pointer;
   transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -205,14 +173,7 @@ const strength = computed(() => {
   cursor: not-allowed;
 }
 
-.pwd-strength {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .pwd-bars {
-  flex: 1;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
@@ -220,16 +181,12 @@ const strength = computed(() => {
 
 .pwd-bar {
   height: 5px;
-  border-radius: var(--radius-pill, 9999px);
   background-color: var(--surface-subtle, rgba(148, 163, 184, 0.3));
   transition: background-color 0.25s ease;
 }
 
 .pwd-strength-label {
-  font-size: 0.75rem;
-  font-weight: 600;
   min-width: 44px;
-  text-align: right;
 }
 
 .pwd-msg {

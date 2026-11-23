@@ -1,11 +1,11 @@
 <template>
-  <div class="textarea-wrapper" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled mfs-disabled': disabled }">
-    <label v-if="label" :for="inputId" class="textarea-label mfs-text">
+  <div class="textarea-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled mfs-disabled': disabled }">
+    <label v-if="label" :for="inputId" class="textarea-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
-      <span v-if="required" class="textarea-required mfs-text-danger">*</span>
+      <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="textarea-box mfs-surface mfs-rounded mfs-shadow-inset">
+    <div class="textarea-box mfs-flex mfs-surface mfs-rounded mfs-shadow-inset">
       <textarea
         ref="textareaRef"
         :id="inputId"
@@ -16,17 +16,17 @@
         :rows="rows"
         :maxlength="maxlength"
         :aria-invalid="!!error"
-        class="textarea-field"
+        class="textarea-field mfs-flex-1 mfs-w-full mfs-border-none mfs-text"
         @input="handleInput"
         @focus="$emit('focus', $event)"
         @blur="$emit('blur', $event)"
       />
     </div>
 
-    <div v-if="error || hint || showCount || maxlength !== undefined" class="textarea-footer">
+    <div v-if="error || hint || showCount || maxlength !== undefined" class="textarea-footer mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
       <p v-if="error" class="textarea-msg textarea-msg--error mfs-text-danger">{{ error }}</p>
       <p v-else-if="hint" class="textarea-msg mfs-caption">{{ hint }}</p>
-      <span v-else class="textarea-spacer" />
+      <span v-else class="textarea-spacer mfs-flex-1" />
 
       <span v-if="showCount || maxlength !== undefined" class="textarea-count mfs-caption">
         {{ currentLength }}<template v-if="maxlength !== undefined"> / {{ maxlength }}</template>
@@ -96,34 +96,12 @@ onMounted(resize)
 
 <style scoped>
 .textarea-wrapper {
-  display: flex;
-  flex-direction: column;
   gap: 6px;
-  width: 100%;
-}
-
-.textarea-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.textarea-required {
-  color: var(--danger);
 }
 
 .textarea-box {
-  display: flex;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
-  box-shadow: var(--input-shadow);
   padding: 10px 14px;
   transition: all 0.25s ease;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .textarea-box:focus-within {
@@ -142,17 +120,13 @@ onMounted(resize)
 }
 
 .textarea-field {
-  flex: 1;
-  width: 100%;
   background: transparent;
-  border: none;
   outline: none;
   resize: none;
   overflow-y: hidden;
   font-family: inherit;
   font-size: 0.95rem;
   line-height: 1.5;
-  color: var(--text);
 }
 
 .textarea-field::placeholder {
@@ -162,17 +136,6 @@ onMounted(resize)
 
 .textarea-field:disabled {
   cursor: not-allowed;
-}
-
-.textarea-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.textarea-spacer {
-  flex: 1;
 }
 
 .textarea-msg {
@@ -188,7 +151,6 @@ onMounted(resize)
 
 .textarea-count {
   font-size: 0.75rem;
-  color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
 

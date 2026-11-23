@@ -1,5 +1,5 @@
 <template>
-  <div class="accordion">
+  <div class="accordion mfs-flex mfs-flex-col mfs-gap-3 mfs-w-full">
     <slot v-if="!items.length" />
     <div
       v-for="item in items"
@@ -9,12 +9,13 @@
         'mfs-surface',
         'mfs-rounded',
         'mfs-shadow-card',
+        'mfs-overflow-hidden',
         { 'is-open': isOpen(item.key), 'is-disabled mfs-disabled': item.disabled }
       ]"
     >
       <button
         type="button"
-        class="accordion__trigger mfs-focus-ring"
+        class="accordion__trigger mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-none mfs-font-semibold mfs-focus-ring"
         :aria-expanded="isOpen(item.key)"
         :aria-controls="`acc-panel-${item.key}`"
         :disabled="item.disabled"
@@ -22,7 +23,7 @@
       >
         <span class="accordion__title mfs-title">{{ item.title }}</span>
         <svg
-          class="accordion__chevron"
+          class="accordion__chevron mfs-text-muted"
           viewBox="0 0 20 20"
           width="18"
           height="18"
@@ -44,7 +45,7 @@
         class="accordion__panel"
         role="region"
       >
-        <div class="accordion__body">
+        <div class="accordion__body mfs-overflow-hidden">
           <slot name="item" :item="item" :open="isOpen(item.key)">
             <p v-if="item.content" class="accordion__text mfs-text-muted">{{ item.content }}</p>
           </slot>
@@ -124,40 +125,15 @@ const toggle = (key: Key) => {
 </script>
 
 <style scoped>
-.accordion {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
 .accordion__item {
-  background-color: var(--surface);
-  color: var(--text);
-  border-radius: var(--radius, 18px);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  overflow: hidden;
   transition: box-shadow 0.2s ease;
 }
 
-.accordion__item.is-disabled {
-  opacity: 0.55;
-}
-
 .accordion__trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   padding: 16px 20px;
   background: transparent;
-  border: none;
   color: inherit;
   font-size: 1rem;
-  font-weight: 600;
   text-align: left;
   cursor: pointer;
 }
@@ -168,7 +144,6 @@ const toggle = (key: Key) => {
 
 .accordion__chevron {
   flex-shrink: 0;
-  color: var(--text-muted);
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -187,14 +162,9 @@ const toggle = (key: Key) => {
   grid-template-rows: 1fr;
 }
 
-.accordion__body {
-  overflow: hidden;
-}
-
 .accordion__text {
   margin: 0;
   padding: 0 20px 18px;
-  color: var(--text-muted);
   font-size: 0.94rem;
   line-height: 1.55;
 }

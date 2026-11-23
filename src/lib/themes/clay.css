@@ -11,17 +11,30 @@
   --surface: #ffffff;
   --surface-subtle: #f3f1fd;
   --border: rgba(139, 92, 246, 0.08);
+  --border-width: 1px;
   --radius: 22px;
   --radius-pill: 9999px;
+  --backdrop-blur: none;
 
   /* Colors */
-  --primary: #8b5cf6;
-  --primary-hover: #7c3aed;
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
   --primary-text: #ffffff;
   --secondary: #06b6d4;
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #f43f5e;
+
+  /* Typography & Layout */
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --grid-gap: 16px;
+  --glow: none;
+  --bevel-light: rgba(255, 255, 255, 0.9);
+  --bevel-dark: rgba(109, 40, 217, 0.16);
+  --shadow:
+    4px 8px 16px rgba(109, 40, 217, 0.12),
+    inset -2px -2px 5px rgba(109, 40, 217, 0.16),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.9);
 
   /* Clay Shadows (Exterior soft blur + Interior 3D bevel) */
   --clay-shadow: 

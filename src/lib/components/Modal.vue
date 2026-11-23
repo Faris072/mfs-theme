@@ -1,19 +1,19 @@
 <template>
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div v-if="modelValue" class="modal-backdrop mfs-backdrop" @click="handleBackdropClick">
+      <div v-if="modelValue" class="modal-backdrop mfs-backdrop mfs-flex mfs-items-center mfs-justify-center mfs-p-4" @click="handleBackdropClick">
         <div
-          class="modal-dialog mfs-card"
+          class="modal-dialog mfs-card mfs-overlay mfs-w-full mfs-flex mfs-flex-col mfs-overflow-hidden mfs-p-0"
           :class="[`modal--${size}`]"
           role="dialog"
           aria-modal="true"
           @click.stop
         >
-          <div v-if="title || $slots.header" class="modal-header">
+          <div v-if="title || $slots.header" class="modal-header mfs-flex mfs-items-center mfs-justify-between">
             <slot name="header">
               <h3 class="modal-title mfs-title">{{ title }}</h3>
             </slot>
-            <button class="modal-close mfs-text-muted mfs-focus-ring" @click="close" aria-label="Close modal">
+            <button class="modal-close mfs-flex mfs-items-center mfs-justify-center mfs-border-none mfs-text-muted mfs-focus-ring" @click="close" aria-label="Close modal">
               ✕
             </button>
           </div>
@@ -22,7 +22,7 @@
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="modal-footer">
+          <div v-if="$slots.footer" class="modal-footer mfs-flex mfs-items-center mfs-justify-end mfs-gap-3">
             <slot name="footer" />
           </div>
         </div>
@@ -85,19 +85,10 @@ watch(
   z-index: 9999;
   background-color: rgba(0, 0, 0, 0.45);
   backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
 }
 
 .modal-dialog {
-  padding: 0;
-  width: 100%;
   max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -106,9 +97,6 @@ watch(
 .modal--lg { max-width: 780px; }
 
 .modal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 20px 24px 14px;
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.05));
 }
@@ -116,20 +104,15 @@ watch(
 .modal-title {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 700;
 }
 
 .modal-close {
   background: var(--surface-subtle);
-  border: none;
   font-size: 1rem;
   cursor: pointer;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all 0.2s ease;
 }
 
@@ -147,10 +130,6 @@ watch(
   padding: 16px 24px;
   border-top: 1px solid var(--border, rgba(0, 0, 0, 0.05));
   background-color: var(--surface-subtle);
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
 }
 
 /* Transitions */

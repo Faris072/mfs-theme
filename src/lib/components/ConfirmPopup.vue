@@ -4,7 +4,7 @@
       <div
         v-if="isOpen"
         ref="popupRef"
-        class="mfs-confirm-popup mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+        class="mfs-confirm-popup mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
         :style="positionStyle"
         role="alertdialog"
         aria-modal="false"
@@ -243,8 +243,8 @@ defineExpose({ show, hide })
 
 .mfs-confirm-popup__btn--primary { background-color: var(--primary); }
 .mfs-confirm-popup__btn--success { background-color: var(--success); }
-.mfs-confirm-popup__btn--warning { background-color: var(--warning); color: #1e293b; }
-.mfs-confirm-popup__btn--danger { background-color: var(--danger); }
+.mfs-confirm-popup__btn--warning { background-color: var(--warning); color: var(--warning-text, #1e293b); }
+.mfs-confirm-popup__btn--danger { background-color: var(--danger); color: var(--danger-text, #ffffff); }
 
 [data-theme="glass"] .mfs-confirm-popup {
   background-color: rgba(15, 23, 42, 0.9);

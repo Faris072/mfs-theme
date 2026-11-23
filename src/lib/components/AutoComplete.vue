@@ -22,7 +22,7 @@
       </div>
 
       <Transition name="ac-pop">
-        <ul v-if="isOpen && normalized.length" role="listbox" class="ac-dropdown mfs-surface mfs-rounded mfs-blur mfs-shadow">
+        <ul v-if="isOpen && normalized.length" role="listbox" class="ac-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
           <li
             v-for="(item, idx) in normalized"
             :key="item.label + idx"

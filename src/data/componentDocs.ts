@@ -11,6 +11,12 @@ export interface ComponentNavItem {
   category: string
   phase: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11
   summary: string
+  importSymbol?: string
+  status?: 'Ready' | 'Beta'
+  a11y?: {
+    keyboard?: string[]
+    aria?: string[]
+  }
 }
 
 export const PHASE_TITLES: Record<ComponentNavItem['phase'], string> = {
@@ -42,14 +48,29 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Button',
     category: 'Core',
     phase: 1,
-    summary: 'Adaptive action button with variants, sizes, loading state, and tactile depth.'
+    summary: 'Adaptive action button with variants, sizes, loading state, and tactile depth.',
+    a11y: {
+      keyboard: ['Enter / Space activates button', 'Tab moves focus'],
+      aria: ['aria-busy when loading', 'disabled attribute prevents activation']
+    }
+  },
+  {
+    slug: 'button-group',
+    name: 'ButtonGroup',
+    category: 'Core',
+    phase: 1,
+    summary: 'Grouped container joining adjacent buttons with collapsed borders and shared radius.'
   },
   {
     slug: 'input',
     name: 'Input',
     category: 'Form',
     phase: 1,
-    summary: 'Single-line text input with label, helper text, error state, and theme-aware depth.'
+    summary: 'Single-line text input with label, helper text, error state, and theme-aware depth.',
+    a11y: {
+      keyboard: ['Tab focuses input', 'Standard text editing shortcuts'],
+      aria: ['Associated <label> via for/id', 'aria-invalid and error message binding']
+    }
   },
   {
     slug: 'card',
@@ -70,14 +91,22 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Switch',
     category: 'Form',
     phase: 1,
-    summary: 'Accessible boolean toggle switch with keyboard support and smooth thumb motion.'
+    summary: 'Accessible boolean toggle switch with keyboard support and smooth thumb motion.',
+    a11y: {
+      keyboard: ['Space / Enter toggles state'],
+      aria: ['role="switch"', 'aria-checked reflects boolean state']
+    }
   },
   {
     slug: 'modal',
     name: 'Modal',
     category: 'Overlay',
     phase: 1,
-    summary: 'Focus-managed dialog overlay with backdrop blur, ESC close, and action slots.'
+    summary: 'Focus-managed dialog overlay with backdrop blur, ESC close, and action slots.',
+    a11y: {
+      keyboard: ['Escape closes modal', 'Tab cycles focus inside dialog'],
+      aria: ['role="dialog"', 'aria-modal="true"', 'aria-labelledby for title']
+    }
   },
 
   // Phase 2 (11)
@@ -107,7 +136,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Checkbox',
     category: 'Form',
     phase: 2,
-    summary: 'Binary or array-bound checkbox with indeterminate state and tactile check mark.'
+    summary: 'Binary or array-bound checkbox with indeterminate state and tactile check mark.',
+    a11y: {
+      keyboard: ['Space toggles checked state'],
+      aria: ['Native checkbox or aria-checked="mixed" for indeterminate']
+    }
   },
   {
     slug: 'radio-button',
@@ -121,7 +154,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Select',
     category: 'Form',
     phase: 2,
-    summary: 'Searchable single-select dropdown with keyboard navigation and clearable option.'
+    summary: 'Searchable single-select dropdown with keyboard navigation and clearable option.',
+    a11y: {
+      keyboard: ['ArrowUp / ArrowDown navigate options', 'Enter selects', 'Escape closes'],
+      aria: ['role="combobox"', 'aria-expanded', 'aria-activedescendant']
+    }
   },
   {
     slug: 'multi-select',
@@ -186,7 +223,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Accordion',
     category: 'Layout',
     phase: 3,
-    summary: 'Collapsible content panels supporting single or multiple expanded sections.'
+    summary: 'Collapsible content panels supporting single or multiple expanded sections.',
+    a11y: {
+      keyboard: ['Enter / Space toggles panel', 'Tab moves between headers'],
+      aria: ['aria-expanded on trigger', 'aria-controls linking panel region']
+    }
   },
   {
     slug: 'timeline',
@@ -230,14 +271,22 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Tooltip',
     category: 'Overlay',
     phase: 4,
-    summary: 'Hover and focus-triggered floating hint with configurable placement.'
+    summary: 'Hover and focus-triggered floating hint with configurable placement.',
+    a11y: {
+      keyboard: ['Focus reveals tooltip', 'Escape dismisses'],
+      aria: ['role="tooltip"', 'aria-describedby on trigger']
+    }
   },
   {
     slug: 'drawer',
     name: 'Drawer',
     category: 'Overlay',
     phase: 4,
-    summary: 'Slide-over side or edge panel for navigation, filters, or detail inspection.'
+    summary: 'Slide-over side or edge panel for navigation, filters, or detail inspection.',
+    a11y: {
+      keyboard: ['Escape closes drawer', 'Tab stays trapped while open'],
+      aria: ['role="dialog"', 'aria-modal="true"']
+    }
   },
   {
     slug: 'popover',
@@ -288,7 +337,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Tabs',
     category: 'Navigation',
     phase: 5,
-    summary: 'Tabbed content switcher with keyboard arrow support and active indicator.'
+    summary: 'Tabbed content switcher with keyboard arrow support and active indicator.',
+    a11y: {
+      keyboard: ['ArrowLeft / ArrowRight switch tabs', 'Home / End jump to first/last'],
+      aria: ['role="tablist"', 'role="tab"', 'aria-selected', 'role="tabpanel"']
+    }
   },
   {
     slug: 'breadcrumb',
@@ -332,7 +385,18 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'DataTable',
     category: 'Data',
     phase: 6,
-    summary: 'Structured table with sorting, search filtering, selection, and pagination.'
+    summary: 'Structured table with sorting, search filtering, selection, and pagination.',
+    a11y: {
+      keyboard: ['Tab navigates sortable headers and controls', 'Enter / Space toggles sort'],
+      aria: ['aria-sort on sortable headers', 'aria-selected on selectable rows']
+    }
+  },
+  {
+    slug: 'column',
+    name: 'Column',
+    category: 'Data',
+    phase: 6,
+    summary: 'Renderless column definition component for declarative DataTable headers and body templates.'
   },
   {
     slug: 'data-view',
@@ -414,6 +478,13 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     summary: 'Composite input container pairing fields with addons, icons, or buttons.'
   },
   {
+    slug: 'input-group-addon',
+    name: 'InputGroupAddon',
+    category: 'Forms Advanced',
+    phase: 7,
+    summary: 'Prefix or suffix addon slot inside InputGroup for text, icons, or units.'
+  },
+  {
     slug: 'listbox',
     name: 'Listbox',
     category: 'Forms Advanced',
@@ -447,6 +518,13 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Forms Advanced',
     phase: 7,
     summary: 'Wrapper input dengan posisi ikon kiri/kanan adaptif tema.'
+  },
+  {
+    slug: 'input-icon',
+    name: 'InputIcon',
+    category: 'Forms Advanced',
+    phase: 7,
+    summary: 'Positioned icon element rendered inside IconField.'
   },
 
   // Phase 8 (9)
@@ -692,7 +770,16 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'v-style-class',
     category: 'Overlays, Media & Directives',
     phase: 11,
+    importSymbol: 'vStyleClass',
     summary: 'Directive toggling CSS classes on target elements upon click.'
+  },
+  {
+    slug: 'v-tooltip',
+    name: 'v-tooltip',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    importSymbol: 'vTooltip',
+    summary: 'Directive attaching hover/focus floating tooltips with top, right, bottom, or left modifiers.'
   }
 ]
 

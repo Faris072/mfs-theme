@@ -1,17 +1,17 @@
 <template>
-  <section class="component-preview">
-    <header class="preview-header">
-      <div class="preview-heading">
-        <h3 class="preview-title">{{ title }}</h3>
-        <p v-if="description" class="preview-desc">{{ description }}</p>
+  <section class="component-preview mfs-surface mfs-rounded-lg mfs-overflow-hidden mfs-shadow">
+    <header class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-py-5 mfs-px-6 mfs-surface-subtle mfs-border-none mfs-border-b">
+      <div class="preview-heading mfs-min-w-0">
+        <h3 class="mfs-text-base mfs-font-bold mfs-text mfs-m-0">{{ title }}</h3>
+        <p v-if="description" class="preview-desc mfs-text-muted mfs-mt-1">{{ description }}</p>
       </div>
 
-      <div class="preview-controls">
-        <div class="preview-tabs" role="tablist" aria-label="Preview mode">
+      <div class="mfs-flex mfs-items-center mfs-gap-2">
+        <div class="preview-tabs mfs-inline-flex mfs-rounded-sm mfs-surface" role="tablist" aria-label="Preview mode">
           <button
             type="button"
             role="tab"
-            class="preview-tab-btn"
+            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
             :class="{ 'is-active': tab === 'preview' }"
             :aria-selected="tab === 'preview'"
             @click="tab = 'preview'"
@@ -21,7 +21,7 @@
           <button
             type="button"
             role="tab"
-            class="preview-tab-btn"
+            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
             :class="{ 'is-active': tab === 'code' }"
             :aria-selected="tab === 'code'"
             @click="tab = 'code'"
@@ -32,7 +32,7 @@
 
         <button
           type="button"
-          class="copy-btn"
+          class="copy-btn mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-rounded-sm mfs-surface mfs-font-semibold mfs-cursor-pointer mfs-transition"
           :class="{ 'is-copied': copied }"
           :aria-label="copied ? 'Code copied' : 'Copy code'"
           @click="handleCopy"
@@ -44,63 +44,97 @@
       </div>
     </header>
 
-    <div v-show="tab === 'preview'" class="preview-stage">
+    <div v-show="tab === 'preview'" class="preview-stage mfs-surface mfs-border-none">
       <slot />
     </div>
 
-    <div v-if="tab === 'code'" class="preview-code">
-      <pre><code>{{ code }}</code></pre>
+    <div v-if="tab === 'code'" class="preview-code mfs-surface-subtle mfs-border-none mfs-border-t mfs-overflow-x-auto">
+      <pre class="mfs-m-0 mfs-font-mono mfs-text"><code>{{ code }}</code></pre>
     </div>
 
-    <div v-if="hasApi" class="preview-api">
-      <div v-for="section in apiSections" :key="section.label" class="api-section">
-        <h4 class="api-heading">{{ section.label }}</h4>
-        <div class="api-table-wrap">
-          <table class="api-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th v-if="section.showType">Type</th>
-                <th v-if="section.showDefault">Default</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="row in section.rows" :key="row.name">
-                <td><code class="api-name">{{ row.name }}</code></td>
-                <td v-if="section.showType">
-                  <code v-if="row.type" class="api-type">{{ row.type }}</code>
-                  <span v-else class="api-empty">—</span>
-                </td>
-                <td v-if="section.showDefault">
-                  <code v-if="row.default" class="api-default">{{ row.default }}</code>
-                  <span v-else class="api-empty">—</span>
-                </td>
-                <td>{{ row.description }}</td>
-              </tr>
-            </tbody>
-          </table>
+    <div v-if="hasApi && docContext?.activeTab.value !== 'features'" class="api-section mfs-py-5 mfs-px-6 mfs-flex mfs-flex-col mfs-gap-4 mfs-surface-subtle mfs-border-none mfs-border-t">
+      <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-2">
+        <span class="api-heading mfs-font-bold mfs-text-muted">API Reference</span>
+        <div class="preview-tabs mfs-inline-flex mfs-rounded-sm mfs-surface" role="tablist" aria-label="API reference sections">
+          <button
+            v-for="section in apiSections"
+            :key="section.key"
+            type="button"
+            role="tab"
+            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
+            :class="{ 'is-active': currentApiSection?.key === section.key }"
+            :aria-selected="currentApiSection?.key === section.key"
+            @click="activeApiTab = section.key"
+          >
+            {{ section.label }} ({{ section.rows.length }})
+          </button>
         </div>
+      </div>
+
+      <div v-if="currentApiSection" class="mfs-rounded-sm mfs-surface mfs-overflow-x-auto">
+        <table class="api-table mfs-w-full mfs-text-left">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th v-if="currentApiSection.showType">Type</th>
+              <th v-if="currentApiSection.showDefault">Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in currentApiSection.rows" :key="row.name">
+              <td><code class="api-code mfs-font-mono mfs-text-primary mfs-font-semibold">{{ row.name }}</code></td>
+              <td v-if="currentApiSection.showType">
+                <code v-if="row.type" class="api-code mfs-font-mono mfs-text-muted">{{ row.type }}</code>
+                <span v-else class="mfs-text-muted">—</span>
+              </td>
+              <td v-if="currentApiSection.showDefault">
+                <code v-if="row.default" class="api-code mfs-font-mono mfs-text-muted">{{ row.default }}</code>
+                <span v-else class="mfs-text-muted">—</span>
+              </td>
+              <td>{{ row.description }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, ref, watch, type Ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
 import type { ApiRow } from '../data/componentDocs'
+
+export interface ComponentApiSpec {
+  props?: ApiRow[]
+  events?: ApiRow[]
+  slots?: ApiRow[]
+}
+
+export interface DocsContext {
+  activeTab: Ref<'features' | 'api' | 'theming'>
+  registerApi: (api: ComponentApiSpec) => void
+}
 
 const props = defineProps<{
   title: string
   description?: string
   code: string
-  api?: {
-    props?: ApiRow[]
-    events?: ApiRow[]
-    slots?: ApiRow[]
-  }
+  api?: ComponentApiSpec
 }>()
+
+const docContext = inject<DocsContext | null>('docContext', null)
+
+watch(
+  () => props.api,
+  (api) => {
+    if (api && docContext) {
+      docContext.registerApi(api)
+    }
+  },
+  { immediate: true }
+)
 
 const tab = ref<'preview' | 'code'>('preview')
 const copied = ref(false)
@@ -123,92 +157,64 @@ onBeforeUnmount(() => {
   if (copyTimer) clearTimeout(copyTimer)
 })
 
+type ApiTabKey = 'props' | 'events' | 'slots'
+
 const apiSections = computed(() => {
   const sections: Array<{
+    key: ApiTabKey
     label: string
     rows: ApiRow[]
     showType: boolean
     showDefault: boolean
   }> = []
   if (props.api?.props?.length) {
-    sections.push({ label: 'Props', rows: props.api.props, showType: true, showDefault: true })
+    sections.push({ key: 'props', label: 'Props', rows: props.api.props, showType: true, showDefault: true })
   }
   if (props.api?.events?.length) {
-    sections.push({ label: 'Events', rows: props.api.events, showType: true, showDefault: false })
+    sections.push({ key: 'events', label: 'Events', rows: props.api.events, showType: true, showDefault: false })
   }
   if (props.api?.slots?.length) {
-    sections.push({ label: 'Slots', rows: props.api.slots, showType: false, showDefault: false })
+    sections.push({ key: 'slots', label: 'Slots', rows: props.api.slots, showType: false, showDefault: false })
   }
   return sections
 })
 
 const hasApi = computed(() => apiSections.value.length > 0)
+const activeApiTab = ref<ApiTabKey>('props')
+
+watch(
+  apiSections,
+  (sections) => {
+    if (sections.length > 0 && !sections.some((s) => s.key === activeApiTab.value)) {
+      activeApiTab.value = sections[0].key
+    }
+  },
+  { immediate: true }
+)
+
+const currentApiSection = computed(
+  () => apiSections.value.find((s) => s.key === activeApiTab.value) ?? apiSections.value[0]
+)
 </script>
 
 <style scoped>
-.component-preview {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg, 18px);
-  overflow: hidden;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-}
-
-.preview-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 16px 20px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface-subtle);
-}
-
 .preview-heading {
-  min-width: 0;
   flex: 1 1 220px;
-}
-
-.preview-title {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  margin: 0;
 }
 
 .preview-desc {
   font-size: 0.84rem;
-  color: var(--text-muted);
-  margin: 4px 0 0;
-}
-
-.preview-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .preview-tabs {
-  display: inline-flex;
   padding: 3px;
-  border-radius: var(--radius-sm, 8px);
-  background: var(--surface);
-  border: 1px solid var(--border);
   gap: 2px;
 }
 
 .preview-tab-btn {
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
   font-size: 0.78rem;
-  font-weight: 600;
   padding: 5px 12px;
   border-radius: calc(var(--radius-sm, 8px) - 2px);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .preview-tab-btn:hover {
@@ -221,87 +227,54 @@ const hasApi = computed(() => apiSections.value.length > 0)
 }
 
 .copy-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   padding: 6px 12px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
   font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.copy-btn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
+.copy-btn:hover,
 .copy-btn.is-copied {
   border-color: var(--primary);
   color: var(--primary);
 }
 
 .preview-stage {
-  padding: 24px 20px;
+  padding: 28px 32px;
   background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--border);
+}
+
+@media (max-width: 768px) {
+  .preview-stage {
+    padding: 20px;
+  }
 }
 
 .preview-code {
-  background: var(--surface-subtle);
-  border-top: 1px solid var(--border);
-  overflow-x: auto;
   max-height: 420px;
 }
 
 .preview-code pre {
-  margin: 0;
   padding: 18px 20px;
-  font-family: var(--font-mono);
   font-size: 0.82rem;
   line-height: 1.55;
-  color: var(--text);
   tab-size: 2;
-}
-
-.preview-api {
-  border-top: 1px solid var(--border);
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background: var(--surface-subtle);
 }
 
 .api-heading {
   font-size: 0.78rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin: 0 0 8px;
-}
-
-.api-table-wrap {
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm, 8px);
-  background: var(--surface);
 }
 
 .api-table {
-  width: 100%;
   border-collapse: collapse;
-  font-size: 0.82rem;
-  text-align: left;
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .api-table th,
 .api-table td {
-  padding: 8px 12px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
   color: var(--text);
@@ -318,25 +291,8 @@ const hasApi = computed(() => apiSections.value.length > 0)
   border-bottom: none;
 }
 
-.api-name,
-.api-type,
-.api-default {
-  font-family: var(--font-mono);
+.api-code {
   font-size: 0.78rem;
-}
-
-.api-name {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-.api-type,
-.api-default {
-  color: var(--text-muted);
-}
-
-.api-empty {
-  color: var(--text-muted);
 }
 
 /* Theme overrides */

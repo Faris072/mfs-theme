@@ -19,7 +19,7 @@
       </button>
 
       <Transition name="ts-pop">
-        <div v-if="isOpen" class="ts-dropdown mfs-surface mfs-rounded mfs-blur mfs-shadow" role="tree">
+        <div v-if="isOpen" class="ts-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow" role="tree">
           <div
             v-for="row in visibleNodes"
             :key="String(row.node.value)"

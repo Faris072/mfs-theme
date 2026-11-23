@@ -7,7 +7,7 @@
         @click="reject"
       >
         <div
-          class="mfs-confirm mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+          class="mfs-confirm mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
           role="alertdialog"
           aria-modal="true"
           :aria-labelledby="titleId"
@@ -162,8 +162,8 @@ onBeforeUnmount(() => {
 
 .mfs-confirm__btn--primary { background-color: var(--primary); }
 .mfs-confirm__btn--success { background-color: var(--success); }
-.mfs-confirm__btn--warning { background-color: var(--warning); color: #1e293b; }
-.mfs-confirm__btn--danger { background-color: var(--danger); }
+.mfs-confirm__btn--warning { background-color: var(--warning); color: var(--warning-text, #1e293b); }
+.mfs-confirm__btn--danger { background-color: var(--danger); color: var(--danger-text, #ffffff); }
 
 /* Theme Overrides */
 [data-theme="glass"] .mfs-confirm {

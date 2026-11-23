@@ -1,14 +1,14 @@
 <template>
   <nav
     ref="rootRef"
-    class="mega-menu mfs-surface mfs-rounded mfs-blur"
+    class="mega-menu mfs-surface mfs-rounded mfs-blur mfs-relative mfs-w-full"
     :class="`mega-menu--${orientation}`"
     aria-label="Mega menu"
   >
-    <div class="mega-menu__bar">
+    <div class="mega-menu__bar mfs-flex mfs-flex-col mfs-gap-2">
       <button
         type="button"
-        class="mega-menu__mobile-btn mfs-surface-subtle mfs-rounded-md mfs-interactive mfs-text"
+        class="mega-menu__mobile-btn mfs-surface-subtle mfs-rounded-md mfs-interactive mfs-text mfs-inline-flex mfs-items-center mfs-gap-2 mfs-py-2 mfs-px-3 mfs-border-none mfs-bg-transparent mfs-font-semibold"
         :aria-expanded="mobileOpen"
         aria-label="Toggle mega menu"
         @click="mobileOpen = !mobileOpen"
@@ -25,11 +25,11 @@
         <span>Menu</span>
       </button>
 
-      <ul class="mega-menu__list" :class="{ 'mega-menu__list--open': mobileOpen }" role="menubar">
+      <ul class="mega-menu__list mfs-flex-col mfs-gap-1-5" :class="{ 'mega-menu__list--open': mobileOpen }" role="menubar">
         <li
           v-for="(item, idx) in items"
           :key="idx"
-          class="mega-menu__root"
+          class="mega-menu__root mfs-relative"
           role="none"
           @mouseenter="onHover(idx)"
           @mouseleave="onLeave"
@@ -40,7 +40,7 @@
             :href="!item.columns?.length ? item.href : undefined"
             :type="item.columns?.length || (!item.to && !item.href) ? 'button' : undefined"
             role="menuitem"
-            class="mega-menu__trigger mfs-rounded-sm mfs-text"
+            class="mega-menu__trigger mfs-rounded-sm mfs-text mfs-inline-flex mfs-items-center mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-cursor-pointer"
             :class="{
               'mega-menu__trigger--active': activeIndex === idx,
               'mega-menu__trigger--disabled mfs-disabled': item.disabled
@@ -72,13 +72,13 @@
           <Transition name="mega-fade">
             <div
               v-if="item.columns?.length && activeIndex === idx"
-              class="mega-menu__panel mfs-card mfs-blur"
+              class="mega-menu__panel mfs-card mfs-overlay mfs-blur mfs-p-4"
               role="menu"
             >
               <div class="mega-menu__columns">
                 <div v-for="(col, cIdx) in item.columns" :key="cIdx" class="mega-menu__col">
-                  <div v-if="col.title" class="mega-menu__col-title mfs-text-muted">{{ col.title }}</div>
-                  <ul class="mega-menu__col-list">
+                  <div v-if="col.title" class="mega-menu__col-title mfs-text-muted mfs-font-bold mfs-mb-2 mfs-px-2">{{ col.title }}</div>
+                  <ul class="mega-menu__col-list mfs-flex mfs-flex-col mfs-gap-1">
                     <li v-for="(link, lIdx) in col.items" :key="lIdx" role="none">
                       <component
                         :is="link.to ? 'router-link' : link.href ? 'a' : 'button'"
@@ -86,10 +86,10 @@
                         :href="link.href"
                         :type="!link.to && !link.href ? 'button' : undefined"
                         role="menuitem"
-                        class="mega-menu__link mfs-rounded-sm mfs-text"
+                        class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
                         @click="onLinkClick(link)"
                       >
-                        <span class="mega-menu__link-label">{{ link.label }}</span>
+                        <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
                         <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
                           {{ link.description }}
                         </span>
@@ -205,63 +205,31 @@ onUnmounted(() => {
 
 <style scoped>
 .mega-menu {
-  position: relative;
-  width: 100%;
   padding: 8px 14px;
   z-index: 90;
 }
 
-.mega-menu__bar {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
 .mega-menu__mobile-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   align-self: flex-start;
-  padding: 8px 12px;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  color: var(--text);
-  background: transparent;
   font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
 }
 
 .mega-menu__list {
   display: none;
   list-style: none;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .mega-menu__list--open {
   display: flex;
 }
 
-.mega-menu__root {
-  position: relative;
-}
-
 .mega-menu__trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   padding: 8px 14px;
   min-height: 38px;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  color: var(--text);
-  background: transparent;
   font-family: inherit;
   font-size: 0.92rem;
-  font-weight: 600;
   text-decoration: none;
-  cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -278,7 +246,6 @@ onUnmounted(() => {
 
 .mega-menu__panel {
   margin-top: 6px;
-  padding: 16px;
   z-index: 200;
 }
 
@@ -290,34 +257,18 @@ onUnmounted(() => {
 
 .mega-menu__col-title {
   font-size: 0.76rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 8px;
-  padding-inline: 8px;
 }
 
 .mega-menu__col-list {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .mega-menu__link {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
   gap: 2px;
-  padding: 8px;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  color: var(--text);
-  background: transparent;
   font-family: inherit;
-  text-align: left;
   text-decoration: none;
-  cursor: pointer;
   transition: background-color 0.15s ease;
 }
 
@@ -327,7 +278,6 @@ onUnmounted(() => {
 
 .mega-menu__link-label {
   font-size: 0.9rem;
-  font-weight: 600;
 }
 
 .mega-menu__link-desc {
@@ -371,7 +321,4 @@ onUnmounted(() => {
   }
 }
 
-[data-theme="glass"] .mega-menu__panel {
-  background-color: rgba(15, 23, 42, 0.88);
-}
 </style>

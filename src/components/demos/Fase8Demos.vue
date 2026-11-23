@@ -7,8 +7,8 @@
     :code="splitButtonCode"
     :api="splitButtonApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <SplitButton
           label="Deploy"
           variant="primary"
@@ -34,8 +34,8 @@
         />
         <SplitButton label="Disabled" variant="danger" :items="deployItems" disabled />
       </div>
-      <div class="demo-readout">
-        <span class="demo-readout-label">last event:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">last event:</span>
         <code>{{ lastSplitEvent }}</code>
       </div>
     </div>
@@ -49,8 +49,8 @@
     :code="speedDialCode"
     :api="speedDialApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <Button
           size="sm"
           :variant="dialType === 'linear' ? 'primary' : 'surface'"
@@ -76,7 +76,7 @@
         </Button>
       </div>
 
-      <div class="demo-dial-stage">
+      <div class="mfs-flex mfs-items-center mfs-justify-center mfs-p-6 mfs-rounded-sm mfs-surface-subtle demo-dial-stage">
         <SpeedDial
           v-model="dialOpen"
           :items="dialItems"
@@ -87,10 +87,10 @@
         />
       </div>
 
-      <div class="demo-readout">
-        <span class="demo-readout-label">open:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">open:</span>
         <code>{{ dialOpen }}</code>
-        <span class="demo-readout-label">· selected:</span>
+        <span class="mfs-text-muted mfs-font-semibold">· selected:</span>
         <code>{{ lastDialAction }}</code>
       </div>
     </div>
@@ -104,8 +104,8 @@
     :code="panelCode"
     :api="panelApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <Button size="sm" variant="surface" @click="panelCollapsed = !panelCollapsed">
           {{ panelCollapsed ? 'Expand Panel' : 'Collapse Panel' }}
         </Button>
@@ -115,7 +115,7 @@
         <template #icons>
           <Badge variant="success">v2.4</Badge>
         </template>
-        <p class="demo-copy">
+        <p class="mfs-m-0 mfs-text-sm mfs-text">
           Panels group related settings or status details and adapt smoothly across Clay, Glass, and Neo themes.
         </p>
         <template #footer>
@@ -123,8 +123,8 @@
         </template>
       </Panel>
 
-      <div class="demo-readout">
-        <span class="demo-readout-label">collapsed:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">collapsed:</span>
         <code>{{ panelCollapsed }}</code>
       </div>
     </div>
@@ -138,9 +138,9 @@
     :code="fieldsetCode"
     :api="fieldsetApi"
   >
-    <div class="demo-grid">
+    <div class="mfs-grid mfs-items-start">
       <Fieldset v-model:collapsed="fieldsetCollapsed" legend="Theme Preferences" toggleable>
-        <p class="demo-copy">
+        <p class="mfs-m-0 mfs-text-sm mfs-text">
           Toggleable fieldset content collapses smoothly using CSS grid row transitions.
         </p>
       </Fieldset>
@@ -149,7 +149,7 @@
         <template #legend>
           <span>Custom Legend Slot</span>
         </template>
-        <p class="demo-copy">
+        <p class="mfs-m-0 mfs-text-sm mfs-text">
           Static fieldset with custom legend markup and full keyboard accessibility.
         </p>
       </Fieldset>
@@ -164,8 +164,8 @@
     :code="splitterCode"
     :api="splitterApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <Button
           size="sm"
           :variant="splitLayout === 'horizontal' ? 'primary' : 'surface'"
@@ -191,21 +191,21 @@
         @resize="(s) => (splitSize = Math.round(s))"
       >
         <template #first>
-          <div class="demo-pane">
+          <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
             <strong>Pane 1</strong>
             <span>Drag the divider or focus it and use Arrow keys.</span>
           </div>
         </template>
         <template #second>
-          <div class="demo-pane">
+          <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
             <strong>Pane 2</strong>
             <span>Adapts to horizontal and vertical layouts.</span>
           </div>
         </template>
       </Splitter>
 
-      <div class="demo-readout">
-        <span class="demo-readout-label">first pane:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">first pane:</span>
         <code>{{ splitSize }}%</code>
       </div>
     </div>
@@ -219,7 +219,7 @@
     :code="toolbarCode"
     :api="toolbarApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack">
       <Toolbar>
         <template #start>
           <Button size="sm" variant="primary" @click="toolbarAction = 'New File'">New</Button>
@@ -233,8 +233,8 @@
         </template>
       </Toolbar>
 
-      <div class="demo-readout">
-        <span class="demo-readout-label">last action:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">last action:</span>
         <code>{{ toolbarAction }}</code>
       </div>
     </div>
@@ -249,8 +249,8 @@
     :api="scrollPanelApi"
   >
     <ScrollPanel max-height="190px" width="100%">
-      <div class="demo-scroll-list">
-        <div v-for="n in 12" :key="n" class="demo-scroll-item">
+      <div class="mfs-flex mfs-flex-col mfs-gap-2">
+        <div v-for="n in 12" :key="n" class="mfs-row mfs-justify-between mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-sm mfs-text demo-scroll-item">
           <strong>Entry #{{ n }}</strong>
           <span>Theme-aware scrollable surface item</span>
         </div>
@@ -266,13 +266,13 @@
     :code="fluidCode"
     :api="fluidApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <Button size="sm" :variant="fluidPadded ? 'primary' : 'surface'" @click="fluidPadded = !fluidPadded">
           padded: {{ fluidPadded }}
         </Button>
       </div>
-      <Fluid tag="section" :padded="fluidPadded" class="demo-fluid-box">
+      <Fluid tag="section" :padded="fluidPadded" class="mfs-rounded-sm mfs-py-3 demo-fluid-box">
         <Input v-model="fluidText" label="Full-Width Input" placeholder="Stretches to 100% of container" />
       </Fluid>
     </div>
@@ -286,23 +286,23 @@
     :code="deferredCode"
     :api="deferredApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack">
+      <div class="mfs-row">
         <Button size="sm" variant="surface" @click="resetDeferred">Replay Deferred Load</Button>
       </div>
 
       <Deferred :key="deferredKey" root-margin="0px" :threshold="0.1" @load="onDeferredLoad">
         <template #placeholder>
-          <div class="demo-deferred-box">Waiting for intersection...</div>
+          <div class="mfs-p-4 mfs-rounded-sm mfs-surface-subtle mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text">Waiting for intersection...</div>
         </template>
-        <div class="demo-deferred-loaded">
+        <div class="mfs-p-4 mfs-rounded-sm mfs-surface-subtle mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-deferred-loaded">
           <strong>Deferred Content Mounted</strong>
           <span>Triggered via IntersectionObserver.</span>
         </div>
       </Deferred>
 
-      <div class="demo-readout">
-        <span class="demo-readout-label">loads:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+        <span class="mfs-text-muted mfs-font-semibold">loads:</span>
         <code>{{ deferredLoads }}</code>
       </div>
     </div>
@@ -590,122 +590,22 @@ const deferredApi: ApiSpec = {
 </script>
 
 <style scoped>
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 18px;
-  align-items: start;
-}
-
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-}
-
-.demo-copy {
-  margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: var(--text);
-}
-
-.demo-readout {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm, 10px);
-  background: var(--surface-alt);
-  border: 1px solid var(--border, transparent);
-  font-size: 0.8rem;
-  color: var(--text);
-}
-
-.demo-readout-label {
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.demo-readout code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
 .demo-dial-stage {
   min-height: 190px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  border-radius: var(--radius-sm, 12px);
-  background: var(--surface-alt);
-  border: 1px dashed var(--border, rgba(148, 163, 184, 0.35));
+  border-style: dashed;
 }
 
 .demo-splitter {
   min-height: 190px;
 }
 
-.demo-pane {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 0.88rem;
-  color: var(--text);
-}
-
-.demo-pane span {
-  color: var(--text-muted);
-}
-
-.demo-scroll-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.demo-scroll-item {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: var(--radius-sm, 10px);
-  background: var(--surface-alt);
-  font-size: 0.86rem;
-  color: var(--text);
-}
-
+.demo-pane span,
 .demo-scroll-item span {
   color: var(--text-muted);
 }
 
 .demo-fluid-box {
   border: 1px dashed var(--border, rgba(148, 163, 184, 0.35));
-  border-radius: var(--radius-sm, 12px);
-  padding-block: 12px;
-}
-
-.demo-deferred-box,
-.demo-deferred-loaded {
-  padding: 18px;
-  border-radius: var(--radius-sm, 12px);
-  background: var(--surface-alt);
-  border: 1px solid var(--border, transparent);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.9rem;
-  color: var(--text);
 }
 
 .demo-deferred-loaded span {

@@ -1,23 +1,23 @@
 <template>
   <ol
-    class="steps"
+    class="steps mfs-flex mfs-w-full mfs-gap-2"
     :class="[`steps--${direction}`]"
     aria-label="Progress steps"
   >
     <li
       v-for="(item, index) in items"
       :key="index"
-      class="steps__item"
+      class="steps__item mfs-flex mfs-items-center mfs-gap-2"
       :class="[`steps__item--${resolveStatus(item, index)}`, { 'steps__item--clickable': clickable }]"
       :aria-current="resolveStatus(item, index) === 'active' ? 'step' : undefined"
     >
       <component
         :is="clickable ? 'button' : 'div'"
         :type="clickable ? 'button' : undefined"
-        class="steps__trigger mfs-rounded-md"
+        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md"
         @click="handleStepClick(index)"
       >
-        <span class="steps__circle mfs-surface mfs-shadow">
+        <span class="steps__circle mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-bold mfs-surface mfs-shadow">
           <svg
             v-if="resolveStatus(item, index) === 'completed'"
             width="16"
@@ -50,15 +50,15 @@
           <span v-else>{{ index + 1 }}</span>
         </span>
 
-        <span class="steps__content">
-          <span class="steps__label">{{ item.label }}</span>
+        <span class="steps__content mfs-flex mfs-flex-col">
+          <span class="steps__label mfs-font-semibold">{{ item.label }}</span>
           <span v-if="item.description" class="steps__desc mfs-text-muted">{{ item.description }}</span>
         </span>
       </component>
 
       <span
         v-if="index < items.length - 1"
-        class="steps__connector mfs-surface-subtle mfs-shadow-inset"
+        class="steps__connector mfs-surface-subtle mfs-shadow-inset mfs-pill"
         :class="{ 'steps__connector--completed': resolveStatus(item, index) === 'completed' }"
         aria-hidden="true"
       />
@@ -108,10 +108,7 @@ const handleStepClick = (index: number) => {
 
 <style scoped>
 .steps {
-  display: flex;
   list-style: none;
-  width: 100%;
-  gap: 8px;
 }
 
 .steps--horizontal,
@@ -126,10 +123,7 @@ const handleStepClick = (index: number) => {
 
 .steps__item {
   position: relative;
-  display: flex;
   flex: 1;
-  align-items: center;
-  gap: 8px;
 }
 
 .steps--vertical .steps__item {
@@ -143,13 +137,9 @@ const handleStepClick = (index: number) => {
 }
 
 .steps__trigger {
-  display: inline-flex;
-  align-items: center;
   gap: 10px;
   background: transparent;
-  border: none;
   padding: 6px;
-  border-radius: var(--radius-md, 12px);
   font-family: inherit;
   color: inherit;
   text-align: left;
@@ -165,19 +155,12 @@ const handleStepClick = (index: number) => {
 }
 
 .steps__circle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
   width: 36px;
   height: 36px;
   border-radius: 50%;
   font-size: 0.9rem;
-  font-weight: 700;
-  background-color: var(--surface);
   color: var(--text-muted);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--clay-shadow);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -198,14 +181,11 @@ const handleStepClick = (index: number) => {
 }
 
 .steps__content {
-  display: flex;
-  flex-direction: column;
   gap: 2px;
 }
 
 .steps__label {
   font-size: 0.92rem;
-  font-weight: 600;
   color: var(--text-muted);
 }
 
@@ -216,16 +196,12 @@ const handleStepClick = (index: number) => {
 
 .steps__desc {
   font-size: 0.8rem;
-  color: var(--text-muted);
 }
 
 .steps__connector {
   flex: 1;
   height: 3px;
   min-width: 20px;
-  border-radius: 999px;
-  background-color: var(--surface-subtle);
-  box-shadow: var(--input-shadow);
   transition: background-color 0.25s ease;
 }
 

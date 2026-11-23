@@ -1,6 +1,7 @@
 import type { App, Component, Directive, Plugin } from 'vue'
 // Fase 1
 import Button from './components/Button.vue'
+import ButtonGroup from './components/ButtonGroup.vue'
 import Card from './components/Card.vue'
 import Input from './components/Input.vue'
 import Badge from './components/Badge.vue'
@@ -46,6 +47,7 @@ import ContextMenu from './components/ContextMenu.vue'
 import ScrollTop from './components/ScrollTop.vue'
 // Fase 6
 import DataTable from './components/DataTable.vue'
+import Column from './components/Column.vue'
 import DataView from './components/DataView.vue'
 import Tree from './components/Tree.vue'
 // Fase 7
@@ -58,7 +60,9 @@ import ToggleButton from './components/ToggleButton.vue'
 import InputOtp from './components/InputOtp.vue'
 import InputMask from './components/InputMask.vue'
 import InputGroup from './components/InputGroup.vue'
+import InputGroupAddon from './components/InputGroupAddon.vue'
 import IconField from './components/IconField.vue'
+import InputIcon from './components/InputIcon.vue'
 import Listbox from './components/Listbox.vue'
 import FloatLabel from './components/FloatLabel.vue'
 import IftaLabel from './components/IftaLabel.vue'
@@ -102,6 +106,7 @@ import { useTheme, type ThemeType, THEME_OPTIONS } from './composables/useTheme'
 import { useToast } from './composables/useToast'
 import { useConfirm } from './composables/useConfirm'
 import { vRipple } from './directives/ripple'
+import { vTooltip } from './directives/tooltip'
 import { vFocusTrap } from './directives/focusTrap'
 import { vAnimateOnScroll } from './directives/animateOnScroll'
 import { vStyleClass } from './directives/styleClass'
@@ -109,12 +114,14 @@ import './themes/index.css'
 
 export {
   Button,
+  ButtonGroup,
   Card,
   Input,
   Input as InputText,
   Badge,
   Switch,
   Switch as ToggleSwitch,
+  Switch as InputSwitch,
   Modal,
   Modal as Dialog,
   Textarea,
@@ -145,6 +152,7 @@ export {
   Drawer,
   Drawer as Sidebar,
   Popover,
+  Popover as OverlayPanel,
   Skeleton,
   ProgressBar,
   ProgressSpinner,
@@ -152,6 +160,7 @@ export {
   Navbar,
   Navbar as Menubar,
   Tabs,
+  Tabs as TabView,
   Breadcrumb,
   Pagination,
   Pagination as Paginator,
@@ -160,10 +169,12 @@ export {
   ContextMenu,
   ScrollTop,
   DataTable,
+  Column,
   DataView,
   Tree,
   AutoComplete,
   Cascader,
+  Cascader as CascadeSelect,
   TreeSelect,
   Knob,
   SelectButton,
@@ -171,7 +182,9 @@ export {
   InputOtp,
   InputMask,
   InputGroup,
+  InputGroupAddon,
   IconField,
+  InputIcon,
   Listbox,
   FloatLabel,
   IftaLabel,
@@ -211,6 +224,8 @@ export {
   useToast,
   useConfirm,
   vRipple,
+  vTooltip,
+  vTooltip as TooltipDirective,
   vFocusTrap,
   vAnimateOnScroll,
   vStyleClass,
@@ -220,12 +235,14 @@ export {
 
 const components: Record<string, Component> = {
   Button,
+  ButtonGroup,
   Card,
   Input,
   InputText: Input,
   Badge,
   Switch,
   ToggleSwitch: Switch,
+  InputSwitch: Switch,
   Modal,
   Dialog: Modal,
   Textarea,
@@ -256,6 +273,7 @@ const components: Record<string, Component> = {
   Drawer,
   Sidebar: Drawer,
   Popover,
+  OverlayPanel: Popover,
   Skeleton,
   ProgressBar,
   ProgressSpinner,
@@ -263,6 +281,7 @@ const components: Record<string, Component> = {
   Navbar,
   Menubar: Navbar,
   Tabs,
+  TabView: Tabs,
   Breadcrumb,
   Pagination,
   Paginator: Pagination,
@@ -271,10 +290,12 @@ const components: Record<string, Component> = {
   ContextMenu,
   ScrollTop,
   DataTable,
+  Column,
   DataView,
   Tree,
   AutoComplete,
   Cascader,
+  CascadeSelect: Cascader,
   TreeSelect,
   Knob,
   SelectButton,
@@ -282,7 +303,9 @@ const components: Record<string, Component> = {
   InputOtp,
   InputMask,
   InputGroup,
+  InputGroupAddon,
   IconField,
+  InputIcon,
   Listbox,
   FloatLabel,
   IftaLabel,
@@ -322,6 +345,7 @@ const components: Record<string, Component> = {
 
 const directives: Record<string, Directive> = {
   ripple: vRipple,
+  tooltip: vTooltip,
   focustrap: vFocusTrap,
   animateonscroll: vAnimateOnScroll,
   styleclass: vStyleClass

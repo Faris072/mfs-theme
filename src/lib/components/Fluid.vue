@@ -1,5 +1,5 @@
 <template>
-  <component :is="tag" :class="['fluid', { 'fluid--padded': padded }]">
+  <component :is="tag" :class="['fluid', 'mfs-w-full', { 'mfs-px-4': padded }]">
     <slot />
   </component>
 </template>
@@ -20,13 +20,8 @@ withDefaults(
 <style scoped>
 .fluid {
   display: block;
-  width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-}
-
-.fluid--padded {
-  padding-inline: 16px;
 }
 
 [data-theme="clay"] .fluid,

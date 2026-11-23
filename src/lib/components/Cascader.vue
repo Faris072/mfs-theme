@@ -19,7 +19,7 @@
       </button>
 
       <Transition name="cas-pop">
-        <div v-if="isOpen" class="cas-panel mfs-surface mfs-rounded mfs-blur mfs-shadow">
+        <div v-if="isOpen" class="cas-panel mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
           <div v-for="(col, colIdx) in columns" :key="colIdx" class="cas-col">
             <button
               v-for="opt in col"

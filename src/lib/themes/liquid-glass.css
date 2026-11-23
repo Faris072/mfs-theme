@@ -1,0 +1,84 @@
+/* Liquid Glass Theme: Optical refractive crystal glass over dramatic cobalt/coral silk backdrop */
+.theme-liquid-glass,
+[data-theme="liquid-glass"] {
+  --theme-name: 'Liquid Glass';
+  --bg: #0b1020;
+  --bg-gradient:
+    radial-gradient(at 15% 20%, rgba(37, 99, 235, 0.78) 0px, transparent 52%),
+    radial-gradient(at 82% 24%, rgba(234, 88, 12, 0.68) 0px, transparent 48%),
+    radial-gradient(at 52% 48%, rgba(254, 243, 199, 0.22) 0px, transparent 40%),
+    radial-gradient(at 78% 82%, rgba(29, 78, 216, 0.72) 0px, transparent 54%),
+    radial-gradient(at 18% 84%, rgba(249, 115, 22, 0.56) 0px, transparent 50%),
+    linear-gradient(140deg, #0b1020 0%, #131c38 50%, #1f1424 100%);
+  --text: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.78);
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.09);
+  --surface-subtle: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.42);
+  --border-width: 1px;
+  --radius: 24px;
+  --radius-pill: 9999px;
+  --backdrop-blur: blur(10px) saturate(175%) contrast(1.06);
+
+  /* Colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-text: #ffffff;
+  --secondary: #fb923c;
+  --secondary-text: #1c1917;
+  --success: #34d399;
+  --success-text: #042f2e;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --danger-text: #1c1917;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+  --grid-gap: 16px;
+
+  /* Optical Refractive Rim & Depth Shadows */
+  --glow: 0 0 24px rgba(255, 255, 255, 0.18);
+  --bevel-light: rgba(255, 255, 255, 0.85);
+  --bevel-dark: rgba(0, 0, 0, 0.28);
+  --shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
+    0 18px 40px rgba(0, 0, 0, 0.38);
+
+  --clay-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
+    0 14px 32px rgba(0, 0, 0, 0.34);
+
+  --clay-shadow-hover:
+    inset 0 2px 1.5px rgba(255, 255, 255, 0.95),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.55),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.3),
+    0 20px 44px rgba(0, 0, 0, 0.42);
+
+  --clay-shadow-active:
+    inset 0 2px 6px rgba(0, 0, 0, 0.35),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.45),
+    0 6px 16px rgba(0, 0, 0, 0.32);
+
+  --card-shadow:
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
+    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
+    0 18px 40px rgba(0, 0, 0, 0.38);
+
+  --input-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.32),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.35);
+}

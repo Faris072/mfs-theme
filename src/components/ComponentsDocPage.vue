@@ -1,12 +1,12 @@
 <template>
-  <div class="docs-shell">
+  <div class="docs-shell mfs-container">
     <!-- Mobile component switcher -->
-    <div class="mobile-switcher">
-      <label class="mobile-switcher-label" for="mobile-comp-select">Component</label>
-      <div class="mobile-switcher-row">
+    <div class="mobile-switcher mfs-mb-4 mfs-p-3 mfs-rounded-md mfs-surface mfs-shadow">
+      <label class="mobile-switcher-label mfs-font-bold mfs-text-muted mfs-mb-2" for="mobile-comp-select">Component</label>
+      <div>
         <select
           id="mobile-comp-select"
-          class="mobile-select"
+          class="mobile-select mfs-w-full mfs-rounded-sm mfs-surface-subtle mfs-font-semibold"
           :value="activeItem.slug"
           @change="onMobileSelect"
         >
@@ -27,90 +27,357 @@
       </div>
     </div>
 
-    <div class="docs-layout">
+    <div class="docs-layout mfs-items-start">
       <!-- Desktop sticky sidebar -->
-      <aside class="docs-sidebar" aria-label="Components navigation">
-        <div class="sidebar-search-wrap">
-          <Search :size="15" class="sidebar-search-icon" />
+      <aside class="docs-sidebar mfs-flex mfs-flex-col mfs-gap-4 mfs-p-5 mfs-rounded-lg mfs-surface mfs-shadow" aria-label="Components navigation">
+        <div class="mfs-relative mfs-flex mfs-items-center">
+          <Search :size="15" class="sidebar-search-icon mfs-absolute mfs-text-muted" />
           <input
             v-model="searchQuery"
             type="search"
-            class="sidebar-search"
+            class="sidebar-search mfs-w-full mfs-rounded-sm mfs-surface-subtle mfs-shadow-inset"
             placeholder="Filter components..."
             aria-label="Filter components"
           />
         </div>
 
-        <nav class="sidebar-groups">
+        <nav class="sidebar-groups mfs-flex mfs-flex-col mfs-overflow-y-auto mfs-pr-2">
           <div
             v-for="group in filteredGroups"
             :key="group.phase"
-            class="sidebar-group"
           >
-            <p class="sidebar-group-title">{{ group.title }}</p>
-            <ul class="sidebar-list">
+            <button
+              type="button"
+              class="sidebar-group-btn mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-cursor-pointer mfs-transition"
+              :aria-expanded="isGroupOpen(group.phase)"
+              @click="toggleGroup(group.phase)"
+            >
+              <span class="sidebar-group-title mfs-font-bold mfs-text-muted mfs-truncate">{{ group.title }}</span>
+              <span class="mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-shrink-0">
+                <span class="sidebar-group-count mfs-text-xs mfs-font-semibold mfs-text-muted">{{ group.items.length }}</span>
+                <ChevronDown
+                  :size="14"
+                  class="sidebar-group-chevron mfs-text-muted mfs-transition"
+                  :class="{ 'is-open': isGroupOpen(group.phase) }"
+                />
+              </span>
+            </button>
+            <ul
+              v-show="isGroupOpen(group.phase)"
+              class="sidebar-list mfs-flex mfs-flex-col mfs-p-0 mfs-mt-1 mfs-mb-0"
+            >
               <li v-for="item in group.items" :key="item.slug">
                 <button
                   type="button"
-                  class="sidebar-link"
+                  class="sidebar-link mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-rounded-sm mfs-font-medium mfs-bg-transparent mfs-text-left mfs-cursor-pointer mfs-transition"
                   :class="{ 'is-active': item.slug === activeItem.slug }"
                   :aria-current="item.slug === activeItem.slug ? 'page' : undefined"
                   @click="emit('select', item.slug)"
                 >
-                  <span>{{ item.name }}</span>
-                  <span class="sidebar-cat">{{ item.category }}</span>
+                  <span class="mfs-truncate">{{ item.name }}</span>
                 </button>
               </li>
             </ul>
           </div>
 
-          <p v-if="filteredGroups.length === 0" class="sidebar-empty">
+          <p v-if="filteredGroups.length === 0" class="sidebar-empty mfs-text-muted">
             No components match "{{ searchQuery }}".
           </p>
         </nav>
       </aside>
 
       <!-- Main documentation content -->
-      <div class="docs-main">
-        <header class="docs-header">
-          <div class="docs-header-top">
-            <div class="docs-title-row">
-              <h1 class="docs-title">{{ activeItem.name }}</h1>
-              <span class="docs-category-badge">{{ activeItem.category }}</span>
-            </div>
-
-            <!-- Inline quick theme switcher -->
-            <div class="docs-theme-switcher">
-              <span class="docs-theme-label">Theme:</span>
-              <Select
-                class="docs-theme-select-comp"
-                :model-value="currentTheme"
-                :options="themeSelectOptions"
-                :searchable="false"
-                :clearable="false"
-                @update:model-value="onThemeSelect"
-              />
-            </div>
+      <div class="docs-main mfs-min-w-0 mfs-flex mfs-flex-col">
+        <header class="docs-header mfs-p-6 mfs-rounded-lg mfs-surface mfs-shadow">
+          <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-3">
+            <h1 class="docs-title mfs-text mfs-m-0">{{ activeItem.name }}</h1>
+            <span class="docs-category-badge mfs-font-bold mfs-pill mfs-border mfs-surface-subtle mfs-text-primary">{{ activeItem.category }}</span>
+            <span class="mfs-font-bold mfs-pill mfs-soft-success mfs-text-xs mfs-px-3 mfs-py-1">Ready</span>
           </div>
 
-          <p class="docs-summary">{{ activeItem.summary }}</p>
+          <p class="docs-summary mfs-text-muted mfs-mt-3 mfs-mb-0">{{ activeItem.summary }}</p>
+
+          <!-- OpenVue-style Import Bar -->
+          <div class="mfs-mt-4 mfs-px-3 mfs-py-2 mfs-rounded-md mfs-surface-subtle mfs-border mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+            <div class="mfs-flex mfs-items-center mfs-gap-3 mfs-min-w-0 mfs-flex-1">
+              <span class="docs-import-label mfs-text-xs mfs-font-bold mfs-text-muted mfs-surface mfs-border mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-shrink-0">Import</span>
+              <code class="mfs-font-mono mfs-text-xs mfs-text mfs-truncate">{{ importStatement }}</code>
+            </div>
+            <button
+              type="button"
+              class="import-copy-btn mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-px-3 mfs-py-1 mfs-rounded-sm mfs-surface mfs-text-xs mfs-font-semibold mfs-cursor-pointer mfs-transition mfs-shrink-0"
+              :class="{ 'is-copied': copiedImport }"
+              :aria-label="copiedImport ? 'Import copied' : 'Copy import statement'"
+              @click="copyImport"
+            >
+              <Check v-if="copiedImport" :size="13" />
+              <Copy v-else :size="13" />
+              <span>{{ copiedImport ? 'Copied!' : 'Copy' }}</span>
+            </button>
+          </div>
         </header>
 
-        <div class="docs-body">
+        <!-- Top-level OpenVue-style Documentation Tabs -->
+        <nav
+          class="docs-tabs mfs-inline-flex mfs-items-center mfs-gap-1 mfs-p-1 mfs-rounded-md mfs-surface mfs-shadow"
+          role="tablist"
+          aria-label="Component documentation sections"
+        >
+          <button
+            v-for="tabItem in docTabs"
+            :key="tabItem.key"
+            type="button"
+            role="tab"
+            class="docs-tab-btn mfs-border-none mfs-bg-transparent mfs-rounded-sm mfs-font-semibold mfs-text-sm mfs-text-muted mfs-cursor-pointer mfs-transition mfs-inline-flex mfs-items-center mfs-gap-2"
+            :class="{ 'is-active': activeTab === tabItem.key }"
+            :aria-selected="activeTab === tabItem.key"
+            @click="activeTab = tabItem.key"
+          >
+            <span>{{ tabItem.label }}</span>
+            <span
+              v-if="tabItem.key === 'api' && apiRowCount > 0"
+              class="docs-tab-count mfs-pill mfs-text-xs mfs-font-bold mfs-px-2"
+            >
+              {{ apiRowCount }}
+            </span>
+          </button>
+        </nav>
+
+        <!-- Features Tab -->
+        <div v-show="activeTab === 'features'" class="docs-body mfs-flex mfs-flex-col">
           <component :is="activePhaseDemo" :active-slug="activeItem.slug" />
         </div>
 
-        <footer class="docs-pager" aria-label="Component pagination">
+        <!-- Accessibility Card (Features tab) -->
+        <section
+          v-if="activeTab === 'features' && activeItemA11y && (activeItemA11y.keyboard?.length || activeItemA11y.aria?.length)"
+          class="mfs-card mfs-stack mfs-gap-4"
+          aria-labelledby="docs-a11y-heading"
+        >
+          <h2 id="docs-a11y-heading" class="mfs-title mfs-text-base mfs-m-0">Accessibility</h2>
+          <div class="mfs-grid mfs-gap-4">
+            <div v-if="activeItemA11y.keyboard?.length" class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-2">
+              <h3 class="a11y-subhead mfs-font-bold mfs-text-muted mfs-m-0">Keyboard Support</h3>
+              <ul class="a11y-list mfs-flex mfs-flex-col mfs-gap-2 mfs-m-0 mfs-p-0">
+                <li
+                  v-for="(item, idx) in activeItemA11y.keyboard"
+                  :key="idx"
+                  class="mfs-text-sm mfs-text mfs-flex mfs-items-start mfs-gap-2"
+                >
+                  <span>{{ item }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div v-if="activeItemA11y.aria?.length" class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-2">
+              <h3 class="a11y-subhead mfs-font-bold mfs-text-muted mfs-m-0">ARIA Attributes</h3>
+              <ul class="a11y-list mfs-flex mfs-flex-col mfs-gap-2 mfs-m-0 mfs-p-0">
+                <li
+                  v-for="(attr, idx) in activeItemA11y.aria"
+                  :key="idx"
+                  class="mfs-text-sm mfs-text"
+                >
+                  <code class="mfs-font-mono mfs-text-xs mfs-text-primary mfs-font-semibold">{{ attr }}</code>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- API Tab -->
+        <section
+          v-if="activeTab === 'api'"
+          class="mfs-card mfs-stack mfs-gap-6"
+          aria-labelledby="docs-api-heading"
+        >
+          <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
+            <div>
+              <h2 id="docs-api-heading" class="mfs-title mfs-text-lg mfs-m-0">{{ activeItem.name }} API</h2>
+              <p class="mfs-text-sm mfs-text-muted mfs-mt-1 mfs-mb-0">
+                Props, emitted events, slots, and accessibility attributes for {{ activeItem.name }}.
+              </p>
+            </div>
+          </div>
+
+          <template v-if="apiSections.length">
+            <div
+              v-for="section in apiSections"
+              :key="section.key"
+              class="mfs-stack mfs-gap-3"
+            >
+              <div class="mfs-flex mfs-items-center mfs-gap-2">
+                <h3 class="mfs-title mfs-text-base mfs-m-0">{{ section.label }}</h3>
+                <span class="mfs-pill mfs-soft-primary mfs-text-xs mfs-font-bold mfs-px-2 mfs-py-1">
+                  {{ section.rows.length }}
+                </span>
+              </div>
+
+              <div class="mfs-rounded-md mfs-surface-subtle mfs-border mfs-overflow-x-auto">
+                <table class="docs-table mfs-w-full mfs-text-left">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th v-if="section.showType">Type</th>
+                      <th v-if="section.showDefault">Default</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="row in section.rows" :key="row.name">
+                      <td><code class="mfs-font-mono mfs-text-xs mfs-text-primary mfs-font-semibold">{{ row.name }}</code></td>
+                      <td v-if="section.showType">
+                        <code v-if="row.type" class="mfs-font-mono mfs-text-xs mfs-text-muted">{{ row.type }}</code>
+                        <span v-else class="mfs-text-muted">—</span>
+                      </td>
+                      <td v-if="section.showDefault">
+                        <code v-if="row.default" class="mfs-font-mono mfs-text-xs mfs-text-muted">{{ row.default }}</code>
+                        <span v-else class="mfs-text-muted">—</span>
+                      </td>
+                      <td class="mfs-text-sm mfs-text">{{ row.description }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </template>
+
+          <div
+            v-else
+            class="mfs-surface-subtle mfs-rounded-md mfs-p-6 mfs-text-center mfs-stack mfs-gap-2"
+          >
+            <p class="mfs-text-sm mfs-font-semibold mfs-text mfs-m-0">No component API props, events, or slots</p>
+            <p class="mfs-text-xs mfs-text-muted mfs-m-0">
+              {{ activeItem.name }} is a CSS/utility or presentational feature without reactive component bindings.
+            </p>
+          </div>
+
+          <div
+            v-if="activeItemA11y && (activeItemA11y.keyboard?.length || activeItemA11y.aria?.length)"
+            class="mfs-stack mfs-gap-3 mfs-pt-2 mfs-border-none mfs-border-t"
+          >
+            <h3 class="mfs-title mfs-text-base mfs-m-0">Accessibility</h3>
+            <div class="mfs-grid mfs-gap-4">
+              <div v-if="activeItemA11y.keyboard?.length" class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-2">
+                <h4 class="a11y-subhead mfs-font-bold mfs-text-muted mfs-m-0">Keyboard Support</h4>
+                <ul class="a11y-list mfs-flex mfs-flex-col mfs-gap-2 mfs-m-0 mfs-p-0">
+                  <li
+                    v-for="(item, idx) in activeItemA11y.keyboard"
+                    :key="idx"
+                    class="mfs-text-sm mfs-text"
+                  >
+                    {{ item }}
+                  </li>
+                </ul>
+              </div>
+
+              <div v-if="activeItemA11y.aria?.length" class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-2">
+                <h4 class="a11y-subhead mfs-font-bold mfs-text-muted mfs-m-0">ARIA Attributes</h4>
+                <ul class="a11y-list mfs-flex mfs-flex-col mfs-gap-2 mfs-m-0 mfs-p-0">
+                  <li
+                    v-for="(attr, idx) in activeItemA11y.aria"
+                    :key="idx"
+                    class="mfs-text-sm mfs-text"
+                  >
+                    <code class="mfs-font-mono mfs-text-xs mfs-text-primary mfs-font-semibold">{{ attr }}</code>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Theming Tab -->
+        <section
+          v-if="activeTab === 'theming'"
+          class="mfs-card mfs-stack mfs-gap-6"
+          aria-labelledby="docs-theming-heading"
+        >
+          <div class="mfs-stack mfs-gap-1">
+            <h2 id="docs-theming-heading" class="mfs-title mfs-text-lg mfs-m-0">Theming &amp; Design Tokens</h2>
+            <p class="mfs-text-sm mfs-text-muted mfs-m-0">
+              All components adapt automatically when switching themes via <code class="mfs-font-mono mfs-text-xs mfs-text-primary">useTheme()</code> or the <code class="mfs-font-mono mfs-text-xs mfs-text-primary">[data-theme="..."]</code> attribute.
+            </p>
+          </div>
+
+          <!-- Theme Switching -->
+          <div class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-3">
+            <h3 class="mfs-title mfs-text-base mfs-m-0">Runtime Theme Switching</h3>
+            <p class="mfs-text-sm mfs-text-muted mfs-m-0">
+              Call <code class="mfs-font-mono mfs-text-xs mfs-text-primary">setTheme()</code> from <code class="mfs-font-mono mfs-text-xs mfs-text-primary">useTheme()</code> to toggle between <code class="mfs-font-mono mfs-text-xs">clay</code>, <code class="mfs-font-mono mfs-text-xs">glass</code>, <code class="mfs-font-mono mfs-text-xs">neo</code>, and other built-in themes.
+            </p>
+            <pre class="theming-code mfs-m-0 mfs-p-4 mfs-rounded-sm mfs-surface mfs-border mfs-font-mono mfs-text-xs mfs-text mfs-overflow-x-auto"><code>{{ themeSwitchSnippet }}</code></pre>
+          </div>
+
+          <!-- Semantic CSS Tokens Table -->
+          <div class="mfs-stack mfs-gap-3">
+            <h3 class="mfs-title mfs-text-base mfs-m-0">Key Semantic CSS Tokens</h3>
+            <div class="mfs-rounded-md mfs-surface-subtle mfs-border mfs-overflow-x-auto">
+              <table class="docs-table mfs-w-full mfs-text-left">
+                <thead>
+                  <tr>
+                    <th>Token</th>
+                    <th>Preview</th>
+                    <th>Purpose</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="token in themeTokens" :key="token.name">
+                    <td><code class="mfs-font-mono mfs-text-xs mfs-text-primary mfs-font-semibold">{{ token.name }}</code></td>
+                    <td>
+                      <span
+                        class="token-swatch mfs-inline-flex mfs-border mfs-rounded-sm"
+                        :style="token.previewStyle"
+                        :aria-label="token.name"
+                      />
+                    </td>
+                    <td class="mfs-text-sm mfs-text">{{ token.description }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- CSS Override Snippet -->
+          <div class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-3">
+            <h3 class="mfs-title mfs-text-base mfs-m-0">Custom CSS Override</h3>
+            <pre class="theming-code mfs-m-0 mfs-p-4 mfs-rounded-sm mfs-surface mfs-border mfs-font-mono mfs-text-xs mfs-text mfs-overflow-x-auto"><code>{{ themeOverrideSnippet }}</code></pre>
+          </div>
+
+          <!-- Core .mfs-* Utilities Quick Reference -->
+          <div class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-3">
+            <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-2">
+              <h3 class="mfs-title mfs-text-base mfs-m-0">Core .mfs-* Utility Classes</h3>
+              <a
+                href="/components/utilities"
+                class="mfs-text-xs mfs-font-semibold mfs-text-primary"
+                @click.prevent="emit('select', 'utilities')"
+              >
+                View all Theme Utilities &rarr;
+              </a>
+            </div>
+            <div class="mfs-flex mfs-flex-wrap mfs-gap-2">
+              <code
+                v-for="util in coreUtilities"
+                :key="util"
+                class="mfs-font-mono mfs-text-xs mfs-surface mfs-border mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-text"
+              >
+                {{ util }}
+              </code>
+            </div>
+          </div>
+        </section>
+
+        <footer class="mfs-pt-2 mfs-flex mfs-justify-between mfs-gap-3" aria-label="Component pagination">
           <button
             v-if="prevItem"
             type="button"
-            class="pager-btn pager-prev"
+            class="pager-btn pager-prev mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-py-3 mfs-px-4 mfs-rounded-md mfs-surface mfs-shadow mfs-cursor-pointer mfs-transition"
             @click="emit('select', prevItem.slug)"
           >
             <ChevronLeft :size="16" />
-            <div class="pager-meta">
-              <span class="pager-dir">Previous</span>
-              <strong class="pager-name">{{ prevItem.name }}</strong>
+            <div class="pager-meta mfs-flex mfs-flex-col mfs-text-left">
+              <span class="pager-dir mfs-text-muted">Previous</span>
+              <strong class="pager-name mfs-font-bold mfs-text">{{ prevItem.name }}</strong>
             </div>
           </button>
           <span v-else />
@@ -118,12 +385,12 @@
           <button
             v-if="nextItem"
             type="button"
-            class="pager-btn pager-next"
+            class="pager-btn pager-next mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-py-3 mfs-px-4 mfs-rounded-md mfs-surface mfs-shadow mfs-cursor-pointer mfs-transition"
             @click="emit('select', nextItem.slug)"
           >
-            <div class="pager-meta">
-              <span class="pager-dir">Next</span>
-              <strong class="pager-name">{{ nextItem.name }}</strong>
+            <div class="pager-meta mfs-flex mfs-flex-col mfs-text-right">
+              <span class="pager-dir mfs-text-muted">Next</span>
+              <strong class="pager-name mfs-font-bold mfs-text">{{ nextItem.name }}</strong>
             </div>
             <ChevronRight :size="16" />
           </button>
@@ -134,15 +401,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from 'vue'
-import { ChevronLeft, ChevronRight, Circle, Layers, Search, Sparkles } from 'lucide-vue-next'
-import { Select, useTheme, type ThemeType } from '../lib'
+import { computed, defineAsyncComponent, onBeforeUnmount, provide, ref, watch } from 'vue'
+import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, Search } from 'lucide-vue-next'
 import {
   COMPONENT_NAV,
   PHASE_TITLES,
   getComponentBySlug,
+  type ApiRow,
   type ComponentNavItem
 } from '../data/componentDocs'
+import type { ComponentApiSpec, DocsContext } from './ComponentPreview.vue'
 
 const props = defineProps<{
   activeSlug: string
@@ -152,7 +420,6 @@ const emit = defineEmits<{
   (e: 'select', slug: string): void
 }>()
 
-const { currentTheme, themeOptions, setTheme } = useTheme()
 const searchQuery = ref('')
 
 const UtilitiesDemo = defineAsyncComponent(() => import('./demos/UtilitiesDemo.vue'))
@@ -185,6 +452,159 @@ const phaseDemoMap = {
 
 const activeItem = computed(() => getComponentBySlug(props.activeSlug))
 const activePhaseDemo = computed(() => phaseDemoMap[activeItem.value.phase])
+const activeItemA11y = computed(() => activeItem.value.a11y)
+
+const openGroups = ref<Record<number, boolean>>({
+  [activeItem.value.phase]: true
+})
+
+watch(
+  () => activeItem.value.phase,
+  (phase) => {
+    openGroups.value[phase] = true
+  }
+)
+
+const isGroupOpen = (phase: number) =>
+  searchQuery.value.trim().length > 0 || !!openGroups.value[phase]
+
+const toggleGroup = (phase: number) => {
+  openGroups.value[phase] = !openGroups.value[phase]
+}
+
+type DocTabKey = 'features' | 'api' | 'theming'
+
+const docTabs: Array<{ key: DocTabKey; label: string }> = [
+  { key: 'features', label: 'Features' },
+  { key: 'api', label: 'API' },
+  { key: 'theming', label: 'Theming' }
+]
+
+const activeTab = ref<DocTabKey>('features')
+const registeredApi = ref<ComponentApiSpec | null>(null)
+
+const mergeRows = (existing: ApiRow[] = [], incoming: ApiRow[] = []) => {
+  const seen = new Set(existing.map((r) => r.name))
+  return [...existing, ...incoming.filter((r) => !seen.has(r.name))]
+}
+
+const registerApi = (api: ComponentApiSpec) => {
+  const prev = registeredApi.value
+  registeredApi.value = {
+    props: mergeRows(prev?.props, api.props),
+    events: mergeRows(prev?.events, api.events),
+    slots: mergeRows(prev?.slots, api.slots)
+  }
+}
+
+watch(
+  () => props.activeSlug,
+  () => {
+    registeredApi.value = null
+  },
+  { flush: 'sync' }
+)
+
+provide<DocsContext>('docContext', {
+  activeTab,
+  registerApi
+})
+
+const apiSections = computed(() => {
+  const sections: Array<{
+    key: 'props' | 'events' | 'slots'
+    label: string
+    rows: ApiRow[]
+    showType: boolean
+    showDefault: boolean
+  }> = []
+  if (registeredApi.value?.props?.length) {
+    sections.push({ key: 'props', label: 'Props', rows: registeredApi.value.props, showType: true, showDefault: true })
+  }
+  if (registeredApi.value?.events?.length) {
+    sections.push({ key: 'events', label: 'Events', rows: registeredApi.value.events, showType: true, showDefault: false })
+  }
+  if (registeredApi.value?.slots?.length) {
+    sections.push({ key: 'slots', label: 'Slots', rows: registeredApi.value.slots, showType: false, showDefault: false })
+  }
+  return sections
+})
+
+const apiRowCount = computed(() =>
+  apiSections.value.reduce((total, section) => total + section.rows.length, 0)
+)
+
+const themeSwitchSnippet = `import { useTheme } from 'mfs-theme'
+
+const { currentTheme, setTheme } = useTheme()
+setTheme('glass') // 'clay' | 'glass' | 'neo' | ...`
+
+const themeOverrideSnippet = `[data-theme="clay"] {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --radius-md: 16px;
+}`
+
+const themeTokens = [
+  { name: '--bg', description: 'Root page background color', previewStyle: 'background: var(--bg)' },
+  { name: '--surface', description: 'Elevated card, panel, and container surface', previewStyle: 'background: var(--surface)' },
+  { name: '--surface-subtle', description: 'Secondary inset surface for headers and table wells', previewStyle: 'background: var(--surface-subtle)' },
+  { name: '--primary', description: 'Primary brand accent and active state color', previewStyle: 'background: var(--primary)' },
+  { name: '--text', description: 'Primary body and heading text color', previewStyle: 'background: var(--text)' },
+  { name: '--text-muted', description: 'Secondary labels, hints, and captions', previewStyle: 'background: var(--text-muted)' },
+  { name: '--border', description: 'Subtle Hairline border token', previewStyle: 'background: var(--border)' },
+  { name: '--radius-md', description: 'Default medium corner radius (12px base)', previewStyle: 'background: var(--surface); border-radius: var(--radius-md)' },
+  { name: '--clay-shadow', description: 'Theme-adaptive interactive surface shadow', previewStyle: 'background: var(--surface); box-shadow: var(--clay-shadow)' },
+  { name: '--backdrop-blur', description: 'Frosted glass blur filter (active in Glassmorphism)', previewStyle: 'background: var(--surface); backdrop-filter: var(--backdrop-blur, blur(12px))' }
+]
+
+const coreUtilities = [
+  '.mfs-surface',
+  '.mfs-surface-subtle',
+  '.mfs-card',
+  '.mfs-inset',
+  '.mfs-shadow',
+  '.mfs-pill',
+  '.mfs-stack',
+  '.mfs-row',
+  '.mfs-grid',
+  '.mfs-gap-4'
+]
+
+const toDirectiveSymbol = (name: string) =>
+  name.replace(/-([a-z])/g, (_, ch: string) => ch.toUpperCase())
+
+const importStatement = computed(() => {
+  const item = activeItem.value
+  if (item.importSymbol) {
+    return `import { ${item.importSymbol} } from 'mfs-theme'`
+  }
+  if (item.phase === 0) {
+    return `import 'mfs-theme/style.css'`
+  }
+  const symbol = item.name.startsWith('v-') ? toDirectiveSymbol(item.name) : item.name
+  return `import { ${symbol} } from 'mfs-theme'`
+})
+
+const copiedImport = ref(false)
+let importCopyTimer: ReturnType<typeof setTimeout> | null = null
+
+const copyImport = async () => {
+  try {
+    await navigator.clipboard.writeText(importStatement.value)
+    copiedImport.value = true
+    if (importCopyTimer) clearTimeout(importCopyTimer)
+    importCopyTimer = setTimeout(() => {
+      copiedImport.value = false
+    }, 1500)
+  } catch {
+    // Clipboard may be unavailable in restricted contexts
+  }
+}
+
+onBeforeUnmount(() => {
+  if (importCopyTimer) clearTimeout(importCopyTimer)
+})
 
 const activeIndex = computed(() =>
   COMPONENT_NAV.findIndex((item) => item.slug === activeItem.value.slug)
@@ -225,22 +645,6 @@ const filteredGroups = computed(() => {
   return groupByPhase(matches)
 })
 
-const getThemeIcon = (id: ThemeType) => {
-  if (id === 'glass') return Sparkles
-  if (id === 'neo') return Circle
-  return Layers
-}
-
-const themeSelectOptions = computed(() =>
-  themeOptions.map((opt) => ({ label: opt.name, value: opt.id }))
-)
-
-const onThemeSelect = (val: string | number | null) => {
-  if (val) {
-    setTheme(val as ThemeType)
-  }
-}
-
 const onMobileSelect = (e: Event) => {
   const target = e.target as HTMLSelectElement
   if (target.value) {
@@ -251,86 +655,46 @@ const onMobileSelect = (e: Event) => {
 
 <style scoped>
 .docs-shell {
-  max-width: var(--container-max, 1200px);
-  margin: 0 auto;
-  padding: 24px 24px 48px;
+  max-width: 1440px;
+  padding: 28px 32px 56px;
 }
 
 .mobile-switcher {
   display: none;
-  margin-bottom: 16px;
-  padding: 12px 14px;
-  border-radius: var(--radius-md, 12px);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--clay-shadow);
 }
 
 .mobile-switcher-label {
   display: block;
   font-size: 0.72rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 6px;
 }
 
 .mobile-select {
-  width: 100%;
   padding: 9px 12px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
   font-size: 0.9rem;
-  font-weight: 600;
 }
 
 .docs-layout {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 28px;
-  align-items: start;
+  grid-template-columns: 268px minmax(0, 1fr);
+  gap: 32px;
 }
 
 .docs-sidebar {
   position: sticky;
-  top: 84px;
-  max-height: calc(100vh - 108px);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 16px;
-  border-radius: var(--radius-lg, 18px);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-}
-
-.sidebar-search-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
+  top: 88px;
+  max-height: calc(100vh - 112px);
 }
 
 .sidebar-search-icon {
-  position: absolute;
   left: 10px;
-  color: var(--text-muted);
   pointer-events: none;
 }
 
 .sidebar-search {
-  width: 100%;
   padding: 8px 10px 8px 32px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
   font-size: 0.84rem;
-  box-shadow: var(--input-shadow);
 }
 
 .sidebar-search::placeholder {
@@ -338,46 +702,53 @@ const onMobileSelect = (e: Event) => {
 }
 
 .sidebar-groups {
-  overflow-y: auto;
-  padding-right: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  gap: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.sidebar-groups::-webkit-scrollbar {
+  width: 5px;
+}
+
+.sidebar-groups::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-groups::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+
+.sidebar-group-btn:hover {
+  background: var(--surface-subtle);
 }
 
 .sidebar-group-title {
   font-size: 0.7rem;
-  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin: 0 0 6px;
-  padding: 0 6px;
+  letter-spacing: 0.06em;
+}
+
+.sidebar-group-count {
+  font-size: 0.68rem;
+  opacity: 0.8;
+}
+
+.sidebar-group-chevron.is-open {
+  transform: rotate(180deg);
 }
 
 .sidebar-list {
   list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  gap: 4px;
 }
 
 .sidebar-link {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 7px 10px;
-  border: none;
-  border-radius: var(--radius-sm, 8px);
-  background: transparent;
+  padding: 8px 12px;
   color: var(--text);
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: 0.86rem;
+  line-height: 1.35;
 }
 
 .sidebar-link:hover {
@@ -390,181 +761,110 @@ const onMobileSelect = (e: Event) => {
   font-weight: 600;
 }
 
-.sidebar-cat {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.sidebar-link.is-active .sidebar-cat {
-  color: var(--primary-text, #ffffff);
-  opacity: 0.85;
-}
-
 .sidebar-empty {
   font-size: 0.82rem;
-  color: var(--text-muted);
-  padding: 8px 6px;
+  padding: 8px 10px;
 }
 
-.docs-main {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.docs-header {
-  padding: 22px 24px;
-  border-radius: var(--radius-lg, 18px);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-}
-
-.docs-header-top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.docs-title-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
+.docs-main,
+.docs-body {
+  gap: 28px;
 }
 
 .docs-title {
-  font-size: 1.65rem;
+  font-size: 1.7rem;
   font-weight: 800;
-  color: var(--text);
-  margin: 0;
   line-height: 1.2;
 }
 
-.docs-category-badge,
-.docs-phase-badge {
+.docs-category-badge {
   font-size: 0.74rem;
-  font-weight: 700;
   padding: 3px 10px;
-  border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border);
 }
 
-.docs-category-badge {
-  background: var(--surface-subtle);
+.docs-summary {
+  font-size: 0.96rem;
+  line-height: 1.55;
+}
+
+.docs-import-label,
+.a11y-subhead {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.import-copy-btn:hover,
+.import-copy-btn.is-copied {
+  border-color: var(--primary);
   color: var(--primary);
 }
 
-.docs-phase-badge {
-  background: var(--surface-subtle);
-  color: var(--text-muted);
+.a11y-list {
+  list-style: none;
 }
 
-.docs-theme-switcher {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 6px 4px 12px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
+.docs-tabs {
+  align-self: flex-start;
 }
 
-.docs-theme-label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
+.docs-tab-btn {
+  padding: 8px 16px;
 }
 
-.docs-theme-select-comp {
-  width: 162px;
-}
-
-.docs-theme-select-comp :deep(.select-trigger) {
-  padding: 5px 10px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  border-radius: var(--radius-pill, 9999px);
-}
-
-.docs-theme-select-comp :deep(.select-dropdown) {
-  z-index: 180;
-  min-width: 185px;
-  right: 0;
-  left: auto;
-}
-
-.docs-theme-pills {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-}
-
-.docs-theme-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  border: none;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 5px 11px;
-  border-radius: var(--radius-pill, 9999px);
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.docs-theme-pill:hover {
+.docs-tab-btn:hover {
   color: var(--text);
 }
 
-.docs-theme-pill.is-active {
+.docs-tab-btn.is-active {
   background: var(--primary);
   color: var(--primary-text, #ffffff);
 }
 
-.docs-summary {
-  margin: 10px 0 0;
-  font-size: 0.96rem;
+.docs-tab-btn.is-active .docs-tab-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: var(--primary-text, #ffffff);
+}
+
+.docs-tab-count {
+  background: var(--surface-subtle);
   color: var(--text-muted);
+  padding-block: 1px;
 }
 
-.docs-body {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.docs-table {
+  border-collapse: collapse;
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
-.docs-pager {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding-top: 8px;
-}
-
-.pager-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+.docs-table th,
+.docs-table td {
   padding: 12px 16px;
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.docs-table th {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
   background: var(--surface);
-  color: var(--text);
-  cursor: pointer;
-  box-shadow: var(--clay-shadow);
-  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.docs-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.token-swatch {
+  width: 28px;
+  height: 20px;
+}
+
+.theming-code {
+  line-height: 1.55;
+  tab-size: 2;
 }
 
 .pager-btn:hover {
@@ -572,30 +872,14 @@ const onMobileSelect = (e: Event) => {
   transform: translateY(-1px);
 }
 
-.pager-meta {
-  display: flex;
-  flex-direction: column;
-}
-
-.pager-prev .pager-meta {
-  text-align: left;
-}
-
-.pager-next .pager-meta {
-  text-align: right;
-}
-
 .pager-dir {
   font-size: 0.72rem;
-  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
 .pager-name {
   font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--text);
 }
 
 @media (max-width: 900px) {

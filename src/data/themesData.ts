@@ -2,15 +2,6 @@ import type { ThemeType } from '../lib/composables/useTheme'
 
 export type { ThemeType }
 
-export interface ComponentItem {
-  id: string
-  name: string
-  category: 'Action' | 'Forms' | 'Surfaces' | 'Feedback' | 'Navigation'
-  status: 'Ready' | 'Planned' | 'In Progress'
-  description: string
-  snippet: string
-}
-
 export interface DesignToken {
   name: string
   value: string
@@ -35,7 +26,6 @@ export interface ThemeDetailInfo {
   keyFeatures: string[]
   designTokens: DesignToken[]
   utilityClasses: UtilityClass[]
-  components: ComponentItem[]
 }
 
 export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
@@ -45,7 +35,7 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     tagline: '3D Inflated Soft Touch and Tactile Volume',
     badge: 'Tactile Volume',
     icon: 'Layers',
-    accentColor: '#6366f1',
+    accentColor: '#7c3aed',
     previewBg: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 50%, #fce7f3 100%)',
     description:
       'Gaya visual claymorphism mengadopsi ilusi permukaan tanah liat 3D yang mengembang dan empuk. Menggunakan kombinasi multi-layer inner shadow putih dan diffuse outer drop shadow lembut dengan sudut sangat membulat (pill/curved edges).',
@@ -66,112 +56,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
       { className: '.clay-btn', description: 'Tombol clay dengan interaksi click pressed 3D', example: '<button class="clay-btn">Action</button>' },
       { className: '.clay-inset', description: 'Permukaan cekung masuk untuk field teks/form', example: '<input class="clay-inset" />' },
       { className: '.clay-pill', description: 'Badge/tag dengan kelengkungan bulat sempurna', example: '<span class="clay-pill">Label</span>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol claymorphism dengan varian warna, tactile elevation, loading state, dan ripple.',
-        snippet: '<Button variant="primary" size="md">Klik Saya</Button>'
-      },
-      {
-        id: 'input',
-        name: 'Input',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Input text dengan permukaan inset sunken 3D, pesan validasi, dan label floating.',
-        snippet: '<Input v-model="text" label="Nama Pengguna" placeholder="Masukkan nama..." />'
-      },
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Wadah konten clay 3D dengan slot header, footer, dan opsi hover tactile.',
-        snippet: '<Card title="Judul Kartu" subtitle="Deskripsi">\n  Konten di sini\n</Card>'
-      },
-      {
-        id: 'badge',
-        name: 'Badge',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Label status pill dengan warna pastel cerah dan aksen clay shadow mikro.',
-        snippet: '<Badge variant="success" size="sm">Aktif</Badge>'
-      },
-      {
-        id: 'switch',
-        name: 'Switch',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Toggle switch tactile seperti tuas empuk dengan animasi smooth sliding.',
-        snippet: '<Switch v-model="enabled" label="Aktifkan Fitur" />'
-      },
-      {
-        id: 'modal',
-        name: 'Modal',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Dialog popup dengan backdrop blur dan kontainer clay melayang di atas viewport.',
-        snippet: '<Modal v-model="showModal" title="Detail Konfirmasi">\n  Isi Modal\n</Modal>'
-      },
-      {
-        id: 'avatar',
-        name: 'Avatar',
-        category: 'Surfaces',
-        status: 'Planned',
-        description: 'Foto profil berbentuk gelembung 3D dengan indikator status kehadiran.',
-        snippet: '<Avatar src="/avatar.png" size="lg" status="online" />'
-      },
-      {
-        id: 'tabs',
-        name: 'Tabs',
-        category: 'Navigation',
-        status: 'Planned',
-        description: 'Tab bar dengan sliding indicator bubble yang mengikuti tab aktif.',
-        snippet: '<Tabs v-model="activeTab" :items="[\'Ikhtisar\', \'Pengaturan\']" />'
-      },
-      {
-        id: 'dropdown',
-        name: 'Dropdown',
-        category: 'Action',
-        status: 'Planned',
-        description: 'Menu popover clay mengambang untuk daftar pilihan aksi lanjutan.',
-        snippet: '<Dropdown :options="actions" @select="handleAction" />'
-      },
-      {
-        id: 'checkbox',
-        name: 'Checkbox',
-        category: 'Forms',
-        status: 'Planned',
-        description: 'Kotak centang empuk 3D dengan icon ceklis dinamis.',
-        snippet: '<Checkbox v-model="agree" label="Saya setuju dengan S&K" />'
-      },
-      {
-        id: 'navbar',
-        name: 'Navbar',
-        category: 'Navigation',
-        status: 'In Progress',
-        description: 'Header navigasi responsif dengan integrasi theme switcher bawaan.',
-        snippet: '<Navbar brand="My App" :sticky="true" />'
-      },
-      {
-        id: 'toast',
-        name: 'Toast',
-        category: 'Feedback',
-        status: 'In Progress',
-        description: 'Notifikasi mengambang dengan animasi kenyal ala bubble clay.',
-        snippet: '<Toast variant="success" message="Data berhasil disimpan!" />'
-      },
-      {
-        id: 'tooltip',
-        name: 'Tooltip',
-        category: 'Feedback',
-        status: 'Planned',
-        description: 'Petunjuk hover bubble clay dengan sudut membulat dan elevasi lembut.',
-        snippet: '<Tooltip text="Informasi tambahan">Hover saya</Tooltip>'
-      }
     ]
   },
   glass: {
@@ -201,112 +85,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
       { className: '.glass-glow', description: 'Aksen cahaya neon menyala di sekitar batas komponen', example: '<div class="glass-glow">...</div>' },
       { className: '.glass-border', description: 'Border gradien halus yang mensimulasikan bias cahaya', example: '<div class="glass-border">...</div>' },
       { className: '.glass-dock', description: 'Bar dock navigasi mengambang ala macOS', example: '<nav class="glass-dock">...</nav>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol kaca transparan dengan efek hover neon glow dan pantulan tepi.',
-        snippet: '<Button variant="primary">Luncurkan</Button>'
-      },
-      {
-        id: 'input',
-        name: 'Input',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Input form transparan dengan garis fokus neon cyber.',
-        snippet: '<Input v-model="token" label="API Key" placeholder="sk-..." />'
-      },
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Panel kartu kaca buram dengan pemisah konten bercahaya.',
-        snippet: '<Card title="Metrik Server" subtitle="Status Realtime">\n  Data grafis\n</Card>'
-      },
-      {
-        id: 'badge',
-        name: 'Badge',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Tag translucent dengan border tipis dan teks glow kontras tinggi.',
-        snippet: '<Badge variant="success">Online</Badge>'
-      },
-      {
-        id: 'switch',
-        name: 'Switch',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Saklar toggle kaca dengan indikator lampu neon aktif.',
-        snippet: '<Switch v-model="dark" label="Mode Malam" />'
-      },
-      {
-        id: 'modal',
-        name: 'Modal',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Popup kaca elegan dengan efek latar belakang blur pekat.',
-        snippet: '<Modal v-model="open" title="Autentikasi Kaca">\n  Konten\n</Modal>'
-      },
-      {
-        id: 'avatar',
-        name: 'Avatar',
-        category: 'Surfaces',
-        status: 'Planned',
-        description: 'Avatar dengan ring kaca neon yang berputar pelan.',
-        snippet: '<Avatar src="/user.jpg" size="lg" status="online" />'
-      },
-      {
-        id: 'tabs',
-        name: 'Tabs',
-        category: 'Navigation',
-        status: 'Planned',
-        description: 'Tab kaca dengan highlight border cahaya berjalan.',
-        snippet: '<Tabs v-model="tab" :items="[\'Metrics\', \'Logs\']" />'
-      },
-      {
-        id: 'dropdown',
-        name: 'Dropdown',
-        category: 'Action',
-        status: 'Planned',
-        description: 'Menu tarik-turun kaca berlapis dengan efek frost.',
-        snippet: '<Dropdown :options="items" />'
-      },
-      {
-        id: 'checkbox',
-        name: 'Checkbox',
-        category: 'Forms',
-        status: 'Planned',
-        description: 'Kotak pilihan kaca dengan centang neon menyala.',
-        snippet: '<Checkbox v-model="check" label="Tetap Masuk" />'
-      },
-      {
-        id: 'navbar',
-        name: 'Navbar',
-        category: 'Navigation',
-        status: 'In Progress',
-        description: 'Dock navigasi kaca mengambang dengan backdrop-filter ultra jernih.',
-        snippet: '<Navbar brand="GlassUI" />'
-      },
-      {
-        id: 'toast',
-        name: 'Toast',
-        category: 'Feedback',
-        status: 'In Progress',
-        description: 'Notifikasi kaca frost mengambang dengan aksen border neon.',
-        snippet: '<Toast variant="success" message="Koneksi terenkripsi aktif!" />'
-      },
-      {
-        id: 'tooltip',
-        name: 'Tooltip',
-        category: 'Feedback',
-        status: 'Planned',
-        description: 'Petunjuk hover kaca mini dengan font kontras tajam.',
-        snippet: '<Tooltip text="Informasi rahasia">Hover saya</Tooltip>'
-      }
     ]
   },
   neo: {
@@ -336,112 +114,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
       { className: '.neo-sunken', description: 'Permukaan yang masuk ke dalam permukaan latar', example: '<div class="neo-sunken">...</div>' },
       { className: '.neo-button', description: 'Tombol yang beralih dari timbul menjadi cekung saat diklik', example: '<button class="neo-button">Press</button>' },
       { className: '.neo-circle', description: 'Tombol aksi lingkaran timbul untuk kontrol audio/media', example: '<button class="neo-circle">▶</button>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol terangkat (extruded) yang bertransisi menjadi inset saat ditekan.',
-        snippet: '<Button variant="primary">Kirim Perintah</Button>'
-      },
-      {
-        id: 'input',
-        name: 'Input',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Field teks yang terukir ke dalam permukaan kanvas dengan bayangan dalam presisi.',
-        snippet: '<Input v-model="code" label="Kode Keamanan" />'
-      },
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Kartu material monokromatik dengan relief timbul yang halus.',
-        snippet: '<Card title="Panel Kontrol">\n  Pengaturan perangkat\n</Card>'
-      },
-      {
-        id: 'badge',
-        name: 'Badge',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Tag indikator timbul dengan cekungan lembut di sekelilingnya.',
-        snippet: '<Badge variant="primary">Standby</Badge>'
-      },
-      {
-        id: 'switch',
-        name: 'Switch',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Saklar toggle fisik dalam alur rel cekung dengan knob timbul licin.',
-        snippet: '<Switch v-model="power" label="Daya Mesin" />'
-      },
-      {
-        id: 'modal',
-        name: 'Modal',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Dialog timbul tebal yang muncul mulus dari bidang layar.',
-        snippet: '<Modal v-model="visible" title="Konfigurasi">\n  Formulir\n</Modal>'
-      },
-      {
-        id: 'avatar',
-        name: 'Avatar',
-        category: 'Surfaces',
-        status: 'Planned',
-        description: 'Foto profil yang diletakkan dalam cincin cekung neumorphic.',
-        snippet: '<Avatar src="/photo.jpg" />'
-      },
-      {
-        id: 'tabs',
-        name: 'Tabs',
-        category: 'Navigation',
-        status: 'Planned',
-        description: 'Navigasi tab dengan status aktif berubah menjadi cekung.',
-        snippet: '<Tabs v-model="selected" :items="[\'Suara\', \'Tampilan\']" />'
-      },
-      {
-        id: 'dropdown',
-        name: 'Dropdown',
-        category: 'Action',
-        status: 'Planned',
-        description: 'Daftar pilihan timbul dengan pemisah elevasi halus.',
-        snippet: '<Dropdown :options="options" />'
-      },
-      {
-        id: 'checkbox',
-        name: 'Checkbox',
-        category: 'Forms',
-        status: 'Planned',
-        description: 'Kotak ceklis cekung dengan tanda aktif timbul.',
-        snippet: '<Checkbox v-model="checked" label="Simpan Preferensi" />'
-      },
-      {
-        id: 'navbar',
-        name: 'Navbar',
-        category: 'Navigation',
-        status: 'In Progress',
-        description: 'Bilah navigasi horizontal dengan tombol timbul terintegrasi.',
-        snippet: '<Navbar brand="NeoUI" />'
-      },
-      {
-        id: 'toast',
-        name: 'Toast',
-        category: 'Feedback',
-        status: 'In Progress',
-        description: 'Notifikasi soft UI timbul yang muncul halus dari tepi layar.',
-        snippet: '<Toast variant="success" message="Pengaturan berhasil disimpan!" />'
-      },
-      {
-        id: 'tooltip',
-        name: 'Tooltip',
-        category: 'Feedback',
-        status: 'Planned',
-        description: 'Balon info timbul yang muncul dengan elevasi lembut.',
-        snippet: '<Tooltip text="Panduan instrumen">Hover</Tooltip>'
-      }
     ]
   },
 
@@ -470,24 +142,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-card', description: 'Kartu bersih dengan border hairline', example: '<div class="mfs-card">...</div>' },
       { className: '.mfs-surface-subtle', description: 'Permukaan sekunder abu-abu sangat muda', example: '<div class="mfs-surface-subtle">...</div>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol monokrom tegas dengan feedback hover halus.',
-        snippet: '<Button variant="primary">Simpan</Button>'
-      },
-      {
-        id: 'input',
-        name: 'Input',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Field input datar dengan garis batas fokus presisi.',
-        snippet: '<Input v-model="text" label="Email" />'
-      }
     ]
   },
 
@@ -497,7 +151,7 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     tagline: 'Bold Outlines, Hard Offset Shadows, and Raw Contrast',
     badge: 'High Contrast',
     icon: 'Square',
-    accentColor: '#facc15',
+    accentColor: '#dc2626',
     previewBg: 'linear-gradient(135deg, #fef08a 0%, #fde047 100%)',
     description:
       'Neubrutalism memadukan garis batas hitam tebal, bayangan offset solid tanpa blur, dan blok warna cerah berenergi tinggi.',
@@ -516,24 +170,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-card', description: 'Kartu dengan outline tebal dan hard shadow', example: '<div class="mfs-card">...</div>' },
       { className: '.mfs-interactive', description: 'Interaksi tekan menggeser offset shadow', example: '<button class="mfs-interactive">Click</button>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol bold dengan outline pekat dan hard drop shadow.',
-        snippet: '<Button variant="primary">Execute</Button>'
-      },
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Kontainer blok tegas untuk menonjolkan konten utama.',
-        snippet: '<Card title="Alert">Konten</Card>'
-      }
     ]
   },
 
@@ -562,24 +198,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-grid', description: 'Grid responsif otomatis untuk tile bento', example: '<div class="mfs-grid">...</div>' },
       { className: '.mfs-card', description: 'Tile bento dengan padding proporsional', example: '<div class="mfs-card">...</div>' }
-    ],
-    components: [
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Tile modular untuk metrik, ringkasan, dan widget.',
-        snippet: '<Card title="Analytics">...</Card>'
-      },
-      {
-        id: 'data-view',
-        name: 'DataView',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Penyaji koleksi dalam grid bento responsif.',
-        snippet: '<DataView :value="items" layout="grid" />'
-      }
     ]
   },
 
@@ -608,24 +226,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-surface', description: 'Permukaan HUD gelap dengan border neon', example: '<div class="mfs-surface">...</div>' },
       { className: '.mfs-shadow', description: 'Efek pendar neon pada elemen interaktif', example: '<div class="mfs-shadow">...</div>' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol neon dengan pendar glow saat hover.',
-        snippet: '<Button variant="primary">Initialize</Button>'
-      },
-      {
-        id: 'terminal',
-        name: 'Terminal',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Konsol perintah interaktif bergaya cyber HUD.',
-        snippet: '<Terminal prompt="sys@cyber:~$" />'
-      }
     ]
   },
 
@@ -654,24 +254,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-card', description: 'Panel dialog klasik berbingkai bevel', example: '<div class="mfs-card">...</div>' },
       { className: '.mfs-inset', description: 'Field cekung bevel terbalik untuk input', example: '<input class="mfs-inset" />' }
-    ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol bevel klasik dengan animasi tekan cekung.',
-        snippet: '<Button variant="primary">OK</Button>'
-      },
-      {
-        id: 'modal',
-        name: 'Modal',
-        category: 'Feedback',
-        status: 'Ready',
-        description: 'Jendela dialog desktop klasik.',
-        snippet: '<Modal v-model="open" title="System">...</Modal>'
-      }
     ]
   },
 
@@ -700,24 +282,6 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-grid', description: 'Tata letak grid terstruktur', example: '<div class="mfs-grid">...</div>' },
       { className: '.mfs-border', description: 'Garis pemisah grid presisi', example: '<div class="mfs-border">...</div>' }
-    ],
-    components: [
-      {
-        id: 'card',
-        name: 'Card',
-        category: 'Surfaces',
-        status: 'Ready',
-        description: 'Blok konten editorial dengan garis tegas.',
-        snippet: '<Card title="01 / Index">...</Card>'
-      },
-      {
-        id: 'tabs',
-        name: 'Tabs',
-        category: 'Navigation',
-        status: 'Ready',
-        description: 'Navigasi tab garis lurus bergaya indeks cetak.',
-        snippet: '<Tabs v-model="tab" :items="items" />'
-      }
     ]
   },
 
@@ -746,24 +310,298 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
     utilityClasses: [
       { className: '.mfs-card', description: 'Panel fisik dengan kilau tepi atas', example: '<div class="mfs-card">...</div>' },
       { className: '.mfs-interactive', description: 'Tombol fisik dengan feedback tekan', example: '<button class="mfs-interactive">Press</button>' }
+    ]
+  },
+
+  'liquid-glass': {
+    id: 'liquid-glass',
+    name: 'Liquid Glass',
+    tagline: 'Fluid Specular Refractions and Translucent Depth',
+    badge: 'Liquid Optics',
+    icon: 'Droplets',
+    accentColor: '#38bdf8',
+    previewBg: 'radial-gradient(circle at 18% 20%, #1e3a8a 0%, #0b1020 58%, #881337 100%)',
+    description:
+      'Terinspirasi oleh optik kaca cair modern dengan pembiasan spekular lembut, saturasi latar belakang tinggi, dan sudut kapsul yang mengalir organik.',
+    keyFeatures: [
+      'Backdrop blur intensif dengan saturasi warna latar tinggi',
+      'Highlight tepi spekular putih lembut menyerupai kaca cair',
+      'Sudut membulat besar dengan transisi elastis halus',
+      'Kontras teks tajam di atas permukaan semi-transparan'
     ],
-    components: [
-      {
-        id: 'button',
-        name: 'Button',
-        category: 'Action',
-        status: 'Ready',
-        description: 'Tombol glossy dengan kilau atas dan bayangan dasar.',
-        snippet: '<Button variant="primary">Confirm</Button>'
-      },
-      {
-        id: 'switch',
-        name: 'Switch',
-        category: 'Forms',
-        status: 'Ready',
-        description: 'Sakelar fisik dengan tuas menonjol realistis.',
-        snippet: '<Switch v-model="on" label="Power" />'
-      }
+    designTokens: [
+      { name: '--surface', value: 'rgba(255, 255, 255, 0.55)', description: 'Lapisan kaca cair semi-transparan' },
+      { name: '--backdrop-blur', value: 'blur(24px) saturate(180%)', description: 'Pembiasan optik berintensitas tinggi' },
+      { name: '--radius', value: '20px', description: 'Kelengkungan organik kaca cair' },
+      { name: '--primary', value: '#0ea5e9', description: 'Biru kristal spekular' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Panel kaca cair dengan highlight spekular', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-surface', description: 'Permukaan translusen adaptif', example: '<div class="mfs-surface">...</div>' }
+    ]
+  },
+
+  'material-you': {
+    id: 'material-you',
+    name: 'Material You',
+    tagline: 'Dynamic Tonal Palettes and Expressive Pill Shapes',
+    badge: 'Adaptive Tonal',
+    icon: 'Palette',
+    accentColor: '#6750a4',
+    previewBg: 'linear-gradient(135deg, #f3edf7 0%, #eaddff 55%, #d0bcff 100%)',
+    description:
+      'Mengadopsi sistem warna tonal dinamis Material Design 3 dengan kontainer kapsul ekspresif, elevasi tonal lembut, dan aksen ungu lavender yang harmonis.',
+    keyFeatures: [
+      'Palet tonal harmonis antara permukaan utama dan kontainer',
+      'Bentuk pil dan sudut membulat besar khas Material 3',
+      'Elevasi permukaan berbasis warna tonal, bukan bayangan berat',
+      'State layer halus pada interaksi hover dan tekan'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#fef7ff', description: 'Permukaan tonal dasar' },
+      { name: '--surface-subtle', value: '#f3edf7', description: 'Kontainer tonal sekunder' },
+      { name: '--radius', value: '16px', description: 'Kelengkungan kontainer ekspresif' },
+      { name: '--primary', value: '#6750a4', description: 'Aksen primer Material You' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Kontainer tonal dengan elevasi lembut', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-pill', description: 'Bentuk kapsul khas komponen aksi Material 3', example: '<button class="mfs-pill">Action</button>' }
+    ]
+  },
+
+  terminal: {
+    id: 'terminal',
+    name: 'Terminal CLI',
+    tagline: 'Monospace Phosphor Glow and Raw Console Precision',
+    badge: 'CRT Console',
+    icon: 'Terminal',
+    accentColor: '#22c55e',
+    previewBg: 'linear-gradient(135deg, #020617 0%, #052e16 60%, #0a0a0a 100%)',
+    description:
+      'Antarmuka bergaya konsol UNIX dan monitor fosfor hijau klasik dengan tipografi monospace penuh, sudut tajam 0px, dan garis batas matriks tegas.',
+    keyFeatures: [
+      'Tipografi monospace menyeluruh untuk kesan CLI autentik',
+      'Latar hitam pekat dengan aksen hijau fosfor terang',
+      'Sudut tajam 0px tanpa radius',
+      'Glow tipis pada status aktif dan fokus keyboard'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#090d0b', description: 'Layar konsol gelap' },
+      { name: '--border', value: 'rgba(34, 197, 94, 0.35)', description: 'Garis batas matriks hijau' },
+      { name: '--radius', value: '0px', description: 'Geometri kotak murni terminal' },
+      { name: '--primary', value: '#22c55e', description: 'Hijau fosfor klasik' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-surface', description: 'Panel konsol gelap berbingkai matriks', example: '<div class="mfs-surface">...</div>' },
+      { className: '.mfs-font-mono', description: 'Tipografi monospace bergaya terminal', example: '<code class="mfs-font-mono">$ mfs</code>' }
+    ]
+  },
+
+  'hand-drawn': {
+    id: 'hand-drawn',
+    name: 'Hand-Drawn',
+    tagline: 'Organic Sketch Borders and Playful Paper Charm',
+    badge: 'Sketchbook UI',
+    icon: 'PenTool',
+    accentColor: '#ea580c',
+    previewBg: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 55%, #fde68a 100%)',
+    description:
+      'Menghadirkan nuansa buku sketsa dan gambar tangan di atas kertas hangat dengan garis tepi tinta organik, bayangan arsiran solid, dan aksen oranye hangat.',
+    keyFeatures: [
+      'Garis batas tinta gelap bergaya sketsa tangan',
+      'Latar kertas krem hangat yang ramah mata',
+      'Bayangan offset solid ringan seperti coretan pena',
+      'Bentuk sudut asimetris yang terasa natural'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#fffdf7', description: 'Kertas sketsa krem hangat' },
+      { name: '--border', value: '#292524', description: 'Garis tinta sketsa gelap' },
+      { name: '--radius', value: '12px', description: 'Kelengkungan organik sketsa' },
+      { name: '--primary', value: '#ea580c', description: 'Aksen tinta oranye hangat' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Kartu bergaya kotak sketsa tangan', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-border', description: 'Garis tepi tinta ekspresif', example: '<div class="mfs-border">...</div>' }
+    ]
+  },
+
+  'y2k-chrome': {
+    id: 'y2k-chrome',
+    name: 'Y2K Chrome',
+    tagline: 'Metallic Iridescence and Early-2000s Gloss',
+    badge: 'Millennium Gloss',
+    icon: 'Disc',
+    accentColor: '#3b82f6',
+    previewBg: 'linear-gradient(135deg, #e2e8f0 0%, #bfdbfe 45%, #f5d0fe 100%)',
+    description:
+      'Estetika milenium awal tahun 2000-an yang memadukan permukaan metalik krom perak, kilau spekular biru elektrik, dan gradasi plastik glossy futuristik.',
+    keyFeatures: [
+      'Gradasi metalik krom perak dengan kilau tepi tajam',
+      'Aksen biru elektrik dan sentuhan iridescent pastel',
+      'Bevel glossy modern yang memantulkan cahaya',
+      'Sudut kapsul dan kontainer bergaya pemutar media 2000-an'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#f1f5f9', description: 'Permukaan krom perak terang' },
+      { name: '--border', value: '#94a3b8', description: 'Bingkai metalik mengilap' },
+      { name: '--radius', value: '14px', description: 'Kelengkungan perangkat era Y2K' },
+      { name: '--primary', value: '#3b82f6', description: 'Biru hiperlink milenium' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Panel krom metalik dengan kilau tepi', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-interactive', description: 'Tombol glossy dengan feedback pantulan', example: '<button class="mfs-interactive">Play</button>' }
+    ]
+  },
+
+  bauhaus: {
+    id: 'bauhaus',
+    name: 'Bauhaus',
+    tagline: 'Primary Color Geometry and Modernist Balance',
+    badge: 'Geometric Art',
+    icon: 'Shapes',
+    accentColor: '#dc2626',
+    previewBg: 'linear-gradient(135deg, #fefce8 0%, #fee2e2 50%, #dbeafe 100%)',
+    description:
+      'Terinspirasi oleh aliran desain Bauhaus Jerman: bentuk geometris murni, garis hitam tegas, sudut tajam 0px, dan kombinasi warna primer merah, biru, kuning.',
+    keyFeatures: [
+      'Disiplin geometri murni dengan sudut siku 0px',
+      'Garis batas hitam tebal berstruktur arsitektural',
+      'Palet warna primer klasik di atas latar kanvas hangat',
+      'Bayangan blok geometris tanpa blur'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#fffef9', description: 'Kanvas kertas arsitektural' },
+      { name: '--border', value: '#18181b', description: 'Garis struktur hitam tegas' },
+      { name: '--radius', value: '0px', description: 'Sudut geometris murni' },
+      { name: '--primary', value: '#dc2626', description: 'Merah primer Bauhaus' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-grid', description: 'Grid geometris proporsional', example: '<div class="mfs-grid">...</div>' },
+      { className: '.mfs-card', description: 'Blok konten berbingkai arsitektural', example: '<div class="mfs-card">...</div>' }
+    ]
+  },
+
+  'pixel-art': {
+    id: 'pixel-art',
+    name: 'Pixel Art',
+    tagline: '8-Bit Arcade Crispness and Stepped Retro Blocks',
+    badge: '8-Bit Arcade',
+    icon: 'Gamepad2',
+    accentColor: '#ff9e64',
+    previewBg: 'linear-gradient(135deg, #1a1c2c 0%, #29366f 100%)',
+    description:
+      'Menghidupkan pesona gim arkade 8-bit dengan latar malam biru gelap, sudut 0px tajam, bayangan blok tanpa blur, dan aksen oranye piksel retro.',
+    keyFeatures: [
+      'Sudut 0px murni tanpa anti-aliasing lengkung',
+      'Latar biru malam #1a1c2c dengan permukaan #29366f',
+      'Tipografi monospace berkarakter konsol retro',
+      'Efek tekan instan ala tombol arkade klasik'
+    ],
+    designTokens: [
+      { name: '--bg', value: '#1a1c2c', description: 'Latar belakang malam arkade 8-bit' },
+      { name: '--surface', value: '#29366f', description: 'Panel dialog 8-bit biru gelap' },
+      { name: '--radius', value: '0px', description: 'Sudut kotak piksel murni' },
+      { name: '--primary', value: '#ff9e64', description: 'Oranye arkade klasik' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Kotak dialog 8-bit berbingkai piksel', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-interactive', description: 'Tombol arkade dengan offset tekan', example: '<button class="mfs-interactive">Start</button>' }
+    ]
+  },
+
+  'aurora-gradient': {
+    id: 'aurora-gradient',
+    name: 'Aurora Gradient',
+    tagline: 'Northern Lights Glow and Velvet Dark Glass',
+    badge: 'Aurora Mesh',
+    icon: 'Waves',
+    accentColor: '#2dd4bf',
+    previewBg: 'radial-gradient(circle at 15% 20%, #0f766e 0%, #1e1b4b 50%, #090d16 100%)',
+    description:
+      'Tema gelap atmosferik yang memadukan pendar warna aurora borealis (teal, emerald, indigo) di atas panel kaca gelap beludru dengan kedalaman lembut.',
+    keyFeatures: [
+      'Latar gelap malam dipadu pendar gradasi aurora teal-indigo',
+      'Permukaan kaca gelap dengan backdrop blur halus',
+      'Aksen bercahaya teal-emerald yang menenangkan mata',
+      'Border tipis bercahaya untuk pemisahan hierarki'
+    ],
+    designTokens: [
+      { name: '--surface', value: 'rgba(15, 23, 42, 0.72)', description: 'Panel kaca gelap aurora' },
+      { name: '--border', value: 'rgba(45, 212, 191, 0.25)', description: 'Garis cahaya teal tipis' },
+      { name: '--radius', value: '16px', description: 'Sudut lembut mengalir' },
+      { name: '--primary', value: '#2dd4bf', description: 'Teal aurora bercahaya' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Kartu kaca gelap dengan aksen aurora', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-surface', description: 'Permukaan translusen malam', example: '<div class="mfs-surface">...</div>' }
+    ]
+  },
+
+  vaporwave: {
+    id: 'vaporwave',
+    name: 'Vaporwave',
+    tagline: 'Synthwave Neon Grids and Sunset Retrowave Vibes',
+    badge: 'Synthwave 84',
+    icon: 'Sunset',
+    accentColor: '#f472b6',
+    previewBg: 'linear-gradient(135deg, #2e1065 0%, #701a75 50%, #be185d 100%)',
+    description:
+      'Estetika synthwave dan vaporwave era 80-an dengan langit ungu tua, neon pink-cyan elektrik, dan nuansa retro-futuristik yang penuh gaya.',
+    keyFeatures: [
+      'Palet ungu gelap dipadu neon pink magenta dan cyan',
+      'Pendar cahaya neon lembut pada border dan elemen aktif',
+      'Kontras dramatis untuk dashboard kreatif dan media player',
+      'Nuansa nostalgia kaset VHS dan matahari terbenam digital'
+    ],
+    designTokens: [
+      { name: '--surface', value: 'rgba(30, 11, 54, 0.85)', description: 'Panel ungu synthwave gelap' },
+      { name: '--border', value: 'rgba(244, 114, 182, 0.4)', description: 'Garis neon pink elektrik' },
+      { name: '--radius', value: '6px', description: 'Sudut retro-futuristik' },
+      { name: '--primary', value: '#f472b6', description: 'Neon pink vaporwave' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-surface', description: 'Permukaan gelap berbingkai neon pink', example: '<div class="mfs-surface">...</div>' },
+      { className: '.mfs-shadow', description: 'Efek pendar cahaya synthwave', example: '<div class="mfs-shadow">...</div>' }
+    ]
+  },
+
+  manga: {
+    id: 'manga',
+    name: 'Manga',
+    tagline: 'Stark Ink Panels, Screentone Contrast, and Comic Punch',
+    badge: 'Ink & Panel',
+    icon: 'BookOpen',
+    accentColor: '#e11d48',
+    previewBg: 'linear-gradient(135deg, #ffffff 0%, #f4f4f5 60%, #e4e4e7 100%)',
+    description:
+      'Terinspirasi oleh panel komik manga Jepang: tinta hitam pekat di atas kertas putih murni, bayangan offset tegas tanpa blur, dan aksen merah crimson dramatis.',
+    keyFeatures: [
+      'Kontras hitam-putih murni bergaya tinta komik',
+      'Border panel tebal 2px dengan sudut siku 0px–2px',
+      'Hard offset shadow dramatis khas panel aksi',
+      'Aksen merah crimson untuk penekanan elemen interaktif'
+    ],
+    designTokens: [
+      { name: '--surface', value: '#ffffff', description: 'Kertas halaman manga putih' },
+      { name: '--border', value: '#09090b', description: 'Garis tinta panel hitam pekat' },
+      { name: '--radius', value: '2px', description: 'Sudut panel komik tajam' },
+      { name: '--primary', value: '#e11d48', description: 'Merah crimson dramatis' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Panel komik berbingkai tinta tebal', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-interactive', description: 'Tombol panel aksi dengan hard shadow', example: '<button class="mfs-interactive">Read</button>' }
     ]
   }
 }
+
+export const DARK_THEMES = new Set<ThemeType>([
+  'glass',
+  'cyberpunk',
+  'liquid-glass',
+  'terminal',
+  'pixel-art',
+  'aurora-gradient',
+  'vaporwave'
+])
+
+export const isDarkTheme = (id: ThemeType): boolean => DARK_THEMES.has(id)

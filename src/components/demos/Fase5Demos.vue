@@ -7,10 +7,10 @@
     :code="navbarCode"
     :api="navbarApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <Navbar :items="navItems" :sticky="false" @navigate="onNavbarNavigate">
         <template #brand>
-          <span class="demo-brand">
+          <span class="mfs-inline-flex mfs-items-center mfs-gap-2">
             <span class="demo-brand__dot" aria-hidden="true" />
             <span>MFS UI</span>
           </span>
@@ -22,7 +22,7 @@
         </template>
       </Navbar>
 
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Active route: <strong>{{ lastNavLabel }}</strong>
       </p>
     </div>
@@ -38,22 +38,22 @@
   >
     <Tabs v-model="activeTab" :items="tabItems">
       <template #default="{ activeKey }">
-        <div class="demo-panel">
+        <div class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
           <template v-if="activeKey === 'overview'">
-            <h4 class="demo-panel__title">Overview</h4>
-            <p class="demo-panel__text">
+            <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">Overview</h4>
+            <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
               Switch between Claymorphism, Glassmorphism, and Neumorphism without changing component markup.
             </p>
           </template>
           <template v-else-if="activeKey === 'tokens'">
-            <h4 class="demo-panel__title">Design Tokens</h4>
-            <p class="demo-panel__text">
+            <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">Design Tokens</h4>
+            <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
               Powered by CSS custom properties for surfaces, shadows, borders, and blur effects.
             </p>
           </template>
           <template v-else-if="activeKey === 'accessibility'">
-            <h4 class="demo-panel__title">Accessibility</h4>
-            <p class="demo-panel__text">
+            <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">Accessibility</h4>
+            <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
               Full keyboard support with ArrowLeft, ArrowRight, Home, and End keys plus ARIA roles.
             </p>
           </template>
@@ -70,18 +70,18 @@
     :code="breadcrumbCode"
     :api="breadcrumbApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
-        <span class="demo-label">Chevron (default)</span>
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-flex mfs-flex-col mfs-gap-2">
+        <span class="mfs-caption mfs-font-semibold">Chevron (default)</span>
         <Breadcrumb :items="breadcrumbItems" @navigate="onBreadcrumbNavigate" />
       </div>
 
-      <div class="demo-row">
-        <span class="demo-label">Slash separator</span>
+      <div class="mfs-flex mfs-flex-col mfs-gap-2">
+        <span class="mfs-caption mfs-font-semibold">Slash separator</span>
         <Breadcrumb :items="breadcrumbItems" separator="slash" @navigate="onBreadcrumbNavigate" />
       </div>
 
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Last clicked: <strong>{{ lastBreadcrumb }}</strong>
       </p>
     </div>
@@ -95,7 +95,7 @@
     :code="paginationCode"
     :api="paginationApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <Pagination
         v-model="currentPage"
         v-model:per-page="perPage"
@@ -103,7 +103,7 @@
         :per-page-options="[10, 20, 50]"
         show-jump-to
       />
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Showing page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong> ({{ perPage }} items / page)
       </p>
     </div>
@@ -117,18 +117,18 @@
     :code="stepsCode"
     :api="stepsApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <Steps v-model="currentStep" :items="stepItems" clickable />
 
-      <div class="demo-panel demo-steps-footer">
+      <div class="mfs-p-4 mfs-rounded-md mfs-surface-subtle mfs-row mfs-justify-between">
         <div>
-          <h4 class="demo-panel__title">
+          <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
             Step {{ currentStep + 1 }}: {{ stepItems[currentStep]?.label }}
           </h4>
-          <p class="demo-panel__text">{{ stepItems[currentStep]?.description }}</p>
+          <p class="mfs-m-0 mfs-text-sm mfs-text-muted">{{ stepItems[currentStep]?.description }}</p>
         </div>
 
-        <div class="demo-btn-group">
+        <div class="mfs-inline-flex mfs-gap-2">
           <Button
             size="sm"
             variant="secondary"
@@ -158,11 +158,11 @@
     :code="contextMenuCode"
     :api="contextMenuApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <ContextMenu ref="contextMenuRef" :items="contextItems" @select="onContextSelect">
-        <div class="demo-context-zone" tabindex="0">
-          <p class="demo-context-zone__title">Right-click anywhere in this zone</p>
-          <p class="demo-context-zone__hint">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-justify-center mfs-gap-2 mfs-p-5 mfs-text-center mfs-rounded-md mfs-surface-subtle demo-context-zone" tabindex="0">
+          <p class="mfs-m-0 mfs-font-semibold mfs-text">Right-click anywhere in this zone</p>
+          <p class="mfs-m-0 mfs-caption">
             Or use the button below on touch devices.
           </p>
           <Button size="sm" variant="secondary" @click="openContextAtButton">
@@ -171,7 +171,7 @@
         </div>
       </ContextMenu>
 
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Last action: <strong>{{ lastContextAction }}</strong>
       </p>
     </div>
@@ -185,15 +185,15 @@
     :code="scrollTopCode"
     :api="scrollTopApi"
   >
-    <div class="demo-stack">
-      <div id="scroll-top-demo-box" ref="scrollBoxRef" class="demo-scroll-box">
-        <div class="demo-scroll-box__header">
+    <div class="mfs-stack mfs-w-full">
+      <div id="scroll-top-demo-box" ref="scrollBoxRef" class="mfs-p-3 mfs-rounded-md mfs-surface-subtle demo-scroll-box">
+        <div class="mfs-row mfs-justify-between mfs-gap-2 mfs-py-2 mfs-mb-2 mfs-border-b mfs-text-sm mfs-font-semibold mfs-text">
           <span>Scroll inside this container (threshold: 80px)</span>
           <Button size="sm" variant="secondary" @click="scrollDemoDown">
             Scroll Down
           </Button>
         </div>
-        <p v-for="n in 12" :key="n" class="demo-scroll-box__item">
+        <p v-for="n in 12" :key="n" class="mfs-mt-0 mfs-mb-3 mfs-text-sm mfs-text-muted">
           Line {{ n }} — Scroll down past 80px to reveal the floating ScrollTop button at bottom-right.
         </p>
       </div>
@@ -530,39 +530,8 @@ const scrollTopApi = {
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-}
-
-.demo-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.demo-label {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.demo-status {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
 .demo-status strong {
   color: var(--text);
-}
-
-.demo-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .demo-brand__dot {
@@ -573,93 +542,14 @@ const scrollTopApi = {
   box-shadow: 0 0 0 3px var(--surface-subtle);
 }
 
-.demo-panel {
-  padding: 16px;
-  border-radius: var(--radius-md, 14px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-}
-
-.demo-panel__title {
-  margin: 0 0 4px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.demo-panel__text {
-  margin: 0;
-  font-size: 0.86rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.demo-steps-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.demo-btn-group {
-  display: inline-flex;
-  gap: 8px;
-}
-
 .demo-context-zone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
   min-height: 150px;
-  padding: 20px;
-  text-align: center;
-  border-radius: var(--radius-md, 14px);
   border: 2px dashed var(--border);
-  background: var(--surface-subtle);
   user-select: none;
-}
-
-.demo-context-zone__title {
-  margin: 0;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.demo-context-zone__hint {
-  margin: 0;
-  font-size: 0.82rem;
-  color: var(--text-muted);
 }
 
 .demo-scroll-box {
   height: 220px;
   overflow-y: auto;
-  padding: 14px;
-  border-radius: var(--radius-md, 14px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-}
-
-.demo-scroll-box__header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding-bottom: 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--border);
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.demo-scroll-box__item {
-  margin: 0 0 12px;
-  font-size: 0.84rem;
-  color: var(--text-muted);
 }
 </style>

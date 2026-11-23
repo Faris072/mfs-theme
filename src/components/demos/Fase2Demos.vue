@@ -7,8 +7,8 @@
     :code="textareaCode"
     :api="textareaApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Textarea
           v-model="bio"
           label="Project Bio"
@@ -18,13 +18,13 @@
           show-count
           required
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">v-model:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">v-model:</span>
           <code>{{ JSON.stringify(bio) }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <Textarea
           v-model="notes"
           label="Validation & Disabled"
@@ -50,8 +50,8 @@
     :code="inputNumberCode"
     :api="inputNumberApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <InputNumber
           v-model="quantity"
           label="Seat Count"
@@ -60,13 +60,13 @@
           :step="1"
           hint="Use buttons or Up/Down arrow keys (1–20)."
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">quantity:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">quantity:</span>
           <code>{{ quantity }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <InputNumber
           v-model="budget"
           label="Monthly Budget"
@@ -76,8 +76,8 @@
           :step="25.5"
           :decimals="2"
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">budget:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">budget:</span>
           <code>{{ budget }}</code>
         </div>
       </div>
@@ -92,8 +92,8 @@
     :code="passwordCode"
     :api="passwordApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Password
           v-model="secret"
           label="Account Password"
@@ -102,13 +102,13 @@
           show-strength
           required
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">length:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">length:</span>
           <code>{{ secret.length }} chars</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <Password
           model-value="123"
           label="Invalid Password"
@@ -131,8 +131,8 @@
     :code="checkboxCode"
     :api="checkboxApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Checkbox v-model="agreed" label="Accept terms and conditions" />
         <Checkbox
           :model-value="allThemesSelected"
@@ -141,19 +141,19 @@
           @change="toggleAllThemes"
         />
         <Checkbox :model-value="true" label="Disabled checked" disabled />
-        <div class="demo-readout">
-          <span class="demo-readout-label">agreed:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">agreed:</span>
           <code>{{ agreed }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
-        <span class="demo-group-title">Enabled Themes (array v-model)</span>
-        <div class="demo-row">
+      <div class="mfs-stack">
+        <span class="mfs-text-xs mfs-font-bold mfs-text-muted demo-group-title">Enabled Themes (array v-model)</span>
+        <div class="mfs-row">
           <Checkbox v-for="t in themeChoices" :key="t" v-model="selectedThemes" :value="t" :label="t" />
         </div>
-        <div class="demo-readout">
-          <span class="demo-readout-label">selectedThemes:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">selectedThemes:</span>
           <code>{{ JSON.stringify(selectedThemes) }}</code>
         </div>
       </div>
@@ -168,15 +168,15 @@
     :code="radioCode"
     :api="radioApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row" role="radiogroup" aria-label="Deployment plan">
+    <div class="mfs-stack">
+      <div class="mfs-row" role="radiogroup" aria-label="Deployment plan">
         <RadioButton v-model="plan" name="plan" value="starter" label="Starter" />
         <RadioButton v-model="plan" name="plan" value="pro" label="Pro" />
         <RadioButton v-model="plan" name="plan" value="enterprise" label="Enterprise" />
         <RadioButton v-model="plan" name="plan" value="legacy" label="Legacy (Disabled)" disabled />
       </div>
-      <div class="demo-readout">
-        <span class="demo-readout-label">plan:</span>
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+        <span class="mfs-text-muted mfs-font-semibold">plan:</span>
         <code>{{ JSON.stringify(plan) }}</code>
       </div>
     </div>
@@ -190,8 +190,8 @@
     :code="selectCode"
     :api="selectApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Select
           v-model="framework"
           label="Framework"
@@ -201,13 +201,13 @@
           clearable
           hint="Type to filter or use Arrow keys."
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">framework:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">framework:</span>
           <code>{{ JSON.stringify(framework) }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <Select
           v-model="role"
           label="Custom Option Slot"
@@ -215,14 +215,14 @@
           placeholder="Assign role"
         >
           <template #option="{ option, selected }">
-            <span class="demo-opt-custom">
+            <span class="mfs-flex mfs-items-center mfs-justify-between mfs-w-full mfs-gap-2">
               <span>{{ option.label }}</span>
-              <small v-if="selected" class="demo-opt-tag">Active</small>
+              <small v-if="selected" class="mfs-text-xs mfs-font-bold mfs-text-primary">Active</small>
             </span>
           </template>
         </Select>
-        <div class="demo-readout">
-          <span class="demo-readout-label">role:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">role:</span>
           <code>{{ JSON.stringify(role) }}</code>
         </div>
       </div>
@@ -237,8 +237,8 @@
     :code="multiSelectCode"
     :api="multiSelectApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <MultiSelect
           v-model="tags"
           label="UI Capabilities"
@@ -248,13 +248,13 @@
           select-all
           hint="Click chip × to remove."
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">tags:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">tags:</span>
           <code>{{ JSON.stringify(tags) }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <MultiSelect
           :model-value="['clay', 'glass']"
           label="Disabled MultiSelect"
@@ -273,19 +273,19 @@
     :code="sliderCode"
     :api="sliderApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Slider v-model="volume" label="Opacity" :min="0" :max="100" :step="5" />
-        <div class="demo-readout">
-          <span class="demo-readout-label">volume:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">volume:</span>
           <code>{{ volume }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <Slider v-model="priceRange" label="Price Range ($)" range :min="0" :max="500" :step="10" />
-        <div class="demo-readout">
-          <span class="demo-readout-label">priceRange:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">priceRange:</span>
           <code>{{ JSON.stringify(priceRange) }}</code>
         </div>
       </div>
@@ -300,16 +300,16 @@
     :code="ratingCode"
     :api="ratingApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <Rating v-model="score" label="Fractional Rating (allow-half)" allow-half />
-        <div class="demo-readout">
-          <span class="demo-readout-label">score:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">score:</span>
           <code>{{ score }} / 5</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <Rating :model-value="4" label="Readonly (6 stars)" :stars="6" readonly />
         <Rating :model-value="2" label="Disabled" disabled />
       </div>
@@ -324,24 +324,24 @@
     :code="colorPickerCode"
     :api="colorPickerApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <ColorPicker v-model="accentColor" label="Primary Accent" />
-        <div class="demo-readout">
-          <span class="demo-readout-label">accentColor:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">accentColor:</span>
           <span class="demo-color-dot" :style="{ backgroundColor: accentColor }" />
           <code>{{ accentColor }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <ColorPicker
           v-model="brandColor"
           label="Custom Presets"
           :presets="['#0ea5e9', '#14b8a6', '#f97316', '#e11d48', '#6366f1']"
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">brandColor:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">brandColor:</span>
           <span class="demo-color-dot" :style="{ backgroundColor: brandColor }" />
           <code>{{ brandColor }}</code>
         </div>
@@ -357,21 +357,21 @@
     :code="datePickerCode"
     :api="datePickerApi"
   >
-    <div class="demo-grid">
-      <div class="demo-stack">
+    <div class="mfs-grid mfs-items-start">
+      <div class="mfs-stack">
         <DatePicker
           v-model="selectedDate"
           label="Release Date"
           placeholder="Pick a date"
           hint="Single date selection."
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">selectedDate:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">selectedDate:</span>
           <code>{{ formatDateVal(selectedDate) }}</code>
         </div>
       </div>
 
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <DatePicker
           v-model="dateRange"
           label="Sprint Window (Range)"
@@ -379,8 +379,8 @@
           placeholder="Select start – end"
           :min="minDate"
         />
-        <div class="demo-readout">
-          <span class="demo-readout-label">dateRange:</span>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+          <span class="mfs-text-muted mfs-font-semibold">dateRange:</span>
           <code>{{ formatRangeVal(dateRange) }}</code>
         </div>
       </div>
@@ -874,54 +874,13 @@ const datePickerApi: ApiSpec = {
 </script>
 
 <style scoped>
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-  align-items: start;
-}
-
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px 20px;
-  align-items: center;
-}
-
 .demo-group-title {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 
-.demo-readout {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm, 10px);
-  background: var(--surface-alt);
-  border: 1px solid var(--border, transparent);
-  font-size: 0.8rem;
-  color: var(--text);
-}
-
-.demo-readout-label {
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
 .demo-readout code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
   word-break: break-word;
 }
 
@@ -931,20 +890,5 @@ const datePickerApi: ApiSpec = {
   border-radius: 50%;
   border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
   flex-shrink: 0;
-}
-
-.demo-opt-custom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 8px;
-}
-
-.demo-opt-tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--primary);
-  text-transform: uppercase;
 }
 </style>

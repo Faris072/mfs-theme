@@ -5,14 +5,16 @@
   --bg: #e6ecf5;
   --bg-gradient: linear-gradient(135deg, #e6ecf5 0%, #e2e8f0 100%);
   --text: #334155;
-  --text-muted: #64748b;
+  --text-muted: #475569;
 
   /* Surfaces */
   --surface: #e6ecf5;
   --surface-subtle: #e2e8f0;
   --border: transparent;
+  --border-width: 1px;
   --radius: 14px;
   --radius-pill: 9999px;
+  --backdrop-blur: none;
 
   /* Colors */
   --primary: #4f46e5;
@@ -22,6 +24,16 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+
+  /* Typography & Layout */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --grid-gap: 16px;
+  --glow: none;
+  --bevel-light: #ffffff;
+  --bevel-dark: #c4cad3;
+  --shadow:
+    6px 6px 12px #c4cad3,
+    -6px -6px 12px #ffffff;
 
   /* Neumorphic Extrusion Shadows */
   --clay-shadow: 

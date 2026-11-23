@@ -1,15 +1,15 @@
 <template>
-  <div ref="rootRef" class="select-wrapper" :class="{ 'select-wrapper--error': !!error, 'select-wrapper--disabled mfs-disabled': disabled }">
-    <label v-if="label" :for="triggerId" class="select-label mfs-text">
+  <div ref="rootRef" class="select-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'select-wrapper--error': !!error, 'select-wrapper--disabled mfs-disabled': disabled }">
+    <label v-if="label" :for="triggerId" class="select-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
-      <span v-if="required" class="select-required mfs-text-danger">*</span>
+      <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
     <div class="select-container">
       <button
         :id="triggerId"
         type="button"
-        class="select-trigger mfs-surface mfs-rounded mfs-shadow-inset"
+        class="select-trigger mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-surface mfs-rounded mfs-shadow-inset"
         role="combobox"
         :aria-expanded="isOpen"
         :aria-controls="listboxId"
@@ -18,17 +18,17 @@
         @click="toggle"
         @keydown="handleKeydown"
       >
-        <span class="select-value" :class="{ 'select-value--placeholder': !selectedOption }">
+        <span class="select-value mfs-flex-1 mfs-truncate" :class="{ 'select-value--placeholder': !selectedOption }">
           {{ selectedOption ? selectedOption.label : placeholder }}
         </span>
 
-        <span class="select-actions">
+        <span class="select-actions mfs-inline-flex mfs-items-center mfs-text-muted">
           <span
             v-if="clearable && selectedOption && !disabled"
             role="button"
             tabindex="-1"
             aria-label="Clear selection"
-            class="select-clear"
+            class="select-clear mfs-inline-flex"
             @click.stop="clearValue"
           >
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
@@ -54,19 +54,19 @@
       </button>
 
       <Transition name="select-pop">
-        <div v-if="isOpen" :id="listboxId" role="listbox" class="select-dropdown mfs-surface mfs-rounded mfs-blur mfs-shadow">
+        <div v-if="isOpen" :id="listboxId" role="listbox" class="select-dropdown mfs-flex mfs-flex-col mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
           <div v-if="searchable" class="select-search-box">
             <input
               ref="searchRef"
               v-model="query"
               type="text"
-              class="select-search mfs-inset"
+              class="select-search mfs-w-full mfs-text-sm mfs-inset"
               placeholder="Search..."
               @keydown="handleKeydown"
             />
           </div>
 
-          <div class="select-options">
+          <div class="select-options mfs-flex mfs-flex-col">
             <button
               v-for="(opt, idx) in filteredOptions"
               :key="String(opt.value) + idx"
@@ -74,7 +74,7 @@
               role="option"
               :aria-selected="opt.value === modelValue"
               :disabled="opt.disabled"
-              class="select-option"
+              class="select-option mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-border-none mfs-text"
               :class="{
                 'select-option--selected': opt.value === modelValue,
                 'select-option--active': idx === activeIndex
@@ -89,7 +89,7 @@
                 </svg>
               </slot>
             </button>
-            <div v-if="filteredOptions.length === 0" class="select-empty">No options</div>
+            <div v-if="filteredOptions.length === 0" class="select-empty mfs-p-3 mfs-text-center mfs-text-muted">No options</div>
           </div>
         </div>
       </Transition>
@@ -231,23 +231,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 
 <style scoped>
 .select-wrapper {
-  display: flex;
-  flex-direction: column;
   gap: 6px;
-  width: 100%;
-}
-
-.select-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.select-required {
-  color: var(--danger);
 }
 
 .select-container {
@@ -255,23 +239,12 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .select-trigger {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
-  box-shadow: var(--input-shadow);
   padding: 11px 14px;
   font-family: inherit;
   font-size: 0.95rem;
-  color: var(--text);
   cursor: pointer;
   text-align: left;
   transition: all 0.25s ease;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .select-trigger:focus-visible {
@@ -289,27 +262,16 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   cursor: not-allowed;
 }
 
-.select-value {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .select-value--placeholder {
   color: var(--text-muted);
   opacity: 0.75;
 }
 
 .select-actions {
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
-  color: var(--text-muted);
 }
 
 .select-clear {
-  display: inline-flex;
   padding: 2px;
   border-radius: 50%;
   cursor: pointer;
@@ -333,15 +295,9 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   left: 0;
   right: 0;
   z-index: 40;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
   box-shadow: var(--clay-shadow-hover);
-  backdrop-filter: var(--backdrop-blur, blur(14px));
   padding: 6px;
   max-height: 250px;
-  display: flex;
-  flex-direction: column;
   gap: 6px;
 }
 
@@ -350,36 +306,23 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .select-search {
-  width: 100%;
   box-sizing: border-box;
   background-color: var(--surface-subtle, rgba(148, 163, 184, 0.12));
-  border: 1px solid var(--border, transparent);
   border-radius: var(--radius-sm, 10px);
   padding: 7px 10px;
   font-family: inherit;
-  font-size: 0.875rem;
-  color: var(--text);
   outline: none;
 }
 
 .select-options {
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   gap: 2px;
 }
 
 .select-option {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
   padding: 9px 12px;
-  border: none;
   border-radius: var(--radius-sm, 10px);
   background: transparent;
-  color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
   cursor: pointer;
@@ -403,10 +346,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .select-empty {
-  padding: 12px;
-  text-align: center;
   font-size: 0.85rem;
-  color: var(--text-muted);
 }
 
 .select-msg {

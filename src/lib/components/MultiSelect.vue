@@ -1,28 +1,28 @@
 <template>
-  <div ref="rootRef" class="ms-wrapper" :class="{ 'ms-wrapper--error': !!error, 'ms-wrapper--disabled mfs-disabled': disabled }">
-    <label v-if="label" class="ms-label mfs-text">
+  <div ref="rootRef" class="ms-wrapper mfs-flex mfs-flex-col mfs-gap-1-5 mfs-w-full" :class="{ 'ms-wrapper--error': !!error, 'ms-wrapper--disabled mfs-disabled': disabled }">
+    <label v-if="label" class="ms-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
-      <span v-if="required" class="ms-required mfs-text-danger">*</span>
+      <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="ms-container">
+    <div class="ms-container mfs-relative">
       <div
         tabindex="0"
         role="combobox"
         :aria-expanded="isOpen"
         :aria-invalid="!!error"
-        class="ms-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring"
+        class="ms-trigger mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring mfs-cursor-pointer"
         @click="toggle"
         @keydown.escape="close"
         @keydown.enter.prevent="toggle"
       >
-        <div class="ms-chips">
-          <span v-for="opt in selectedOptions" :key="String(opt.value)" class="ms-chip mfs-pill">
+        <div class="ms-chips mfs-flex-1 mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-1-5">
+          <span v-for="opt in selectedOptions" :key="String(opt.value)" class="ms-chip mfs-inline-flex mfs-items-center mfs-gap-1 mfs-bg-primary mfs-font-semibold mfs-pill">
             <span class="ms-chip-text">{{ opt.label }}</span>
             <button
               v-if="!disabled"
               type="button"
-              class="ms-chip-remove"
+              class="ms-chip-remove mfs-inline-flex mfs-items-center mfs-justify-center mfs-border-none mfs-p-0 mfs-rounded-full mfs-cursor-pointer"
               :aria-label="`Remove ${opt.label}`"
               @click.stop="removeValue(opt.value)"
             >
@@ -32,7 +32,7 @@
               </svg>
             </button>
           </span>
-          <span v-if="selectedOptions.length === 0" class="ms-placeholder">{{ placeholder }}</span>
+          <span v-if="selectedOptions.length === 0" class="ms-placeholder mfs-text-muted">{{ placeholder }}</span>
         </div>
 
         <svg
@@ -44,7 +44,7 @@
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
-          class="ms-chevron"
+          class="ms-chevron mfs-text-muted mfs-shrink-0"
           :class="{ 'ms-chevron--open': isOpen }"
         >
           <polyline points="6 9 12 15 18 9" />
@@ -52,13 +52,13 @@
       </div>
 
       <Transition name="ms-pop">
-        <div v-if="isOpen" role="listbox" aria-multiselectable="true" class="ms-dropdown mfs-surface mfs-rounded mfs-blur mfs-shadow">
+        <div v-if="isOpen" role="listbox" aria-multiselectable="true" class="ms-dropdown mfs-absolute mfs-flex mfs-flex-col mfs-gap-1 mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
           <div v-if="searchable" class="ms-search-box">
             <input
               ref="searchRef"
               v-model="query"
               type="text"
-              class="ms-search mfs-inset"
+              class="ms-search mfs-w-full mfs-text-sm mfs-inset mfs-rounded-sm mfs-outline-none"
               placeholder="Search..."
               @keydown.escape="close"
             />
@@ -67,10 +67,10 @@
           <button
             v-if="selectAll && enabledOptions.length > 0"
             type="button"
-            class="ms-option ms-option--all"
+            class="ms-option ms-option--all mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-font-semibold mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
             @click="toggleSelectAll"
           >
-            <span class="ms-check" :class="{ 'ms-check--on': allSelected }">
+            <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': allSelected }">
               <svg v-if="allSelected" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
@@ -78,7 +78,7 @@
             <span>Select All</span>
           </button>
 
-          <div class="ms-options">
+          <div class="ms-options mfs-flex mfs-flex-col mfs-overflow-y-auto">
             <button
               v-for="(opt, idx) in filteredOptions"
               :key="String(opt.value) + idx"
@@ -86,25 +86,25 @@
               role="option"
               :aria-selected="isSelected(opt.value)"
               :disabled="opt.disabled"
-              class="ms-option"
+              class="ms-option mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
               :class="{ 'ms-option--selected': isSelected(opt.value) }"
               @click="toggleOption(opt)"
             >
-              <span class="ms-check" :class="{ 'ms-check--on': isSelected(opt.value) }">
+              <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': isSelected(opt.value) }">
                 <svg v-if="isSelected(opt.value)" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </span>
               <span>{{ opt.label }}</span>
             </button>
-            <div v-if="filteredOptions.length === 0" class="ms-empty">No options</div>
+            <div v-if="filteredOptions.length === 0" class="ms-empty mfs-p-3 mfs-text-center mfs-text-muted">No options</div>
           </div>
         </div>
       </Transition>
     </div>
 
-    <p v-if="error" class="ms-msg ms-msg--error mfs-text-danger">{{ error }}</p>
-    <p v-else-if="hint" class="ms-msg mfs-caption">{{ hint }}</p>
+    <p v-if="error" class="ms-msg ms-msg--error mfs-text-danger mfs-font-medium mfs-m-0">{{ error }}</p>
+    <p v-else-if="hint" class="ms-msg mfs-caption mfs-m-0">{{ hint }}</p>
   </div>
 </template>
 
@@ -218,44 +218,10 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 </script>
 
 <style scoped>
-.ms-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
-
-.ms-label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.ms-required {
-  color: var(--danger);
-}
-
-.ms-container {
-  position: relative;
-}
-
 .ms-trigger {
   min-height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
-  box-shadow: var(--input-shadow);
   padding: 6px 12px;
-  cursor: pointer;
   transition: all 0.25s ease;
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .ms-trigger:focus-visible {
@@ -273,38 +239,16 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   cursor: not-allowed;
 }
 
-.ms-chips {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
 .ms-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
   padding: 3px 8px;
-  border-radius: var(--radius-pill, 9999px);
-  background-color: var(--primary);
-  color: var(--primary-text, #ffffff);
   font-size: 0.8rem;
-  font-weight: 600;
 }
 
 .ms-chip-remove {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
   background: rgba(255, 255, 255, 0.2);
   color: inherit;
-  border-radius: 50%;
   width: 16px;
   height: 16px;
-  padding: 0;
-  cursor: pointer;
 }
 
 .ms-chip-remove:hover {
@@ -312,14 +256,11 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-placeholder {
-  color: var(--text-muted);
   opacity: 0.75;
   font-size: 0.95rem;
 }
 
 .ms-chevron {
-  color: var(--text-muted);
-  flex-shrink: 0;
   transition: transform 0.2s ease;
 }
 
@@ -328,57 +269,31 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-dropdown {
-  position: absolute;
   top: calc(100% + 6px);
   left: 0;
   right: 0;
   z-index: 40;
-  background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius, 14px);
   box-shadow: var(--clay-shadow-hover);
-  backdrop-filter: var(--backdrop-blur, blur(14px));
   padding: 6px;
   max-height: 260px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 }
 
 .ms-search {
-  width: 100%;
   box-sizing: border-box;
   background-color: var(--surface-subtle, rgba(148, 163, 184, 0.12));
-  border: 1px solid var(--border, transparent);
-  border-radius: var(--radius-sm, 10px);
   padding: 7px 10px;
   font-family: inherit;
-  font-size: 0.875rem;
-  color: var(--text);
-  outline: none;
 }
 
 .ms-options {
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
   gap: 2px;
 }
 
 .ms-option {
-  width: 100%;
-  display: flex;
-  align-items: center;
   gap: 10px;
   padding: 8px 10px;
-  border: none;
-  border-radius: var(--radius-sm, 10px);
-  background: transparent;
-  color: var(--text);
   font-family: inherit;
   font-size: 0.9rem;
-  cursor: pointer;
-  text-align: left;
 }
 
 .ms-option:hover:not(:disabled) {
@@ -386,7 +301,6 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-option--all {
-  font-weight: 600;
   border-bottom: 1px solid var(--border, rgba(148, 163, 184, 0.2));
   border-radius: var(--radius-sm, 10px) var(--radius-sm, 10px) 0 0;
 }
@@ -406,10 +320,6 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   height: 18px;
   border-radius: 6px;
   border: 1px solid var(--border, rgba(148, 163, 184, 0.5));
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
 .ms-check--on {
@@ -419,21 +329,11 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-empty {
-  padding: 12px;
-  text-align: center;
   font-size: 0.85rem;
-  color: var(--text-muted);
 }
 
 .ms-msg {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.ms-msg--error {
-  color: var(--danger);
-  font-weight: 500;
 }
 
 .ms-pop-enter-active,

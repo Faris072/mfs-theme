@@ -7,13 +7,13 @@
     :code="dataTableCode"
     :api="dataTableApi"
   >
-    <div class="demo-stack">
-      <div class="demo-controls">
-        <div class="demo-control-group" role="group" aria-label="Responsive mode">
-          <span class="demo-control-label">Mobile Mode:</span>
+    <div class="mfs-stack">
+      <div class="mfs-row mfs-justify-between demo-controls">
+        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Responsive mode">
+          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mobile Mode:</span>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': tableResponsiveMode === 'card' }"
             @click="tableResponsiveMode = 'card'"
           >
@@ -21,7 +21,7 @@
           </button>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': tableResponsiveMode === 'scroll' }"
             @click="tableResponsiveMode = 'scroll'"
           >
@@ -29,11 +29,11 @@
           </button>
         </div>
 
-        <div class="demo-control-group" role="group" aria-label="Selection mode">
-          <span class="demo-control-label">Selection:</span>
+        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Selection mode">
+          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Selection:</span>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': tableSelectionMode === 'multiple' }"
             @click="setTableSelectionMode('multiple')"
           >
@@ -41,7 +41,7 @@
           </button>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': tableSelectionMode === 'single' }"
             @click="setTableSelectionMode('single')"
           >
@@ -61,14 +61,14 @@
         @sort="onTableSort"
       >
         <template #header>
-          <span class="demo-toolbar-title">Team Directory ({{ tableRows.length }})</span>
+          <span class="mfs-text-base mfs-font-bold mfs-text">Team Directory ({{ tableRows.length }})</span>
         </template>
         <template #cell-status="{ value }">
           <Badge :variant="statusVariant(value)">{{ value }}</Badge>
         </template>
       </DataTable>
 
-      <div class="demo-status-bar">
+      <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
         <span>
           <strong>Selected:</strong> {{ selectedSummary }}
         </span>
@@ -87,19 +87,19 @@
     :code="dataViewCode"
     :api="dataViewApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack">
       <DataView
         v-model:layout="viewLayout"
         :items="filteredCatalog"
         :columns="viewLayout === 'grid' ? viewColumns : undefined"
       >
         <template #header>
-          <div class="demo-controls">
-            <span class="demo-toolbar-title">Theme Presets ({{ filteredCatalog.length }})</span>
-            <div v-if="viewLayout === 'grid'" class="demo-control-group" role="group" aria-label="Grid columns">
+          <div class="mfs-row mfs-justify-between demo-controls">
+            <span class="mfs-text-base mfs-font-bold mfs-text">Theme Presets ({{ filteredCatalog.length }})</span>
+            <div v-if="viewLayout === 'grid'" class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Grid columns">
               <button
                 type="button"
-                class="demo-pill"
+                class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
                 :class="{ 'is-active': viewColumns === 2 }"
                 @click="viewColumns = 2"
               >
@@ -107,7 +107,7 @@
               </button>
               <button
                 type="button"
-                class="demo-pill"
+                class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
                 :class="{ 'is-active': viewColumns === 3 }"
                 @click="viewColumns = 3"
               >
@@ -118,25 +118,25 @@
         </template>
 
         <template #grid="{ item }">
-          <article class="dv-card dv-card--grid">
-            <div class="dv-card__top">
+          <article class="mfs-p-4 mfs-rounded-md mfs-surface-subtle mfs-interactive mfs-flex mfs-flex-col mfs-gap-3 dv-card--grid">
+            <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
               <span class="dv-card__icon" aria-hidden="true">{{ item.icon }}</span>
               <Badge :variant="item.badgeVariant">{{ item.tag }}</Badge>
             </div>
-            <h4 class="dv-card__title">{{ item.name }}</h4>
-            <p class="dv-card__desc">{{ item.description }}</p>
+            <h4 class="mfs-m-0 mfs-text-base mfs-font-bold mfs-text">{{ item.name }}</h4>
+            <p class="mfs-m-0 mfs-text-sm mfs-text-muted">{{ item.description }}</p>
           </article>
         </template>
 
         <template #list="{ item }">
-          <article class="dv-card dv-card--list">
+          <article class="mfs-p-4 mfs-rounded-md mfs-surface-subtle mfs-interactive mfs-flex mfs-items-start mfs-gap-3">
             <span class="dv-card__icon" aria-hidden="true">{{ item.icon }}</span>
-            <div class="dv-card__body">
-              <div class="dv-card__row">
-                <h4 class="dv-card__title">{{ item.name }}</h4>
+            <div class="mfs-flex-1 mfs-flex mfs-flex-col mfs-gap-1 dv-card__body">
+              <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
+                <h4 class="mfs-m-0 mfs-text-base mfs-font-bold mfs-text">{{ item.name }}</h4>
                 <Badge :variant="item.badgeVariant">{{ item.tag }}</Badge>
               </div>
-              <p class="dv-card__desc">{{ item.description }}</p>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">{{ item.description }}</p>
             </div>
           </article>
         </template>
@@ -152,18 +152,18 @@
     :code="treeCode"
     :api="treeApi"
   >
-    <div class="demo-stack">
-      <div class="demo-controls">
-        <div class="demo-control-group">
-          <button type="button" class="demo-pill" @click="expandAllTree">Expand All</button>
-          <button type="button" class="demo-pill" @click="treeExpanded = []">Collapse All</button>
+    <div class="mfs-stack">
+      <div class="mfs-row mfs-justify-between demo-controls">
+        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2">
+          <button type="button" class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill" @click="expandAllTree">Expand All</button>
+          <button type="button" class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill" @click="treeExpanded = []">Collapse All</button>
         </div>
 
-        <div class="demo-control-group" role="group" aria-label="Tree selection mode">
-          <span class="demo-control-label">Mode:</span>
+        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Tree selection mode">
+          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mode:</span>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': treeSelectionMode === 'checkbox' }"
             @click="setTreeMode('checkbox')"
           >
@@ -171,7 +171,7 @@
           </button>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': treeSelectionMode === 'single' }"
             @click="setTreeMode('single')"
           >
@@ -179,7 +179,7 @@
           </button>
           <button
             type="button"
-            class="demo-pill"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
             :class="{ 'is-active': treeSelectionMode === 'none' }"
             @click="setTreeMode('none')"
           >
@@ -188,7 +188,7 @@
         </div>
       </div>
 
-      <div class="tree-stage">
+      <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-shadow-inset">
         <Tree
           v-model:expanded-keys="treeExpanded"
           v-model:selected-keys="treeSelected"
@@ -198,7 +198,7 @@
         />
       </div>
 
-      <div class="demo-status-bar">
+      <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
         <span>
           <strong>Selected Keys:</strong>
           {{ treeSelected.length ? treeSelected.join(', ') : 'None' }}
@@ -516,53 +516,6 @@ const treeApi = {
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.demo-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.demo-control-group {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-}
-
-.demo-control-label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-right: 2px;
-}
-
-.demo-toolbar-title {
-  font-size: 0.9375rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.demo-pill {
-  padding: 6px 12px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border, transparent);
-  background: var(--surface-subtle);
-  color: var(--text-muted);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: var(--input-shadow);
-}
-
 .demo-pill:hover {
   color: var(--text);
 }
@@ -573,90 +526,21 @@ const treeApi = {
   border-color: transparent;
 }
 
-.demo-status-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 10px 14px;
-  border-radius: var(--radius-sm, 8px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-
 .demo-status-bar strong {
   color: var(--text);
 }
 
-/* DataView item cards */
-.dv-card {
-  padding: 16px;
-  border-radius: var(--radius-md, 14px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s ease;
-}
-
-.dv-card:hover {
-  transform: translateY(-2px);
-}
-
 .dv-card--grid {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
   height: 100%;
 }
 
-.dv-card--list {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.dv-card__top,
-.dv-card__row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
 .dv-card__body {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1 1 auto;
   min-width: 0;
 }
 
 .dv-card__icon {
   font-size: 1.5rem;
   line-height: 1;
-}
-
-.dv-card__title {
-  margin: 0;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.dv-card__desc {
-  margin: 0;
-  font-size: 0.84rem;
-  line-height: 1.5;
-  color: var(--text-muted);
-}
-
-.tree-stage {
-  padding: 14px;
-  border-radius: var(--radius-md, 14px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--input-shadow);
 }
 
 @media (max-width: 640px) {

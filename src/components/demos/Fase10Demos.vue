@@ -7,16 +7,16 @@
     :code="orderListCode"
     :api="orderListApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <OrderList v-model="roadmapItems" header="Release Priorities" item-key="id">
         <template #item="{ item }">
-          <div class="demo-list-row">
-            <span class="demo-list-name">{{ item.name }}</span>
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.name }}</span>
             <Badge variant="surface" size="sm">{{ item.priority }}</Badge>
           </div>
         </template>
       </OrderList>
-      <p class="demo-meta">
+      <p class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">
         Current order: {{ roadmapItems.map((i) => i.name).join(' → ') }}
       </p>
     </div>
@@ -30,7 +30,7 @@
     :code="pickListCode"
     :api="pickListApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <PickList
         v-model:source="availablePermissions"
         v-model:target="assignedPermissions"
@@ -39,9 +39,9 @@
         item-key="id"
       >
         <template #item="{ item }">
-          <div class="demo-list-row">
-            <span class="demo-list-name">{{ item.label }}</span>
-            <span class="demo-list-sub">{{ item.scope }}</span>
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.label }}</span>
+            <span class="mfs-text-xs mfs-text-muted">{{ item.scope }}</span>
           </div>
         </template>
       </PickList>
@@ -56,7 +56,7 @@
     :code="treeTableCode"
     :api="treeTableApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <TreeTable
         v-model:expanded-keys="treeExpandedKeys"
         :columns="treeColumns"
@@ -79,12 +79,12 @@
     :code="orgChartCode"
     :api="orgChartApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <OrganizationChart
         :value="orgTree"
         @node-click="(node) => (selectedOrgNode = `${node.label} (${node.title ?? 'Member'})`)"
       />
-      <p class="demo-meta">Selected node: <strong>{{ selectedOrgNode }}</strong></p>
+      <p class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Selected node: <strong>{{ selectedOrgNode }}</strong></p>
     </div>
   </ComponentPreview>
 
@@ -96,12 +96,12 @@
     :code="virtualScrollerCode"
     :api="virtualScrollerApi"
   >
-    <div class="demo-stack">
-      <p class="demo-meta">Rendering {{ virtualItems.length.toLocaleString() }} items (itemSize: 44px)</p>
+    <div class="mfs-stack mfs-w-full">
+      <p class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Rendering {{ virtualItems.length.toLocaleString() }} items (itemSize: 44px)</p>
       <VirtualScroller :items="virtualItems" :item-size="44" height="260px" item-key="id">
         <template #item="{ item, index }">
-          <div class="demo-list-row">
-            <span class="demo-list-name">#{{ index + 1 }} · {{ item.title }}</span>
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">#{{ index + 1 }} · {{ item.title }}</span>
             <Badge variant="surface" size="sm">{{ item.status }}</Badge>
           </div>
         </template>
@@ -117,10 +117,10 @@
     :code="meterGroupCode"
     :api="meterGroupApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row demo-row--between">
-        <span class="demo-meta">Storage Breakdown (100 GB total)</span>
-        <div class="demo-row">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-justify-between">
+        <span class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Storage Breakdown (100 GB total)</span>
+        <div class="mfs-row">
           <Button variant="surface" size="sm" @click="bumpAppsMeter(-10)">-10 GB Apps</Button>
           <Button variant="primary" size="sm" @click="bumpAppsMeter(10)">+10 GB Apps</Button>
         </div>
@@ -137,12 +137,12 @@
     :code="inplaceCode"
     :api="inplaceApi"
   >
-    <div class="demo-stack">
-      <div class="demo-inplace-row">
-        <span class="demo-meta">Project Name:</span>
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
+        <span class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Project Name:</span>
         <Inplace v-model:active="inplaceEditing">
           <template #display>
-            <span class="demo-inplace-value">{{ projectTitle }} (click to edit)</span>
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ projectTitle }} (click to edit)</span>
           </template>
           <template #content>
             <Input v-model="projectTitle" placeholder="Project name" />
@@ -455,61 +455,3 @@ const inplaceApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
 }
 </script>
 
-<style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-row--between {
-  justify-content: space-between;
-}
-
-.demo-meta {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.demo-list-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
-
-.demo-list-name {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.demo-list-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-}
-
-.demo-inplace-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-}
-
-.demo-inplace-value {
-  font-size: 0.92rem;
-  font-weight: 600;
-  color: var(--text);
-}
-</style>

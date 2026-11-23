@@ -8,8 +8,8 @@
       :code="avatarCode"
       :api="avatarApi"
     >
-      <div class="demo-stack">
-        <div class="demo-row demo-row--center">
+      <div class="mfs-stack">
+        <div class="mfs-row">
           <Avatar :src="avatarSvg" alt="Alex Rivera" size="sm" status="online" />
           <Avatar :src="avatarSvg" alt="Alex Rivera" size="md" status="away" />
           <Avatar label="Maya Lin" size="lg" status="busy" />
@@ -27,10 +27,10 @@
       :code="chipCode"
       :api="chipApi"
     >
-      <div class="demo-stack">
-        <div class="demo-group">
-          <span class="demo-label">Clickable Filters ({{ activeFilter }})</span>
-          <div class="demo-row">
+      <div class="mfs-stack">
+        <div class="mfs-flex mfs-flex-col mfs-gap-3">
+          <span class="mfs-text-xs mfs-font-bold mfs-text-muted demo-label">Clickable Filters ({{ activeFilter }})</span>
+          <div class="mfs-row">
             <Chip
               v-for="filter in filters"
               :key="filter"
@@ -43,19 +43,19 @@
           </div>
         </div>
 
-        <div class="demo-group">
-          <div class="demo-label-row">
-            <span class="demo-label">Removable &amp; Semantic Variants</span>
+        <div class="mfs-flex mfs-flex-col mfs-gap-3">
+          <div class="mfs-row mfs-gap-2">
+            <span class="mfs-text-xs mfs-font-bold mfs-text-muted demo-label">Removable &amp; Semantic Variants</span>
             <button
               v-if="tags.length < initialTags.length"
               type="button"
-              class="demo-reset-btn"
+              class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
               @click="tags = [...initialTags]"
             >
               Reset tags
             </button>
           </div>
-          <div class="demo-row">
+          <div class="mfs-row">
             <Chip
               v-for="tag in tags"
               :key="tag.label"
@@ -68,7 +68,7 @@
                 <span aria-hidden="true">{{ tag.icon }}</span>
               </template>
             </Chip>
-            <span v-if="!tags.length" class="demo-muted">All tags removed.</span>
+            <span v-if="!tags.length" class="mfs-caption">All tags removed.</span>
           </div>
         </div>
       </div>
@@ -82,17 +82,17 @@
       :code="dividerCode"
       :api="dividerApi"
     >
-      <div class="demo-stack">
-        <div class="demo-block">
-          <p class="demo-text">Default horizontal divider</p>
+      <div class="mfs-stack">
+        <div class="mfs-flex mfs-flex-col">
+          <p class="mfs-m-0 mfs-text-sm mfs-text">Default horizontal divider</p>
           <Divider />
-          <p class="demo-text">Left-aligned &amp; dashed label</p>
+          <p class="mfs-m-0 mfs-text-sm mfs-text">Left-aligned &amp; dashed label</p>
           <Divider align="left" dashed>Section A</Divider>
           <Divider align="center">OR</Divider>
           <Divider align="right" dashed>End</Divider>
         </div>
 
-        <div class="demo-inline-bar">
+        <div class="mfs-row mfs-gap-1 mfs-text-sm mfs-font-semibold mfs-text">
           <span>Overview</span>
           <Divider orientation="vertical" />
           <span>Analytics</span>
@@ -110,18 +110,18 @@
       :code="accordionCode"
       :api="accordionApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': allowMultiple }"
             :aria-pressed="allowMultiple"
             @click="toggleMultipleMode"
           >
             Multiple: {{ allowMultiple ? 'On' : 'Off' }}
           </button>
-          <span class="demo-muted">Open: {{ openLabel }}</span>
+          <span class="mfs-caption">Open: {{ openLabel }}</span>
         </div>
 
         <Accordion
@@ -140,11 +140,11 @@
       :code="timelineCode"
       :api="timelineApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': timelineLayout === 'vertical' }"
             @click="timelineLayout = 'vertical'"
           >
@@ -152,7 +152,7 @@
           </button>
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': timelineLayout === 'horizontal' }"
             @click="timelineLayout = 'horizontal'"
           >
@@ -172,11 +172,11 @@
       :code="carouselCode"
       :api="carouselApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': carouselAutoplay }"
             :aria-pressed="carouselAutoplay"
             @click="carouselAutoplay = !carouselAutoplay"
@@ -185,14 +185,14 @@
           </button>
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': carouselLoop }"
             :aria-pressed="carouselLoop"
             @click="carouselLoop = !carouselLoop"
           >
             Loop: {{ carouselLoop ? 'On' : 'Off' }}
           </button>
-          <span class="demo-muted">Slide {{ carouselIndex + 1 }} / {{ carouselSlides.length }}</span>
+          <span class="mfs-caption">Slide {{ carouselIndex + 1 }} / {{ carouselSlides.length }}</span>
         </div>
 
         <Carousel
@@ -202,10 +202,10 @@
           :loop="carouselLoop"
         >
           <template #default="{ item }">
-            <div class="demo-slide" :style="{ background: item.bg }">
-              <span class="demo-slide__badge">{{ item.badge }}</span>
-              <h4 class="demo-slide__title">{{ item.title }}</h4>
-              <p class="demo-slide__desc">{{ item.description }}</p>
+            <div class="mfs-flex mfs-flex-col mfs-justify-center mfs-items-center mfs-text-center mfs-gap-2 demo-slide" :style="{ background: item.bg }">
+              <span class="mfs-pill mfs-surface mfs-text-xs mfs-font-bold mfs-text-primary mfs-px-3 mfs-py-1 demo-slide__badge">{{ item.badge }}</span>
+              <h4 class="mfs-title mfs-text-lg mfs-m-0">{{ item.title }}</h4>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-slide__desc">{{ item.description }}</p>
             </div>
           </template>
         </Carousel>
@@ -220,9 +220,9 @@
       :code="imageCode"
       :api="imageApi"
     >
-      <div class="demo-stack">
-        <div class="demo-image-grid">
-          <div class="demo-image-card">
+      <div class="mfs-stack">
+        <div class="mfs-grid">
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <Image
               :src="previewSvg"
               alt="Geometric landscape preview"
@@ -231,10 +231,10 @@
               fit="cover"
               preview
             />
-            <span class="demo-caption">Click image for fullscreen preview (cover)</span>
+            <span class="mfs-caption">Click image for fullscreen preview (cover)</span>
           </div>
 
-          <div class="demo-image-card">
+          <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <Image
               :src="containSvg"
               alt="Contained badge graphic"
@@ -243,7 +243,7 @@
               fit="contain"
               preview
             />
-            <span class="demo-caption">Contained fit with fullscreen preview</span>
+            <span class="mfs-caption">Contained fit with fullscreen preview</span>
           </div>
         </div>
       </div>
@@ -598,85 +598,12 @@ const imageApi: { props: ApiRow[] } = {
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.demo-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.demo-label-row,
-.demo-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-label {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-muted);
+.demo-label,
+.demo-slide__badge {
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: flex-start;
-}
-
-.demo-row--center {
-  align-items: center;
-}
-
-.demo-block {
-  display: flex;
-  flex-direction: column;
-}
-
-.demo-text {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text);
-}
-
-.demo-muted {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.demo-inline-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.demo-reset-btn,
-.demo-toggle-btn {
-  padding: 6px 12px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
-}
-
-.demo-reset-btn:hover,
 .demo-toggle-btn:hover {
   border-color: var(--primary);
 }
@@ -690,54 +617,9 @@ const imageApi: { props: ApiRow[] } = {
 .demo-slide {
   padding: 40px 48px 48px;
   min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 8px;
-}
-
-.demo-slide__badge {
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 4px 10px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--surface);
-  color: var(--primary);
-  border: 1px solid var(--border);
-}
-
-.demo-slide__title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text);
 }
 
 .demo-slide__desc {
-  margin: 0;
   max-width: 420px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.demo-image-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.demo-image-card {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.demo-caption {
-  font-size: 0.8rem;
-  color: var(--text-muted);
 }
 </style>

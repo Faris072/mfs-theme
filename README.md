@@ -34,7 +34,7 @@ Hasil build akan berada di folder `dist/`:
 - `dist/mfs-theme.js` (ES Module)
 - `dist/mfs-theme.umd.cjs` (UMD)
 - `dist/index.d.ts` (TypeScript types)
-- `dist/style.css` (CSS library)
+- `mfs-theme/style.css` (CSS library, `dist/mfs-theme.css`)
 
 ### Cara Publikasi ke NPM:
 1. Pastikan sudah login di npm:
@@ -99,3 +99,11 @@ mfs-theme/
 ├── vite.lib.config.ts        # Config untuk build library NPM
 └── package.json
 ```
+
+---
+
+## License & Trademarks
+
+Source code is licensed under the [MIT License](./LICENSE).
+
+The **MFS Atomic Technology** and **MFS Theme** names, logos (including `public/logo.svg`), and brand assets are proprietary to **MFS Atomic Technology** (not open-source) and are **excluded from the MIT License** (all rights reserved). They may not be used to imply endorsement or as your own brand without prior written permission.

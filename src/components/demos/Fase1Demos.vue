@@ -1,5 +1,5 @@
 <template>
-  <div class="demo-stack">
+  <div class="mfs-stack mfs-w-full">
     <!-- BUTTON -->
     <template v-if="activeSlug === 'button'">
       <ComponentPreview
@@ -7,7 +7,7 @@
         description="Semantic color variants adapting to Clay, Glass, and Neo themes."
         :code="buttonVariantsCode"
       >
-        <div class="demo-row">
+        <div class="mfs-row mfs-w-full">
           <Button variant="primary">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Button variant="surface">Surface</Button>
@@ -22,7 +22,7 @@
         description="Control padding with size and toggle pill vs. rounded corners."
         :code="buttonSizesCode"
       >
-        <div class="demo-row">
+        <div class="mfs-row mfs-w-full">
           <Button size="sm">Small</Button>
           <Button size="md">Medium</Button>
           <Button size="lg">Large</Button>
@@ -36,8 +36,8 @@
         :code="buttonStatesCode"
         :api="buttonApi"
       >
-        <div class="demo-col">
-          <div class="demo-row">
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-row mfs-w-full">
             <Button @click="triggerButtonLoad" :loading="buttonLoading">
               <template #prepend><Sparkles :size="16" /></template>
               {{ buttonLoading ? 'Saving...' : 'Click to Load' }}
@@ -60,7 +60,7 @@
         description="Two-way v-model binding with label, placeholder, required mark, and hint."
         :code="inputBasicCode"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <Input
             id="demo-name"
             v-model="inputName"
@@ -87,7 +87,7 @@
         :code="inputStatesCode"
         :api="inputApi"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <Input
             id="demo-search"
             v-model="inputSearch"
@@ -129,9 +129,9 @@
         description="Structured surface container with title, subtitle, body, and hover elevation."
         :code="cardBasicCode"
       >
-        <div class="demo-grid">
+        <div class="mfs-grid mfs-w-full">
           <Card title="Project Overview" subtitle="Updated 5 mins ago" hoverable>
-            <p class="demo-text">
+            <p class="mfs-m-0 mfs-text-sm mfs-text">
               Adaptive surface container that inherits Clay, Glass, or Neo depth automatically.
             </p>
             <template #footer>
@@ -142,19 +142,19 @@
 
           <Card bordered>
             <template #header>
-              <div class="demo-row-between">
-                <span class="demo-card-heading">
+              <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+                <span class="mfs-inline-flex mfs-items-center mfs-gap-2 mfs-font-bold mfs-text">
                   <Layers :size="18" />
                   Custom Header Slot
                 </span>
                 <Badge variant="success" size="sm">Active</Badge>
               </div>
             </template>
-            <p class="demo-text">
+            <p class="mfs-m-0 mfs-text-sm mfs-text">
               Use the <code>header</code> and <code>footer</code> slots for full layout control.
             </p>
             <template #footer>
-              <span class="demo-muted">v1.0.0</span>
+              <span class="mfs-caption">v1.0.0</span>
             </template>
           </Card>
         </div>
@@ -166,9 +166,9 @@
         :code="cardInteractiveCode"
         :api="cardApi"
       >
-        <div class="demo-col">
+        <div class="mfs-stack mfs-w-full">
           <Card title="Quick Preferences" subtitle="Changes apply immediately">
-            <div class="demo-col-sm">
+            <div class="mfs-flex mfs-flex-col mfs-gap-3 mfs-w-full">
               <Switch v-model="cardNotify" label="Email notifications" />
               <Switch v-model="cardCompact" label="Compact density" />
             </div>
@@ -189,8 +189,8 @@
         description="Semantic status pills in small and medium sizes."
         :code="badgeVariantsCode"
       >
-        <div class="demo-col">
-          <div class="demo-row">
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-row mfs-w-full">
             <Badge variant="primary">Primary</Badge>
             <Badge variant="secondary">Secondary</Badge>
             <Badge variant="success">Success</Badge>
@@ -198,7 +198,7 @@
             <Badge variant="danger">Danger</Badge>
             <Badge variant="surface">Surface</Badge>
           </div>
-          <div class="demo-row">
+          <div class="mfs-row mfs-w-full">
             <Badge size="sm" variant="primary">Small</Badge>
             <Badge size="md" variant="primary">Medium</Badge>
           </div>
@@ -211,7 +211,7 @@
         :code="badgeSlotsCode"
         :api="badgeApi"
       >
-        <div class="demo-row">
+        <div class="mfs-row mfs-w-full">
           <Badge variant="success">
             <template #prepend><CheckCircle2 :size="13" /></template>
             Verified
@@ -237,7 +237,7 @@
         description="Accessible boolean toggle with v-model, label prop, and disabled state."
         :code="switchBasicCode"
       >
-        <div class="demo-col-sm">
+        <div class="mfs-flex mfs-flex-col mfs-gap-3 mfs-w-full">
           <Switch v-model="switchAutoSave" label="Enable auto-save" />
           <Switch v-model="switchAnalytics" label="Share anonymous usage" />
           <Switch :model-value="true" label="Locked enabled" disabled />
@@ -251,16 +251,16 @@
         :code="switchSlotCode"
         :api="switchApi"
       >
-        <div class="demo-row">
+        <div class="mfs-row mfs-w-full">
           <Switch v-model="switchBeta" @change="onSwitchChange">
-            <span class="demo-row-tight">
+            <span class="mfs-inline-flex mfs-items-center mfs-gap-2">
               Beta features
               <Badge size="sm" :variant="switchBeta ? 'success' : 'surface'">
                 {{ switchBeta ? 'Enabled' : 'Off' }}
               </Badge>
             </span>
           </Switch>
-          <span class="demo-muted">Last change: {{ switchLastEvent }}</span>
+          <span class="mfs-caption">Last change: {{ switchLastEvent }}</span>
         </div>
       </ComponentPreview>
     </template>
@@ -273,7 +273,7 @@
         :code="modalBasicCode"
         :api="modalApi"
       >
-        <div class="demo-row">
+        <div class="mfs-row mfs-w-full">
           <Button size="sm" @click="openModal('sm')">Small Modal</Button>
           <Button size="md" variant="secondary" @click="openModal('md')">Medium Modal</Button>
           <Button size="md" variant="surface" @click="openModal('lg')">Large Modal</Button>
@@ -283,7 +283,7 @@
         </div>
 
         <Modal v-model="modalOpen" :size="modalSize" :title="`Modal (${modalSize.toUpperCase()})`">
-          <p class="demo-text">
+          <p class="mfs-m-0 mfs-text-sm mfs-text">
             This dialog adapts to the active theme and locks background scrolling while open.
           </p>
           <template #footer>
@@ -298,7 +298,7 @@
           size="sm"
           :close-on-backdrop="false"
         >
-          <p class="demo-text">
+          <p class="mfs-m-0 mfs-text-sm mfs-text">
             Clicking outside will not dismiss this modal. Use the close button or footer actions.
           </p>
           <template #footer>
@@ -309,6 +309,77 @@
         </Modal>
       </ComponentPreview>
     </template>
+
+    <!-- BUTTON GROUP -->
+    <template v-else-if="activeSlug === 'button-group'">
+      <ComponentPreview
+        title="Segmented ButtonGroup"
+        description="Joins adjacent Button components into a unified horizontal action group with shared borders and radii."
+        :code="buttonGroupCode"
+        :api="buttonGroupApi"
+      >
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-row mfs-items-center">
+            <ButtonGroup>
+              <Button
+                v-for="opt in ['Left', 'Center', 'Right']"
+                :key="opt"
+                size="sm"
+                :variant="groupAlign === opt ? 'primary' : 'surface'"
+                @click="groupAlign = opt"
+              >
+                {{ opt }}
+              </Button>
+            </ButtonGroup>
+            <span class="mfs-text-sm mfs-text-muted">Active: <strong class="mfs-text">{{ groupAlign }}</strong></span>
+          </div>
+        </div>
+      </ComponentPreview>
+    </template>
+
+    <!-- INPUT ICON -->
+    <template v-else-if="activeSlug === 'input-icon'">
+      <ComponentPreview
+        title="InputIcon Wrapper"
+        description="Semantic inline icon slot wrapper with muted contrast and aria-hidden for input fields."
+        :code="inputIconCode"
+        :api="inputIconApi"
+      >
+        <div class="mfs-grid mfs-w-full">
+          <Input v-model="iconQuery" label="Search with InputIcon" placeholder="Search...">
+            <template #prepend>
+              <InputIcon><Search :size="16" /></InputIcon>
+            </template>
+          </Input>
+          <Input v-model="iconEmail" label="Email with InputIcon" placeholder="you@domain.com">
+            <template #prepend>
+              <InputIcon><Mail :size="16" /></InputIcon>
+            </template>
+          </Input>
+        </div>
+      </ComponentPreview>
+    </template>
+
+    <!-- INPUT GROUP ADDON -->
+    <template v-else-if="activeSlug === 'input-group-addon'">
+      <ComponentPreview
+        title="InputGroupAddon"
+        description="Prefix and suffix text/unit addons paired inside InputGroup."
+        :code="inputGroupAddonCode"
+        :api="inputGroupAddonApi"
+      >
+        <div class="mfs-stack mfs-w-full">
+          <InputGroup>
+            <InputGroupAddon>https://</InputGroupAddon>
+            <Input v-model="addonDomain" placeholder="example" />
+            <InputGroupAddon>.com</InputGroupAddon>
+          </InputGroup>
+          <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+            Preview URL: <code class="mfs-font-mono mfs-text-primary">https://{{ addonDomain || 'example' }}.com</code>
+          </p>
+        </div>
+      </ComponentPreview>
+    </template>
   </div>
 </template>
 
@@ -317,7 +388,18 @@ import { ref } from 'vue'
 import { ArrowRight, Bell, CheckCircle2, Layers, Mail, Search, Sparkles } from 'lucide-vue-next'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
-import { Badge, Button, Card, Input, Modal, Switch } from '../../lib'
+import {
+  Badge,
+  Button,
+  ButtonGroup,
+  Card,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputIcon,
+  Modal,
+  Switch
+} from '../../lib'
 
 defineProps<{ activeSlug: string }>()
 
@@ -351,6 +433,12 @@ const switchLastEvent = ref('none')
 const onSwitchChange = (val: boolean) => {
   switchLastEvent.value = val ? 'turned on' : 'turned off'
 }
+
+// ButtonGroup / InputIcon / InputGroupAddon demo state
+const groupAlign = ref('Left')
+const iconQuery = ref('')
+const iconEmail = ref('')
+const addonDomain = ref('mfs-theme')
 
 // Modal demo state
 const modalOpen = ref(false)
@@ -696,76 +784,41 @@ const modalApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
     { name: 'footer', description: 'Footer action bar.' }
   ]
 }
+
+const buttonGroupCode = `<template>
+  <ButtonGroup>
+    <Button variant="primary">Left</Button>
+    <Button variant="surface">Center</Button>
+    <Button variant="surface">Right</Button>
+  </ButtonGroup>
+</template>`
+
+const buttonGroupApi: { slots: ApiRow[] } = {
+  slots: [{ name: 'default', description: 'Adjacent Button elements rendered with role="group".' }]
+}
+
+const inputIconCode = `<template>
+  <Input v-model="query" label="Search">
+    <template #prepend>
+      <InputIcon><Search :size="16" /></InputIcon>
+    </template>
+  </Input>
+</template>`
+
+const inputIconApi: { slots: ApiRow[] } = {
+  slots: [{ name: 'default', description: 'Icon element (e.g. Lucide icon) wrapped with aria-hidden="true".' }]
+}
+
+const inputGroupAddonCode = `<template>
+  <InputGroup>
+    <InputGroupAddon>https://</InputGroupAddon>
+    <Input v-model="domain" placeholder="example" />
+    <InputGroupAddon>.com</InputGroupAddon>
+  </InputGroup>
+</template>`
+
+const inputGroupAddonApi: { slots: ApiRow[] } = {
+  slots: [{ name: 'default', description: 'Static text, unit, or symbol addon rendered inside InputGroup.' }]
+}
 </script>
 
-<style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  max-width: 100%;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px;
-  max-width: 100%;
-}
-
-.demo-row-tight {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.demo-row-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-}
-
-.demo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
-  gap: 16px;
-  width: 100%;
-}
-
-.demo-col {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-
-.demo-col-sm {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-.demo-card-heading {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.demo-text {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: var(--text);
-}
-
-.demo-muted {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-</style>

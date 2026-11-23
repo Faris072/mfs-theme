@@ -1,0 +1,71 @@
+/* Aurora Gradient Theme: Northern lights dark glass, emerald/cyan/violet iridescence */
+.theme-aurora-gradient,
+[data-theme="aurora-gradient"] {
+  --theme-name: 'Aurora';
+  --bg: #070b19;
+  --bg-gradient:
+    radial-gradient(circle at 20% 20%, rgba(16, 185, 129, 0.24) 0%, transparent 45%),
+    radial-gradient(circle at 80% 15%, rgba(139, 92, 246, 0.26) 0%, transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(6, 182, 212, 0.2) 0%, #070b19 70%);
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+
+  /* Surfaces */
+  --surface: rgba(15, 23, 42, 0.58);
+  --surface-subtle: rgba(30, 41, 59, 0.52);
+  --border: rgba(52, 211, 153, 0.28);
+  --border-width: 1px;
+  --radius: 18px;
+  --radius-pill: 9999px;
+  --backdrop-blur: blur(18px) saturate(160%);
+
+  /* Colors */
+  --primary: #34d399;
+  --primary-hover: #6ee7b7;
+  --primary-text: #042f2e;
+  --secondary: #a78bfa;
+  --secondary-text: #1e1b4b;
+  --success: #10b981;
+  --success-text: #042f2e;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --danger-text: #070b19;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: Inter, system-ui, -apple-system, sans-serif;
+  --grid-gap: 16px;
+
+  /* Aurora Glow & Depth */
+  --glow: 0 0 20px rgba(52, 211, 153, 0.3);
+  --bevel-light: rgba(167, 243, 208, 0.28);
+  --bevel-dark: rgba(2, 6, 23, 0.8);
+  --shadow:
+    0 10px 30px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(52, 211, 153, 0.14);
+
+  --clay-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(52, 211, 153, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+
+  --clay-shadow-hover:
+    0 10px 28px rgba(0, 0, 0, 0.5),
+    0 0 22px rgba(52, 211, 153, 0.35),
+    0 0 14px rgba(167, 139, 250, 0.25);
+
+  --clay-shadow-active:
+    0 2px 8px rgba(0, 0, 0, 0.55),
+    inset 0 2px 6px rgba(0, 0, 0, 0.4);
+
+  --card-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.45),
+    0 0 20px rgba(52, 211, 153, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+
+  --input-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.45),
+    0 0 8px rgba(52, 211, 153, 0.1);
+}

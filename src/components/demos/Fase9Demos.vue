@@ -8,19 +8,19 @@
       :code="menuCode"
       :api="menuApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             @click="popupMenuRef?.toggle($event)"
           >
             Toggle Popup Menu
           </button>
-          <span class="demo-muted">Selected: {{ menuSelected }}</span>
+          <span class="mfs-caption">Selected: {{ menuSelected }}</span>
         </div>
 
-        <div class="demo-menu-wrap">
+        <div class="mfs-w-full demo-menu-wrap">
           <Menu :items="menuItems" @select="onMenuSelect" />
         </div>
 
@@ -36,9 +36,9 @@
       :code="tieredMenuCode"
       :api="tieredMenuApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
-          <span class="demo-muted">Selected: {{ tieredSelected }}</span>
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
+          <span class="mfs-caption">Selected: {{ tieredSelected }}</span>
         </div>
 
         <div class="demo-tiered-stage">
@@ -55,9 +55,9 @@
       :code="slideMenuCode"
       :api="slideMenuApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
-          <span class="demo-muted">Selected: {{ slideSelected }}</span>
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
+          <span class="mfs-caption">Selected: {{ slideSelected }}</span>
         </div>
 
         <SlideMenu
@@ -77,24 +77,24 @@
       :code="panelMenuCode"
       :api="panelMenuApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': panelMultiple }"
             :aria-pressed="panelMultiple"
             @click="togglePanelMultiple"
           >
             Multiple: {{ panelMultiple ? 'On' : 'Off' }}
           </button>
-          <span class="demo-muted">
+          <span class="mfs-caption">
             Expanded: {{ panelExpanded.length ? panelExpanded.join(', ') : 'None' }}
           </span>
-          <span class="demo-muted">· Selected: {{ panelSelected }}</span>
+          <span class="mfs-caption">· Selected: {{ panelSelected }}</span>
         </div>
 
-        <div class="demo-panel-wrap">
+        <div class="mfs-w-full demo-menu-wrap">
           <PanelMenu
             v-model:expanded-keys="panelExpanded"
             :items="panelItems"
@@ -113,11 +113,11 @@
       :code="megaMenuCode"
       :api="megaMenuApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': megaOrientation === 'horizontal' }"
             @click="megaOrientation = 'horizontal'"
           >
@@ -125,13 +125,13 @@
           </button>
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': megaOrientation === 'vertical' }"
             @click="megaOrientation = 'vertical'"
           >
             Vertical
           </button>
-          <span class="demo-muted">Selected: {{ megaSelected }}</span>
+          <span class="mfs-caption">Selected: {{ megaSelected }}</span>
         </div>
 
         <div class="demo-mega-stage">
@@ -152,13 +152,13 @@
       :code="dockCode"
       :api="dockApi"
     >
-      <div class="demo-stack">
-        <div class="demo-toolbar">
+      <div class="mfs-stack">
+        <div class="mfs-row mfs-gap-2">
           <button
             v-for="pos in dockPositions"
             :key="pos"
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': dockPosition === pos }"
             @click="dockPosition = pos"
           >
@@ -166,7 +166,7 @@
           </button>
           <button
             type="button"
-            class="demo-toggle-btn"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
             :class="{ 'is-active': dockMagnify }"
             :aria-pressed="dockMagnify"
             @click="dockMagnify = !dockMagnify"
@@ -175,7 +175,7 @@
           </button>
         </div>
 
-        <div class="demo-dock-stage" :class="`demo-dock-stage--${dockPosition}`">
+        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage" :class="`demo-dock-stage--${dockPosition}`">
           <Dock
             :items="dockItems"
             :position="dockPosition"
@@ -194,12 +194,12 @@
       :code="tabMenuCode"
       :api="tabMenuApi"
     >
-      <div class="demo-stack">
+      <div class="mfs-stack">
         <TabMenu v-model="activeTab" :items="tabItems" />
 
-        <div class="demo-tab-panel">
+        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle">
           <strong>{{ tabItems[activeTab]?.label }}</strong>
-          <p class="demo-text">{{ tabDescriptions[activeTab] }}</p>
+          <p class="mfs-mt-2 mfs-mb-0 mfs-text-sm mfs-text-muted">{{ tabDescriptions[activeTab] }}</p>
         </div>
       </div>
     </ComponentPreview>
@@ -522,41 +522,8 @@ const tabMenuApi: { props: ApiRow[]; events: ApiRow[] } = {
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.demo-toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-muted {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-}
-
-.demo-text {
-  margin: 6px 0 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
 .demo-toggle-btn {
-  padding: 6px 12px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
-  font-size: 0.8rem;
-  font-weight: 600;
   text-transform: capitalize;
-  cursor: pointer;
-  transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
 }
 
 .demo-toggle-btn:hover {
@@ -569,10 +536,8 @@ const tabMenuApi: { props: ApiRow[]; events: ApiRow[] } = {
   color: var(--primary-text, #ffffff);
 }
 
-.demo-menu-wrap,
-.demo-panel-wrap {
+.demo-menu-wrap {
   max-width: 300px;
-  width: 100%;
 }
 
 .demo-tiered-stage {
@@ -585,11 +550,7 @@ const tabMenuApi: { props: ApiRow[]; events: ApiRow[] } = {
 
 .demo-dock-stage {
   min-height: 150px;
-  padding: 16px;
-  border-radius: var(--radius, 14px);
-  border: 1px dashed var(--border);
-  background: var(--surface-subtle);
-  display: flex;
+  border-style: dashed;
 }
 
 .demo-dock-stage--bottom {
@@ -612,13 +573,5 @@ const tabMenuApi: { props: ApiRow[]; events: ApiRow[] } = {
   align-items: center;
   justify-content: flex-end;
   min-height: 280px;
-}
-
-.demo-tab-panel {
-  padding: 16px;
-  border-radius: var(--radius, 12px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
 }
 </style>

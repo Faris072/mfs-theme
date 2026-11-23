@@ -1,16 +1,16 @@
 <template>
   <Teleport to="body">
     <div
-      class="mfs-toast-container"
+      class="mfs-toast-container mfs-fixed mfs-p-4"
       :class="[`mfs-toast-container--${position}`]"
       role="region"
       aria-label="Notifications"
     >
-      <TransitionGroup name="mfs-toast" tag="div" class="mfs-toast-list">
+      <TransitionGroup name="mfs-toast" tag="div" class="mfs-toast-list mfs-flex mfs-flex-col mfs-gap-3">
         <div
           v-for="item in visibleToasts"
           :key="item.id"
-          class="mfs-toast mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+          class="mfs-toast mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur mfs-flex mfs-items-start mfs-gap-3 mfs-relative"
           :class="[`mfs-toast--${item.severity}`]"
           :role="item.severity === 'danger' || item.severity === 'warning' ? 'alert' : 'status'"
           aria-live="polite"
@@ -19,7 +19,7 @@
           @focusin="pause(item.id)"
           @focusout="resume(item.id)"
         >
-          <span class="mfs-toast__icon" aria-hidden="true">
+          <span class="mfs-toast__icon mfs-shrink-0" aria-hidden="true">
             <svg v-if="item.severity === 'success'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10" />
               <path d="m9 12 2 2 4-4" />
@@ -41,15 +41,15 @@
             </svg>
           </span>
 
-          <div class="mfs-toast__body">
-            <div v-if="item.title" class="mfs-toast__title mfs-title">{{ item.title }}</div>
-            <div class="mfs-toast__message mfs-text-muted">{{ item.message }}</div>
+          <div class="mfs-toast__body mfs-flex-1 mfs-min-w-0">
+            <div v-if="item.title" class="mfs-toast__title mfs-title mfs-font-bold">{{ item.title }}</div>
+            <div class="mfs-toast__message mfs-text-muted mfs-text-sm">{{ item.message }}</div>
           </div>
 
           <button
             v-if="item.closable"
             type="button"
-            class="mfs-toast__close mfs-surface-subtle mfs-pill mfs-focus-ring"
+            class="mfs-toast__close mfs-surface-subtle mfs-pill mfs-focus-ring mfs-shrink-0 mfs-border-none mfs-text-muted mfs-inline-flex mfs-items-center mfs-justify-center mfs-cursor-pointer"
             aria-label="Close notification"
             @click="remove(item.id)"
           >
@@ -90,10 +90,8 @@ const visibleToasts = computed(() => {
 
 <style scoped>
 .mfs-toast-container {
-  position: fixed;
   z-index: 10050;
   pointer-events: none;
-  padding: 16px;
   max-width: 100vw;
   width: min(400px, 100vw);
 }
@@ -105,27 +103,11 @@ const visibleToasts = computed(() => {
 .mfs-toast-container--top-center { top: 0; left: 50%; transform: translateX(-50%); }
 .mfs-toast-container--bottom-center { bottom: 0; left: 50%; transform: translateX(-50%); }
 
-.mfs-toast-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .mfs-toast {
   --toast-accent: var(--primary);
   pointer-events: auto;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
   padding: 14px 16px;
-  background-color: var(--surface);
-  color: var(--text);
-  border-radius: var(--radius, 16px);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
   border-left: 4px solid var(--toast-accent);
-  position: relative;
 }
 
 .mfs-toast--info { --toast-accent: var(--primary); }
@@ -134,7 +116,6 @@ const visibleToasts = computed(() => {
 .mfs-toast--danger { --toast-accent: var(--danger); }
 
 .mfs-toast__icon {
-  flex-shrink: 0;
   width: 20px;
   height: 20px;
   color: var(--toast-accent);
@@ -146,37 +127,20 @@ const visibleToasts = computed(() => {
   height: 100%;
 }
 
-.mfs-toast__body {
-  flex: 1;
-  min-width: 0;
-}
-
 .mfs-toast__title {
-  font-weight: 700;
   font-size: 0.95rem;
   margin-bottom: 2px;
   line-height: 1.3;
 }
 
 .mfs-toast__message {
-  font-size: 0.875rem;
-  color: var(--text-muted);
   line-height: 1.4;
   word-break: break-word;
 }
 
 .mfs-toast__close {
-  flex-shrink: 0;
   width: 28px;
   height: 28px;
-  border-radius: 50%;
-  border: none;
-  background: var(--surface-subtle);
-  color: var(--text-muted);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   transition: transform 0.15s ease, color 0.15s ease;
 }
 
@@ -196,9 +160,6 @@ const visibleToasts = computed(() => {
 }
 
 [data-theme="glass"] .mfs-toast {
-  background-color: rgba(15, 23, 42, 0.78);
-  backdrop-filter: blur(18px);
-  border-color: rgba(255, 255, 255, 0.18);
   border-left: 4px solid var(--toast-accent);
 }
 

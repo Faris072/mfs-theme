@@ -1,5 +1,5 @@
 <template>
-  <div class="slide-menu mfs-surface mfs-rounded-md mfs-blur" :style="{ width: menuWidth }">
+  <div class="slide-menu mfs-surface mfs-overlay mfs-rounded-md mfs-blur" :style="{ width: menuWidth }">
     <div v-if="stack.length > 0" class="slide-menu__header">
       <button
         type="button"

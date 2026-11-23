@@ -21,9 +21,15 @@
   --primary-hover: #22d3ee;
   --primary-text: #041019;
   --secondary: #ec4899;
+  --secondary-text: #041019;
   --success: #10b981;
+  --success-text: #042f2e;
   --warning: #facc15;
   --danger: #f43f5e;
+  --danger-text: #041019;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
 
   /* Typography & Layout */
   --font-display: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

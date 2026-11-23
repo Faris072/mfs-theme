@@ -256,8 +256,8 @@ onBeforeUnmount(stopDrag)
   transform: translateX(-50%);
   padding: 2px 7px;
   border-radius: var(--radius-sm, 6px);
-  background-color: var(--text);
-  color: var(--bg, #ffffff);
+  background-color: var(--tooltip-bg, #0f172a);
+  color: var(--tooltip-text, #f8fafc);
   font-size: 0.72rem;
   font-weight: 600;
   white-space: nowrap;

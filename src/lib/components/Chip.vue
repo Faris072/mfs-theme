@@ -110,22 +110,22 @@ const handleClick = (event: Event) => {
 
 .chip--secondary {
   background-color: var(--secondary);
-  color: #ffffff;
+  color: var(--secondary-text, #ffffff);
 }
 
 .chip--success {
   background-color: var(--success);
-  color: #ffffff;
+  color: var(--success-text, #ffffff);
 }
 
 .chip--warning {
   background-color: var(--warning);
-  color: #ffffff;
+  color: var(--warning-text, #1e293b);
 }
 
 .chip--danger {
   background-color: var(--danger);
-  color: #ffffff;
+  color: var(--danger-text, #ffffff);
 }
 
 .chip--active {

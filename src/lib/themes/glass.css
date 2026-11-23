@@ -11,6 +11,7 @@
   --surface: rgba(255, 255, 255, 0.08);
   --surface-subtle: rgba(255, 255, 255, 0.04);
   --border: rgba(255, 255, 255, 0.18);
+  --border-width: 1px;
   --backdrop-blur: blur(16px);
   --radius: 16px;
   --radius-pill: 9999px;
@@ -20,9 +21,23 @@
   --primary-hover: #0ea5e9;
   --primary-text: #042f2e;
   --secondary: #a855f7;
+  --secondary-text: #020617;
   --success: #34d399;
+  --success-text: #042f2e;
   --warning: #fbbf24;
   --danger: #fb7185;
+  --danger-text: #0f172a;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --grid-gap: 16px;
+  --glow: 0 0 20px rgba(56, 189, 248, 0.22);
+  --bevel-light: rgba(255, 255, 255, 0.28);
+  --bevel-dark: rgba(2, 6, 23, 0.55);
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 
   /* Glass Shadows & Border reflections */
   --clay-shadow: 

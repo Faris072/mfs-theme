@@ -1,0 +1,47 @@
+/* Manga Theme: High-contrast black & white comic ink panels, sharp 0px edges, crimson accent */
+.theme-manga,
+[data-theme="manga"] {
+  --theme-name: 'Manga';
+  --bg: #f5f5f5;
+  --bg-gradient: radial-gradient(#d4d4d4 1px, #f5f5f5 1px);
+  --text: #000000;
+  --text-muted: #404040;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f3f4f6;
+  --border: #000000;
+  --border-width: 2.5px;
+  --radius: 0px;
+  --radius-pill: 0px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #000000;
+  --primary-hover: #262626;
+  --primary-text: #ffffff;
+  --secondary: #dc2626;
+  --success: #16a34a;
+  --warning: #ca8a04;
+  --danger: #dc2626;
+
+  /* Typography & Layout */
+  --font-display: Impact, "Arial Black", "Hiragino Kaku Gothic ProN", sans-serif;
+  --grid-gap: 14px;
+
+  /* Ink Panel Shadows */
+  --glow: none;
+  --bevel-light: #ffffff;
+  --bevel-dark: #000000;
+  --shadow: 4px 4px 0 #000000;
+
+  --clay-shadow: 3px 3px 0 #000000;
+
+  --clay-shadow-hover: 5px 5px 0 #dc2626;
+
+  --clay-shadow-active: 1px 1px 0 #000000;
+
+  --card-shadow: 5px 5px 0 #000000;
+
+  --input-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.12);
+}

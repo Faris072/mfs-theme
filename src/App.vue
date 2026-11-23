@@ -1,26 +1,26 @@
 <template>
-  <div class="app">
+  <div class="app mfs-flex mfs-flex-col">
     <!-- Navbar -->
-    <header class="navbar">
-      <div class="navbar__container">
+    <header class="navbar mfs-surface mfs-border-none mfs-border-b">
+      <div class="mfs-container mfs-flex mfs-items-center mfs-justify-between mfs-py-3 mfs-px-6">
         <!-- Brand -->
-        <router-link to="/" class="navbar__brand">
-          <div class="brand-logo">
-            <Palette :size="20" class="brand-icon" />
+        <router-link to="/" class="navbar__brand mfs-flex mfs-items-center mfs-gap-3">
+          <div class="brand-logo mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-flex mfs-items-center mfs-justify-center">
+            <img src="/logo.svg" alt="MFS Theme" class="brand-icon" />
           </div>
           <div>
-            <span class="brand-title">MFS Theme</span>
-            <span class="brand-badge">Vue 3 UI Library</span>
+            <span class="brand-title mfs-font-bold mfs-text">MFS Theme</span>
+            <span class="brand-badge mfs-text-xs mfs-font-medium mfs-text-muted">Vue 3 UI Library</span>
           </div>
         </router-link>
 
         <!-- Desktop Navigation & Theme Switcher -->
-        <div class="navbar__actions">
+        <div class="navbar__actions mfs-flex mfs-items-center mfs-gap-4">
           <template v-if="isLanding">
-            <router-link to="/components" class="nav-simple-link">
+            <router-link to="/components" class="nav-simple-link mfs-pill mfs-font-semibold mfs-text mfs-transition">
               Components
             </router-link>
-            <router-link to="/catalog" class="nav-cta-btn">
+            <router-link to="/catalog" class="nav-cta-btn mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-pill mfs-bg-primary mfs-shadow mfs-font-semibold mfs-transition">
               <span>Next: Choose Theme</span>
               <ArrowRight :size="15" />
             </router-link>
@@ -28,17 +28,17 @@
 
           <template v-else>
             <!-- View switcher tabs -->
-            <nav class="nav-links" aria-label="Main Navigation">
+            <nav class="nav-links mfs-surface-subtle mfs-pill mfs-shadow-inset mfs-flex" aria-label="Main Navigation">
               <router-link
                 to="/catalog"
-                class="nav-tab"
+                class="nav-tab mfs-pill mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-medium mfs-text-muted mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-transition"
                 :class="{ 'is-active': route.path === '/catalog' || route.path.startsWith('/themes') }"
               >
                 Themes
               </router-link>
               <router-link
                 to="/components"
-                class="nav-tab"
+                class="nav-tab mfs-pill mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-medium mfs-text-muted mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-transition"
                 :class="{ 'is-active': route.path.startsWith('/components') }"
               >
                 Components
@@ -46,8 +46,8 @@
             </nav>
 
             <!-- Active Theme Selector Dropdown -->
-            <div class="theme-selector-bar">
-              <span class="theme-selector-label">Theme:</span>
+            <div class="theme-selector-bar mfs-surface-subtle mfs-pill mfs-shadow-inset mfs-flex mfs-items-center">
+              <span class="theme-selector-label mfs-font-bold mfs-text-muted mfs-select-none">Theme:</span>
               <Select
                 class="navbar-theme-select"
                 :model-value="currentTheme"
@@ -62,7 +62,7 @@
           <a
             href="https://www.npmjs.com/package/mfs-theme"
             target="_blank"
-            class="npm-link"
+            class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
             <span>npm v0.9.0</span>
           </a>
@@ -70,7 +70,7 @@
 
         <!-- Mobile Menu Button -->
         <button
-          class="mobile-menu-btn"
+          class="mobile-menu-btn mfs-surface-subtle mfs-rounded-sm mfs-cursor-pointer"
           aria-label="Toggle navigation"
           @click="mobileMenuOpen = !mobileMenuOpen"
         >
@@ -80,19 +80,19 @@
       </div>
 
       <!-- Mobile Dropdown Drawer -->
-      <div v-if="mobileMenuOpen" class="mobile-drawer">
+      <div v-if="mobileMenuOpen" class="mfs-surface mfs-border-none mfs-border-t mfs-py-4 mfs-px-5">
         <template v-if="isLanding">
-          <div class="mobile-nav-row">
+          <div class="mobile-nav-row mfs-flex mfs-gap-2 mfs-mb-3">
             <router-link
               to="/components"
-              class="nav-tab mobile-outline-tab"
+              class="nav-tab mobile-outline-tab mfs-pill mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-medium mfs-cursor-pointer mfs-transition"
               @click="mobileMenuOpen = false"
             >
               Components
             </router-link>
             <router-link
               to="/catalog"
-              class="nav-cta-btn mobile-cta-fill"
+              class="nav-cta-btn mobile-cta-fill mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-pill mfs-bg-primary mfs-shadow mfs-font-semibold mfs-transition"
               @click="mobileMenuOpen = false"
             >
               <span>Next: Choose Theme</span>
@@ -102,10 +102,10 @@
         </template>
 
         <template v-else>
-          <div class="mobile-nav-row">
+          <div class="mobile-nav-row mfs-flex mfs-gap-2 mfs-mb-3">
             <router-link
               to="/catalog"
-              class="nav-tab"
+              class="nav-tab mfs-pill mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-medium mfs-text-muted mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-transition"
               :class="{ 'is-active': route.path === '/catalog' || route.path.startsWith('/themes') }"
               @click="mobileMenuOpen = false"
             >
@@ -113,7 +113,7 @@
             </router-link>
             <router-link
               to="/components"
-              class="nav-tab"
+              class="nav-tab mfs-pill mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-medium mfs-text-muted mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-transition"
               :class="{ 'is-active': route.path.startsWith('/components') }"
               @click="mobileMenuOpen = false"
             >
@@ -121,13 +121,13 @@
             </router-link>
           </div>
 
-          <p class="drawer-label">Active theme</p>
-          <div class="mobile-theme-grid">
+          <p class="mfs-text-xs mfs-font-semibold mfs-text-muted mfs-mb-2">Active theme</p>
+          <div class="mfs-grid mfs-grid-cols-2 mfs-gap-2">
             <button
               v-for="item in themeOptions"
               :key="item.id"
               type="button"
-              class="mobile-theme-chip"
+              class="mobile-theme-chip mfs-surface-subtle mfs-rounded-md mfs-flex mfs-items-center mfs-gap-2 mfs-font-semibold mfs-cursor-pointer mfs-text-left"
               :class="{ 'is-active': currentTheme === item.id }"
               @click="handleSelectTheme(item.id); mobileMenuOpen = false"
             >
@@ -140,7 +140,7 @@
     </header>
 
     <!-- Main Content Routed View -->
-    <main class="app-main-content">
+    <main class="mfs-w-full mfs-flex-1">
       <router-view />
     </main>
 
@@ -148,10 +148,10 @@
     <ConfirmDialog />
 
     <!-- Footer -->
-    <footer class="footer">
-      <div class="footer__container">
+    <footer class="footer mfs-surface mfs-border-none mfs-border-t mfs-py-8 mfs-px-6 mfs-text-center">
+      <div class="mfs-container mfs-text mfs-text-sm">
         <p>MFS Theme, adaptive multi-theme Vue 3 component library.</p>
-        <p class="footer-sub">
+        <p class="mfs-text-xs mfs-text-muted mfs-mt-1">
           Claymorphism, Glassmorphism, and Neumorphism depth models.
         </p>
       </div>
@@ -163,7 +163,6 @@
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
-  Palette,
   Menu,
   X,
   Layers,
@@ -176,7 +175,17 @@ import {
   Monitor,
   Grid,
   Box,
-  ArrowRight
+  ArrowRight,
+  Droplets,
+  Palette,
+  Terminal,
+  PenTool,
+  Disc,
+  Shapes,
+  Gamepad2,
+  Waves,
+  Sunset,
+  BookOpen
 } from 'lucide-vue-next'
 import { useTheme, Select, Toast, ConfirmDialog, type ThemeType } from './lib'
 
@@ -197,7 +206,17 @@ const iconMap: Record<ThemeType, any> = {
   cyberpunk: Zap,
   retro: Monitor,
   swiss: Grid,
-  skeuomorphism: Box
+  skeuomorphism: Box,
+  'liquid-glass': Droplets,
+  'material-you': Palette,
+  terminal: Terminal,
+  'hand-drawn': PenTool,
+  'y2k-chrome': Disc,
+  bauhaus: Shapes,
+  'pixel-art': Gamepad2,
+  'aurora-gradient': Waves,
+  vaporwave: Sunset,
+  manga: BookOpen
 }
 
 const getThemeIcon = (id: ThemeType) => iconMap[id] ?? Layers
@@ -234,101 +253,51 @@ const onThemeSelect = (val: string | number | null) => {
 
 .app {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
 }
 
 .navbar {
   position: sticky;
   top: 0;
   z-index: 100;
-  background-color: var(--surface);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: var(--backdrop-blur, blur(12px));
-}
-
-.navbar__container {
-  max-width: var(--container-max, 1200px);
-  margin: 0 auto;
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 .navbar__brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
   text-decoration: none;
 }
 
 .brand-logo {
   width: 38px;
   height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md, 12px);
-  color: var(--primary);
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .brand-icon {
   display: block;
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
 }
 
 .brand-title {
   display: block;
   font-size: 1.15rem;
-  font-weight: 700;
   margin: 0;
-  color: var(--text);
   line-height: 1.1;
 }
 
 .brand-badge {
   display: block;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.navbar__actions {
-  display: flex;
-  align-items: center;
-  gap: 16px;
 }
 
 /* Nav links tabs */
 .nav-links {
-  display: flex;
-  background: var(--surface-subtle);
   padding: 3px;
-  border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border);
   gap: 2px;
-  box-shadow: var(--input-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .nav-tab {
-  border: none;
-  background: transparent;
   padding: 6px 14px;
-  border-radius: var(--radius-pill, 9999px);
   font-size: 0.82rem;
-  font-weight: 500;
-  color: var(--text-muted);
   text-decoration: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.2s ease;
 }
 
 .nav-tab.is-active {
@@ -339,12 +308,8 @@ const onThemeSelect = (val: string | number | null) => {
 
 .nav-simple-link {
   padding: 6px 12px;
-  border-radius: var(--radius-pill, 9999px);
   font-size: 0.84rem;
-  font-weight: 600;
-  color: var(--text);
   text-decoration: none;
-  transition: color 0.15s ease;
 }
 
 .nav-simple-link:hover {
@@ -352,19 +317,9 @@ const onThemeSelect = (val: string | number | null) => {
 }
 
 .nav-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
   padding: 7px 14px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--primary);
-  color: var(--primary-text, #ffffff);
   font-size: 0.82rem;
-  font-weight: 600;
   text-decoration: none;
-  box-shadow: var(--clay-shadow);
-  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.15s ease;
 }
 
 .nav-cta-btn:hover {
@@ -384,25 +339,15 @@ const onThemeSelect = (val: string | number | null) => {
 }
 
 .theme-selector-bar {
-  display: flex;
-  align-items: center;
-  background-color: var(--surface-subtle);
   padding: 3px 4px 3px 12px;
-  border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border);
   gap: 3px;
-  box-shadow: var(--input-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .theme-selector-label {
   font-size: 0.72rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
   margin-right: 2px;
-  user-select: none;
 }
 
 .navbar-theme-select {
@@ -423,25 +368,9 @@ const onThemeSelect = (val: string | number | null) => {
   left: auto;
 }
 
-.mobile-theme-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-
 .mobile-theme-chip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   padding: 9px 11px;
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
   font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: left;
 }
 
 .mobile-theme-chip.is-active {
@@ -450,51 +379,14 @@ const onThemeSelect = (val: string | number | null) => {
   background: var(--surface);
 }
 
-.theme-pill-btn {
-  border: none;
-  background: transparent;
-  padding: 5px 12px;
-  border-radius: var(--radius-pill, 9999px);
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-
-.theme-pill-btn:hover {
-  color: var(--text);
-}
-
-.theme-pill-btn.is-active {
-  background-color: var(--surface);
-  color: var(--primary);
-  font-weight: 700;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-}
-
 .theme-pill-icon {
   display: inline-block;
 }
 
 .npm-link {
-  display: inline-flex;
-  align-items: center;
   padding: 6px 12px;
-  border-radius: var(--radius-pill, 9999px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  color: var(--text);
   font-size: 0.78rem;
-  font-weight: 500;
   text-decoration: none;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .npm-link:hover {
@@ -509,102 +401,16 @@ const onThemeSelect = (val: string | number | null) => {
 
 .mobile-menu-btn {
   display: none;
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  color: var(--text);
   padding: 6px;
-  border-radius: var(--radius-sm, 8px);
-  cursor: pointer;
-}
-
-.mobile-drawer {
-  padding: 16px 20px;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-}
-
-.mobile-nav-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
 }
 
 .mobile-nav-row .nav-tab {
   flex: 1;
 }
 
-.drawer-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.mobile-theme-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.mobile-theme-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
-  cursor: pointer;
-  text-align: left;
-}
-
-.mobile-theme-item.is-active {
-  border-color: var(--primary);
-}
-
-.mobile-arrow {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--primary);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: 3px 8px;
-  border-radius: var(--radius-sm, 6px);
-  text-decoration: none;
-}
-
-.mobile-theme-item p {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.app-main-content {
-  width: 100%;
-  flex: 1;
-}
-
 /* Footer */
 .footer {
   margin-top: auto;
-  border-top: 1px solid var(--border);
-  background-color: var(--surface);
-  padding: 32px 24px;
-  text-align: center;
-}
-
-.footer__container {
-  max-width: var(--container-max, 1200px);
-  margin: 0 auto;
-  color: var(--text);
-  font-size: 0.9rem;
-}
-
-.footer-sub {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  margin-top: 4px;
 }
 
 /* Responsiveness */

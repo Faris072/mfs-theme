@@ -1,109 +1,147 @@
 <template>
-  <div class="catalog-page">
+  <div class="mfs-w-full">
     <!-- Header -->
-    <section class="catalog-header">
-      <div class="catalog-container">
-        <h1 class="catalog-title">Theme specifications</h1>
-        <p class="catalog-caption">
-          Select an aesthetic paradigm for your application. Each theme manages visual depth, shadows, and interactive elevations.
+    <section class="catalog-header mfs-surface mfs-border-none mfs-border-b">
+      <div class="mfs-container">
+        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3 mfs-mb-2">
+          <h1 class="catalog-title mfs-text mfs-m-0">Theme specifications</h1>
+          <span class="mfs-surface-subtle mfs-pill mfs-text-xs mfs-font-bold mfs-text-primary mfs-px-3 mfs-py-1">
+            {{ allThemes.length }} Themes
+          </span>
+        </div>
+        <p class="catalog-caption mfs-text-muted">
+          Select an aesthetic paradigm for your application. Each theme manages visual depth, shadows, borders, and interactive elevations.
         </p>
 
-        <!-- Filter tabs -->
-        <div class="filter-tabs-row">
-          <button
-            v-for="cat in filterOptions"
-            :key="cat"
-            class="filter-pill"
-            :class="{ 'is-active': activeFilter === cat }"
-            @click="activeFilter = cat"
-          >
-            {{ cat }}
-          </button>
+        <!-- Search & Filter bar -->
+        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3">
+          <div class="mfs-flex mfs-gap-2 mfs-overflow-x-auto mfs-flex-wrap">
+            <button
+              v-for="cat in filterOptions"
+              :key="cat"
+              class="filter-pill mfs-surface-subtle mfs-pill mfs-font-medium mfs-shadow mfs-cursor-pointer mfs-whitespace-nowrap mfs-transition"
+              :class="{ 'is-active': activeFilter === cat }"
+              @click="activeFilter = cat"
+            >
+              {{ cat }}
+            </button>
+          </div>
+
+          <div class="catalog-search-box mfs-inset mfs-flex mfs-items-center mfs-gap-2 mfs-px-3 mfs-py-1-5">
+            <Search :size="14" class="mfs-text-muted mfs-shrink-0" />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search themes..."
+              aria-label="Search themes"
+              class="catalog-search-input mfs-w-full mfs-border-none mfs-bg-transparent mfs-text mfs-text-sm mfs-outline-none"
+            />
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Theme Cards Grid -->
     <section class="catalog-grid-section">
-      <div class="catalog-container">
-        <div class="theme-cards-grid">
+      <div class="mfs-container">
+        <div v-if="filteredThemes.length === 0" class="mfs-surface mfs-rounded-lg mfs-p-6 mfs-text-center">
+          <p class="mfs-text-muted mfs-m-0">No themes match "{{ searchQuery }}" in {{ activeFilter }}.</p>
+        </div>
+
+        <div v-else class="theme-cards-grid">
           <div
             v-for="t in filteredThemes"
             :key="t.id"
-            class="theme-card-item"
+            class="theme-card-item mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden mfs-flex mfs-flex-col"
             :class="{ 'is-selected': activeThemeId === t.id }"
           >
-            <!-- Card Header Preview -->
-            <div class="card-hero-preview" :class="`preview-theme-${t.id}`">
-              <div class="specimen-container">
-                <div v-if="t.id === 'clay'" class="specimen-clay">
-                  <div class="clay-pill-icon">
-                    <component :is="t.iconComponent" :size="24" />
-                  </div>
-                  <span class="clay-specimen-label">Tactile 3D Volume</span>
+            <!-- Card Header Preview using real [data-theme] -->
+            <div
+              class="card-hero-preview mfs-relative mfs-flex mfs-items-center mfs-justify-center mfs-overflow-hidden mfs-p-4"
+              :data-theme="t.id"
+              :style="{ background: t.previewBg }"
+            >
+              <div class="specimen-pill mfs-surface mfs-pill mfs-shadow mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-transition">
+                <div class="specimen-icon mfs-bg-primary mfs-flex mfs-items-center mfs-justify-center mfs-rounded-full mfs-shrink-0">
+                  <component :is="getThemeIcon(t)" :size="18" />
                 </div>
-
-                <div v-else-if="t.id === 'glass'" class="specimen-glass">
-                  <div class="glass-pill-icon">
-                    <component :is="t.iconComponent" :size="24" />
-                  </div>
-                  <span class="glass-specimen-label">Frosted Translucency</span>
-                </div>
-
-                <div v-else-if="t.id === 'neo'" class="specimen-neo">
-                  <div class="neo-pill-icon">
-                    <component :is="t.iconComponent" :size="24" />
-                  </div>
-                  <span class="neo-specimen-label">Dual Extrusion</span>
+                <div class="mfs-flex mfs-flex-col mfs-min-w-0">
+                  <span class="specimen-label mfs-text mfs-font-bold mfs-truncate">{{ t.name }}</span>
+                  <span class="specimen-badge mfs-text-primary mfs-text-xs mfs-font-semibold mfs-truncate">{{ t.badge }}</span>
                 </div>
               </div>
 
-              <span v-if="activeThemeId === t.id" class="card-active-label">
+              <span
+                v-if="activeThemeId === t.id"
+                class="card-active-label mfs-absolute mfs-bg-primary mfs-pill mfs-text-xs mfs-font-bold mfs-inline-flex mfs-items-center mfs-gap-1"
+              >
                 <Check :size="12" class="icon-inline" />
                 <span>Active</span>
               </span>
             </div>
 
             <!-- Card Body -->
-            <div class="card-body">
-              <div class="card-title-row">
-                <h2 class="card-theme-name">{{ t.name }}</h2>
-                <span class="card-category-badge">{{ t.category }}</span>
+            <div class="mfs-p-6 mfs-flex mfs-flex-col mfs-flex-1">
+              <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-mb-2">
+                <h2 class="card-theme-name mfs-text mfs-m-0 mfs-truncate">{{ t.name }}</h2>
+                <span class="card-category-badge mfs-text-xs mfs-font-bold mfs-text-primary mfs-surface-subtle mfs-pill mfs-border mfs-whitespace-nowrap">
+                  {{ getThemeGroup(t.id) }}
+                </span>
               </div>
 
-              <p class="card-tagline">{{ t.tagline }}</p>
-              <p class="card-description">{{ t.description }}</p>
+              <p class="card-tagline mfs-font-bold mfs-text-primary mfs-m-0">{{ t.tagline }}</p>
+              <p class="card-description mfs-text-muted">{{ t.description }}</p>
 
-              <!-- Use cases -->
+              <!-- Key Features -->
               <div class="use-cases-box">
-                <span class="use-case-title">Target interfaces</span>
-                <div class="use-case-list">
-                  <span v-for="(useCase, idx) in t.useCases" :key="idx" class="use-case-tag">
-                    {{ useCase }}
+                <span class="use-case-title mfs-font-bold mfs-text-muted mfs-mb-2">Key characteristics</span>
+                <div class="mfs-flex mfs-flex-wrap mfs-gap-2">
+                  <span
+                    v-for="(feature, idx) in t.keyFeatures.slice(0, 3)"
+                    :key="idx"
+                    class="use-case-tag mfs-surface-subtle mfs-pill mfs-font-medium mfs-text mfs-shadow-inset"
+                  >
+                    {{ feature }}
                   </span>
                 </div>
               </div>
 
-              <!-- Tokens Specs -->
-              <div class="spec-tokens-grid">
-                <div class="spec-token-row">
-                  <span class="spec-token-label">Elevation</span>
-                  <span class="spec-token-value">{{ t.elevation }}</span>
+              <!-- Theme Activation Info -->
+              <div class="mfs-inset mfs-py-3 mfs-px-4 mfs-mb-6 mfs-flex mfs-flex-col mfs-gap-2">
+                <div class="spec-token-row mfs-gap-2">
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">THEME ID</span>
+                  <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-min-w-0">
+                    <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">'{{ t.id }}'</code>
+                    <button
+                      type="button"
+                      class="mfs-surface mfs-pill mfs-text-muted mfs-text-xs mfs-px-2 mfs-py-0 mfs-inline-flex mfs-items-center mfs-gap-1 mfs-interactive mfs-shrink-0"
+                      :aria-label="`Copy theme ID ${t.id}`"
+                      @click.stop="copyThemeId(t.id)"
+                    >
+                      <Check v-if="copiedThemeId === t.id" :size="11" class="mfs-text-primary" />
+                      <Copy v-else :size="11" />
+                      <span>{{ copiedThemeId === t.id ? 'Copied' : 'Copy' }}</span>
+                    </button>
+                  </div>
                 </div>
-                <div class="spec-token-row">
-                  <span class="spec-token-label">Radius</span>
-                  <span class="spec-token-value">{{ t.radius }}</span>
+                <div class="spec-token-row mfs-gap-2">
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">PLUGIN</span>
+                  <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">defaultTheme: '{{ t.id }}'</code>
                 </div>
-                <div class="spec-token-row">
-                  <span class="spec-token-label">Surface</span>
-                  <span class="spec-token-value">{{ t.surface }}</span>
+                <div class="spec-token-row mfs-gap-2">
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">COMPOSABLE</span>
+                  <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">setTheme('{{ t.id }}')</code>
+                </div>
+                <div class="spec-token-row mfs-gap-2">
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">HTML ATTR</span>
+                  <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">data-theme="{{ t.id }}"</code>
                 </div>
               </div>
 
               <!-- Action buttons -->
-              <div class="card-actions">
+              <div class="card-actions mfs-flex mfs-gap-2-5">
                 <button
-                  class="btn-apply-theme"
+                  class="btn-apply-theme mfs-surface-subtle mfs-text mfs-pill mfs-font-bold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition"
                   :class="{ 'btn-selected': activeThemeId === t.id }"
                   @click="$emit('select-theme', t.id)"
                 >
@@ -111,10 +149,10 @@
                   <span>{{ activeThemeId === t.id ? 'Active Theme' : 'Apply Theme' }}</span>
                 </button>
                 <button
-                  class="btn-view-components"
+                  class="btn-view-components mfs-surface mfs-text mfs-pill mfs-font-semibold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition"
                   @click="$emit('open-theme-detail', t.id)"
                 >
-                  <span>Components</span>
+                  <span>Specs</span>
                   <ArrowRight :size="14" class="icon-inline" />
                 </button>
               </div>
@@ -125,45 +163,46 @@
     </section>
 
     <!-- Comparison Matrix -->
-    <section class="comparison-section">
-      <div class="catalog-container">
-        <h2 class="comparison-heading">Theme specification matrix</h2>
-        <p class="comparison-sub">Comparative overview of structural properties across all three models.</p>
+    <section class="comparison-section mfs-border-none mfs-border-t mfs-surface-subtle">
+      <div class="mfs-container">
+        <h2 class="comparison-heading mfs-text mfs-m-0 mfs-mb-2">Theme specification matrix</h2>
+        <p class="comparison-sub mfs-text-muted">
+          Comparative overview of structural properties across all {{ allThemes.length }} theme models.
+        </p>
 
-        <div class="matrix-table-wrap">
-          <table class="matrix-table">
+        <div class="mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-x-auto">
+          <table class="matrix-table mfs-w-full mfs-text-left">
             <thead>
               <tr>
-                <th scope="col">Dimension</th>
-                <th scope="col">Claymorphism</th>
-                <th scope="col">Glassmorphism</th>
-                <th scope="col">Neumorphism</th>
+                <th scope="col">Theme</th>
+                <th scope="col">Group</th>
+                <th scope="col">Badge</th>
+                <th scope="col">Accent</th>
+                <th scope="col">Primary Token</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">Depth model</th>
-                <td>Dual-layer inner highlights and diffuse drops</td>
-                <td>Translucent layered panels with backdrop blur</td>
-                <td>Dual directional opposing shadows (extruded/inset)</td>
-              </tr>
-              <tr>
-                <th scope="row">Surface opacity</th>
-                <td>Opaque pastel matte</td>
-                <td>Translucent (blur 16px to 24px)</td>
-                <td>Monochromatic canvas integration</td>
-              </tr>
-              <tr>
-                <th scope="row">Corner radius</th>
-                <td>20px to 32px (rounded)</td>
-                <td>12px to 16px (structured)</td>
-                <td>14px to 20px (soft geometric)</td>
-              </tr>
-              <tr>
-                <th scope="row">Component parity</th>
-                <td>100% API identical</td>
-                <td>100% API identical</td>
-                <td>100% API identical</td>
+              <tr
+                v-for="t in allThemes"
+                :key="t.id"
+                class="mfs-cursor-pointer"
+                @click="$emit('select-theme', t.id)"
+              >
+                <th scope="row">
+                  <div class="mfs-flex mfs-items-center mfs-gap-2">
+                    <component :is="getThemeIcon(t)" :size="15" class="mfs-text-primary mfs-shrink-0" />
+                    <span>{{ t.name }}</span>
+                  </div>
+                </th>
+                <td>{{ getThemeGroup(t.id) }}</td>
+                <td>{{ t.badge }}</td>
+                <td>
+                  <span class="mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-font-mono mfs-text-xs">
+                    <span class="accent-dot mfs-rounded-full" :style="{ backgroundColor: t.accentColor }"></span>
+                    {{ t.accentColor }}
+                  </span>
+                </td>
+                <td class="mfs-font-mono mfs-text-xs">{{ t.designTokens[0]?.value || '-' }}</td>
               </tr>
             </tbody>
           </table>
@@ -174,15 +213,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, type Component } from 'vue'
 import {
   Layers,
   Sparkles,
   Circle,
+  Minus,
+  Square,
+  LayoutGrid,
+  Zap,
+  Monitor,
+  Grid,
+  Box,
+  Droplets,
+  Palette,
+  Terminal,
+  PenTool,
+  Cpu,
+  Shapes,
+  Gamepad2,
+  Sun,
+  Disc,
+  BookOpen,
   ArrowRight,
-  Check
+  Check,
+  Copy,
+  Search
 } from 'lucide-vue-next'
-import { type ThemeType } from '../lib'
+import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
 
 defineProps<{
   activeThemeId: ThemeType
@@ -194,142 +252,122 @@ defineEmits<{
 }>()
 
 const activeFilter = ref('All')
-const filterOptions = ['All', 'Tactile', 'Translucent', 'Soft UI']
+const searchQuery = ref('')
+const copiedThemeId = ref<string | null>(null)
 
-interface ThemeItem {
-  id: ThemeType
-  name: string
-  category: string
-  iconComponent: unknown
-  tagline: string
-  description: string
-  previewBg: string
-  useCases: string[]
-  elevation: string
-  radius: string
-  surface: string
+const copyThemeId = async (id: string) => {
+  try {
+    await navigator.clipboard.writeText(`'${id}'`)
+    copiedThemeId.value = id
+    setTimeout(() => {
+      if (copiedThemeId.value === id) copiedThemeId.value = null
+    }, 1800)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
-const themeCatalog: ThemeItem[] = [
-  {
-    id: 'clay',
-    name: 'Claymorphism',
-    category: 'Tactile',
-    iconComponent: Layers,
-    tagline: 'Inflated soft volume with tactile curves',
-    description: 'Constructs playful 3D digital surfaces with multi-layer inner white highlights and diffuse outer drops.',
-    previewBg: 'linear-gradient(135deg, #e0e7ff 0%, #ede9fe 50%, #fce7f3 100%)',
-    useCases: ['Educational tools', 'Creative suites', 'Consumer applications'],
-    elevation: 'Inner top-left white + diffuse outer',
-    radius: 'Large curves (20px to 32px)',
-    surface: 'Opaque matte'
-  },
-  {
-    id: 'glass',
-    name: 'Glassmorphism',
-    category: 'Translucent',
-    iconComponent: Sparkles,
-    tagline: 'Frosted translucent panels with edge reflection',
-    description: 'Modern translucent panels utilizing CSS backdrop-filter blur and subtle luminous borders over dark canvas.',
-    previewBg: 'radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 60%, #020617 100%)',
-    useCases: ['Dark dashboards', 'Technical consoles', 'Data monitoring'],
-    elevation: 'Translucent border + backdrop blur',
-    radius: 'Medium geometric (12px to 16px)',
-    surface: 'Translucent glass'
-  },
-  {
-    id: 'neo',
-    name: 'Neumorphism',
-    category: 'Soft UI',
-    iconComponent: Circle,
-    tagline: 'Minimalist surface relief and extruded forms',
-    description: 'Monochromatic canvas interface using opposing directional shadows for physical extruded or sunken states.',
-    previewBg: 'linear-gradient(135deg, #e6ecf5 0%, #e2e8f0 100%)',
-    useCases: ['Hardware controllers', 'Audio tools', 'Minimal dashboards'],
-    elevation: 'Dual opposing directional light/shadow',
-    radius: 'Soft rounded (14px to 20px)',
-    surface: 'Monochromatic unified'
-  }
+const filterOptions = [
+  'All',
+  'Tactile & 3D',
+  'Glass & Glow',
+  'Minimal & Grid',
+  'Dark & Neon',
+  'Retro & Playful'
 ]
 
+const THEME_GROUP_MAP: Record<string, string> = {
+  clay: 'Tactile & 3D',
+  neo: 'Tactile & 3D',
+  skeuomorphism: 'Tactile & 3D',
+  'material-you': 'Tactile & 3D',
+  glass: 'Glass & Glow',
+  'liquid-glass': 'Glass & Glow',
+  'aurora-gradient': 'Glass & Glow',
+  minimalism: 'Minimal & Grid',
+  bento: 'Minimal & Grid',
+  swiss: 'Minimal & Grid',
+  bauhaus: 'Minimal & Grid',
+  cyberpunk: 'Dark & Neon',
+  terminal: 'Dark & Neon',
+  vaporwave: 'Dark & Neon',
+  retro: 'Retro & Playful',
+  'y2k-chrome': 'Retro & Playful',
+  'pixel-art': 'Retro & Playful',
+  'hand-drawn': 'Retro & Playful',
+  manga: 'Retro & Playful',
+  brutalism: 'Retro & Playful'
+}
+
+const ICON_BY_NAME: Record<string, Component> = {
+  Layers,
+  Sparkles,
+  Circle,
+  Minus,
+  Square,
+  LayoutGrid,
+  Zap,
+  Monitor,
+  Grid,
+  Box,
+  Droplets,
+  Palette,
+  Terminal,
+  PenTool,
+  Cpu,
+  Shapes,
+  Gamepad2,
+  Sun,
+  Disc,
+  BookOpen
+}
+
+const getThemeGroup = (id: string): string => THEME_GROUP_MAP[id] || 'Other'
+
+const getThemeIcon = (theme: ThemeDetailInfo): Component => {
+  return ICON_BY_NAME[theme.icon] || Layers
+}
+
+const allThemes = computed<ThemeDetailInfo[]>(() => Object.values(THEMES_DATA))
+
 const filteredThemes = computed(() => {
-  if (activeFilter.value === 'All') return themeCatalog
-  return themeCatalog.filter((t) => t.category === activeFilter.value)
+  const q = searchQuery.value.trim().toLowerCase()
+  return allThemes.value.filter((t) => {
+    const matchesGroup = activeFilter.value === 'All' || getThemeGroup(t.id) === activeFilter.value
+    if (!matchesGroup) return false
+    if (!q) return true
+    return (
+      t.name.toLowerCase().includes(q) ||
+      t.tagline.toLowerCase().includes(q) ||
+      t.badge.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q)
+    )
+  })
 })
 </script>
 
 <style scoped>
 /* Hallmark · theme: mfs-theme · ThemeCatalogPage.vue */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-.catalog-page {
-  width: 100%;
-}
-
-.catalog-container {
-  max-width: var(--container-max, 1200px);
-  margin: 0 auto;
-}
-
 .catalog-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 48px 24px 32px;
-}
-
-.catalog-tag {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--primary);
-  margin-bottom: 12px;
-  display: inline-block;
+  padding: 48px 0 32px;
 }
 
 .catalog-title {
   font-size: 2.4rem;
   font-weight: 800;
-  color: var(--text);
-  margin: 0 0 10px;
   letter-spacing: -0.02em;
 }
 
 .catalog-caption {
   font-size: 1.05rem;
-  color: var(--text-muted);
   max-width: 680px;
-  margin: 0 0 28px;
+  margin: 0 0 24px;
   line-height: 1.55;
 }
 
-.filter-tabs-row {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-}
-
 .filter-pill {
-  background: var(--surface-subtle);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
   padding: 7px 16px;
-  border-radius: var(--radius-pill, 9999px);
   font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .filter-pill:hover {
@@ -345,26 +383,23 @@ const filteredThemes = computed(() => {
   box-shadow: var(--clay-shadow-active);
 }
 
+.catalog-search-box {
+  min-width: 220px;
+}
+
+.catalog-search-input {
+  min-width: 0;
+}
+
 /* Grid */
 .catalog-grid-section {
-  padding: 48px 24px;
+  padding: 48px 0;
 }
 
 .theme-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
   gap: 28px;
-}
-
-.theme-card-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius, 18px);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 .theme-card-item.is-selected {
@@ -372,212 +407,55 @@ const filteredThemes = computed(() => {
 }
 
 .card-hero-preview {
-  height: 160px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
+  height: 150px;
 }
 
-.specimen-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+.specimen-pill {
+  padding: 10px 18px;
+  max-width: 90%;
 }
 
-/* Clay Specimen */
-.preview-theme-clay {
-  background: linear-gradient(135deg, #e4e7ff 0%, #ede8ff 50%, #fde7f3 100%);
-}
-
-.specimen-clay {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background: #ffffff;
-  border-radius: var(--radius-pill, 9999px);
-  box-shadow: 
-    8px 14px 24px rgba(109, 40, 217, 0.16),
-    inset -3px -3px 7px rgba(109, 40, 217, 0.2),
-    inset 3px 3px 7px #ffffff;
-  transition: transform 0.25s ease;
-}
-
-.specimen-clay:hover {
+.specimen-pill:hover {
   transform: translateY(-2px);
 }
 
-.clay-pill-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #f5f3ff;
-  color: #8b5cf6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    3px 6px 12px rgba(109, 40, 217, 0.12),
-    inset 2px 2px 4px #ffffff,
-    inset -2px -2px 4px rgba(109, 40, 217, 0.15);
+.specimen-icon {
+  width: 36px;
+  height: 36px;
 }
 
-.clay-specimen-label {
+.specimen-label {
   font-size: 0.9rem;
-  font-weight: 700;
-  color: #241442;
 }
 
-/* Glass Specimen */
-.preview-theme-glass {
-  background: radial-gradient(circle at 20% 20%, #312e81 0%, #0f172a 65%, #020617 100%);
-}
-
-.specimen-glass {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: var(--radius-pill, 9999px);
-  box-shadow: 
-    0 12px 32px rgba(0, 0, 0, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  transition: transform 0.25s ease;
-}
-
-.specimen-glass:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.16);
-}
-
-.glass-pill-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: rgba(56, 189, 248, 0.2);
-  color: #38bdf8;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
-}
-
-.glass-specimen-label {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
-}
-
-/* Neo Specimen */
-.preview-theme-neo {
-  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
-}
-
-.specimen-neo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 20px;
-  background: #e2e8f0;
-  border-radius: var(--radius-pill, 9999px);
-  box-shadow: 
-    6px 6px 14px #bcc5d3,
-    -6px -6px 14px #ffffff;
-  transition: transform 0.25s ease;
-}
-
-.specimen-neo:hover {
-  transform: translateY(-2px);
-}
-
-.neo-pill-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: #e2e8f0;
-  color: #4f46e5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    inset 3px 3px 6px #bcc5d3,
-    inset -3px -3px 6px #ffffff;
-}
-
-.neo-specimen-label {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #334155;
+.specimen-badge {
+  font-size: 0.72rem;
 }
 
 .card-active-label {
-  position: absolute;
   top: 12px;
   right: 12px;
-  background: var(--primary);
-  color: var(--primary-text, #ffffff);
   padding: 4px 12px;
-  border-radius: var(--radius-pill, 9999px);
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.card-body {
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.card-title-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
 .card-theme-name {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
-  color: var(--text);
-  margin: 0;
   letter-spacing: -0.01em;
 }
 
 .card-category-badge {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--primary);
-  background: var(--surface-subtle);
   padding: 4px 10px;
-  border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border);
 }
 
 .card-tagline {
   font-size: 0.88rem;
-  font-weight: 700;
-  color: var(--primary);
-  margin: 0 0 10px;
+  margin-bottom: 10px;
 }
 
 .card-description {
-  font-size: 0.92rem;
-  color: var(--text-muted);
+  font-size: 0.9rem;
   line-height: 1.55;
   margin: 0 0 18px;
 }
@@ -589,70 +467,28 @@ const filteredThemes = computed(() => {
 .use-case-title {
   display: block;
   font-size: 0.74rem;
-  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-muted);
-  margin-bottom: 8px;
-}
-
-.use-case-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .use-case-tag {
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
   padding: 4px 10px;
-  border-radius: var(--radius-pill, 9999px);
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text);
-  box-shadow: var(--input-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-}
-
-.spec-tokens-grid {
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-  border-radius: var(--radius, 12px);
-  box-shadow: var(--input-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  padding: 12px 14px;
-  margin-bottom: 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  font-size: 0.78rem;
 }
 
 .spec-token-row {
   display: grid;
-  grid-template-columns: 75px 1fr;
+  grid-template-columns: 95px 1fr;
   align-items: baseline;
-  gap: 8px;
-  font-size: 0.82rem;
-}
-
-.spec-token-label {
-  color: var(--text-muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
 }
 
 .spec-token-value {
-  color: var(--text);
-  font-weight: 600;
   line-height: 1.4;
   word-break: break-word;
 }
 
 .card-actions {
-  display: flex;
-  gap: 10px;
   margin-top: auto;
 }
 
@@ -660,22 +496,10 @@ const filteredThemes = computed(() => {
   flex: 1;
 }
 
-.btn-apply-theme {
-  background: var(--surface-subtle);
-  color: var(--text);
-  border: 1px solid var(--border);
+.btn-apply-theme,
+.btn-view-components {
   padding: 11px 16px;
-  border-radius: var(--radius-pill, 9999px);
   font-size: 0.88rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
 }
 
 .btn-apply-theme:hover {
@@ -686,7 +510,8 @@ const filteredThemes = computed(() => {
   box-shadow: var(--clay-shadow-hover);
 }
 
-.btn-apply-theme:active {
+.btn-apply-theme:active,
+.btn-view-components:active {
   transform: translateY(1px);
   box-shadow: var(--clay-shadow-active);
 }
@@ -698,34 +523,11 @@ const filteredThemes = computed(() => {
   box-shadow: var(--clay-shadow-active);
 }
 
-.btn-view-components {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 11px 16px;
-  border-radius: var(--radius-pill, 9999px);
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: var(--clay-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
 .btn-view-components:hover {
   background: var(--surface-subtle);
   border-color: var(--primary);
   transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
-}
-
-.btn-view-components:active {
-  transform: translateY(1px);
-  box-shadow: var(--clay-shadow-active);
 }
 
 .icon-inline {
@@ -735,43 +537,28 @@ const filteredThemes = computed(() => {
 
 /* Comparison section */
 .comparison-section {
-  border-top: 1px solid var(--border);
-  background: var(--surface-subtle);
-  padding: 60px 24px;
+  padding: 60px 0;
 }
 
 .comparison-heading {
   font-size: 1.85rem;
   font-weight: 800;
-  color: var(--text);
-  margin: 0 0 8px;
   letter-spacing: -0.01em;
 }
 
 .comparison-sub {
   font-size: 0.95rem;
-  color: var(--text-muted);
   margin: 0 0 28px;
 }
 
-.matrix-table-wrap {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius, 18px);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  overflow-x: auto;
-}
-
 .matrix-table {
-  width: 100%;
   border-collapse: collapse;
-  font-size: 0.9rem;
-  text-align: left;
+  font-size: 0.88rem;
 }
 
-.matrix-table th, .matrix-table td {
-  padding: 16px 20px;
+.matrix-table th,
+.matrix-table td {
+  padding: 14px 18px;
   border-bottom: 1px solid var(--border);
   color: var(--text);
 }
@@ -781,7 +568,8 @@ const filteredThemes = computed(() => {
   background: var(--surface-subtle);
 }
 
-.matrix-table tr:hover td {
+.matrix-table tr:hover td,
+.matrix-table tr:hover th {
   background: var(--surface-subtle);
 }
 
@@ -790,9 +578,19 @@ const filteredThemes = computed(() => {
   border-bottom: none;
 }
 
+.accent-dot {
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border: 1px solid var(--border);
+}
+
 @media (max-width: 640px) {
   .catalog-title {
     font-size: 2rem;
+  }
+  .catalog-search-box {
+    width: 100%;
   }
   .card-actions {
     flex-direction: column;

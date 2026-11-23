@@ -7,7 +7,7 @@
         <ul
           v-if="visible"
           ref="menuRef"
-          class="ctx-menu mfs-surface mfs-shadow-card mfs-rounded-md mfs-blur"
+          class="ctx-menu mfs-surface mfs-overlay mfs-shadow-card mfs-rounded-md mfs-blur"
           role="menu"
           :style="{ left: `${position.x}px`, top: `${position.y}px` }"
           @keydown="handleMenuKeydown"
@@ -247,7 +247,4 @@ defineExpose({ open, close })
   transform: scale(0.94);
 }
 
-[data-theme="glass"] .ctx-menu {
-  background-color: rgba(15, 23, 42, 0.85);
-}
 </style>

@@ -1,0 +1,64 @@
+/* Pixel Art Theme: 8-bit/16-bit arcade UI, crisp 0px corners, stepped pixel borders */
+.theme-pixel-art,
+[data-theme="pixel-art"] {
+  --theme-name: 'Pixel Art';
+  --bg: #1a1c2c;
+  --bg-gradient: linear-gradient(180deg, #1a1c2c 0%, #141624 100%);
+  --text: #f4f4f4;
+  --text-muted: #94b0c2;
+
+  /* Surfaces */
+  --surface: #29366f;
+  --surface-subtle: #252b48;
+  --border: #f4f4f4;
+  --border-width: 2px;
+  --radius: 0px;
+  --radius-pill: 0px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #ff9e64;
+  --primary-hover: #ffcd75;
+  --primary-text: #0d0e15;
+  --secondary: #41a6f6;
+  --secondary-text: #0d0e15;
+  --success: #38b764;
+  --success-text: #052e16;
+  --warning: #ffcd75;
+  --danger: #b13e53;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --grid-gap: 12px;
+
+  /* Stepped 8-bit Pixel Shadows */
+  --glow: none;
+  --bevel-light: #73eff7;
+  --bevel-dark: #1a1c2c;
+  --shadow: 4px 4px 0 #0d0e15, -2px 0 0 #0d0e15, 0 -2px 0 #0d0e15;
+
+  --clay-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.25),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.45),
+    3px 3px 0 #0d0e15;
+
+  --clay-shadow-hover:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.35),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.45),
+    4px 4px 0 #0d0e15;
+
+  --clay-shadow-active:
+    inset 2px 2px 0 rgba(0, 0, 0, 0.5),
+    1px 1px 0 #0d0e15;
+
+  --card-shadow:
+    inset 2px 2px 0 rgba(255, 255, 255, 0.2),
+    inset -2px -2px 0 rgba(0, 0, 0, 0.45),
+    4px 4px 0 #0d0e15;
+
+  --input-shadow:
+    inset 3px 3px 0 #11131f;
+}

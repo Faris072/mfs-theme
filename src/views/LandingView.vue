@@ -1,5 +1,5 @@
 <template>
-  <div class="landing-view">
+  <div class="mfs-w-full">
     <LandingPage
       :current-theme="currentTheme"
       @explore-catalog="goToCatalog"
@@ -25,10 +25,3 @@ const goToDetail = (themeId: ThemeType) => {
   router.push(`/themes/${themeId}`)
 }
 </script>
-
-<style scoped>
-/* Hallmark · theme: mfs-theme · LandingView.vue */
-.landing-view {
-  width: 100%;
-}
-</style>

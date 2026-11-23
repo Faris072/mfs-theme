@@ -28,7 +28,7 @@
     <Transition name="split-fade">
       <ul
         v-if="open && items.length"
-        class="split-btn__menu mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+        class="split-btn__menu mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
         role="menu"
       >
         <li v-for="(item, idx) in items" :key="idx" role="none">

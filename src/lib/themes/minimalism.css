@@ -33,8 +33,8 @@
   --shadow: none;
   --font-display: 'Inter', system-ui, -apple-system, sans-serif;
   --glow: none;
-  --bevel-light: none;
-  --bevel-dark: none;
+  --bevel-light: transparent;
+  --bevel-dark: transparent;
   --grid-gap: 16px;
   --backdrop-blur: none;
 }

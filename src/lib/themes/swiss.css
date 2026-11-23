@@ -22,6 +22,7 @@
   --secondary: #111111;
   --success: #15803d;
   --warning: #b45309;
+  --warning-text: #ffffff;
   --danger: #dc2626;
 
   /* Shadows & Effects */
@@ -33,8 +34,8 @@
   --shadow: none;
   --font-display: 'Helvetica Neue', 'Inter', Arial, sans-serif;
   --glow: none;
-  --bevel-light: none;
-  --bevel-dark: none;
+  --bevel-light: transparent;
+  --bevel-dark: transparent;
   --grid-gap: 12px;
   --backdrop-blur: none;
 }

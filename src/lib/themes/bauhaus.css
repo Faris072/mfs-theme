@@ -1,0 +1,47 @@
+/* Bauhaus Theme: Geometric modernism, primary red/blue/yellow, stark black framing */
+.theme-bauhaus,
+[data-theme="bauhaus"] {
+  --theme-name: 'Bauhaus';
+  --bg: #f4f1ea;
+  --bg-gradient: linear-gradient(180deg, #f4f1ea 0%, #eae5d9 100%);
+  --text: #111111;
+  --text-muted: #4b4b4b;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #f4f1ea;
+  --border: #111111;
+  --border-width: 2px;
+  --radius: 0px;
+  --radius-pill: 9999px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #d92b2b;
+  --primary-hover: #b91c1c;
+  --primary-text: #ffffff;
+  --secondary: #1d4ed8;
+  --success: #15803d;
+  --warning: #eab308;
+  --danger: #d92b2b;
+
+  /* Typography & Layout */
+  --font-display: "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --grid-gap: 16px;
+
+  /* Geometric Block Shadows */
+  --glow: none;
+  --bevel-light: rgba(255, 255, 255, 0.6);
+  --bevel-dark: rgba(17, 17, 17, 0.25);
+  --shadow: 4px 4px 0 #111111;
+
+  --clay-shadow: 4px 4px 0 #111111;
+
+  --clay-shadow-hover: 6px 6px 0 #1d4ed8;
+
+  --clay-shadow-active: 1px 1px 0 #111111;
+
+  --card-shadow: 6px 6px 0 #111111;
+
+  --input-shadow: inset 2px 2px 0 rgba(17, 17, 17, 0.12);
+}

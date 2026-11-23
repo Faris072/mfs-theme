@@ -5,7 +5,7 @@
   --bg: #008080;
   --bg-gradient: linear-gradient(180deg, #008080 0%, #006b6b 100%);
   --text: #000000;
-  --text-muted: #404040;
+  --text-muted: #262626;
 
   /* Surfaces */
   --surface: #c0c0c0;
@@ -23,6 +23,7 @@
   --secondary: #008080;
   --success: #008000;
   --warning: #808000;
+  --warning-text: #ffffff;
   --danger: #800000;
 
   /* Typography & Layout */

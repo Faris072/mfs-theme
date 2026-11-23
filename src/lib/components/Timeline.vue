@@ -1,15 +1,19 @@
 <template>
-  <ol :class="['timeline', `timeline--${layout}`]">
+  <ol :class="['timeline mfs-m-0 mfs-p-0 mfs-flex mfs-flex-col', `timeline--${layout}`]">
     <li
       v-for="(item, index) in items"
       :key="index"
-      class="timeline__item"
+      class="timeline__item mfs-flex mfs-gap-4"
     >
-      <div class="timeline__rail" aria-hidden="true">
+      <div class="timeline__rail mfs-flex mfs-flex-col mfs-items-center mfs-shrink-0" aria-hidden="true">
         <span
           :class="[
             'timeline__dot',
             'mfs-shadow',
+            'mfs-rounded-full',
+            'mfs-flex',
+            'mfs-items-center',
+            'mfs-justify-center',
             item.status === 'surface' ? 'mfs-surface-subtle' : `mfs-bg-${item.status || 'primary'}`,
             `timeline__dot--${item.status || 'primary'}`
           ]"
@@ -18,16 +22,16 @@
             <span v-if="item.icon" class="timeline__icon-text">{{ item.icon }}</span>
           </slot>
         </span>
-        <span v-if="index < items.length - 1" class="timeline__line" />
+        <span v-if="index < items.length - 1" class="timeline__line mfs-flex-1 mfs-my-1" />
       </div>
 
-      <div class="timeline__content mfs-surface mfs-rounded mfs-shadow-card">
+      <div class="timeline__content mfs-surface mfs-rounded mfs-shadow-card mfs-flex-1 mfs-mb-4">
         <slot name="item" :item="item" :index="index">
-          <div class="timeline__header">
-            <h4 class="timeline__title mfs-title">{{ item.title }}</h4>
+          <div class="timeline__header mfs-flex mfs-justify-between mfs-gap-2-5 mfs-flex-wrap">
+            <h4 class="timeline__title mfs-title mfs-m-0 mfs-font-bold">{{ item.title }}</h4>
             <time v-if="item.timestamp" class="timeline__time mfs-caption">{{ item.timestamp }}</time>
           </div>
-          <p v-if="item.description" class="timeline__desc mfs-text-muted">{{ item.description }}</p>
+          <p v-if="item.description" class="timeline__desc mfs-text-muted mfs-m-0">{{ item.description }}</p>
         </slot>
       </div>
     </li>
@@ -58,52 +62,19 @@ withDefaults(
 <style scoped>
 .timeline {
   list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.timeline__item {
-  display: flex;
-  gap: 16px;
-}
-
-.timeline__rail {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
 }
 
 .timeline__dot {
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 0.7rem;
-  color: #ffffff;
   border: 3px solid var(--surface);
-  box-shadow: var(--clay-shadow);
   z-index: 1;
 }
 
-.timeline__dot--primary { background-color: var(--primary); }
-.timeline__dot--success { background-color: var(--success); }
-.timeline__dot--warning { background-color: var(--warning); }
-.timeline__dot--danger { background-color: var(--danger); }
-.timeline__dot--surface {
-  background-color: var(--surface-subtle);
-  color: var(--text);
-}
-
 .timeline__line {
-  flex: 1;
   width: 2px;
   min-height: 24px;
-  margin: 4px 0;
   background-image: repeating-linear-gradient(
     to bottom,
     var(--border, rgba(148, 163, 184, 0.45)) 0 6px,
@@ -112,15 +83,7 @@ withDefaults(
 }
 
 .timeline__content {
-  flex: 1;
   padding: 12px 16px;
-  margin-bottom: 16px;
-  background-color: var(--surface);
-  color: var(--text);
-  border-radius: var(--radius, 16px);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .timeline__item:last-child .timeline__content {
@@ -128,28 +91,16 @@ withDefaults(
 }
 
 .timeline__header {
-  display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-  flex-wrap: wrap;
 }
 
 .timeline__title {
-  margin: 0;
   font-size: 0.98rem;
-  font-weight: 700;
-}
-
-.timeline__time {
-  font-size: 0.78rem;
-  color: var(--text-muted);
 }
 
 .timeline__desc {
-  margin: 6px 0 0;
+  margin-top: 6px;
   font-size: 0.9rem;
-  color: var(--text-muted);
   line-height: 1.5;
 }
 

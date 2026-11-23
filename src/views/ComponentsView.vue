@@ -1,5 +1,5 @@
 <template>
-  <div class="components-view">
+  <div class="mfs-w-full">
     <ComponentsDocPage
       :active-slug="activeSlug"
       @select="selectComponent"
@@ -28,9 +28,3 @@ const selectComponent = (slug: string) => {
   router.push(`/components/${slug}`)
 }
 </script>
-
-<style scoped>
-.components-view {
-  width: 100%;
-}
-</style>

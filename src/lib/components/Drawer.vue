@@ -3,11 +3,11 @@
     <Transition name="mfs-drawer-fade">
       <div
         v-if="modelValue"
-        class="mfs-drawer-backdrop mfs-backdrop"
+        class="mfs-drawer-backdrop mfs-backdrop mfs-fixed mfs-inset-0 mfs-flex"
         @click="handleBackdropClick"
       >
         <aside
-          class="mfs-drawer mfs-surface mfs-shadow-card mfs-blur"
+          class="mfs-drawer mfs-surface mfs-overlay mfs-shadow-card mfs-blur mfs-fixed mfs-flex mfs-flex-col mfs-overflow-hidden"
           :class="[`mfs-drawer--${position}`]"
           :style="panelStyle"
           role="dialog"
@@ -15,13 +15,13 @@
           :aria-label="title || 'Drawer'"
           @click.stop
         >
-          <div v-if="title || $slots.header" class="mfs-drawer__header">
+          <div v-if="title || $slots.header" class="mfs-drawer__header mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-b">
             <slot name="header">
-              <h3 class="mfs-drawer__title mfs-title">{{ title }}</h3>
+              <h3 class="mfs-drawer__title mfs-title mfs-m-0 mfs-font-bold">{{ title }}</h3>
             </slot>
             <button
               type="button"
-              class="mfs-drawer__close mfs-surface-subtle mfs-pill mfs-focus-ring"
+              class="mfs-drawer__close mfs-surface-subtle mfs-pill mfs-focus-ring mfs-shrink-0 mfs-border-none mfs-text-muted mfs-inline-flex mfs-items-center mfs-justify-center mfs-cursor-pointer"
               aria-label="Close drawer"
               @click="close"
             >
@@ -32,11 +32,11 @@
             </button>
           </div>
 
-          <div class="mfs-drawer__body">
+          <div class="mfs-drawer__body mfs-flex-1 mfs-p-5 mfs-overflow-y-auto">
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="mfs-drawer__footer">
+          <div v-if="$slots.footer" class="mfs-drawer__footer mfs-border-t mfs-flex mfs-justify-end mfs-gap-2-5">
             <slot name="footer" />
           </div>
         </aside>
@@ -123,24 +123,10 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .mfs-drawer-backdrop {
-  position: fixed;
-  inset: 0;
   z-index: 10000;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(6px);
-  display: flex;
 }
 
 .mfs-drawer {
-  position: fixed;
-  background-color: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -173,32 +159,16 @@ onBeforeUnmount(() => {
 }
 
 .mfs-drawer__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   padding: 18px 20px 14px;
-  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
 }
 
 .mfs-drawer__title {
-  margin: 0;
   font-size: 1.15rem;
-  font-weight: 700;
 }
 
 .mfs-drawer__close {
-  flex-shrink: 0;
   width: 34px;
   height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: var(--surface-subtle);
-  color: var(--text-muted);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
   transition: transform 0.15s ease, color 0.15s ease;
 }
 
@@ -212,27 +182,11 @@ onBeforeUnmount(() => {
   transform: scale(1.08);
 }
 
-.mfs-drawer__body {
-  flex: 1;
-  padding: 20px;
-  overflow-y: auto;
-}
-
 .mfs-drawer__footer {
   padding: 14px 20px 18px;
-  border-top: 1px solid var(--border, rgba(0, 0, 0, 0.06));
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
 }
 
 /* Theme Overrides */
-[data-theme="glass"] .mfs-drawer {
-  background-color: rgba(15, 23, 42, 0.86);
-  backdrop-filter: blur(20px);
-  border-color: rgba(255, 255, 255, 0.16);
-}
-
 [data-theme="neo"] .mfs-drawer {
   border: none;
 }

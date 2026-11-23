@@ -7,8 +7,8 @@
     :code="toastCode"
     :api="toastApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
         <Button
           variant="primary"
           size="sm"
@@ -38,7 +38,7 @@
           Danger Toast
         </Button>
       </div>
-      <div class="demo-row">
+      <div class="mfs-row">
         <Button
           variant="surface"
           size="sm"
@@ -61,7 +61,7 @@
     :code="alertCode"
     :api="alertApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <Alert severity="info" title="Information">
         Theme tokens update automatically when switching between Clay, Glass, and Neo.
       </Alert>
@@ -80,7 +80,7 @@
       >
         Your session is about to expire. Click the close icon to dismiss this alert.
       </Alert>
-      <div v-else class="demo-row">
+      <div v-else class="mfs-row">
         <Button variant="surface" size="sm" @click="showClosableAlert = true">
           Restore Dismissed Alert
         </Button>
@@ -96,7 +96,7 @@
     :code="tooltipCode"
     :api="tooltipApi"
   >
-    <div class="demo-row demo-row--spaced">
+    <div class="mfs-row mfs-gap-4">
       <Tooltip content="Appears above trigger" placement="top">
         <Button variant="surface" size="sm">Top</Button>
       </Tooltip>
@@ -123,7 +123,7 @@
     :code="drawerCode"
     :api="drawerApi"
   >
-    <div class="demo-row">
+    <div class="mfs-row">
       <Button variant="primary" size="sm" @click="openDrawer('right')">Right Drawer</Button>
       <Button variant="surface" size="sm" @click="openDrawer('left')">Left Drawer</Button>
       <Button variant="surface" size="sm" @click="openDrawer('top')">Top Drawer</Button>
@@ -136,12 +136,12 @@
       :size="drawerPosition === 'top' || drawerPosition === 'bottom' ? '240px' : '360px'"
       :title="`Drawer (${drawerPosition})`"
     >
-      <p class="demo-text">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
         This drawer slides in from the <strong>{{ drawerPosition }}</strong> edge. Press
         <kbd>Esc</kbd> or click the backdrop to close it.
       </p>
       <template #footer>
-        <div class="demo-row demo-row--end">
+        <div class="mfs-row mfs-justify-end mfs-w-full">
           <Button variant="surface" size="sm" @click="drawerOpen = false">Cancel</Button>
           <Button variant="primary" size="sm" @click="drawerOpen = false">Done</Button>
         </div>
@@ -157,13 +157,13 @@
     :code="popoverCode"
     :api="popoverApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
         <button
           v-for="pos in (['bottom', 'top', 'left', 'right'] as const)"
           :key="pos"
           type="button"
-          class="demo-pill-btn"
+          class="mfs-pill mfs-px-3 mfs-py-1 mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-interactive demo-pill-btn"
           :class="{ 'is-active': popoverPlacement === pos }"
           @click="popoverPlacement = pos"
         >
@@ -171,7 +171,7 @@
         </button>
       </div>
 
-      <div class="demo-center-stage">
+      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6">
         <Popover :placement="popoverPlacement">
           <template #trigger="{ open }">
             <Button variant="primary" size="sm">
@@ -179,9 +179,9 @@
             </Button>
           </template>
           <template #default="{ close }">
-            <div class="demo-popover-body">
-              <strong class="demo-popover-title">Quick Actions</strong>
-              <p class="demo-text">
+            <div class="mfs-flex mfs-flex-col mfs-gap-2">
+              <strong class="mfs-text-sm mfs-text">Quick Actions</strong>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
                 Click outside, press Escape, or use the scoped close callback.
               </p>
               <Button variant="surface" size="sm" @click="close">Dismiss</Button>
@@ -200,18 +200,18 @@
     :code="skeletonCode"
     :api="skeletonApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row demo-row--between">
-        <span class="demo-label">Shimmer animation: {{ skeletonAnimated ? 'On' : 'Off' }}</span>
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-justify-between">
+        <span class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Shimmer animation: {{ skeletonAnimated ? 'On' : 'Off' }}</span>
         <Button variant="surface" size="sm" @click="skeletonAnimated = !skeletonAnimated">
           Toggle Shimmer
         </Button>
       </div>
 
-      <div class="demo-skeleton-card">
-        <div class="demo-skeleton-head">
+      <div class="mfs-surface-subtle mfs-rounded mfs-p-4 mfs-flex mfs-flex-col mfs-gap-3">
+        <div class="mfs-flex mfs-items-center mfs-gap-3">
           <Skeleton variant="circle" width="48px" :animated="skeletonAnimated" />
-          <div class="demo-skeleton-meta">
+          <div class="mfs-flex-1 mfs-flex mfs-flex-col mfs-gap-2">
             <Skeleton variant="text" width="45%" height="16px" :animated="skeletonAnimated" />
             <Skeleton variant="text" width="30%" height="12px" :animated="skeletonAnimated" />
           </div>
@@ -230,10 +230,10 @@
     :code="progressBarCode"
     :api="progressBarApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row demo-row--between">
-        <span class="demo-label">Interactive Value: {{ progressValue }}%</span>
-        <div class="demo-row">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-justify-between">
+        <span class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">Interactive Value: {{ progressValue }}%</span>
+        <div class="mfs-row">
           <Button variant="surface" size="sm" @click="adjustProgress(-15)">-15%</Button>
           <Button variant="primary" size="sm" @click="adjustProgress(15)">+15%</Button>
         </div>
@@ -255,27 +255,27 @@
     :code="progressSpinnerCode"
     :api="progressSpinnerApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row demo-row--spaced">
-        <div class="demo-spinner-item">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-4">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-gap-2 demo-spinner-item">
           <ProgressSpinner size="sm" variant="primary" />
-          <span class="demo-caption">sm</span>
+          <span class="mfs-caption mfs-font-semibold">sm</span>
         </div>
-        <div class="demo-spinner-item">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-gap-2 demo-spinner-item">
           <ProgressSpinner size="md" variant="secondary" />
-          <span class="demo-caption">md</span>
+          <span class="mfs-caption mfs-font-semibold">md</span>
         </div>
-        <div class="demo-spinner-item">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-gap-2 demo-spinner-item">
           <ProgressSpinner size="lg" variant="success" />
-          <span class="demo-caption">lg</span>
+          <span class="mfs-caption mfs-font-semibold">lg</span>
         </div>
-        <div class="demo-spinner-item">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-gap-2 demo-spinner-item">
           <ProgressSpinner :size="60" :stroke-width="5" variant="warning" />
-          <span class="demo-caption">60px</span>
+          <span class="mfs-caption mfs-font-semibold">60px</span>
         </div>
-        <div class="demo-spinner-item">
+        <div class="mfs-flex mfs-flex-col mfs-items-center mfs-gap-2 demo-spinner-item">
           <ProgressSpinner size="md" variant="danger" />
-          <span class="demo-caption">danger</span>
+          <span class="mfs-caption mfs-font-semibold">danger</span>
         </div>
       </div>
     </div>
@@ -289,8 +289,8 @@
     :code="confirmDialogCode"
     :api="confirmDialogApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
         <Button variant="primary" size="sm" @click="askConfirm('primary')">
           Confirm Publish
         </Button>
@@ -298,20 +298,49 @@
           Delete Item
         </Button>
       </div>
-      <p class="demo-label">
+      <p class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">
         Last result: <strong>{{ confirmResult }}</strong>
       </p>
+    </div>
+  </ComponentPreview>
+
+  <!-- 10. Column -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'column'"
+    title="Column"
+    description="Declarative DataTable column definition supporting sorting, custom body/header slots, and visibility toggling."
+    :code="columnCode"
+    :api="columnApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
+        <Button size="sm" variant="surface" @click="hideRoleColumn = !hideRoleColumn">
+          {{ hideRoleColumn ? 'Show Role Column' : 'Hide Role Column' }}
+        </Button>
+      </div>
+      <DataTable :columns="columnDefs" :rows="columnRows">
+        <Column field="name" header="Member" sortable />
+        <Column field="role" header="Role" sortable :hidden="hideRoleColumn" />
+        <Column field="status" header="Status" />
+        <template #cell-status="{ value }">
+          <span class="mfs-pill mfs-soft-primary mfs-px-2 mfs-py-1 mfs-text-xs mfs-font-bold">
+            {{ value }}
+          </span>
+        </template>
+      </DataTable>
     </div>
   </ComponentPreview>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import {
   Alert,
   Button,
+  Column,
+  DataTable,
   Drawer,
   Popover,
   ProgressBar,
@@ -382,6 +411,19 @@ const askConfirm = async (variant: 'primary' | 'danger') => {
   )
   confirmResult.value = accepted ? `Confirmed (${variant})` : `Cancelled (${variant})`
 }
+
+// 10. Column
+const hideRoleColumn = ref(false)
+const columnDefs = computed(() => [
+  { key: 'name', label: 'Member', sortable: true },
+  ...(hideRoleColumn.value ? [] : [{ key: 'role', label: 'Role', sortable: true }]),
+  { key: 'status', label: 'Status' }
+])
+const columnRows = [
+  { name: 'Ari Pratama', role: 'Maintainer', status: 'Active' },
+  { name: 'Nadia Kusuma', role: 'Designer', status: 'Active' },
+  { name: 'Raka Putra', role: 'Reviewer', status: 'Idle' }
+]
 
 // Code snippets
 const toastCode = `<script setup lang="ts">
@@ -779,120 +821,49 @@ const confirmDialogApi: { props: ApiRow[] } = {
     }
   ]
 }
+
+const columnCode = `<template>
+  <DataTable :value="rows">
+    <Column field="name" header="Member" sortable />
+    <Column field="role" header="Role" :hidden="hideRole" />
+    <Column field="status" header="Status">
+      <template #body="{ data }">
+        <span class="mfs-pill mfs-soft-primary">{{ data.status }}</span>
+      </template>
+    </Column>
+  </DataTable>
+</template>`
+
+const columnApi: { props: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'field', type: 'string', description: 'Property key in each row object.' },
+    { name: 'header', type: 'string', description: 'Column header label.' },
+    { name: 'sortable', type: 'boolean', default: 'false', description: 'Enables column sorting.' },
+    { name: 'frozen', type: 'boolean', default: 'false', description: 'Pins the column horizontally.' },
+    { name: 'alignFrozen', type: "'left' | 'right'", default: "'left'", description: 'Side to pin when frozen.' },
+    { name: 'hidden', type: 'boolean', default: 'false', description: 'Hides column from rendering.' }
+  ],
+  slots: [
+    { name: 'header', description: 'Custom column header template.' },
+    { name: 'body', description: 'Cell template receiving { data, field, index }.' },
+    { name: 'filter', description: 'Custom column filter input.' },
+    { name: 'editor', description: 'Inline cell editor template.' },
+    { name: 'footer', description: 'Custom column footer template.' }
+  ]
+}
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-}
-
-.demo-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-row--spaced {
-  gap: 18px;
-}
-
-.demo-row--between {
-  justify-content: space-between;
-}
-
-.demo-row--end {
-  justify-content: flex-end;
-  width: 100%;
-}
-
-.demo-center-stage {
-  display: flex;
-  justify-content: center;
-  padding: 28px 16px;
-}
-
-.demo-text {
-  margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.demo-label {
-  margin: 0;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.demo-caption {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
 .demo-pill-btn {
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--border, transparent);
-  background: var(--surface-subtle);
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 600;
   text-transform: capitalize;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .demo-pill-btn.is-active {
   background: var(--primary);
-  color: #ffffff;
-}
-
-.demo-popover-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.demo-popover-title {
-  font-size: 0.92rem;
-  color: var(--text);
-}
-
-.demo-skeleton-card {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px;
-  border-radius: var(--radius, 16px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
-}
-
-.demo-skeleton-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.demo-skeleton-meta {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  color: var(--primary-text, #ffffff);
 }
 
 .demo-spinner-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
   min-width: 56px;
 }
 

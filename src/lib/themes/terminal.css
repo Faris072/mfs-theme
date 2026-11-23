@@ -1,0 +1,62 @@
+/* Terminal Theme: Phosphor green CRT aesthetic, monospace typography, sharp 2px edges */
+.theme-terminal,
+[data-theme="terminal"] {
+  --theme-name: 'Terminal';
+  --bg: #040805;
+  --bg-gradient: radial-gradient(circle at 50% 30%, #09170d 0%, #040805 70%, #020402 100%);
+  --text: #4ade80;
+  --text-muted: #22c55e;
+
+  /* Surfaces */
+  --surface: #07120a;
+  --surface-subtle: #0c1d11;
+  --border: rgba(74, 222, 128, 0.4);
+  --border-width: 1px;
+  --radius: 2px;
+  --radius-pill: 2px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #22c55e;
+  --primary-hover: #4ade80;
+  --primary-text: #021206;
+  --secondary: #10b981;
+  --secondary-text: #021206;
+  --success: #4ade80;
+  --success-text: #052e16;
+  --warning: #facc15;
+  --danger: #ef4444;
+  --danger-text: #040805;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --grid-gap: 12px;
+
+  /* Phosphor Glow & Bevel Tokens */
+  --glow: 0 0 10px rgba(74, 222, 128, 0.32);
+  --bevel-light: rgba(74, 222, 128, 0.3);
+  --bevel-dark: rgba(0, 0, 0, 0.9);
+  --shadow: 0 0 14px rgba(34, 197, 94, 0.18);
+
+  --clay-shadow:
+    0 0 10px rgba(34, 197, 94, 0.18),
+    inset 0 0 8px rgba(34, 197, 94, 0.08);
+
+  --clay-shadow-hover:
+    0 0 16px rgba(74, 222, 128, 0.35),
+    inset 0 0 10px rgba(74, 222, 128, 0.14);
+
+  --clay-shadow-active:
+    inset 0 0 12px rgba(74, 222, 128, 0.25);
+
+  --card-shadow:
+    0 0 20px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(34, 197, 94, 0.12);
+
+  --input-shadow:
+    inset 0 0 10px rgba(0, 0, 0, 0.85),
+    0 0 6px rgba(34, 197, 94, 0.15);
+}

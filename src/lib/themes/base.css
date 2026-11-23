@@ -14,6 +14,13 @@
   --bevel-light: transparent;
   --bevel-dark: transparent;
   --grid-gap: 16px;
+  --secondary-text: #ffffff;
+  --success-text: #ffffff;
+  --warning-text: #1e293b;
+  --danger-text: #ffffff;
+  --tooltip-bg: #0f172a;
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.14);
 }
 
 *, *::before, *::after {

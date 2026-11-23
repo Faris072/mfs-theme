@@ -69,14 +69,15 @@ const hide = () => {
 }
 
 .mfs-tooltip {
-  --tt-bg: var(--text);
-  --tt-color: var(--surface);
+  --tt-bg: var(--tooltip-bg, #0f172a);
+  --tt-color: var(--tooltip-text, #f8fafc);
   position: absolute;
   z-index: 10020;
   padding: 6px 11px;
   border-radius: var(--radius-sm, 8px);
   background-color: var(--tt-bg);
   color: var(--tt-color);
+  border: 1px solid var(--tooltip-border, rgba(255, 255, 255, 0.14));
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1.35;

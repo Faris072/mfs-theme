@@ -1,0 +1,47 @@
+/* Hand-Drawn Theme: Warm sketchbook paper, charcoal ink strokes, playful offset shadows */
+.theme-hand-drawn,
+[data-theme="hand-drawn"] {
+  --theme-name: 'Hand-Drawn';
+  --bg: #fdfbf7;
+  --bg-gradient: radial-gradient(#d6d3d1 1px, transparent 1px);
+  --text: #1c1917;
+  --text-muted: #57534e;
+
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-subtle: #faf6ed;
+  --border: #1c1917;
+  --border-width: 2px;
+  --radius: 14px;
+  --radius-pill: 9999px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #c2410c;
+  --primary-hover: #9a3412;
+  --primary-text: #ffffff;
+  --secondary: #0284c7;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  /* Typography & Layout */
+  --font-display: "Comic Sans MS", "Chalkboard SE", "Marker Felt", cursive, sans-serif;
+  --grid-gap: 16px;
+
+  /* Ink Sketch Offset Tokens */
+  --glow: none;
+  --bevel-light: rgba(255, 255, 255, 0.8);
+  --bevel-dark: rgba(28, 25, 23, 0.18);
+  --shadow: 3px 4px 0 #1c1917;
+
+  --clay-shadow: 3px 3px 0 #1c1917;
+
+  --clay-shadow-hover: 5px 5px 0 #1c1917;
+
+  --clay-shadow-active: 1px 1px 0 #1c1917;
+
+  --card-shadow: 4px 5px 0 #1c1917;
+
+  --input-shadow: inset 2px 2px 0 rgba(28, 25, 23, 0.08);
+}

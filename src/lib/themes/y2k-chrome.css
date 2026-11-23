@@ -1,0 +1,65 @@
+/* Y2K Chrome Theme: Early-2000s metallic silver, glossy bevels, electric cobalt & cyber lime */
+.theme-y2k-chrome,
+[data-theme="y2k-chrome"] {
+  --theme-name: 'Y2K Chrome';
+  --bg: #d8e2f0;
+  --bg-gradient: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 45%, #dbeafe 100%);
+  --text: #0f172a;
+  --text-muted: #475569;
+
+  /* Surfaces */
+  --surface: #edf2f7;
+  --surface-subtle: #e2e8f0;
+  --border: #94a3b8;
+  --border-width: 1.5px;
+  --radius: 14px;
+  --radius-pill: 9999px;
+  --backdrop-blur: none;
+
+  /* Colors */
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-text: #ffffff;
+  --secondary: #84cc16;
+  --secondary-text: #0f172a;
+  --success: #16a34a;
+  --success-text: #052e16;
+  --warning: #eab308;
+  --danger: #e11d48;
+
+  /* Typography & Layout */
+  --font-display: "Trebuchet MS", "Segoe UI", Tahoma, Geneva, sans-serif;
+  --grid-gap: 14px;
+
+  /* Metallic Gloss & Bevel Tokens */
+  --glow: 0 0 14px rgba(37, 99, 235, 0.25);
+  --bevel-light: #ffffff;
+  --bevel-dark: #64748b;
+  --shadow:
+    0 6px 16px rgba(15, 23, 42, 0.14),
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 0 rgba(100, 116, 139, 0.35);
+
+  --clay-shadow:
+    0 4px 12px rgba(15, 23, 42, 0.14),
+    inset 0 2px 1px #ffffff,
+    inset 0 -2px 2px rgba(100, 116, 139, 0.35);
+
+  --clay-shadow-hover:
+    0 6px 18px rgba(37, 99, 235, 0.22),
+    inset 0 2px 1px #ffffff,
+    inset 0 -2px 2px rgba(100, 116, 139, 0.4);
+
+  --clay-shadow-active:
+    inset 0 2px 4px rgba(15, 23, 42, 0.25),
+    inset 0 -1px 0 #ffffff;
+
+  --card-shadow:
+    0 8px 24px rgba(15, 23, 42, 0.14),
+    inset 0 2px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -2px 0 rgba(148, 163, 184, 0.45);
+
+  --input-shadow:
+    inset 0 2px 5px rgba(15, 23, 42, 0.16),
+    inset 0 -1px 0 #ffffff;
+}

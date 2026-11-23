@@ -1,5 +1,5 @@
 <template>
-  <div class="catalog-view">
+  <div class="mfs-w-full">
     <ThemeCatalogPage
       :active-theme-id="currentTheme"
       @select-theme="setTheme"
@@ -20,10 +20,3 @@ const goToDetail = (themeId: ThemeType) => {
   router.push(`/themes/${themeId}`)
 }
 </script>
-
-<style scoped>
-/* Hallmark · theme: mfs-theme · CatalogView.vue */
-.catalog-view {
-  width: 100%;
-}
-</style>

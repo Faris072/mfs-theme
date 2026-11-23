@@ -1,15 +1,15 @@
 <template>
-  <div class="data-table mfs-surface mfs-rounded mfs-shadow-card" :class="`data-table--${responsiveMode}`">
-    <div v-if="searchable || $slots.header" class="data-table__toolbar">
+  <div class="data-table mfs-surface mfs-rounded mfs-shadow-card mfs-overflow-hidden" :class="`data-table--${responsiveMode}`">
+    <div v-if="searchable || $slots.header" class="data-table__toolbar mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-b">
       <slot name="header" />
-      <div v-if="searchable" class="data-table__search">
-        <svg class="data-table__search-icon" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <div v-if="searchable" class="data-table__search mfs-relative mfs-flex mfs-items-center">
+        <svg class="data-table__search-icon mfs-absolute mfs-text-muted" viewBox="0 0 20 20" fill="none" aria-hidden="true">
           <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" />
           <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
         </svg>
         <input
           type="search"
-          class="data-table__search-input mfs-inset mfs-rounded-sm"
+          class="data-table__search-input mfs-inset mfs-rounded-sm mfs-w-full mfs-text-sm mfs-outline-none"
           :value="activeQuery"
           placeholder="Search..."
           aria-label="Search table"
@@ -18,15 +18,15 @@
       </div>
     </div>
 
-    <div class="data-table__wrap">
-      <table class="data-table__table">
+    <div class="data-table__wrap mfs-w-full mfs-overflow-x-auto">
+      <table class="data-table__table mfs-w-full mfs-text-left">
         <thead class="data-table__head">
           <tr>
-            <th v-if="selectionType" class="data-table__th data-table__th--select mfs-text-muted">
+            <th v-if="selectionType" class="data-table__th data-table__th--select mfs-text-muted mfs-whitespace-nowrap">
               <input
                 v-if="selectionType === 'multiple'"
                 type="checkbox"
-                class="data-table__checkbox"
+                class="data-table__checkbox mfs-cursor-pointer"
                 :checked="allSelected"
                 :indeterminate="someSelected"
                 aria-label="Select all rows"
@@ -36,7 +36,7 @@
             <th
               v-for="col in columns"
               :key="col.key"
-              class="data-table__th mfs-text-muted"
+              class="data-table__th mfs-text-muted mfs-whitespace-nowrap"
               :class="[
                 col.align ? `data-table__cell--${col.align}` : '',
                 { 'data-table__th--sortable': col.sortable }
@@ -47,11 +47,11 @@
               <button
                 v-if="col.sortable"
                 type="button"
-                class="data-table__sort-btn mfs-focus-ring"
+                class="data-table__sort-btn mfs-focus-ring mfs-inline-flex mfs-items-center mfs-bg-transparent mfs-border-none mfs-cursor-pointer mfs-p-0"
                 @click="toggleSort(col.key)"
               >
                 <span>{{ col.label }}</span>
-                <svg class="data-table__sort-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <svg class="data-table__sort-icon mfs-shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path
                     d="M8 3L11 6.5H5L8 3Z"
                     :fill="sortKey === col.key && sortOrder === 'asc' ? 'currentColor' : 'none'"
@@ -73,9 +73,9 @@
 
         <tbody class="data-table__body">
           <tr v-if="processedRows.length === 0" class="data-table__empty-row">
-            <td :colspan="columns.length + (selectionType ? 1 : 0)" class="data-table__empty mfs-text-muted">
+            <td :colspan="columns.length + (selectionType ? 1 : 0)" class="data-table__empty mfs-text-muted mfs-text-center">
               <slot name="empty">
-                <div class="data-table__empty-content">
+                <div class="data-table__empty-content mfs-inline-flex mfs-flex-col mfs-items-center mfs-gap-2">
                   <svg class="data-table__empty-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <rect x="3" y="5" width="18" height="14" rx="3" stroke="currentColor" stroke-width="1.6" />
                     <path d="M3 10H21" stroke="currentColor" stroke-width="1.6" />
@@ -103,7 +103,7 @@
             >
               <input
                 :type="selectionType === 'single' ? 'radio' : 'checkbox'"
-                class="data-table__checkbox"
+                class="data-table__checkbox mfs-cursor-pointer"
                 :name="selectionType === 'single' ? radioGroupName : undefined"
                 :checked="isRowSelected(row, rowIndex)"
                 :aria-label="`Select row ${rowIndex + 1}`"
@@ -316,30 +316,11 @@ function onRowClick(row: Record<string, any>, index: number) {
 </script>
 
 <style scoped>
-.data-table {
-  background: var(--surface);
-  color: var(--text);
-  border-radius: var(--radius, 16px);
-  box-shadow: var(--card-shadow);
-  border: 1px solid var(--border, transparent);
-  backdrop-filter: var(--backdrop-blur, none);
-  overflow: hidden;
-}
-
 .data-table__toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
   padding: 14px 18px;
-  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
 }
 
 .data-table__search {
-  position: relative;
-  display: flex;
-  align-items: center;
   margin-left: auto;
   min-width: 200px;
   flex: 1 1 220px;
@@ -347,24 +328,14 @@ function onRowClick(row: Record<string, any>, index: number) {
 }
 
 .data-table__search-icon {
-  position: absolute;
   left: 12px;
   width: 16px;
   height: 16px;
-  color: var(--text-muted);
   pointer-events: none;
 }
 
 .data-table__search-input {
-  width: 100%;
   padding: 9px 12px 9px 36px;
-  border-radius: var(--radius-sm, 10px);
-  border: 1px solid var(--border, transparent);
-  background: var(--surface-subtle);
-  color: var(--text);
-  box-shadow: var(--input-shadow);
-  font-size: 0.875rem;
-  outline: none;
   transition: border-color 0.2s ease;
 }
 
@@ -372,15 +343,8 @@ function onRowClick(row: Record<string, any>, index: number) {
   border-color: var(--primary);
 }
 
-.data-table__wrap {
-  width: 100%;
-  overflow-x: auto;
-}
-
 .data-table__table {
-  width: 100%;
   border-collapse: collapse;
-  text-align: left;
   font-size: 0.9rem;
 }
 
@@ -390,10 +354,8 @@ function onRowClick(row: Record<string, any>, index: number) {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--text-muted);
   background: var(--surface-subtle);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
-  white-space: nowrap;
 }
 
 .data-table__th--select,
@@ -403,17 +365,11 @@ function onRowClick(row: Record<string, any>, index: number) {
 }
 
 .data-table__sort-btn {
-  display: inline-flex;
-  align-items: center;
   gap: 6px;
-  background: none;
-  border: none;
   color: inherit;
   font: inherit;
   text-transform: inherit;
   letter-spacing: inherit;
-  cursor: pointer;
-  padding: 0;
 }
 
 .data-table__sort-btn:hover {
@@ -423,7 +379,6 @@ function onRowClick(row: Record<string, any>, index: number) {
 .data-table__sort-icon {
   width: 14px;
   height: 14px;
-  flex-shrink: 0;
 }
 
 .data-table__td {
@@ -462,20 +417,10 @@ function onRowClick(row: Record<string, any>, index: number) {
   width: 16px;
   height: 16px;
   accent-color: var(--primary);
-  cursor: pointer;
 }
 
 .data-table__empty {
   padding: 36px 16px;
-  text-align: center;
-  color: var(--text-muted);
-}
-
-.data-table__empty-content {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
 }
 
 .data-table__empty-icon {

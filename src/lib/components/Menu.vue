@@ -4,7 +4,7 @@
       <div
         v-if="visible"
         ref="menuRef"
-        class="menu menu--popup mfs-surface mfs-shadow-card mfs-rounded-md mfs-blur"
+        class="menu menu--popup mfs-surface mfs-overlay mfs-shadow-card mfs-rounded-md mfs-blur"
         role="menu"
         :style="{ left: `${position.x}px`, top: `${position.y}px` }"
         @keydown="onKeydown"
@@ -284,7 +284,4 @@ defineExpose({ open, close, toggle })
   transform: scale(0.95) translateY(-4px);
 }
 
-[data-theme="glass"] .menu--popup {
-  background-color: rgba(15, 23, 42, 0.85);
-}
 </style>

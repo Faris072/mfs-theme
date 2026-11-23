@@ -7,8 +7,8 @@
     :code="confirmPopupCode"
     :api="confirmPopupApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row-wrap">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
         <Button size="sm" variant="primary" @click="openConfirm($event, 'primary')">
           Save Changes
         </Button>
@@ -17,7 +17,7 @@
         </Button>
       </div>
       <ConfirmPopup ref="confirmPopupRef" />
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Last response: <strong>{{ confirmStatus }}</strong>
       </p>
     </div>
@@ -31,7 +31,7 @@
     :code="inlineMessageCode"
     :api="inlineMessageApi"
   >
-    <div class="demo-row-wrap">
+    <div class="mfs-row mfs-gap-2">
       <InlineMessage severity="info" text="Theme tokens synced" />
       <InlineMessage severity="success" text="Build passed" />
       <InlineMessage severity="warning" text="Unsaved changes" />
@@ -47,17 +47,17 @@
     :code="blockUiCode"
     :api="blockUiApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row-wrap">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
         <Button size="sm" variant="primary" @click="isBlocked = !isBlocked">
           {{ isBlocked ? 'Unblock Panel' : 'Block Panel' }}
         </Button>
       </div>
 
       <BlockUI :blocked="isBlocked" label="Syncing workspace...">
-        <div class="demo-panel">
-          <h4 class="demo-panel__title">Project Settings</h4>
-          <p class="demo-panel__text">
+        <div class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
+          <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">Project Settings</h4>
+          <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
             This region becomes inert and displays a blurred spinner overlay while blocked is true.
           </p>
         </div>
@@ -73,9 +73,9 @@
     :code="galleriaCode"
     :api="galleriaApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <Galleria v-model:active-index="galleriaIndex" :images="galleriaImages" />
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Active slide: <strong>{{ galleriaIndex + 1 }} / {{ galleriaImages.length }}</strong>
       </p>
     </div>
@@ -89,7 +89,7 @@
     :code="fileUploadCode"
     :api="fileUploadApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <FileUpload
         multiple
         accept="image/*,.pdf,.txt"
@@ -100,7 +100,7 @@
         @error="uploadStatus = $event"
         @clear="onFilesCleared"
       />
-      <p class="demo-status">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
         Status: <strong>{{ uploadStatus }}</strong>
       </p>
     </div>
@@ -130,8 +130,8 @@
     :code="chartCode"
     :api="chartApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row-wrap">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
         <Button
           v-for="kind in chartKinds"
           :key="kind"
@@ -154,14 +154,14 @@
     :code="rippleCode"
     :api="rippleApi"
   >
-    <div class="demo-row-wrap">
-      <button v-ripple type="button" class="demo-ripple-box">
+    <div class="mfs-row mfs-gap-2">
+      <button v-ripple type="button" class="mfs-px-4 mfs-py-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm mfs-font-semibold mfs-interactive">
         Default Ripple (click me)
       </button>
-      <button v-ripple="{ color: 'var(--primary)' }" type="button" class="demo-ripple-box">
+      <button v-ripple="{ color: 'var(--primary)' }" type="button" class="mfs-px-4 mfs-py-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm mfs-font-semibold mfs-interactive">
         Primary Ripple
       </button>
-      <button v-ripple="false" type="button" class="demo-ripple-box demo-ripple-box--muted">
+      <button v-ripple="false" type="button" class="mfs-px-4 mfs-py-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm mfs-font-semibold demo-ripple-box--muted">
         Disabled Ripple
       </button>
     </div>
@@ -175,19 +175,19 @@
     :code="focusTrapCode"
     :api="focusTrapApi"
   >
-    <div class="demo-stack">
-      <div class="demo-row-wrap">
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
         <Button size="sm" variant="primary" @click="trapActive = !trapActive">
           {{ trapActive ? 'Disable Focus Trap' : 'Enable Focus Trap' }}
         </Button>
       </div>
 
-      <div v-focus-trap="trapActive" class="demo-panel demo-trap-box">
-        <p class="demo-panel__text">
+      <div v-focus-trap="trapActive" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle mfs-flex mfs-flex-col mfs-gap-2">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
           {{ trapActive ? 'Focus is trapped here — press Tab / Shift+Tab.' : 'Enable trap to cycle focus inside this box.' }}
         </p>
-        <div class="demo-row-wrap">
-          <input type="text" class="demo-mini-input" placeholder="Focusable input" />
+        <div class="mfs-row mfs-gap-2">
+          <input type="text" class="mfs-px-2 mfs-py-2 mfs-rounded-sm mfs-surface mfs-text-sm" placeholder="Focusable input" />
           <Button size="sm" variant="secondary">Action A</Button>
           <Button size="sm" variant="secondary" @click="trapActive = false">Release</Button>
         </div>
@@ -203,13 +203,13 @@
     :code="aosCode"
     :api="aosApi"
   >
-    <div class="demo-aos-scroll">
-      <p class="demo-status">Scroll inside this box to trigger enter/leave animations:</p>
+    <div class="mfs-flex mfs-flex-col mfs-gap-3 mfs-p-3 mfs-rounded-md mfs-surface-subtle demo-aos-scroll">
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">Scroll inside this box to trigger enter/leave animations:</p>
       <div
         v-for="n in 4"
         :key="n"
         v-animate-on-scroll="{ enterClass: 'demo-aos-in', leaveClass: 'demo-aos-out', once: false, threshold: 0.25 }"
-        class="demo-aos-card"
+        class="mfs-px-4 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold demo-aos-card"
       >
         Animated Card #{{ n }}
       </div>
@@ -224,16 +224,45 @@
     :code="styleClassCode"
     :api="styleClassApi"
   >
-    <div class="demo-stack">
+    <div class="mfs-stack mfs-w-full">
       <button
         v-style-class="{ selector: '@next', toggleClass: 'demo-style-active' }"
         type="button"
-        class="demo-ripple-box"
+        class="mfs-px-4 mfs-py-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm mfs-font-semibold mfs-interactive"
       >
         Click to toggle @next sibling class
       </button>
-      <div class="demo-panel demo-style-target">
+      <div class="mfs-p-4 mfs-rounded-md mfs-surface-subtle demo-style-target">
         Target sibling element (`@next`)
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- v-tooltip -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'v-tooltip'"
+    title="v-tooltip"
+    description="Directive attaching theme-aware floating tooltips on hover/focus with placement modifiers and disabled option."
+    :code="vTooltipCode"
+    :api="vTooltipApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
+        <Button v-tooltip="'Top placement (default)'" size="sm" variant="surface">Top</Button>
+        <Button v-tooltip.bottom="'Bottom placement'" size="sm" variant="surface">Bottom</Button>
+        <Button v-tooltip.left="'Left placement'" size="sm" variant="surface">Left</Button>
+        <Button
+          v-tooltip.right="{ value: 'Right placement', disabled: tooltipDisabled }"
+          size="sm"
+          variant="primary"
+        >
+          Right {{ tooltipDisabled ? '(Disabled)' : '' }}
+        </Button>
+      </div>
+      <div class="mfs-row mfs-gap-2">
+        <Button size="sm" variant="secondary" @click="tooltipDisabled = !tooltipDisabled">
+          {{ tooltipDisabled ? 'Enable Right Tooltip' : 'Disable Right Tooltip' }}
+        </Button>
       </div>
     </div>
   </ComponentPreview>
@@ -254,6 +283,7 @@ import vRipple from '../../lib/directives/ripple'
 import vFocusTrap from '../../lib/directives/focusTrap'
 import vAnimateOnScroll from '../../lib/directives/animateOnScroll'
 import vStyleClass from '../../lib/directives/styleClass'
+import { vTooltip } from '../../lib/directives/tooltip'
 
 defineProps<{ activeSlug: string }>()
 
@@ -534,105 +564,41 @@ const styleClassApi = {
     { name: 'v-style-class', type: 'string | { selector?: string; toggleClass?: string; enterClass?: string; leaveClass?: string }', default: '—', description: 'Selector (@self, @next, @prev, @parent, @grandparent, or CSS) and classes to toggle on click.' }
   ]
 }
+
+/* ---------- v-tooltip ---------- */
+const tooltipDisabled = ref(false)
+
+const vTooltipCode = `<template>
+  <Button v-tooltip="'Top tooltip'">Top</Button>
+  <Button v-tooltip.bottom="'Bottom tooltip'">Bottom</Button>
+  <Button v-tooltip.left="'Left tooltip'">Left</Button>
+  <Button v-tooltip.right="{ value: 'Right tooltip', disabled: false }">Right</Button>
+</template>`
+
+const vTooltipApi = {
+  props: [
+    { name: 'v-tooltip', type: 'string | { value?: string; disabled?: boolean; class?: string }', default: '—', description: 'Tooltip text or options object.' },
+    { name: '.top / .bottom / .left / .right', type: 'Directive modifier', default: '.top', description: 'Preferred placement relative to the host element.' }
+  ]
+}
 </script>
 
 <style scoped>
-.demo-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  width: 100%;
-}
-
-.demo-row-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-}
-
-.demo-status {
-  margin: 0;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
 .demo-status strong {
   color: var(--text);
 }
 
-.demo-panel {
-  padding: 16px;
-  border-radius: var(--radius-md, 14px);
-  background: var(--surface-subtle);
-  border: 1px solid var(--border);
-}
-
-.demo-panel__title {
-  margin: 0 0 4px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-.demo-panel__text {
-  margin: 0;
-  font-size: 0.86rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-.demo-ripple-box {
-  padding: 12px 18px;
-  border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
 .demo-ripple-box--muted {
   opacity: 0.65;
-}
-
-.demo-trap-box {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.demo-mini-input {
-  padding: 7px 10px;
-  border-radius: var(--radius-sm, 8px);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 0.86rem;
+  cursor: pointer;
 }
 
 .demo-aos-scroll {
   height: 220px;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 14px;
-  border-radius: var(--radius-md, 14px);
-  border: 1px solid var(--border);
-  background: var(--surface-subtle);
 }
 
 .demo-aos-card {
-  padding: 24px 16px;
-  border-radius: var(--radius-sm, 10px);
-  background: var(--surface);
-  border: 1px solid var(--border);
-  font-weight: 600;
-  color: var(--text);
   transition: transform 0.35s ease, opacity 0.35s ease, border-color 0.35s ease;
 }
 
