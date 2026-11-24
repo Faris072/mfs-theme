@@ -336,50 +336,6 @@
         </div>
       </ComponentPreview>
     </template>
-
-    <!-- INPUT ICON -->
-    <template v-else-if="activeSlug === 'input-icon'">
-      <ComponentPreview
-        title="InputIcon Wrapper"
-        description="Semantic inline icon slot wrapper with muted contrast and aria-hidden for input fields."
-        :code="inputIconCode"
-        :api="inputIconApi"
-      >
-        <div class="mfs-grid mfs-w-full">
-          <Input v-model="iconQuery" label="Search with InputIcon" placeholder="Search...">
-            <template #prepend>
-              <InputIcon><Search :size="16" /></InputIcon>
-            </template>
-          </Input>
-          <Input v-model="iconEmail" label="Email with InputIcon" placeholder="you@domain.com">
-            <template #prepend>
-              <InputIcon><Mail :size="16" /></InputIcon>
-            </template>
-          </Input>
-        </div>
-      </ComponentPreview>
-    </template>
-
-    <!-- INPUT GROUP ADDON -->
-    <template v-else-if="activeSlug === 'input-group-addon'">
-      <ComponentPreview
-        title="InputGroupAddon"
-        description="Prefix and suffix text/unit addons paired inside InputGroup."
-        :code="inputGroupAddonCode"
-        :api="inputGroupAddonApi"
-      >
-        <div class="mfs-stack mfs-w-full">
-          <InputGroup>
-            <InputGroupAddon>https://</InputGroupAddon>
-            <Input v-model="addonDomain" placeholder="example" />
-            <InputGroupAddon>.com</InputGroupAddon>
-          </InputGroup>
-          <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
-            Preview URL: <code class="mfs-font-mono mfs-text-primary">https://{{ addonDomain || 'example' }}.com</code>
-          </p>
-        </div>
-      </ComponentPreview>
-    </template>
   </div>
 </template>
 
@@ -394,9 +350,6 @@ import {
   ButtonGroup,
   Card,
   Input,
-  InputGroup,
-  InputGroupAddon,
-  InputIcon,
   Modal,
   Switch
 } from '../../lib'
@@ -434,11 +387,8 @@ const onSwitchChange = (val: boolean) => {
   switchLastEvent.value = val ? 'turned on' : 'turned off'
 }
 
-// ButtonGroup / InputIcon / InputGroupAddon demo state
+// ButtonGroup demo state
 const groupAlign = ref('Left')
-const iconQuery = ref('')
-const iconEmail = ref('')
-const addonDomain = ref('mfs-theme')
 
 // Modal demo state
 const modalOpen = ref(false)
@@ -795,30 +745,6 @@ const buttonGroupCode = `<template>
 
 const buttonGroupApi: { slots: ApiRow[] } = {
   slots: [{ name: 'default', description: 'Adjacent Button elements rendered with role="group".' }]
-}
-
-const inputIconCode = `<template>
-  <Input v-model="query" label="Search">
-    <template #prepend>
-      <InputIcon><Search :size="16" /></InputIcon>
-    </template>
-  </Input>
-</template>`
-
-const inputIconApi: { slots: ApiRow[] } = {
-  slots: [{ name: 'default', description: 'Icon element (e.g. Lucide icon) wrapped with aria-hidden="true".' }]
-}
-
-const inputGroupAddonCode = `<template>
-  <InputGroup>
-    <InputGroupAddon>https://</InputGroupAddon>
-    <Input v-model="domain" placeholder="example" />
-    <InputGroupAddon>.com</InputGroupAddon>
-  </InputGroup>
-</template>`
-
-const inputGroupAddonApi: { slots: ApiRow[] } = {
-  slots: [{ name: 'default', description: 'Static text, unit, or symbol addon rendered inside InputGroup.' }]
 }
 </script>
 

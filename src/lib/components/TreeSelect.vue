@@ -1,9 +1,10 @@
 <template>
-  <div ref="rootRef" class="ts-wrapper" :class="{ 'ts-wrapper--disabled mfs-disabled': disabled }">
+  <div class="ts-wrapper" :class="{ 'ts-wrapper--disabled mfs-disabled': disabled }">
     <span v-if="label" class="ts-label mfs-text">{{ label }}</span>
 
     <div class="ts-container">
       <button
+        ref="triggerRef"
         type="button"
         class="ts-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-focus-ring"
         :disabled="disabled"
@@ -13,60 +14,78 @@
         <span class="ts-value" :class="{ 'mfs-text-muted': !displayText }">
           {{ displayText || placeholder }}
         </span>
+        <span v-if="loading" class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ts-chevron" :class="{ 'ts-chevron--open': isOpen }">
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
 
-      <Transition name="ts-pop">
-        <div v-if="isOpen" class="ts-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow" role="tree">
-          <div
-            v-for="row in visibleNodes"
-            :key="String(row.node.value)"
-            role="treeitem"
-            :aria-selected="isSelected(row.node.value)"
-            class="ts-row"
-            :style="{ paddingLeft: `${8 + row.depth * 18}px` }"
-          >
-            <button
-              v-if="row.node.children?.length"
-              type="button"
-              class="ts-expand mfs-text-muted"
-              :aria-label="expanded.has(row.node.value) ? 'Collapse' : 'Expand'"
-              @click.stop="toggleExpand(row.node.value)"
-            >
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" :style="{ transform: expanded.has(row.node.value) ? 'rotate(90deg)' : '' }">
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
-            </button>
-            <span v-else class="ts-expand-spacer" />
+      <Teleport to="body">
+        <Transition name="ts-pop">
+          <div v-if="isOpen" ref="overlayRef" :style="overlayStyle" class="ts-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow" role="tree">
+            <slot v-if="loading && visibleNodes.length === 0" name="loading">
+              <div class="mfs-empty-state">
+                <span class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
+              </div>
+            </slot>
+            <div v-else-if="visibleNodes.length === 0" class="mfs-empty-state">
+              <slot name="empty">{{ emptyText }}</slot>
+            </div>
+            <template v-else>
+              <div
+                v-for="row in visibleNodes"
+                :key="String(row.node.value)"
+                role="treeitem"
+                :aria-selected="isSelected(row.node.value)"
+                class="ts-row"
+                :style="{ paddingLeft: `${8 + row.depth * 18}px` }"
+              >
+                <button
+                  v-if="row.node.children?.length || (lazy && !row.node.isLeaf)"
+                  type="button"
+                  class="ts-expand mfs-text-muted"
+                  :aria-label="expanded.has(row.node.value) ? 'Collapse' : 'Expand'"
+                  @click.stop="toggleExpand(row.node)"
+                >
+                  <span v-if="row.node.loading" class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
+                  <svg v-else viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" :style="{ transform: expanded.has(row.node.value) ? 'rotate(90deg)' : '' }">
+                    <polyline points="9 18 15 12 9 6" />
+                  </svg>
+                </button>
+                <span v-else class="ts-expand-spacer" />
 
-            <button
-              type="button"
-              class="ts-node mfs-text"
-              :class="{ 'ts-node--selected': isSelected(row.node.value) }"
-              :disabled="row.node.disabled"
-              @click="selectNode(row.node)"
-            >
-              <span>{{ row.node.label }}</span>
-              <svg v-if="isSelected(row.node.value)" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </button>
+                <button
+                  type="button"
+                  class="ts-node mfs-text"
+                  :class="{ 'ts-node--selected': isSelected(row.node.value) }"
+                  :disabled="row.node.disabled"
+                  @click="selectNode(row.node)"
+                >
+                  <span>{{ row.node.label }}</span>
+                  <svg v-if="isSelected(row.node.value)" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </button>
+              </div>
+              <slot v-if="loading" name="loading" />
+            </template>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </Teleport>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 export interface TreeSelectNode {
   label: string
   value: any
   disabled?: boolean
+  isLeaf?: boolean
+  loading?: boolean
   children?: TreeSelectNode[]
 }
 
@@ -78,28 +97,43 @@ const props = withDefaults(
     label?: string
     placeholder?: string
     disabled?: boolean
+    loading?: boolean
+    lazy?: boolean
+    emptyText?: string
   }>(),
   {
     modelValue: null,
     options: () => [],
     multiple: false,
     placeholder: 'Select node...',
-    disabled: false
+    disabled: false,
+    loading: false,
+    lazy: false,
+    emptyText: 'No options found'
   }
 )
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any): void
   (e: 'change', value: any): void
+  (e: 'lazy-load', node: TreeSelectNode): void
 }>()
 
-const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, { offset: 6, matchWidth: true })
 const expanded = reactive(new Set<any>())
 
-const toggleExpand = (val: any) => {
-  if (expanded.has(val)) expanded.delete(val)
-  else expanded.add(val)
+const toggleExpand = (node: TreeSelectNode) => {
+  if (expanded.has(node.value)) {
+    expanded.delete(node.value)
+  } else {
+    expanded.add(node.value)
+    if (props.lazy && !node.isLeaf && !node.children?.length) {
+      emit('lazy-load', node)
+    }
+  }
 }
 
 const visibleNodes = computed(() => {
@@ -156,7 +190,7 @@ const selectNode = (node: TreeSelectNode) => {
 }
 
 const onClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) isOpen.value = false
+  if (!containsTarget(e.target)) isOpen.value = false
 }
 
 const onEscape = (e: KeyboardEvent) => {
@@ -182,7 +216,7 @@ onBeforeUnmount(() => {
 .ts-value { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ts-chevron { color: var(--text-muted); transition: transform 0.2s ease; }
 .ts-chevron--open { transform: rotate(180deg); }
-.ts-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 40; padding: 6px; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+.ts-dropdown { z-index: 40; padding: 6px; max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
 .ts-row { display: flex; align-items: center; gap: 4px; }
 .ts-expand { background: transparent; border: none; width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
 .ts-expand svg { transition: transform 0.15s ease; }

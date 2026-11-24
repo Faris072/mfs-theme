@@ -2,7 +2,7 @@
   <div ref="rootRef" class="ac-wrapper" :class="{ 'ac-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" :for="inputId" class="ac-label mfs-text">{{ label }}</label>
 
-    <div class="ac-container">
+    <div ref="triggerRef" class="ac-container">
       <div class="ac-box mfs-surface mfs-rounded mfs-shadow-inset">
         <input
           :id="inputId"
@@ -21,28 +21,34 @@
         <span v-if="loading" class="ac-spinner" aria-hidden="true" />
       </div>
 
-      <Transition name="ac-pop">
-        <ul v-if="isOpen && normalized.length" role="listbox" class="ac-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
-          <li
-            v-for="(item, idx) in normalized"
-            :key="item.label + idx"
-            role="option"
-            :aria-selected="idx === activeIndex"
-            class="ac-option mfs-text"
-            :class="{ 'ac-option--active': idx === activeIndex }"
-            @mousedown.prevent="selectItem(item)"
-            @mouseenter="activeIndex = idx"
-          >
-            {{ item.label }}
-          </li>
-        </ul>
-      </Transition>
+      <Teleport to="body">
+        <Transition name="ac-pop">
+          <ul v-if="isOpen && (normalized.length || showEmpty)" ref="overlayRef" role="listbox" :style="overlayStyle" class="ac-dropdown mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
+            <li
+              v-for="(item, idx) in normalized"
+              :key="item.label + idx"
+              role="option"
+              :aria-selected="idx === activeIndex"
+              class="ac-option mfs-text"
+              :class="{ 'ac-option--active': idx === activeIndex }"
+              @mousedown.prevent="selectItem(item)"
+              @mouseenter="activeIndex = idx"
+            >
+              {{ item.label }}
+            </li>
+            <li v-if="showEmpty" class="mfs-empty-state" role="status">
+              <slot name="empty">{{ emptyText }}</slot>
+            </li>
+          </ul>
+        </Transition>
+      </Teleport>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, useId } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 export interface AutoCompleteItem {
   label: string
@@ -58,6 +64,8 @@ const props = withDefaults(
     disabled?: boolean
     loading?: boolean
     minLength?: number
+    remote?: boolean
+    emptyText?: string
   }>(),
   {
     modelValue: '',
@@ -65,7 +73,9 @@ const props = withDefaults(
     placeholder: 'Type to search...',
     disabled: false,
     loading: false,
-    minLength: 1
+    minLength: 1,
+    remote: false,
+    emptyText: 'No results found'
   }
 )
 
@@ -77,15 +87,25 @@ const emit = defineEmits<{
 
 const inputId = `mfs-ac-${useId()}`
 const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 const activeIndex = ref(-1)
 
-const normalized = computed<AutoCompleteItem[]>(() => {
-  const q = (props.modelValue || '').toLowerCase()
-  return props.suggestions
-    .map((s) => (typeof s === 'string' ? { label: s, value: s } : s))
-    .filter((s) => !q || s.label.toLowerCase().includes(q))
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, {
+  matchWidth: true
 })
+
+const normalized = computed<AutoCompleteItem[]>(() => {
+  const items = props.suggestions.map((s) => (typeof s === 'string' ? { label: s, value: s } : s))
+  if (props.remote) return items
+  const q = (props.modelValue || '').toLowerCase()
+  return items.filter((s) => !q || s.label.toLowerCase().includes(q))
+})
+
+const showEmpty = computed(() =>
+  (props.modelValue || '').length >= props.minLength && !props.loading && normalized.value.length === 0
+)
 
 const onInput = (e: Event) => {
   const val = (e.target as HTMLInputElement).value
@@ -100,7 +120,7 @@ const onInput = (e: Event) => {
 }
 
 const onFocus = () => {
-  if ((props.modelValue || '').length >= props.minLength && normalized.value.length) {
+  if ((props.modelValue || '').length >= props.minLength && (normalized.value.length || !props.loading)) {
     isOpen.value = true
   }
 }
@@ -129,7 +149,7 @@ const onKeydown = (e: KeyboardEvent) => {
 }
 
 const onClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) isOpen.value = false
+  if (!containsTarget(e.target)) isOpen.value = false
 }
 
 onMounted(() => document.addEventListener('mousedown', onClickOutside))
@@ -147,7 +167,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 .ac-input::placeholder { color: var(--text-muted); opacity: 0.7; }
 .ac-spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: ac-spin 0.6s linear infinite; }
 @keyframes ac-spin { to { transform: rotate(360deg); } }
-.ac-dropdown { position: absolute; top: calc(100% + 6px); left: 0; right: 0; z-index: 40; list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
+.ac-dropdown { list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
 .ac-option { padding: 9px 12px; border-radius: var(--radius-sm, 10px); cursor: pointer; font-size: 0.9rem; }
 .ac-option--active, .ac-option:hover { background-color: var(--surface-subtle); color: var(--primary); }
 .ac-pop-enter-active, .ac-pop-leave-active { transition: opacity 0.15s ease, transform 0.15s ease; }

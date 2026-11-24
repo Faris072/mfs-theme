@@ -209,12 +209,40 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- Column -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'column'"
+    title="Column"
+    description="Declarative DataTable column definition supporting sorting, custom body/header slots, and visibility toggling."
+    :code="columnCode"
+    :api="columnApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row">
+        <Button size="sm" variant="surface" @click="hideRoleColumn = !hideRoleColumn">
+          {{ hideRoleColumn ? 'Show Role Column' : 'Hide Role Column' }}
+        </Button>
+      </div>
+      <DataTable :columns="columnDefs" :rows="columnRows">
+        <Column field="name" header="Member" sortable />
+        <Column field="role" header="Role" sortable :hidden="hideRoleColumn" />
+        <Column field="status" header="Status" />
+        <template #cell-status="{ value }">
+          <span class="mfs-pill mfs-soft-primary mfs-px-2 mfs-py-1 mfs-text-xs mfs-font-bold">
+            {{ value }}
+          </span>
+        </template>
+      </DataTable>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
-import { Badge, DataTable, DataView, Tree } from '../../lib'
+import type { ApiRow } from '../../data/componentDocs'
+import { Badge, Button, Column, DataTable, DataView, Tree } from '../../lib'
 import type { DataTableColumn, SortOrder } from '../../lib/components/DataTable.vue'
 import type { DataViewLayout } from '../../lib/components/DataView.vue'
 import type { TreeNode } from '../../lib/components/Tree.vue'
@@ -511,6 +539,51 @@ const treeApi = {
   ],
   slots: [
     { name: 'node', description: 'Custom node content receiving { node, expanded, selected, level }.' }
+  ]
+}
+
+// ---------------------------------------------------------------------------
+// Column Demo State
+// ---------------------------------------------------------------------------
+const hideRoleColumn = ref(false)
+const columnDefs = computed(() => [
+  { key: 'name', label: 'Member', sortable: true },
+  ...(hideRoleColumn.value ? [] : [{ key: 'role', label: 'Role', sortable: true }]),
+  { key: 'status', label: 'Status' }
+])
+const columnRows = [
+  { name: 'Ari Pratama', role: 'Maintainer', status: 'Active' },
+  { name: 'Nadia Kusuma', role: 'Designer', status: 'Active' },
+  { name: 'Raka Putra', role: 'Reviewer', status: 'Idle' }
+]
+
+const columnCode = `<template>
+  <DataTable :value="rows">
+    <Column field="name" header="Member" sortable />
+    <Column field="role" header="Role" :hidden="hideRole" />
+    <Column field="status" header="Status">
+      <template #body="{ data }">
+        <span class="mfs-pill mfs-soft-primary">{{ data.status }}</span>
+      </template>
+    </Column>
+  </DataTable>
+</template>`
+
+const columnApi: { props: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'field', type: 'string', description: 'Property key in each row object.' },
+    { name: 'header', type: 'string', description: 'Column header label.' },
+    { name: 'sortable', type: 'boolean', default: 'false', description: 'Enables column sorting.' },
+    { name: 'frozen', type: 'boolean', default: 'false', description: 'Pins the column horizontally.' },
+    { name: 'alignFrozen', type: "'left' | 'right'", default: "'left'", description: 'Side to pin when frozen.' },
+    { name: 'hidden', type: 'boolean', default: 'false', description: 'Hides column from rendering.' }
+  ],
+  slots: [
+    { name: 'header', description: 'Custom column header template.' },
+    { name: 'body', description: 'Cell template receiving { data, field, index }.' },
+    { name: 'filter', description: 'Custom column filter input.' },
+    { name: 'editor', description: 'Inline cell editor template.' },
+    { name: 'footer', description: 'Custom column footer template.' }
   ]
 }
 </script>

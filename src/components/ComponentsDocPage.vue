@@ -42,43 +42,28 @@
         </div>
 
         <nav class="sidebar-groups mfs-flex mfs-flex-col mfs-overflow-y-auto mfs-pr-2">
-          <div
-            v-for="group in filteredGroups"
-            :key="group.phase"
+          <Accordion
+            v-if="sidebarAccordionItems.length > 0"
+            v-model="openGroupKeys"
+            multiple
+            :items="sidebarAccordionItems"
           >
-            <button
-              type="button"
-              class="sidebar-group-btn mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-cursor-pointer mfs-transition"
-              :aria-expanded="isGroupOpen(group.phase)"
-              @click="toggleGroup(group.phase)"
-            >
-              <span class="sidebar-group-title mfs-font-bold mfs-text-muted mfs-truncate">{{ group.title }}</span>
-              <span class="mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-shrink-0">
-                <span class="sidebar-group-count mfs-text-xs mfs-font-semibold mfs-text-muted">{{ group.items.length }}</span>
-                <ChevronDown
-                  :size="14"
-                  class="sidebar-group-chevron mfs-text-muted mfs-transition"
-                  :class="{ 'is-open': isGroupOpen(group.phase) }"
-                />
-              </span>
-            </button>
-            <ul
-              v-show="isGroupOpen(group.phase)"
-              class="sidebar-list mfs-flex mfs-flex-col mfs-p-0 mfs-mt-1 mfs-mb-0"
-            >
-              <li v-for="item in group.items" :key="item.slug">
-                <button
-                  type="button"
-                  class="sidebar-link mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-rounded-sm mfs-font-medium mfs-bg-transparent mfs-text-left mfs-cursor-pointer mfs-transition"
-                  :class="{ 'is-active': item.slug === activeItem.slug }"
-                  :aria-current="item.slug === activeItem.slug ? 'page' : undefined"
-                  @click="emit('select', item.slug)"
-                >
-                  <span class="mfs-truncate">{{ item.name }}</span>
-                </button>
-              </li>
-            </ul>
-          </div>
+            <template #item="{ item }">
+              <ul class="sidebar-list mfs-flex mfs-flex-col mfs-p-0 mfs-m-0">
+                <li v-for="navItem in groupItemsByKey.get(item.key) ?? []" :key="navItem.slug">
+                  <button
+                    type="button"
+                    class="sidebar-link mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-rounded-sm mfs-font-medium mfs-bg-transparent mfs-text-left mfs-cursor-pointer mfs-transition"
+                    :class="{ 'is-active': navItem.slug === activeItem.slug }"
+                    :aria-current="navItem.slug === activeItem.slug ? 'page' : undefined"
+                    @click="emit('select', navItem.slug)"
+                  >
+                    <span class="mfs-truncate">{{ navItem.name }}</span>
+                  </button>
+                </li>
+              </ul>
+            </template>
+          </Accordion>
 
           <p v-if="filteredGroups.length === 0" class="sidebar-empty mfs-text-muted">
             No components match "{{ searchQuery }}".
@@ -402,7 +387,8 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent, onBeforeUnmount, provide, ref, watch } from 'vue'
-import { Check, ChevronDown, ChevronLeft, ChevronRight, Copy, Search } from 'lucide-vue-next'
+import { Check, ChevronLeft, ChevronRight, Copy, Search } from 'lucide-vue-next'
+import Accordion, { type AccordionItem } from '../lib/components/Accordion.vue'
 import {
   COMPONENT_NAV,
   PHASE_TITLES,
@@ -454,23 +440,17 @@ const activeItem = computed(() => getComponentBySlug(props.activeSlug))
 const activePhaseDemo = computed(() => phaseDemoMap[activeItem.value.phase])
 const activeItemA11y = computed(() => activeItem.value.a11y)
 
-const openGroups = ref<Record<number, boolean>>({
-  [activeItem.value.phase]: true
-})
+const openGroupKeys = ref<(string | number)[]>([activeItem.value.phase])
+let savedKeysBeforeSearch: (string | number)[] | null = null
 
 watch(
   () => activeItem.value.phase,
   (phase) => {
-    openGroups.value[phase] = true
+    if (!openGroupKeys.value.includes(phase)) {
+      openGroupKeys.value = [...openGroupKeys.value, phase]
+    }
   }
 )
-
-const isGroupOpen = (phase: number) =>
-  searchQuery.value.trim().length > 0 || !!openGroups.value[phase]
-
-const toggleGroup = (phase: number) => {
-  openGroups.value[phase] = !openGroups.value[phase]
-}
 
 type DocTabKey = 'features' | 'api' | 'theming'
 
@@ -645,6 +625,39 @@ const filteredGroups = computed(() => {
   return groupByPhase(matches)
 })
 
+const sidebarAccordionItems = computed<AccordionItem[]>(() =>
+  filteredGroups.value.map((group) => ({
+    key: group.phase,
+    title: `${group.title} (${group.items.length})`
+  }))
+)
+
+const groupItemsByKey = computed(() => {
+  const map = new Map<string | number, ComponentNavItem[]>()
+  for (const group of filteredGroups.value) {
+    map.set(group.phase, group.items)
+  }
+  return map
+})
+
+watch(
+  [() => searchQuery.value.trim(), filteredGroups],
+  ([trimmed, groups], [prevTrimmed]) => {
+    if (trimmed.length > 0) {
+      if (!prevTrimmed) {
+        savedKeysBeforeSearch = [...openGroupKeys.value]
+      }
+      openGroupKeys.value = groups.map((g) => g.phase)
+    } else if (prevTrimmed) {
+      const restored = savedKeysBeforeSearch ?? []
+      savedKeysBeforeSearch = null
+      openGroupKeys.value = restored.includes(activeItem.value.phase)
+        ? restored
+        : [...restored, activeItem.value.phase]
+    }
+  }
+)
+
 const onMobileSelect = (e: Event) => {
   const target = e.target as HTMLSelectElement
   if (target.value) {
@@ -720,23 +733,41 @@ const onMobileSelect = (e: Event) => {
   border-radius: 9999px;
 }
 
-.sidebar-group-btn:hover {
-  background: var(--surface-subtle);
+.docs-sidebar :deep(.accordion) {
+  gap: 6px;
 }
 
-.sidebar-group-title {
-  font-size: 0.7rem;
+.docs-sidebar :deep(.accordion__trigger) {
+  padding: 8px 10px;
+  gap: 8px;
+  font-size: 0.72rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
 }
 
-.sidebar-group-count {
-  font-size: 0.68rem;
-  opacity: 0.8;
+.docs-sidebar :deep(.accordion__title) {
+  color: inherit;
+  font-size: inherit;
+  line-height: 1.25;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.sidebar-group-chevron.is-open {
-  transform: rotate(180deg);
+.docs-sidebar :deep(.accordion__chevron) {
+  width: 15px;
+  height: 15px;
+}
+
+.docs-sidebar :deep(.accordion__body) {
+  padding: 0 6px;
+  transition: padding 0.28s ease;
+}
+
+.docs-sidebar :deep(.accordion__item.is-open .accordion__body) {
+  padding: 4px 6px 8px;
 }
 
 .sidebar-list {
@@ -811,6 +842,8 @@ const onMobileSelect = (e: Event) => {
 
 .docs-tab-btn {
   padding: 8px 16px;
+  color: var(--text-muted);
+  background: transparent;
 }
 
 .docs-tab-btn:hover {
@@ -867,6 +900,11 @@ const onMobileSelect = (e: Event) => {
   tab-size: 2;
 }
 
+.pager-btn {
+  background-color: var(--surface);
+  color: var(--text);
+}
+
 .pager-btn:hover {
   border-color: var(--primary);
   transform: translateY(-1px);
@@ -876,10 +914,12 @@ const onMobileSelect = (e: Event) => {
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  color: var(--text-muted);
 }
 
 .pager-name {
   font-size: 0.92rem;
+  color: var(--text);
 }
 
 @media (max-width: 900px) {

@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onBeforeUnmount } from 'vue'
+import { computed, watch, onMounted, onBeforeUnmount } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -95,29 +95,36 @@ const onKeydown = (e: KeyboardEvent) => {
 }
 
 let prevOverflow = ''
+let hasLocked = false
 
 const lockBody = (lock: boolean) => {
   if (typeof document === 'undefined') return
   if (lock) {
+    if (hasLocked) return
     prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     document.addEventListener('keydown', onKeydown)
-  } else {
+    hasLocked = true
+  } else if (hasLocked) {
     document.body.style.overflow = prevOverflow
     document.removeEventListener('keydown', onKeydown)
+    hasLocked = false
   }
 }
 
+onMounted(() => {
+  if (props.modelValue) {
+    lockBody(true)
+  }
+})
+
 watch(
   () => props.modelValue,
-  (open) => lockBody(open),
-  { immediate: true }
+  (open) => lockBody(open)
 )
 
 onBeforeUnmount(() => {
-  if (props.modelValue) {
-    lockBody(false)
-  }
+  lockBody(false)
 })
 </script>
 

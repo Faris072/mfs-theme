@@ -48,4 +48,24 @@ withDefaults(
   padding: 4px 12px;
   font-size: 0.85rem;
 }
+
+.badge--primary {
+  color: var(--primary-text, #ffffff);
+}
+
+.badge--secondary {
+  color: var(--secondary-text, #ffffff);
+}
+
+.badge--success {
+  color: var(--success-text, #ffffff);
+}
+
+.badge--warning {
+  color: var(--warning-text, #1e293b);
+}
+
+.badge--danger {
+  color: var(--danger-text, #ffffff);
+}
 </style>

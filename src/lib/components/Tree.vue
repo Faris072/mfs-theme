@@ -4,12 +4,22 @@
     :class="{ 'tree--root mfs-surface mfs-rounded mfs-shadow-card': level === 0 }"
     :role="level === 0 ? 'tree' : 'group'"
   >
+    <li v-if="level === 0 && loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-label="Loading" />
+      </slot>
+    </li>
+    <li v-if="level === 0 && !loading && nodes.length === 0" class="mfs-empty-state">
+      <slot name="empty">
+        <span>{{ emptyText }}</span>
+      </slot>
+    </li>
     <li
       v-for="node in nodes"
       :key="node.key"
       class="tree__item"
       role="treeitem"
-      :aria-expanded="hasChildren(node) ? isExpanded(node.key) : undefined"
+      :aria-expanded="canExpand(node) ? isExpanded(node.key) : undefined"
       :aria-selected="selectionMode !== 'none' ? isSelected(node.key) : undefined"
       :aria-disabled="node.disabled || undefined"
     >
@@ -28,7 +38,7 @@
         @keydown.left.prevent="collapseIfExpanded(node)"
       >
         <button
-          v-if="hasChildren(node)"
+          v-if="canExpand(node)"
           type="button"
           class="tree__toggle mfs-text-muted"
           :class="{ 'tree__toggle--expanded': isExpanded(node.key) }"
@@ -48,16 +58,15 @@
         </button>
         <span v-else class="tree__spacer" aria-hidden="true" />
 
-        <input
+        <Checkbox
           v-if="selectionMode === 'checkbox'"
-          type="checkbox"
           class="tree__checkbox"
-          :checked="isSelected(node.key)"
+          :model-value="isSelected(node.key)"
           :disabled="node.disabled"
           :aria-label="`Select ${node.label}`"
-          tabindex="-1"
+          :tabindex="-1"
           @click.stop
-          @change="toggleSelect(node)"
+          @update:model-value="toggleSelect(node)"
         />
 
         <span v-if="node.icon" class="tree__icon" aria-hidden="true">{{ node.icon }}</span>
@@ -81,11 +90,13 @@
         :expanded-keys="expandedKeys"
         :selection-mode="selectionMode"
         :selected-keys="selectedKeys"
+        :lazy="lazy"
         :level="level + 1"
         @update:expanded-keys="$emit('update:expandedKeys', $event)"
         @update:selected-keys="$emit('update:selectedKeys', $event)"
         @node-click="$emit('node-click', $event)"
         @node-toggle="(n, exp) => $emit('node-toggle', n, exp)"
+        @lazy-load="$emit('lazy-load', $event)"
       >
         <template v-if="$slots.node" #node="slotProps">
           <slot name="node" v-bind="slotProps" />
@@ -96,12 +107,15 @@
 </template>
 
 <script setup lang="ts">
+import Checkbox from './Checkbox.vue'
+
 export interface TreeNode {
   key: string
   label: string
   children?: TreeNode[]
   disabled?: boolean
   icon?: string
+  leaf?: boolean
 }
 
 defineOptions({
@@ -115,12 +129,18 @@ const props = withDefaults(
     selectionMode?: 'none' | 'single' | 'checkbox'
     selectedKeys?: string[]
     level?: number
+    loading?: boolean
+    lazy?: boolean
+    emptyText?: string
   }>(),
   {
     expandedKeys: () => [],
     selectionMode: 'none',
     selectedKeys: () => [],
-    level: 0
+    level: 0,
+    loading: false,
+    lazy: false,
+    emptyText: 'No items found'
   }
 )
 
@@ -129,14 +149,21 @@ const emit = defineEmits<{
   'update:selectedKeys': [keys: string[]]
   'node-click': [node: TreeNode]
   'node-toggle': [node: TreeNode, expanded: boolean]
+  'lazy-load': [node: TreeNode]
 }>()
 
 defineSlots<{
   node?: (props: { node: TreeNode; expanded: boolean; selected: boolean; level: number }) => any
+  loading?: () => any
+  empty?: () => any
 }>()
 
 function hasChildren(node: TreeNode): boolean {
   return Array.isArray(node.children) && node.children.length > 0
+}
+
+function canExpand(node: TreeNode): boolean {
+  return hasChildren(node) || (props.lazy && !node.leaf)
 }
 
 function isExpanded(key: string): boolean {
@@ -148,11 +175,14 @@ function isSelected(key: string): boolean {
 }
 
 function toggleExpand(node: TreeNode) {
-  if (!hasChildren(node)) return
+  if (!canExpand(node)) return
   const next = new Set(props.expandedKeys)
   const expanding = !next.has(node.key)
   if (expanding) {
     next.add(node.key)
+    if (props.lazy && !node.children?.length) {
+      emit('lazy-load', node)
+    }
   } else {
     next.delete(node.key)
   }
@@ -161,13 +191,13 @@ function toggleExpand(node: TreeNode) {
 }
 
 function expandIfCollapsed(node: TreeNode) {
-  if (hasChildren(node) && !isExpanded(node.key)) {
+  if (canExpand(node) && !isExpanded(node.key)) {
     toggleExpand(node)
   }
 }
 
 function collapseIfExpanded(node: TreeNode) {
-  if (hasChildren(node) && isExpanded(node.key)) {
+  if (canExpand(node) && isExpanded(node.key)) {
     toggleExpand(node)
   }
 }
@@ -192,7 +222,7 @@ function onNodeClick(node: TreeNode) {
   emit('node-click', node)
   if (props.selectionMode !== 'none') {
     toggleSelect(node)
-  } else if (hasChildren(node)) {
+  } else if (canExpand(node)) {
     toggleExpand(node)
   }
 }
@@ -206,6 +236,7 @@ function onNodeClick(node: TreeNode) {
 }
 
 .tree--root {
+  position: relative;
   background: var(--surface);
   color: var(--text);
   border-radius: var(--radius, 16px);
@@ -282,10 +313,6 @@ function onNodeClick(node: TreeNode) {
 }
 
 .tree__checkbox {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
-  cursor: pointer;
   flex-shrink: 0;
 }
 

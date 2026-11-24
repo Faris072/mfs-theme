@@ -1,6 +1,7 @@
 <template>
-  <div ref="rootRef" class="mfs-popover-wrapper">
+  <div class="mfs-popover-wrapper">
     <div
+      ref="triggerRef"
       class="mfs-popover__trigger"
       :aria-expanded="isOpen"
       aria-haspopup="dialog"
@@ -9,21 +10,26 @@
       <slot name="trigger" :open="isOpen" :toggle="toggle" />
     </div>
 
-    <Transition name="mfs-popover">
-      <div
-        v-if="isOpen"
-        class="mfs-popover mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
-        :class="[`mfs-popover--${placement}`]"
-        role="dialog"
-      >
-        <slot :close="close" />
-      </div>
-    </Transition>
+    <Teleport to="body">
+      <Transition name="mfs-popover">
+        <div
+          v-if="isOpen"
+          ref="overlayRef"
+          :style="overlayStyle"
+          class="mfs-popover mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
+          :class="[`mfs-popover--${placement}`]"
+          role="dialog"
+        >
+          <slot :close="close" />
+        </div>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, watch, onBeforeUnmount } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 const props = withDefaults(
   defineProps<{
@@ -40,11 +46,17 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
 }>()
 
-const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const internalOpen = ref(false)
 
 const isControlled = computed(() => props.modelValue !== undefined)
 const isOpen = computed(() => (isControlled.value ? Boolean(props.modelValue) : internalOpen.value))
+
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, {
+  offset: 10,
+  align: 'center'
+})
 
 const setOpen = (next: boolean) => {
   if (!isControlled.value) {
@@ -57,8 +69,7 @@ const toggle = () => setOpen(!isOpen.value)
 const close = () => setOpen(false)
 
 const onDocumentPointerDown = (e: PointerEvent) => {
-  if (!rootRef.value) return
-  if (!rootRef.value.contains(e.target as Node)) {
+  if (!containsTarget(e.target)) {
     close()
   }
 }
@@ -99,7 +110,6 @@ onBeforeUnmount(() => {
 }
 
 .mfs-popover {
-  position: absolute;
   z-index: 10010;
   min-width: 200px;
   max-width: min(340px, 90vw);
@@ -110,30 +120,6 @@ onBeforeUnmount(() => {
   border: 1px solid var(--border, transparent);
   box-shadow: var(--card-shadow);
   backdrop-filter: var(--backdrop-blur, none);
-}
-
-.mfs-popover--bottom {
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.mfs-popover--top {
-  bottom: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.mfs-popover--left {
-  right: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.mfs-popover--right {
-  left: calc(100% + 10px);
-  top: 50%;
-  transform: translateY(-50%);
 }
 
 /* Theme Overrides */
@@ -151,13 +137,6 @@ onBeforeUnmount(() => {
 .mfs-popover-enter-from,
 .mfs-popover-leave-to {
   opacity: 0;
-  transform: translateX(-50%) scale(0.95);
-}
-
-.mfs-popover--left.mfs-popover-enter-from,
-.mfs-popover--left.mfs-popover-leave-to,
-.mfs-popover--right.mfs-popover-enter-from,
-.mfs-popover--right.mfs-popover-leave-to {
-  transform: translateY(-50%) scale(0.95);
+  transform: scale(0.95);
 }
 </style>

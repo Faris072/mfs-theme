@@ -1,8 +1,19 @@
 <template>
   <div class="pick-list">
+    <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-label="Loading" />
+      </slot>
+    </div>
+
     <div class="pick-list__panel mfs-surface mfs-rounded mfs-shadow-card">
       <div v-if="sourceHeader" class="pick-list__header mfs-text">{{ sourceHeader }}</div>
       <ul class="pick-list__list mfs-inset mfs-rounded-md" role="listbox" aria-label="Source items">
+        <li v-if="!loading && source.length === 0" class="mfs-empty-state">
+          <slot name="empty-source">
+            <span>{{ emptySourceText }}</span>
+          </slot>
+        </li>
         <li
           v-for="(item, index) in source"
           :key="getItemKey(item, index)"
@@ -72,6 +83,11 @@
     <div class="pick-list__panel mfs-surface mfs-rounded mfs-shadow-card">
       <div v-if="targetHeader" class="pick-list__header mfs-text">{{ targetHeader }}</div>
       <ul class="pick-list__list mfs-inset mfs-rounded-md" role="listbox" aria-label="Target items">
+        <li v-if="!loading && target.length === 0" class="mfs-empty-state">
+          <slot name="empty-target">
+            <span>{{ emptyTargetText }}</span>
+          </slot>
+        </li>
         <li
           v-for="(item, index) in target"
           :key="getItemKey(item, index)"
@@ -103,11 +119,17 @@ const props = withDefaults(
     itemKey?: string
     sourceHeader?: string
     targetHeader?: string
+    loading?: boolean
+    emptySourceText?: string
+    emptyTargetText?: string
   }>(),
   {
     itemKey: 'id',
     sourceHeader: 'Available',
-    targetHeader: 'Selected'
+    targetHeader: 'Selected',
+    loading: false,
+    emptySourceText: 'No items',
+    emptyTargetText: 'No items'
   }
 )
 
@@ -119,6 +141,9 @@ const emit = defineEmits<{
 
 defineSlots<{
   item?: (props: { item: any; index: number; list: 'source' | 'target' }) => any
+  loading?: () => any
+  'empty-source'?: () => any
+  'empty-target'?: () => any
 }>()
 
 const selectedSource = ref<number[]>([])
@@ -179,6 +204,7 @@ function moveAllToSource() {
 
 <style scoped>
 .pick-list {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   gap: 14px;

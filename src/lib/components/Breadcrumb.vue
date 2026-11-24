@@ -39,12 +39,20 @@
             {{ item.label }}
           </span>
 
+          <button
+            v-else-if="!item.to && !item.href"
+            type="button"
+            class="breadcrumb__link mfs-inline-flex mfs-items-center mfs-rounded-sm mfs-border-none mfs-font-medium mfs-text"
+            @click="emit('navigate', item, $event)"
+          >
+            {{ item.label }}
+          </button>
+
           <component
-            :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+            :is="item.to ? 'router-link' : 'a'"
             v-else
             :to="item.to"
             :href="item.href"
-            :type="!item.to && !item.href ? 'button' : undefined"
             class="breadcrumb__link mfs-inline-flex mfs-items-center mfs-rounded-sm mfs-border-none mfs-font-medium mfs-text"
             @click="emit('navigate', item, $event)"
           >
@@ -103,6 +111,7 @@ const emit = defineEmits<{
 .breadcrumb__link {
   padding: 3px 8px;
   background: transparent;
+  color: var(--text);
   font-family: inherit;
   font-size: inherit;
   text-decoration: none;

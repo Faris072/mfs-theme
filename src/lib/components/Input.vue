@@ -1,11 +1,11 @@
 <template>
-  <div class="input-wrapper" :class="{ 'input-wrapper--error': !!error }">
+  <div class="input-wrapper" :class="{ 'input-wrapper--error': !!error, 'input-wrapper--disabled is-disabled': disabled }">
     <label v-if="label" class="input-label mfs-text">
       {{ label }}
       <span v-if="required" class="input-required">*</span>
     </label>
 
-    <div class="input-box mfs-surface mfs-rounded mfs-shadow-inset">
+    <div class="input-box mfs-surface mfs-rounded mfs-shadow-inset" :class="{ 'mfs-disabled': disabled }">
       <span v-if="$slots.prepend" class="input-affix mfs-text-muted input-affix--prepend">
         <slot name="prepend" />
       </span>
@@ -105,6 +105,18 @@ const handleInput = (e: Event) => {
 .input-wrapper--error .input-box {
   border-color: var(--danger);
   box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25), var(--input-shadow);
+}
+
+.input-wrapper--disabled {
+  cursor: not-allowed;
+}
+
+.input-wrapper--disabled .input-label {
+  opacity: 0.72;
+}
+
+.input-wrapper--disabled .input-field {
+  color: var(--text-muted);
 }
 
 .input-field {

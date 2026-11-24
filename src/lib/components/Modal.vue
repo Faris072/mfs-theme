@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue'
+import { watch, onMounted, onBeforeUnmount } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -64,18 +64,36 @@ const handleBackdropClick = () => {
   }
 }
 
+let prevOverflow = ''
+let hasLocked = false
+
+const lockBody = (lock: boolean) => {
+  if (typeof document === 'undefined') return
+  if (lock) {
+    if (hasLocked) return
+    prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    hasLocked = true
+  } else if (hasLocked) {
+    document.body.style.overflow = prevOverflow
+    hasLocked = false
+  }
+}
+
+onMounted(() => {
+  if (props.modelValue) {
+    lockBody(true)
+  }
+})
+
 watch(
   () => props.modelValue,
-  (open) => {
-    if (typeof document !== 'undefined') {
-      if (open) {
-        document.body.style.overflow = 'hidden'
-      } else {
-        document.body.style.overflow = ''
-      }
-    }
-  }
+  (open) => lockBody(open)
 )
+
+onBeforeUnmount(() => {
+  lockBody(false)
+})
 </script>
 
 <style scoped>

@@ -1,11 +1,11 @@
 <template>
-  <div class="textarea-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled mfs-disabled': disabled }">
+  <div class="textarea-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'textarea-wrapper--error': !!error, 'textarea-wrapper--disabled is-disabled': disabled }">
     <label v-if="label" :for="inputId" class="textarea-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
       <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="textarea-box mfs-flex mfs-surface mfs-rounded mfs-shadow-inset">
+    <div class="textarea-box mfs-flex mfs-surface mfs-rounded mfs-shadow-inset" :class="{ 'mfs-disabled': disabled }">
       <textarea
         ref="textareaRef"
         :id="inputId"
@@ -114,9 +114,16 @@ onMounted(resize)
   box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.25), var(--input-shadow);
 }
 
-.textarea-wrapper--disabled .textarea-box {
-  opacity: 0.6;
+.textarea-wrapper--disabled {
   cursor: not-allowed;
+}
+
+.textarea-wrapper--disabled .textarea-label {
+  opacity: 0.72;
+}
+
+.textarea-wrapper--disabled .textarea-field {
+  color: var(--text-muted);
 }
 
 .textarea-field {

@@ -1,10 +1,17 @@
 <template>
-  <div class="mfs-upload mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-p-4 mfs-flex mfs-flex-col mfs-gap-3">
+  <div
+    class="mfs-upload mfs-relative mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-p-4 mfs-flex mfs-flex-col mfs-gap-3"
+    :aria-busy="loading || undefined"
+  >
+    <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <span class="mfs-spinner" aria-hidden="true" />
+    </div>
+
     <div
       class="mfs-upload__dropzone mfs-surface-subtle mfs-rounded mfs-focus-ring mfs-relative mfs-text-center mfs-cursor-pointer"
       :class="{
         'mfs-upload__dropzone--dragging': isDragging,
-        'mfs-upload__dropzone--disabled mfs-disabled': disabled
+        'mfs-upload__dropzone--disabled mfs-disabled': disabled || loading
       }"
       role="button"
       tabindex="0"
@@ -22,7 +29,7 @@
         class="mfs-upload__input"
         :accept="accept"
         :multiple="multiple"
-        :disabled="disabled"
+        :disabled="disabled || loading"
         @change="onFileChange"
       />
 
@@ -41,6 +48,10 @@
         <span v-if="accept && maxFileSize"> · </span>
         <span v-if="maxFileSize">Max: {{ formatSize(maxFileSize) }}</span>
       </p>
+    </div>
+
+    <div v-if="displayError" class="mfs-soft-danger mfs-rounded-sm mfs-p-2 mfs-text-sm" role="alert">
+      {{ displayError }}
     </div>
 
     <div v-if="typeof progress === 'number' && progress > 0" class="mfs-upload__progress-wrap mfs-flex mfs-items-center mfs-gap-2-5">
@@ -73,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = withDefaults(
   defineProps<{
@@ -82,10 +93,13 @@ const props = withDefaults(
     maxFileSize?: number
     disabled?: boolean
     progress?: number
+    loading?: boolean
+    error?: string
   }>(),
   {
     multiple: false,
-    disabled: false
+    disabled: false,
+    loading: false
   }
 )
 
@@ -99,6 +113,8 @@ const emit = defineEmits<{
 const inputRef = ref<HTMLInputElement | null>(null)
 const files = ref<File[]>([])
 const isDragging = ref(false)
+const internalError = ref<string | null>(null)
+const displayError = computed(() => props.error || internalError.value)
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -120,15 +136,20 @@ function matchesAccept(file: File, acceptStr?: string): boolean {
 }
 
 function processFiles(fileList: FileList | null) {
-  if (!fileList || props.disabled) return
+  if (!fileList || props.disabled || props.loading) return
+  internalError.value = null
   const valid: File[] = []
   for (const file of Array.from(fileList)) {
     if (!matchesAccept(file, props.accept)) {
-      emit('error', `Invalid file type: ${file.name}`)
+      const msg = `Invalid file type: ${file.name}`
+      internalError.value = msg
+      emit('error', msg)
       continue
     }
     if (props.maxFileSize && file.size > props.maxFileSize) {
-      emit('error', `File too large: ${file.name} (max ${formatSize(props.maxFileSize)})`)
+      const msg = `File too large: ${file.name} (max ${formatSize(props.maxFileSize)})`
+      internalError.value = msg
+      emit('error', msg)
       continue
     }
     valid.push(file)
@@ -139,7 +160,7 @@ function processFiles(fileList: FileList | null) {
 }
 
 const openPicker = () => {
-  if (!props.disabled) inputRef.value?.click()
+  if (!props.disabled && !props.loading) inputRef.value?.click()
 }
 
 const onFileChange = (e: Event) => {
@@ -149,7 +170,7 @@ const onFileChange = (e: Event) => {
 }
 
 const onDragOver = () => {
-  if (!props.disabled) isDragging.value = true
+  if (!props.disabled && !props.loading) isDragging.value = true
 }
 
 const onDrop = (e: DragEvent) => {

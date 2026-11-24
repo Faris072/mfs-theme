@@ -1,14 +1,30 @@
 <template>
   <div
     class="carousel mfs-surface mfs-rounded mfs-shadow-card"
+    :class="{ 'carousel--loading-empty': loading && items.length === 0 }"
     role="region"
     aria-roledescription="carousel"
+    :aria-busy="loading || undefined"
     @mouseenter="paused = true"
     @mouseleave="paused = false"
     @focusin="paused = true"
     @focusout="paused = false"
   >
+    <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-hidden="true" />
+      </slot>
+    </div>
+
     <div
+      v-if="!loading && items.length === 0"
+      class="mfs-empty-state"
+    >
+      <slot name="empty">{{ emptyText }}</slot>
+    </div>
+
+    <div
+      v-else
       class="carousel__viewport"
       @pointerdown="onPointerDown"
       @pointerup="onPointerUp"
@@ -82,13 +98,17 @@ const props = withDefaults(
     autoplay?: boolean
     interval?: number
     loop?: boolean
+    loading?: boolean
+    emptyText?: string
   }>(),
   {
     items: () => [],
     modelValue: 0,
     autoplay: false,
     interval: 4000,
-    loop: true
+    loop: true,
+    loading: false,
+    emptyText: 'No items'
   }
 )
 
@@ -177,6 +197,10 @@ onBeforeUnmount(stopAutoplay)
   box-shadow: var(--card-shadow);
   backdrop-filter: var(--backdrop-blur, none);
   overflow: hidden;
+}
+
+.carousel--loading-empty {
+  min-height: 120px;
 }
 
 .carousel__viewport {

@@ -105,6 +105,26 @@ const handleClick = (e: MouseEvent) => {
 }
 
 /* Variants */
+.btn--primary {
+  color: var(--primary-text, #ffffff);
+}
+
+.btn--secondary {
+  color: var(--secondary-text, #ffffff);
+}
+
+.btn--success {
+  color: var(--success-text, #ffffff);
+}
+
+.btn--warning {
+  color: var(--warning-text, #1e293b);
+}
+
+.btn--danger {
+  color: var(--danger-text, #ffffff);
+}
+
 [data-theme="clay"] .btn--primary {
   box-shadow: 
     6px 12px 22px rgba(124, 58, 237, 0.35),

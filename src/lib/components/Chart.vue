@@ -2,9 +2,28 @@
   <div
     class="mfs-chart mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-flex mfs-flex-col mfs-gap-3 mfs-p-4"
     :style="chartFilterVars"
+    :aria-busy="loading || undefined"
   >
-    <div class="mfs-chart__canvas mfs-relative mfs-w-full">
+    <div
+      class="mfs-chart__canvas mfs-relative mfs-w-full"
+      :style="loading && isEmpty ? { minHeight: `${height}px` } : undefined"
+    >
+      <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+        <slot name="loading">
+          <span class="mfs-spinner" aria-hidden="true" />
+        </slot>
+      </div>
+
+      <div
+        v-if="!loading && isEmpty"
+        class="mfs-empty-state"
+        :style="{ minHeight: `${height}px` }"
+      >
+        <slot name="empty">{{ emptyText }}</slot>
+      </div>
+
       <svg
+        v-else
         class="mfs-chart__svg"
         :viewBox="`0 0 ${W} ${H}`"
         role="img"
@@ -87,7 +106,7 @@
 
           <!-- X Labels -->
           <text
-            v-for="(label, idx) in data.labels"
+            v-for="(label, idx) in labels"
             :key="idx"
             :x="getX(idx)"
             :y="H - 8"
@@ -100,7 +119,7 @@
 
         <!-- Bar Chart -->
         <template v-if="type === 'bar'">
-          <template v-for="(ds, dsIdx) in data.datasets" :key="dsIdx">
+          <template v-for="(ds, dsIdx) in datasets" :key="dsIdx">
             <g v-for="(val, idx) in ds.data" :key="idx">
               <rect
                 :x="getBarX(idx, dsIdx)"
@@ -110,7 +129,7 @@
                 :fill="ds.color || palette[dsIdx % palette.length]"
                 rx="4"
                 class="mfs-chart__bar"
-                @mouseenter="showTip($event, `${data.labels[idx] ?? idx}: ${val}`)"
+                @mouseenter="showTip($event, `${labels[idx] ?? idx}: ${val}`)"
                 @mouseleave="tip = null"
               />
               <rect
@@ -128,7 +147,7 @@
 
         <!-- Line Chart -->
         <template v-else-if="type === 'line'">
-          <template v-for="(ds, dsIdx) in data.datasets" :key="dsIdx">
+          <template v-for="(ds, dsIdx) in datasets" :key="dsIdx">
             <polyline
               fill="none"
               :stroke="ds.color || palette[dsIdx % palette.length]"
@@ -145,7 +164,7 @@
                 r="5"
                 :fill="ds.color || palette[dsIdx % palette.length]"
                 class="mfs-chart__point"
-                @mouseenter="showTip($event, `${data.labels[idx] ?? idx}: ${val}`)"
+                @mouseenter="showTip($event, `${labels[idx] ?? idx}: ${val}`)"
                 @mouseleave="tip = null"
               />
               <circle
@@ -192,7 +211,7 @@
       </div>
     </div>
 
-    <div v-if="legendItems.length > 0" class="mfs-chart__legend mfs-flex mfs-flex-wrap mfs-gap-3 mfs-justify-center">
+    <div v-if="!isEmpty && legendItems.length > 0" class="mfs-chart__legend mfs-flex mfs-flex-wrap mfs-gap-3 mfs-justify-center">
       <span
         v-for="(item, idx) in legendItems"
         :key="idx"
@@ -222,14 +241,26 @@ export interface ChartData {
 const props = withDefaults(
   defineProps<{
     type?: 'bar' | 'line' | 'pie' | 'doughnut'
-    data: ChartData
+    data?: ChartData | null
     height?: number
+    loading?: boolean
+    emptyText?: string
   }>(),
   {
     type: 'bar',
-    height: 240
+    data: null,
+    height: 240,
+    loading: false,
+    emptyText: 'No chart data'
   }
 )
+
+const labels = computed(() => props.data?.labels ?? [])
+const datasets = computed(() => props.data?.datasets ?? [])
+const isEmpty = computed(() => {
+  if (datasets.value.length === 0) return true
+  return datasets.value.every((d) => !d.data || d.data.length === 0)
+})
 
 const W = 480
 const H = computed(() => props.height)
@@ -251,12 +282,12 @@ const palette = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#f43f5e', '#38bdf8
 const tip = ref<{ x: number; y: number; text: string } | null>(null)
 
 const maxVal = computed(() => {
-  const all = props.data.datasets.flatMap((d) => d.data)
+  const all = datasets.value.flatMap((d) => d.data)
   return Math.max(1, ...all)
 })
 
 const getX = (idx: number) => {
-  const count = Math.max(1, props.data.labels.length)
+  const count = Math.max(1, labels.value.length)
   const plotW = W - PAD_L - PAD_R
   if (count === 1) return PAD_L + plotW / 2
   return PAD_L + (plotW * (idx + 0.5)) / count
@@ -268,14 +299,14 @@ const getY = (val: number) => {
 }
 
 const barWidth = computed(() => {
-  const count = Math.max(1, props.data.labels.length)
-  const dsCount = Math.max(1, props.data.datasets.length)
+  const count = Math.max(1, labels.value.length)
+  const dsCount = Math.max(1, datasets.value.length)
   const groupW = (W - PAD_L - PAD_R) / count
   return Math.max(6, Math.min(34, (groupW * 0.68) / dsCount))
 })
 
 const getBarX = (idx: number, dsIdx: number) => {
-  const dsCount = Math.max(1, props.data.datasets.length)
+  const dsCount = Math.max(1, datasets.value.length)
   const totalW = dsCount * barWidth.value + (dsCount - 1) * 4
   return getX(idx) - totalW / 2 + dsIdx * (barWidth.value + 4)
 }
@@ -284,7 +315,7 @@ const getLinePoints = (values: number[]) =>
   values.map((v, i) => `${getX(i)},${getY(v)}`).join(' ')
 
 const pieSegments = computed(() => {
-  const ds = props.data.datasets[0]
+  const ds = datasets.value[0]
   if (!ds) return []
   const total = ds.data.reduce((a, b) => a + Math.max(0, b), 0) || 1
   const outerR = Math.min(W, H.value) * 0.4
@@ -314,7 +345,7 @@ const pieSegments = computed(() => {
     return {
       d,
       value: val,
-      label: props.data.labels[idx] ?? `Item ${idx + 1}`,
+      label: labels.value[idx] ?? `Item ${idx + 1}`,
       color: palette[idx % palette.length]
     }
   })
@@ -322,12 +353,12 @@ const pieSegments = computed(() => {
 
 const legendItems = computed(() => {
   if (props.type === 'pie' || props.type === 'doughnut') {
-    return props.data.labels.map((label, idx) => ({
+    return labels.value.map((label, idx) => ({
       label,
       color: palette[idx % palette.length]
     }))
   }
-  return props.data.datasets.map((ds, idx) => ({
+  return datasets.value.map((ds, idx) => ({
     label: ds.label ?? `Series ${idx + 1}`,
     color: ds.color ?? palette[idx % palette.length]
   }))

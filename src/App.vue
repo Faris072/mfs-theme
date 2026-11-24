@@ -64,7 +64,7 @@
             target="_blank"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
-            <span>npm v1.0.0</span>
+            <span>npm v1.0.2</span>
           </a>
         </div>
 
@@ -297,7 +297,13 @@ const onThemeSelect = (val: string | number | null) => {
 .nav-tab {
   padding: 6px 14px;
   font-size: 0.82rem;
+  color: var(--text-muted);
+  background: transparent;
   text-decoration: none;
+}
+
+.nav-tab:hover:not(.is-active) {
+  color: var(--text);
 }
 
 .nav-tab.is-active {

@@ -1,5 +1,5 @@
 <template>
-  <section class="component-preview mfs-surface mfs-rounded-lg mfs-overflow-hidden mfs-shadow">
+  <section class="component-preview mfs-surface mfs-rounded-lg mfs-shadow">
     <header class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-py-5 mfs-px-6 mfs-surface-subtle mfs-border-none mfs-border-b">
       <div class="preview-heading mfs-min-w-0">
         <h3 class="mfs-text-base mfs-font-bold mfs-text mfs-m-0">{{ title }}</h3>
@@ -214,6 +214,8 @@ const currentApiSection = computed(
 .preview-tab-btn {
   font-size: 0.78rem;
   padding: 5px 12px;
+  color: var(--text-muted);
+  background: transparent;
   border-radius: calc(var(--radius-sm, 8px) - 2px);
 }
 

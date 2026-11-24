@@ -1,5 +1,5 @@
 <template>
-  <div class="data-view">
+  <div class="data-view mfs-relative">
     <div class="data-view__header">
       <div class="data-view__header-left">
         <slot name="header" />
@@ -80,6 +80,12 @@
         </slot>
       </div>
     </div>
+
+    <div v-if="loading" class="mfs-loading-overlay" aria-busy="true">
+      <slot name="loading">
+        <span class="mfs-spinner" />
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -95,16 +101,24 @@ const props = withDefaults(
     itemKey?: string
     columns?: number
     emptyText?: string
+    loading?: boolean
+    lazy?: boolean
+    totalRecords?: number
   }>(),
   {
     layout: 'grid',
     itemKey: 'id',
-    emptyText: 'No items found'
+    emptyText: 'No items found',
+    loading: false,
+    lazy: false
   }
 )
 
 const emit = defineEmits<{
   'update:layout': [value: DataViewLayout]
+  page: [payload: { page: number; rowsPerPage?: number }]
+  sort: [payload: { key: string; order: 'asc' | 'desc' | null }]
+  filter: [payload: unknown]
 }>()
 
 const localLayout = ref<DataViewLayout>(props.layout)

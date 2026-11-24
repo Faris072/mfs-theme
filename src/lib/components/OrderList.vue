@@ -1,5 +1,11 @@
 <template>
   <div class="order-list mfs-surface mfs-rounded mfs-shadow-card">
+    <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-label="Loading" />
+      </slot>
+    </div>
+
     <div v-if="header || $slots.header" class="order-list__header">
       <slot name="header">
         <span class="order-list__title mfs-title">{{ header }}</span>
@@ -55,6 +61,11 @@
       </div>
 
       <ul class="order-list__list mfs-inset mfs-rounded-md" role="listbox" aria-label="Orderable items">
+        <li v-if="!loading && modelValue.length === 0" class="mfs-empty-state">
+          <slot name="empty">
+            <span>{{ emptyText }}</span>
+          </slot>
+        </li>
         <li
           v-for="(item, index) in modelValue"
           :key="getItemKey(item, index)"
@@ -84,10 +95,14 @@ const props = withDefaults(
     modelValue: any[]
     itemKey?: string
     header?: string
+    loading?: boolean
+    emptyText?: string
   }>(),
   {
     itemKey: 'id',
-    header: ''
+    header: '',
+    loading: false,
+    emptyText: 'No items'
   }
 )
 
@@ -99,6 +114,8 @@ const emit = defineEmits<{
 defineSlots<{
   header?: () => any
   item?: (props: { item: any; index: number; selected: boolean }) => any
+  loading?: () => any
+  empty?: () => any
 }>()
 
 const selectedIndex = ref<number | null>(null)
@@ -161,6 +178,7 @@ function moveBottom() {
 
 <style scoped>
 .order-list {
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;

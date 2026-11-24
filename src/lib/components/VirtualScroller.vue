@@ -5,7 +5,17 @@
     :style="{ height }"
     @scroll="onScroll"
   >
-    <div class="virtual-scroller__spacer" :style="{ height: `${totalHeight}px` }">
+    <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-label="Loading" />
+      </slot>
+    </div>
+    <div v-else-if="items.length === 0" class="mfs-empty-state">
+      <slot name="empty">
+        <span>{{ emptyText }}</span>
+      </slot>
+    </div>
+    <div v-else class="virtual-scroller__spacer" :style="{ height: `${totalHeight}px` }">
       <div
         class="virtual-scroller__content"
         :style="{ transform: `translateY(${offsetY}px)` }"
@@ -35,16 +45,28 @@ const props = withDefaults(
     height?: string
     buffer?: number
     itemKey?: string
+    loading?: boolean
+    lazy?: boolean
+    emptyText?: string
   }>(),
   {
     height: '300px',
     buffer: 3,
-    itemKey: 'id'
+    itemKey: 'id',
+    loading: false,
+    lazy: false,
+    emptyText: 'No items'
   }
 )
 
+const emit = defineEmits<{
+  'lazy-load': [payload: { first: number; last: number }]
+}>()
+
 defineSlots<{
   item?: (props: { item: any; index: number }) => any
+  loading?: () => any
+  empty?: () => any
 }>()
 
 const containerRef = ref<HTMLElement | null>(null)
@@ -61,6 +83,9 @@ function onScroll() {
   if (!containerRef.value) return
   scrollTop.value = containerRef.value.scrollTop
   viewportHeight.value = containerRef.value.clientHeight || viewportHeight.value
+  if (props.lazy) {
+    emit('lazy-load', { first: startIndex.value, last: endIndex.value })
+  }
 }
 
 const totalHeight = computed(() => props.items.length * props.itemSize)

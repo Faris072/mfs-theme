@@ -209,7 +209,7 @@ defineExpose({ open, close, toggle })
 
 .menu--popup {
   position: fixed;
-  z-index: 9500;
+  z-index: 10100;
 }
 
 .menu__list,

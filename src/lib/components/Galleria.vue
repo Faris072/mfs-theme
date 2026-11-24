@@ -2,60 +2,74 @@
   <div
     class="mfs-galleria mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
     :class="{ 'mfs-galleria--fullscreen': isFullscreen }"
+    :aria-busy="loading || undefined"
     tabindex="0"
     @keydown.left.prevent="prev"
     @keydown.right.prevent="next"
     @keydown.escape="isFullscreen = false"
   >
     <div class="mfs-galleria__stage">
-      <img
-        v-if="currentImage"
-        :src="currentImage.src"
-        :alt="currentImage.alt || currentImage.title || 'Gallery image'"
-        class="mfs-galleria__image"
-      />
-
-      <button
-        v-if="images.length > 1"
-        type="button"
-        class="mfs-galleria__nav mfs-galleria__nav--prev mfs-surface-subtle mfs-pill mfs-focus-ring"
-        aria-label="Previous image"
-        @click="prev"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m15 18-6-6 6-6" />
-        </svg>
-      </button>
-
-      <button
-        v-if="images.length > 1"
-        type="button"
-        class="mfs-galleria__nav mfs-galleria__nav--next mfs-surface-subtle mfs-pill mfs-focus-ring"
-        aria-label="Next image"
-        @click="next"
-      >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m9 18 6-6-6-6" />
-        </svg>
-      </button>
-
-      <button
-        type="button"
-        class="mfs-galleria__fs mfs-surface-subtle mfs-pill mfs-focus-ring"
-        :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
-        @click="isFullscreen = !isFullscreen"
-      >
-        <svg v-if="!isFullscreen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-        </svg>
-        <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
-        </svg>
-      </button>
-
-      <div v-if="currentImage?.title" class="mfs-galleria__caption">
-        {{ currentImage.title }}
+      <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+        <slot name="loading">
+          <span class="mfs-spinner" aria-hidden="true" />
+        </slot>
       </div>
+
+      <div v-if="!loading && images.length === 0" class="mfs-empty-state">
+        <slot name="empty">{{ emptyText }}</slot>
+      </div>
+
+      <template v-else>
+        <img
+          v-if="currentImage"
+          :src="currentImage.src"
+          :alt="currentImage.alt || currentImage.title || 'Gallery image'"
+          class="mfs-galleria__image"
+        />
+
+        <button
+          v-if="images.length > 1"
+          type="button"
+          class="mfs-galleria__nav mfs-galleria__nav--prev mfs-surface-subtle mfs-pill mfs-focus-ring"
+          aria-label="Previous image"
+          @click="prev"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+        </button>
+
+        <button
+          v-if="images.length > 1"
+          type="button"
+          class="mfs-galleria__nav mfs-galleria__nav--next mfs-surface-subtle mfs-pill mfs-focus-ring"
+          aria-label="Next image"
+          @click="next"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+
+        <button
+          v-if="images.length > 0"
+          type="button"
+          class="mfs-galleria__fs mfs-surface-subtle mfs-pill mfs-focus-ring"
+          :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
+          @click="isFullscreen = !isFullscreen"
+        >
+          <svg v-if="!isFullscreen" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+          </svg>
+          <svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
+          </svg>
+        </button>
+
+        <div v-if="currentImage?.title" class="mfs-galleria__caption">
+          {{ currentImage.title }}
+        </div>
+      </template>
     </div>
 
     <div v-if="showThumbnails && images.length > 1" class="mfs-galleria__thumbs">
@@ -86,15 +100,20 @@ export interface GalleriaImage {
 
 const props = withDefaults(
   defineProps<{
-    images: GalleriaImage[]
+    images?: GalleriaImage[]
     activeIndex?: number
     showThumbnails?: boolean
     fullscreen?: boolean
+    loading?: boolean
+    emptyText?: string
   }>(),
   {
+    images: () => [],
     activeIndex: 0,
     showThumbnails: true,
-    fullscreen: false
+    fullscreen: false,
+    loading: false,
+    emptyText: 'No images'
   }
 )
 

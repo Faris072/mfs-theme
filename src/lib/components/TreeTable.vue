@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-table mfs-surface mfs-rounded mfs-shadow-card">
+  <div class="tree-table mfs-relative mfs-surface mfs-rounded mfs-shadow-card">
     <div class="tree-table__wrap">
       <table class="tree-table__table">
         <thead>
@@ -75,6 +75,12 @@
         </tbody>
       </table>
     </div>
+
+    <div v-if="loading" class="mfs-loading-overlay" aria-busy="true">
+      <slot name="loading">
+        <span class="mfs-spinner" />
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -92,6 +98,7 @@ export interface TreeTableNode {
   key: string
   data: Record<string, any>
   children?: TreeTableNode[]
+  leaf?: boolean
 }
 
 interface FlatEntry {
@@ -107,16 +114,21 @@ const props = withDefaults(
     nodes: TreeTableNode[]
     expandedKeys?: string[]
     emptyText?: string
+    loading?: boolean
+    lazy?: boolean
   }>(),
   {
     expandedKeys: () => [],
-    emptyText: 'No data available'
+    emptyText: 'No data available',
+    loading: false,
+    lazy: false
   }
 )
 
 const emit = defineEmits<{
   'update:expandedKeys': [keys: string[]]
   'node-toggle': [node: TreeTableNode, expanded: boolean]
+  'lazy-load': [node: TreeTableNode]
 }>()
 
 const localExpanded = ref<string[]>([...props.expandedKeys])
@@ -134,7 +146,9 @@ const flatRows = computed<FlatEntry[]>(() => {
 
   function walk(list: TreeTableNode[], depth: number) {
     for (const node of list) {
-      const hasChildren = Array.isArray(node.children) && node.children.length > 0
+      const hasChildren =
+        (Array.isArray(node.children) && node.children.length > 0) ||
+        (props.lazy && node.leaf !== true)
       const expanded = hasChildren && expandedSet.has(node.key)
       result.push({ node, depth, hasChildren, expanded })
       if (expanded && node.children) {
@@ -159,6 +173,9 @@ function toggleNode(node: TreeTableNode) {
   localExpanded.value = arr
   emit('update:expandedKeys', arr)
   emit('node-toggle', node, expanding)
+  if (expanding && props.lazy && (!node.children || node.children.length === 0)) {
+    emit('lazy-load', node)
+  }
 }
 </script>
 

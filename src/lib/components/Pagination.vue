@@ -1,10 +1,10 @@
 <template>
-  <nav class="pagination mfs-row mfs-text" aria-label="Pagination">
+  <nav class="pagination mfs-row mfs-text" aria-label="Pagination" :aria-busy="loading || undefined">
     <div class="pagination__controls">
       <button
         type="button"
         class="pagination__btn mfs-surface mfs-shadow mfs-rounded-md mfs-interactive"
-        :disabled="currentPage <= 1"
+        :disabled="isDisabled || currentPage <= 1"
         aria-label="First page"
         @click="goToPage(1)"
       >
@@ -17,7 +17,7 @@
       <button
         type="button"
         class="pagination__btn mfs-surface mfs-shadow mfs-rounded-md mfs-interactive"
-        :disabled="currentPage <= 1"
+        :disabled="isDisabled || currentPage <= 1"
         aria-label="Previous page"
         @click="goToPage(currentPage - 1)"
       >
@@ -35,6 +35,7 @@
           type="button"
           class="pagination__btn pagination__btn--page mfs-surface mfs-shadow mfs-rounded-md mfs-interactive"
           :class="{ 'pagination__btn--active': entry === currentPage }"
+          :disabled="isDisabled"
           :aria-label="`Page ${entry}`"
           :aria-current="entry === currentPage ? 'page' : undefined"
           @click="goToPage(entry)"
@@ -46,7 +47,7 @@
       <button
         type="button"
         class="pagination__btn mfs-surface mfs-shadow mfs-rounded-md mfs-interactive"
-        :disabled="currentPage >= totalPages"
+        :disabled="isDisabled || currentPage >= totalPages"
         aria-label="Next page"
         @click="goToPage(currentPage + 1)"
       >
@@ -58,7 +59,7 @@
       <button
         type="button"
         class="pagination__btn mfs-surface mfs-shadow mfs-rounded-md mfs-interactive"
-        :disabled="currentPage >= totalPages"
+        :disabled="isDisabled || currentPage >= totalPages"
         aria-label="Last page"
         @click="goToPage(totalPages)"
       >
@@ -75,6 +76,7 @@
         <select
           class="pagination__select mfs-surface mfs-rounded-md mfs-shadow-inset"
           :value="perPage"
+          :disabled="isDisabled"
           aria-label="Items per page"
           @change="handlePerPageChange"
         >
@@ -92,6 +94,7 @@
             type="number"
             min="1"
             :max="totalPages"
+            :disabled="isDisabled"
             class="pagination__input mfs-surface mfs-rounded-md mfs-shadow-inset"
             aria-label="Jump to page"
           />
@@ -112,14 +115,20 @@ const props = withDefaults(
     perPageOptions?: number[]
     showJumpTo?: boolean
     siblingCount?: number
+    loading?: boolean
+    disabled?: boolean
   }>(),
   {
     perPage: 10,
     perPageOptions: () => [10, 20, 50, 100],
     showJumpTo: false,
-    siblingCount: 1
+    siblingCount: 1,
+    loading: false,
+    disabled: false
   }
 )
+
+const isDisabled = computed(() => props.disabled || props.loading)
 
 const emit = defineEmits<{
   (e: 'update:modelValue', page: number): void
@@ -170,6 +179,7 @@ const pages = computed<(number | 'ellipsis')[]>(() => {
 })
 
 const goToPage = (page: number) => {
+  if (isDisabled.value) return
   const clamped = Math.min(Math.max(1, page), totalPages.value)
   if (clamped === currentPage.value) return
   emit('update:modelValue', clamped)
@@ -177,6 +187,7 @@ const goToPage = (page: number) => {
 }
 
 const handlePerPageChange = (e: Event) => {
+  if (isDisabled.value) return
   const nextPerPage = Number((e.target as HTMLSelectElement).value)
   const nextTotalPages = Math.max(1, Math.ceil(props.total / Math.max(1, nextPerPage)))
   const nextPage = Math.min(currentPage.value, nextTotalPages)
@@ -188,6 +199,7 @@ const handlePerPageChange = (e: Event) => {
 }
 
 const handleJumpSubmit = () => {
+  if (isDisabled.value) return
   const parsed = Number.parseInt(jumpInput.value, 10)
   if (!Number.isNaN(parsed)) {
     goToPage(parsed)

@@ -1,5 +1,5 @@
 <template>
-  <div ref="rootRef" class="dp-wrapper mfs-flex mfs-flex-col mfs-gap-1-5 mfs-w-full" :class="{ 'dp-wrapper--error': !!error, 'dp-wrapper--disabled mfs-disabled': disabled }">
+  <div class="dp-wrapper mfs-flex mfs-flex-col mfs-gap-1-5 mfs-w-full" :class="{ 'dp-wrapper--error': !!error, 'dp-wrapper--disabled mfs-disabled': disabled }">
     <label v-if="label" class="dp-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
       <span v-if="required" class="dp-required mfs-text-danger">*</span>
@@ -7,6 +7,7 @@
 
     <div class="dp-container mfs-relative">
       <button
+        ref="triggerRef"
         type="button"
         class="dp-trigger mfs-surface mfs-rounded mfs-shadow-inset mfs-w-full mfs-flex mfs-items-center mfs-gap-2-5 mfs-text-left mfs-cursor-pointer"
         :disabled="disabled"
@@ -25,8 +26,9 @@
         </span>
       </button>
 
-      <Transition name="dp-pop">
-        <div v-if="isOpen" class="dp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-absolute mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2" role="dialog" aria-label="Calendar">
+      <Teleport to="body">
+        <Transition name="dp-pop">
+          <div v-if="isOpen" ref="overlayRef" :style="overlayStyle" class="dp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2" role="dialog" aria-label="Calendar">
           <div class="dp-header mfs-flex mfs-items-center mfs-justify-between">
             <button type="button" class="dp-nav mfs-surface-subtle mfs-rounded-md mfs-interactive mfs-inline-flex mfs-items-center mfs-justify-center mfs-border-none mfs-text" aria-label="Previous month" @click="shiftMonth(-1)">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -65,8 +67,9 @@
               </button>
             </div>
           </Transition>
-        </div>
-      </Transition>
+          </div>
+        </Transition>
+      </Teleport>
     </div>
 
     <p v-if="error" class="dp-msg dp-msg--error mfs-text-danger mfs-font-medium mfs-m-0">{{ error }}</p>
@@ -76,6 +79,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 type DateInput = Date | string
 
@@ -106,8 +110,10 @@ const emit = defineEmits<{
   (e: 'change', value: Date | [Date, Date] | null): void
 }>()
 
-const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, { offset: 8 })
 const today = new Date()
 
 const toDate = (v?: DateInput | null): Date | null => {
@@ -215,7 +221,7 @@ const selectDate = (d: Date) => {
 }
 
 const handleClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) isOpen.value = false
+  if (!containsTarget(e.target)) isOpen.value = false
 }
 
 const handleEscape = (e: KeyboardEvent) => {
@@ -248,8 +254,6 @@ onBeforeUnmount(() => {
 }
 
 .dp-popover {
-  top: calc(100% + 8px);
-  left: 0;
   z-index: 45;
   width: min(300px, 92vw);
   box-shadow: var(--clay-shadow-hover);

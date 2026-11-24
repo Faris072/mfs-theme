@@ -5,7 +5,7 @@
       <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="ms-container mfs-relative">
+    <div ref="triggerRef" class="ms-container mfs-relative">
       <div
         tabindex="0"
         role="combobox"
@@ -35,6 +35,7 @@
           <span v-if="selectedOptions.length === 0" class="ms-placeholder mfs-text-muted">{{ placeholder }}</span>
         </div>
 
+        <span v-if="loading" class="mfs-spinner mfs-spinner--sm mfs-shrink-0" aria-hidden="true" />
         <svg
           viewBox="0 0 24 24"
           width="16"
@@ -51,56 +52,64 @@
         </svg>
       </div>
 
-      <Transition name="ms-pop">
-        <div v-if="isOpen" role="listbox" aria-multiselectable="true" class="ms-dropdown mfs-absolute mfs-flex mfs-flex-col mfs-gap-1 mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
-          <div v-if="searchable" class="ms-search-box">
-            <input
-              ref="searchRef"
-              v-model="query"
-              type="text"
-              class="ms-search mfs-w-full mfs-text-sm mfs-inset mfs-rounded-sm mfs-outline-none"
-              placeholder="Search..."
-              @keydown.escape="close"
-            />
-          </div>
+      <Teleport to="body">
+        <Transition name="ms-pop">
+          <div v-if="isOpen" ref="overlayRef" role="listbox" aria-multiselectable="true" :style="overlayStyle" class="ms-dropdown mfs-flex mfs-flex-col mfs-gap-1 mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
+            <div v-if="searchable" class="ms-search-box">
+              <input
+                ref="searchRef"
+                v-model="query"
+                type="text"
+                class="ms-search mfs-w-full mfs-text-sm mfs-inset mfs-rounded-sm mfs-outline-none"
+                placeholder="Search..."
+                @input="onSearchInput"
+                @keydown.escape="close"
+              />
+            </div>
 
-          <button
-            v-if="selectAll && enabledOptions.length > 0"
-            type="button"
-            class="ms-option ms-option--all mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-font-semibold mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
-            @click="toggleSelectAll"
-          >
-            <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': allSelected }">
-              <svg v-if="allSelected" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </span>
-            <span>Select All</span>
-          </button>
-
-          <div class="ms-options mfs-flex mfs-flex-col mfs-overflow-y-auto">
             <button
-              v-for="(opt, idx) in filteredOptions"
-              :key="String(opt.value) + idx"
+              v-if="selectAll && enabledOptions.length > 0"
               type="button"
-              role="option"
-              :aria-selected="isSelected(opt.value)"
-              :disabled="opt.disabled"
-              class="ms-option mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
-              :class="{ 'ms-option--selected': isSelected(opt.value) }"
-              @click="toggleOption(opt)"
+              class="ms-option ms-option--all mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-font-semibold mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
+              @click="toggleSelectAll"
             >
-              <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': isSelected(opt.value) }">
-                <svg v-if="isSelected(opt.value)" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': allSelected }">
+                <svg v-if="allSelected" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </span>
-              <span>{{ opt.label }}</span>
+              <span>Select All</span>
             </button>
-            <div v-if="filteredOptions.length === 0" class="ms-empty mfs-p-3 mfs-text-center mfs-text-muted">No options</div>
+
+            <div class="ms-options mfs-flex mfs-flex-col mfs-overflow-y-auto">
+              <button
+                v-for="(opt, idx) in filteredOptions"
+                :key="String(opt.value) + idx"
+                type="button"
+                role="option"
+                :aria-selected="isSelected(opt.value)"
+                :disabled="opt.disabled"
+                class="ms-option mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-text mfs-rounded-sm mfs-bg-transparent mfs-cursor-pointer mfs-text-left"
+                :class="{ 'ms-option--selected': isSelected(opt.value) }"
+                @click="toggleOption(opt)"
+              >
+                <span class="ms-check mfs-inline-flex mfs-items-center mfs-justify-center mfs-shrink-0" :class="{ 'ms-check--on': isSelected(opt.value) }">
+                  <svg v-if="isSelected(opt.value)" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
+                <span>{{ opt.label }}</span>
+              </button>
+              <div v-if="loading && filteredOptions.length === 0" class="ms-empty mfs-empty-state">
+                <span class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
+              </div>
+              <div v-else-if="filteredOptions.length === 0" class="ms-empty mfs-empty-state">
+                <slot name="empty">{{ emptyText }}</slot>
+              </div>
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </Teleport>
     </div>
 
     <p v-if="error" class="ms-msg ms-msg--error mfs-text-danger mfs-font-medium mfs-m-0">{{ error }}</p>
@@ -110,6 +119,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 export interface MultiSelectOption {
   label: string
@@ -129,6 +139,9 @@ const props = withDefaults(
     disabled?: boolean
     searchable?: boolean
     selectAll?: boolean
+    loading?: boolean
+    remote?: boolean
+    emptyText?: string
   }>(),
   {
     modelValue: () => [],
@@ -137,29 +150,44 @@ const props = withDefaults(
     required: false,
     disabled: false,
     searchable: false,
-    selectAll: false
+    selectAll: false,
+    loading: false,
+    remote: false,
+    emptyText: 'No options found'
   }
 )
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any[]): void
   (e: 'change', value: any[]): void
+  (e: 'filter', payload: { value: string }): void
 }>()
 
 const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const searchRef = ref<HTMLInputElement | null>(null)
 const isOpen = ref(false)
 const query = ref('')
+
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, {
+  matchWidth: true
+})
 
 const normalizedOptions = computed<MultiSelectOption[]>(() =>
   props.options.map((o) => (typeof o === 'string' ? { label: o, value: o } : o))
 )
 
 const filteredOptions = computed(() => {
+  if (props.remote) return normalizedOptions.value
   const q = query.value.trim().toLowerCase()
   if (!q) return normalizedOptions.value
   return normalizedOptions.value.filter((o) => o.label.toLowerCase().includes(q))
 })
+
+const onSearchInput = (e: Event) => {
+  emit('filter', { value: (e.target as HTMLInputElement).value })
+}
 
 const enabledOptions = computed(() => normalizedOptions.value.filter((o) => !o.disabled))
 
@@ -208,7 +236,7 @@ const toggleSelectAll = () => {
 }
 
 const handleClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) {
+  if (!containsTarget(e.target)) {
     close()
   }
 }
@@ -269,10 +297,6 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-dropdown {
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 40;
   box-shadow: var(--clay-shadow-hover);
   padding: 6px;
   max-height: 260px;

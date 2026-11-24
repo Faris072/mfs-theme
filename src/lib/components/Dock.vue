@@ -108,17 +108,14 @@ const handleSelect = (item: DockItem, index: number) => {
 
 .dock__list {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
   list-style: none;
   max-width: 100%;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.dock__list::-webkit-scrollbar {
-  display: none;
+  overflow: visible;
 }
 
 .dock--left .dock__list,

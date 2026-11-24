@@ -169,7 +169,7 @@ defineExpose({ open, close })
 
 .ctx-menu {
   position: fixed;
-  z-index: 9500;
+  z-index: 10100;
   min-width: 188px;
   padding: 6px;
   list-style: none;

@@ -14,7 +14,7 @@
         :ref="(el) => setTabRef(item.key, el as HTMLButtonElement | null)"
         type="button"
         role="tab"
-        class="tabs__tab mfs-pill"
+        class="tabs__tab mfs-pill mfs-bg-transparent"
         :class="{
           'tabs__tab--active': item.key === activeKey,
           'tabs__tab--disabled mfs-disabled': item.disabled

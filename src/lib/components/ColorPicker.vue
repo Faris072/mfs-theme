@@ -1,9 +1,10 @@
 <template>
-  <div ref="rootRef" class="cp-wrapper mfs-inline-flex mfs-flex-col mfs-gap-1-5" :class="{ 'cp-wrapper--disabled mfs-disabled': disabled }">
+  <div class="cp-wrapper mfs-inline-flex mfs-flex-col mfs-gap-1-5" :class="{ 'cp-wrapper--disabled mfs-disabled': disabled }">
     <span v-if="label" class="cp-label mfs-text mfs-text-sm mfs-font-semibold">{{ label }}</span>
 
     <div class="cp-container mfs-relative">
       <button
+        ref="triggerRef"
         type="button"
         class="cp-trigger mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-font-semibold"
         :disabled="disabled"
@@ -15,8 +16,9 @@
         <span class="cp-hex mfs-font-mono">{{ modelValue.toUpperCase() }}</span>
       </button>
 
-      <Transition name="cp-pop">
-        <div v-if="isOpen" class="cp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-absolute mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2-5" role="dialog" aria-label="Color picker">
+      <Teleport to="body">
+        <Transition name="cp-pop">
+          <div v-if="isOpen" ref="overlayRef" :style="overlayStyle" class="cp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2-5" role="dialog" aria-label="Color picker">
           <div class="cp-native-row mfs-flex mfs-items-center mfs-gap-2">
             <input
               type="color"
@@ -64,12 +66,14 @@
           </div>
         </div>
       </Transition>
+      </Teleport>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 const props = withDefaults(
   defineProps<{
@@ -90,8 +94,11 @@ const emit = defineEmits<{
   (e: 'change', value: string): void
 }>()
 
-const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
+
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, { offset: 8 })
 
 const normalizedHex = computed(() => (/^#[0-9a-fA-F]{6}$/.test(props.modelValue) ? props.modelValue : '#8b5cf6'))
 
@@ -126,7 +133,7 @@ const onRgbChange = (channel: 'r' | 'g' | 'b', e: Event) => {
 }
 
 const handleClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) isOpen.value = false
+  if (isOpen.value && !containsTarget(e.target)) isOpen.value = false
 }
 
 const handleEscape = (e: KeyboardEvent) => {
@@ -162,8 +169,6 @@ onBeforeUnmount(() => {
 }
 
 .cp-popover {
-  top: calc(100% + 8px);
-  left: 0;
   z-index: 45;
   width: 236px;
   box-shadow: var(--clay-shadow-hover);

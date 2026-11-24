@@ -5,7 +5,7 @@
       <span v-if="required" class="mfs-text-danger">*</span>
     </label>
 
-    <div class="select-container">
+    <div ref="triggerRef" class="select-container">
       <button
         :id="triggerId"
         type="button"
@@ -23,6 +23,7 @@
         </span>
 
         <span class="select-actions mfs-inline-flex mfs-items-center mfs-text-muted">
+          <span v-if="loading" class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
           <span
             v-if="clearable && selectedOption && !disabled"
             role="button"
@@ -53,46 +54,54 @@
         </span>
       </button>
 
-      <Transition name="select-pop">
-        <div v-if="isOpen" :id="listboxId" role="listbox" class="select-dropdown mfs-flex mfs-flex-col mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
-          <div v-if="searchable" class="select-search-box">
-            <input
-              ref="searchRef"
-              v-model="query"
-              type="text"
-              class="select-search mfs-w-full mfs-text-sm mfs-inset"
-              placeholder="Search..."
-              @keydown="handleKeydown"
-            />
-          </div>
+      <Teleport to="body">
+        <Transition name="select-pop">
+          <div v-if="isOpen" :id="listboxId" ref="overlayRef" role="listbox" :style="overlayStyle" class="select-dropdown mfs-flex mfs-flex-col mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow">
+            <div v-if="searchable" class="select-search-box">
+              <input
+                ref="searchRef"
+                v-model="query"
+                type="text"
+                class="select-search mfs-w-full mfs-text-sm mfs-inset"
+                placeholder="Search..."
+                @input="onSearchInput"
+                @keydown="handleKeydown"
+              />
+            </div>
 
-          <div class="select-options mfs-flex mfs-flex-col">
-            <button
-              v-for="(opt, idx) in filteredOptions"
-              :key="String(opt.value) + idx"
-              type="button"
-              role="option"
-              :aria-selected="opt.value === modelValue"
-              :disabled="opt.disabled"
-              class="select-option mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-border-none mfs-text"
-              :class="{
-                'select-option--selected': opt.value === modelValue,
-                'select-option--active': idx === activeIndex
-              }"
-              @click="selectOption(opt)"
-              @mouseenter="activeIndex = idx"
-            >
-              <slot name="option" :option="opt" :selected="opt.value === modelValue">
-                <span>{{ opt.label }}</span>
-                <svg v-if="opt.value === modelValue" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              </slot>
-            </button>
-            <div v-if="filteredOptions.length === 0" class="select-empty mfs-p-3 mfs-text-center mfs-text-muted">No options</div>
+            <div class="select-options mfs-flex mfs-flex-col">
+              <button
+                v-for="(opt, idx) in filteredOptions"
+                :key="String(opt.value) + idx"
+                type="button"
+                role="option"
+                :aria-selected="opt.value === modelValue"
+                :disabled="opt.disabled"
+                class="select-option mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-border-none mfs-text"
+                :class="{
+                  'select-option--selected': opt.value === modelValue,
+                  'select-option--active': idx === activeIndex
+                }"
+                @click="selectOption(opt)"
+                @mouseenter="activeIndex = idx"
+              >
+                <slot name="option" :option="opt" :selected="opt.value === modelValue">
+                  <span>{{ opt.label }}</span>
+                  <svg v-if="opt.value === modelValue" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </slot>
+              </button>
+              <div v-if="loading && filteredOptions.length === 0" class="select-empty mfs-empty-state">
+                <span class="mfs-spinner mfs-spinner--sm" aria-hidden="true" />
+              </div>
+              <div v-else-if="filteredOptions.length === 0" class="select-empty mfs-empty-state">
+                <slot name="empty">{{ emptyText }}</slot>
+              </div>
+            </div>
           </div>
-        </div>
-      </Transition>
+        </Transition>
+      </Teleport>
     </div>
 
     <p v-if="error" class="select-msg select-msg--error mfs-text-danger">{{ error }}</p>
@@ -102,6 +111,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 export interface SelectOption {
   label: string
@@ -121,6 +131,9 @@ const props = withDefaults(
     disabled?: boolean
     searchable?: boolean
     clearable?: boolean
+    loading?: boolean
+    remote?: boolean
+    emptyText?: string
   }>(),
   {
     options: () => [],
@@ -128,13 +141,17 @@ const props = withDefaults(
     required: false,
     disabled: false,
     searchable: false,
-    clearable: false
+    clearable: false,
+    loading: false,
+    remote: false,
+    emptyText: 'No options found'
   }
 )
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: any): void
   (e: 'change', value: any): void
+  (e: 'filter', payload: { value: string }): void
 }>()
 
 const uid = useId()
@@ -142,20 +159,31 @@ const triggerId = `mfs-select-${uid}`
 const listboxId = `mfs-select-list-${uid}`
 
 const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
 const searchRef = ref<HTMLInputElement | null>(null)
 const isOpen = ref(false)
 const query = ref('')
 const activeIndex = ref(-1)
+
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, {
+  matchWidth: true
+})
 
 const normalizedOptions = computed<SelectOption[]>(() =>
   props.options.map((o) => (typeof o === 'string' ? { label: o, value: o } : o))
 )
 
 const filteredOptions = computed(() => {
+  if (props.remote) return normalizedOptions.value
   const q = query.value.trim().toLowerCase()
   if (!q) return normalizedOptions.value
   return normalizedOptions.value.filter((o) => o.label.toLowerCase().includes(q))
 })
+
+const onSearchInput = (e: Event) => {
+  emit('filter', { value: (e.target as HTMLInputElement).value })
+}
 
 const selectedOption = computed(() =>
   normalizedOptions.value.find((o) => o.value === props.modelValue)
@@ -220,7 +248,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 
 const handleClickOutside = (e: MouseEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) {
+  if (!containsTarget(e.target)) {
     close()
   }
 }
@@ -290,11 +318,6 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .select-dropdown {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
-  z-index: 40;
   box-shadow: var(--clay-shadow-hover);
   padding: 6px;
   max-height: 250px;

@@ -7,6 +7,8 @@
       class="checkbox__input"
       :checked="isChecked"
       :disabled="disabled"
+      :aria-label="ariaLabel"
+      :tabindex="tabindex"
       @change="handleChange"
     />
     <span class="checkbox__box mfs-surface mfs-shadow-inset" :class="{ 'checkbox__box--checked': isChecked || indeterminate }">
@@ -34,6 +36,8 @@ const props = withDefaults(
     label?: string
     disabled?: boolean
     id?: string
+    ariaLabel?: string
+    tabindex?: string | number
   }>(),
   {
     modelValue: false,

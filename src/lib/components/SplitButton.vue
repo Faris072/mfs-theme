@@ -1,6 +1,6 @@
 <template>
-  <div ref="rootRef" class="split-btn">
-    <div :class="['split-btn__group', 'mfs-pill', 'mfs-shadow', `split-btn--${variant}`, `split-btn--${size}`]">
+  <div class="split-btn">
+    <div ref="triggerRef" :class="['split-btn__group', 'mfs-pill', 'mfs-shadow', `split-btn--${variant}`, `split-btn--${size}`]">
       <button
         type="button"
         :class="['split-btn__main', 'mfs-interactive', 'mfs-focus-ring', variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`, { 'mfs-disabled': disabled }]"
@@ -25,31 +25,36 @@
       </button>
     </div>
 
-    <Transition name="split-fade">
-      <ul
-        v-if="open && items.length"
-        class="split-btn__menu mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
-        role="menu"
-      >
-        <li v-for="(item, idx) in items" :key="idx" role="none">
-          <button
-            type="button"
-            role="menuitem"
-            class="split-btn__item mfs-text"
-            :disabled="item.disabled"
-            @click="onSelect(item)"
-          >
-            <span v-if="item.icon" class="split-btn__icon">{{ item.icon }}</span>
-            <span>{{ item.label }}</span>
-          </button>
-        </li>
-      </ul>
-    </Transition>
+    <Teleport to="body">
+      <Transition name="split-fade">
+        <ul
+          v-if="open && items.length"
+          ref="overlayRef"
+          :style="overlayStyle"
+          class="split-btn__menu mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
+          role="menu"
+        >
+          <li v-for="(item, idx) in items" :key="idx" role="none">
+            <button
+              type="button"
+              role="menuitem"
+              class="split-btn__item mfs-text"
+              :disabled="item.disabled"
+              @click="onSelect(item)"
+            >
+              <span v-if="item.icon" class="split-btn__icon">{{ item.icon }}</span>
+              <span>{{ item.label }}</span>
+            </button>
+          </li>
+        </ul>
+      </Transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useFloatingOverlay } from '../composables/useFloatingOverlay'
 
 export interface SplitButtonItem {
   label: string
@@ -81,7 +86,13 @@ const emit = defineEmits<{
 }>()
 
 const open = ref(false)
-const rootRef = ref<HTMLElement | null>(null)
+const triggerRef = ref<HTMLElement | null>(null)
+const overlayRef = ref<HTMLElement | null>(null)
+
+const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, open, {
+  offset: 8,
+  align: 'right'
+})
 
 const onSelect = (item: SplitButtonItem) => {
   if (item.disabled) return
@@ -90,7 +101,7 @@ const onSelect = (item: SplitButtonItem) => {
 }
 
 const onDocClick = (e: MouseEvent) => {
-  if (open.value && rootRef.value && !rootRef.value.contains(e.target as Node)) {
+  if (open.value && !containsTarget(e.target)) {
     open.value = false
   }
 }
@@ -153,9 +164,6 @@ onBeforeUnmount(() => {
 .split-btn--lg .split-btn__main { padding: 13px 24px; font-size: 1.05rem; }
 
 .split-btn__menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  right: 0;
   min-width: 170px;
   margin: 0;
   padding: 6px;

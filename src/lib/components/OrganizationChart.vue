@@ -1,57 +1,76 @@
 <template>
-  <div class="org-chart" :class="{ 'org-chart--root': level === 0 }">
-    <div class="org-chart__node-wrap">
-      <div
-        class="org-chart__node mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-focus-ring"
-        tabindex="0"
-        @click="$emit('node-click', value)"
-        @keydown.enter.prevent="$emit('node-click', value)"
-      >
-        <slot name="node" :node="value" :expanded="isExpanded">
-          <div class="org-chart__label mfs-title">{{ value.label }}</div>
-          <div v-if="value.title" class="org-chart__title mfs-caption">{{ value.title }}</div>
-        </slot>
-      </div>
-
-      <button
-        v-if="collapsible && hasChildren"
-        type="button"
-        class="org-chart__toggle mfs-surface-subtle mfs-pill mfs-shadow"
-        :aria-expanded="isExpanded"
-        :aria-label="isExpanded ? `Collapse ${value.label}` : `Expand ${value.label}`"
-        @click.stop="toggleExpand"
-      >
-        <svg
-          :class="{ 'org-chart__chevron--collapsed': !isExpanded }"
-          viewBox="0 0 16 16"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
+  <div
+    class="org-chart mfs-relative"
+    :class="{
+      'org-chart--root': level === 0,
+      'org-chart--loading-empty': level === 0 && loading && !value
+    }"
+    :aria-busy="level === 0 && loading ? true : undefined"
+  >
+    <div v-if="level === 0 && loading" class="mfs-loading-overlay" role="status" aria-live="polite">
+      <slot name="loading">
+        <span class="mfs-spinner" aria-hidden="true" />
+      </slot>
     </div>
 
-    <div v-if="hasChildren && isExpanded" class="org-chart__children">
-      <div
-        v-for="child in value.children"
-        :key="child.key"
-        class="org-chart__branch"
-      >
-        <OrganizationChart
-          :value="child"
-          :collapsible="collapsible"
-          :expanded-keys="expandedKeys"
-          :level="level + 1"
-          @update:expanded-keys="$emit('update:expandedKeys', $event)"
-          @node-click="$emit('node-click', $event)"
-        >
-          <template v-if="$slots.node" #node="slotProps">
-            <slot name="node" v-bind="slotProps" />
-          </template>
-        </OrganizationChart>
-      </div>
+    <div v-if="!value && !loading" class="mfs-empty-state">
+      <slot name="empty">{{ emptyText }}</slot>
     </div>
+
+    <template v-else-if="value">
+      <div class="org-chart__node-wrap">
+        <div
+          class="org-chart__node mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-focus-ring"
+          tabindex="0"
+          @click="$emit('node-click', value)"
+          @keydown.enter.prevent="$emit('node-click', value)"
+        >
+          <slot name="node" :node="value" :expanded="isExpanded">
+            <div class="org-chart__label mfs-title">{{ value.label }}</div>
+            <div v-if="value.title" class="org-chart__title mfs-caption">{{ value.title }}</div>
+          </slot>
+        </div>
+
+        <button
+          v-if="collapsible && hasChildren"
+          type="button"
+          class="org-chart__toggle mfs-surface-subtle mfs-pill mfs-shadow"
+          :aria-expanded="isExpanded"
+          :aria-label="isExpanded ? `Collapse ${value.label}` : `Expand ${value.label}`"
+          @click.stop="toggleExpand"
+        >
+          <svg
+            :class="{ 'org-chart__chevron--collapsed': !isExpanded }"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+
+      <div v-if="hasChildren && isExpanded" class="org-chart__children">
+        <div
+          v-for="child in value.children"
+          :key="child.key"
+          class="org-chart__branch"
+        >
+          <OrganizationChart
+            :value="child"
+            :collapsible="collapsible"
+            :expanded-keys="expandedKeys"
+            :level="level + 1"
+            @update:expanded-keys="$emit('update:expandedKeys', $event)"
+            @node-click="$emit('node-click', $event)"
+          >
+            <template v-if="$slots.node" #node="slotProps">
+              <slot name="node" v-bind="slotProps" />
+            </template>
+          </OrganizationChart>
+        </div>
+      </div>
+    </template>
   </div>
 </template>
 
@@ -71,15 +90,20 @@ defineOptions({
 
 const props = withDefaults(
   defineProps<{
-    value: OrgChartNode
+    value?: OrgChartNode | null
     collapsible?: boolean
     expandedKeys?: string[]
     level?: number
+    loading?: boolean
+    emptyText?: string
   }>(),
   {
+    value: null,
     collapsible: true,
     expandedKeys: undefined,
-    level: 0
+    level: 0,
+    loading: false,
+    emptyText: 'No data'
   }
 )
 
@@ -90,15 +114,18 @@ const emit = defineEmits<{
 
 defineSlots<{
   node?: (props: { node: OrgChartNode; expanded: boolean }) => any
+  loading?: () => any
+  empty?: () => any
 }>()
 
 const internalExpanded = ref(true)
 
 const hasChildren = computed(
-  () => Array.isArray(props.value.children) && props.value.children.length > 0
+  () => Array.isArray(props.value?.children) && props.value.children.length > 0
 )
 
 const isExpanded = computed(() => {
+  if (!props.value) return false
   if (props.expandedKeys) {
     return props.expandedKeys.includes(props.value.key)
   }
@@ -108,14 +135,14 @@ const isExpanded = computed(() => {
 watch(
   () => props.expandedKeys,
   () => {
-    if (props.expandedKeys) {
+    if (props.expandedKeys && props.value) {
       internalExpanded.value = props.expandedKeys.includes(props.value.key)
     }
   }
 )
 
 function toggleExpand() {
-  if (!hasChildren.value) return
+  if (!props.value || !hasChildren.value) return
   if (props.expandedKeys) {
     const next = new Set(props.expandedKeys)
     if (next.has(props.value.key)) {
@@ -135,6 +162,10 @@ function toggleExpand() {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.org-chart--loading-empty {
+  min-height: 120px;
 }
 
 .org-chart--root {

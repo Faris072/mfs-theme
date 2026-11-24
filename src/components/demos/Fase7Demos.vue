@@ -336,6 +336,50 @@
         </div>
       </ComponentPreview>
     </template>
+
+    <!-- INPUT ICON -->
+    <template v-else-if="activeSlug === 'input-icon'">
+      <ComponentPreview
+        title="InputIcon Wrapper"
+        description="Semantic inline icon slot wrapper with muted contrast and aria-hidden for input fields."
+        :code="inputIconCode"
+        :api="inputIconApi"
+      >
+        <div class="mfs-grid mfs-w-full">
+          <Input v-model="iconQuery" label="Search with InputIcon" placeholder="Search...">
+            <template #prepend>
+              <InputIcon><Search :size="16" /></InputIcon>
+            </template>
+          </Input>
+          <Input v-model="iconEmail" label="Email with InputIcon" placeholder="you@domain.com">
+            <template #prepend>
+              <InputIcon><Mail :size="16" /></InputIcon>
+            </template>
+          </Input>
+        </div>
+      </ComponentPreview>
+    </template>
+
+    <!-- INPUT GROUP ADDON -->
+    <template v-else-if="activeSlug === 'input-group-addon'">
+      <ComponentPreview
+        title="InputGroupAddon"
+        description="Prefix and suffix text/unit addons paired inside InputGroup."
+        :code="inputGroupAddonCode"
+        :api="inputGroupAddonApi"
+      >
+        <div class="mfs-stack mfs-w-full">
+          <InputGroup>
+            <InputGroupAddon>https://</InputGroupAddon>
+            <Input v-model="addonDomain" placeholder="example" />
+            <InputGroupAddon>.com</InputGroupAddon>
+          </InputGroup>
+          <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+            Preview URL: <code class="mfs-font-mono mfs-text-primary">https://{{ addonDomain || 'example' }}.com</code>
+          </p>
+        </div>
+      </ComponentPreview>
+    </template>
   </div>
 </template>
 
@@ -344,7 +388,7 @@ import { ref } from 'vue'
 import { Mail, Search } from 'lucide-vue-next'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
-import { Button } from '../../lib'
+import { Button, Input, InputGroupAddon, InputIcon } from '../../lib'
 import AutoComplete from '../../lib/components/AutoComplete.vue'
 import Cascader, { type CascaderOption } from '../../lib/components/Cascader.vue'
 import TreeSelect, { type TreeSelectNode } from '../../lib/components/TreeSelect.vue'
@@ -436,9 +480,12 @@ const maskPhone = ref('')
 const maskDate = ref('')
 const maskSerial = ref('')
 
-// InputGroup
+// InputGroup / InputIcon / InputGroupAddon
 const igDomain = ref('mfs-theme')
 const igAmount = ref('49.00')
+const iconQuery = ref('')
+const iconEmail = ref('')
+const addonDomain = ref('mfs-theme')
 
 // Listbox
 const lbCity = ref('Tokyo')
@@ -852,6 +899,30 @@ const iconFieldApi: { props: ApiRow[]; slots: ApiRow[] } = {
     { name: 'icon', description: 'Icon element positioned inside the input.' },
     { name: 'default', description: 'Wrapped input or Input component.' }
   ]
+}
+
+const inputIconCode = `<template>
+  <Input v-model="query" label="Search">
+    <template #prepend>
+      <InputIcon><Search :size="16" /></InputIcon>
+    </template>
+  </Input>
+</template>`
+
+const inputIconApi: { slots: ApiRow[] } = {
+  slots: [{ name: 'default', description: 'Icon element (e.g. Lucide icon) wrapped with aria-hidden="true".' }]
+}
+
+const inputGroupAddonCode = `<template>
+  <InputGroup>
+    <InputGroupAddon>https://</InputGroupAddon>
+    <Input v-model="domain" placeholder="example" />
+    <InputGroupAddon>.com</InputGroupAddon>
+  </InputGroup>
+</template>`
+
+const inputGroupAddonApi: { slots: ApiRow[] } = {
+  slots: [{ name: 'default', description: 'Static text, unit, or symbol addon rendered inside InputGroup.' }]
 }
 </script>
 

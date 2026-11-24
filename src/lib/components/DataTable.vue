@@ -1,5 +1,5 @@
 <template>
-  <div class="data-table mfs-surface mfs-rounded mfs-shadow-card mfs-overflow-hidden" :class="`data-table--${responsiveMode}`">
+  <div class="data-table mfs-relative mfs-surface mfs-rounded mfs-shadow-card mfs-overflow-hidden" :class="`data-table--${responsiveMode}`">
     <div v-if="searchable || $slots.header" class="data-table__toolbar mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-b">
       <slot name="header" />
       <div v-if="searchable" class="data-table__search mfs-relative mfs-flex mfs-items-center">
@@ -23,14 +23,14 @@
         <thead class="data-table__head">
           <tr>
             <th v-if="selectionType" class="data-table__th data-table__th--select mfs-text-muted mfs-whitespace-nowrap">
-              <input
+              <Checkbox
                 v-if="selectionType === 'multiple'"
-                type="checkbox"
-                class="data-table__checkbox mfs-cursor-pointer"
-                :checked="allSelected"
+                class="data-table__checkbox"
+                :model-value="allSelected"
                 :indeterminate="someSelected"
                 aria-label="Select all rows"
-                @change="toggleSelectAll"
+                @click.stop
+                @update:model-value="toggleSelectAll"
               />
             </th>
             <th
@@ -102,12 +102,21 @@
               @click.stop
             >
               <input
-                :type="selectionType === 'single' ? 'radio' : 'checkbox'"
+                v-if="selectionType === 'single'"
+                type="radio"
                 class="data-table__checkbox mfs-cursor-pointer"
-                :name="selectionType === 'single' ? radioGroupName : undefined"
+                :name="radioGroupName"
                 :checked="isRowSelected(row, rowIndex)"
                 :aria-label="`Select row ${rowIndex + 1}`"
                 @change="toggleRowSelection(row, rowIndex)"
+              />
+              <Checkbox
+                v-else
+                class="data-table__checkbox"
+                :model-value="isRowSelected(row, rowIndex)"
+                :aria-label="`Select row ${rowIndex + 1}`"
+                @click.stop
+                @update:model-value="toggleRowSelection(row, rowIndex)"
               />
             </td>
             <td
@@ -131,11 +140,18 @@
         </tbody>
       </table>
     </div>
+
+    <div v-if="loading" class="mfs-loading-overlay" aria-busy="true">
+      <slot name="loading">
+        <span class="mfs-spinner" />
+      </slot>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref, useId, watch } from 'vue'
+import Checkbox from './Checkbox.vue'
 
 export interface DataTableColumn {
   key: string
@@ -158,6 +174,11 @@ const props = withDefaults(
     selection?: Record<string, any> | Record<string, any>[] | null
     responsiveMode?: 'card' | 'scroll'
     emptyText?: string
+    loading?: boolean
+    lazy?: boolean
+    totalRecords?: number
+    rowsPerPage?: number
+    page?: number
   }>(),
   {
     rowKey: 'id',
@@ -166,14 +187,18 @@ const props = withDefaults(
     selectable: false,
     selection: null,
     responsiveMode: 'card',
-    emptyText: 'No data available'
+    emptyText: 'No data available',
+    loading: false,
+    lazy: false
   }
 )
 
 const emit = defineEmits<{
   'update:selection': [value: Record<string, any> | Record<string, any>[] | null]
   'update:searchQuery': [value: string]
+  page: [payload: { page: number; rowsPerPage?: number }]
   sort: [payload: { key: string; order: SortOrder }]
+  filter: [query: string]
   'row-click': [row: Record<string, any>]
 }>()
 
@@ -208,6 +233,7 @@ function onSearchInput(e: Event) {
   const value = (e.target as HTMLInputElement).value
   localQuery.value = value
   emit('update:searchQuery', value)
+  emit('filter', value)
 }
 
 function toggleSort(key: string) {
@@ -230,6 +256,10 @@ function getAriaSort(col: DataTableColumn): 'ascending' | 'descending' | 'none' 
 }
 
 const processedRows = computed(() => {
+  if (props.lazy) {
+    return props.rows
+  }
+
   const query = activeQuery.value.trim().toLowerCase()
   let result = props.rows
 
@@ -414,6 +444,10 @@ function onRowClick(row: Record<string, any>, index: number) {
 }
 
 .data-table__checkbox {
+  vertical-align: middle;
+}
+
+input.data-table__checkbox {
   width: 16px;
   height: 16px;
   accent-color: var(--primary);

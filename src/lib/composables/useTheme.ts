@@ -177,18 +177,27 @@ const VALID_THEMES: ThemeType[] = THEME_OPTIONS.map((t) => t.id)
 const THEME_CLASSES = VALID_THEMES.map((id) => `theme-${id}`)
 
 const currentTheme = ref<ThemeType>('clay')
+let observerAttached = false
+
+const syncRootClasses = (theme: ThemeType) => {
+  if (typeof document === 'undefined') return
+  const root = document.documentElement
+  const body = document.body
+
+  root.classList.remove(...THEME_CLASSES)
+  root.classList.add(`theme-${theme}`)
+  body?.classList.remove(...THEME_CLASSES)
+}
 
 export function useTheme() {
   const setTheme = (theme: ThemeType) => {
     currentTheme.value = theme
     if (typeof document !== 'undefined') {
       const root = document.documentElement
-      const body = document.body
-
-      root.setAttribute('data-theme', theme)
-      body.classList.remove(...THEME_CLASSES)
-      body.classList.add(`theme-${theme}`)
-
+      if (root.getAttribute('data-theme') !== theme) {
+        root.setAttribute('data-theme', theme)
+      }
+      syncRootClasses(theme)
       localStorage.setItem('active-theme', theme)
     }
   }
@@ -200,6 +209,23 @@ export function useTheme() {
         setTheme(saved)
       } else {
         setTheme(defaultTheme)
+      }
+
+      if (!observerAttached && typeof MutationObserver !== 'undefined') {
+        observerAttached = true
+        const observer = new MutationObserver(() => {
+          const attr = document.documentElement.getAttribute('data-theme') as ThemeType | null
+          if (attr && VALID_THEMES.includes(attr)) {
+            if (currentTheme.value !== attr) {
+              currentTheme.value = attr
+            }
+            syncRootClasses(attr)
+          }
+        })
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ['data-theme']
+        })
       }
     }
   }
