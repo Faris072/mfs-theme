@@ -96,19 +96,6 @@ All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
 | `vaporwave` | Vaporwave — Pastel synth gradients and retro-futuristic contrast |
 | `manga` | Manga — High-contrast ink panels with halftone depth |
 
-## Local Development
-
-```bash
-bun install
-bun run dev
-```
-
-Build the library bundle (`dist/`):
-
-```bash
-bun run build:lib
-```
-
 ## License & Trademarks
 
 Source code is licensed under the [MIT License](./LICENSE).
