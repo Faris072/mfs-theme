@@ -152,13 +152,142 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- 8. ImageCropper -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'image-cropper'"
+    title="ImageCropper"
+    description="Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload."
+    :code="imageCropperCode"
+    :api="imageCropperApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-justify-between">
+        <div class="mfs-row">
+          <input
+            ref="cropperFileInputRef"
+            type="file"
+            accept="image/*"
+            class="mfs-sr-only"
+            @change="onCropperFileSelect"
+          />
+          <Button variant="surface" size="sm" @click="cropperFileInputRef?.click()">
+            Choose Image
+          </Button>
+          <Button
+            v-if="cropperSrc !== sampleCropperImage"
+            variant="surface"
+            size="sm"
+            @click="resetSampleImage"
+          >
+            Reset Sample
+          </Button>
+        </div>
+
+        <div class="mfs-row">
+          <div class="mfs-flex mfs-items-center mfs-gap-2">
+            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Shape:</span>
+            <Button
+              :variant="cropShape === 'rect' ? 'primary' : 'surface'"
+              size="sm"
+              @click="cropShape = 'rect'"
+            >
+              Rect
+            </Button>
+            <Button
+              :variant="cropShape === 'circle' ? 'primary' : 'surface'"
+              size="sm"
+              @click="cropShape = 'circle'"
+            >
+              Circle
+            </Button>
+          </div>
+
+          <div class="mfs-flex mfs-items-center mfs-gap-2">
+            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Ratio:</span>
+            <Button
+              :variant="cropAspectRatio === 1 ? 'primary' : 'surface'"
+              size="sm"
+              @click="cropAspectRatio = 1"
+            >
+              1:1
+            </Button>
+            <Button
+              :variant="cropAspectRatio === 16 / 9 ? 'primary' : 'surface'"
+              size="sm"
+              @click="cropAspectRatio = 16 / 9"
+            >
+              16:9
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <ImageCropper
+        :src="cropperSrc"
+        v-model:shape="cropShape"
+        :aspect-ratio="cropAspectRatio"
+        file-name="avatar-crop.png"
+        @crop="onCropComplete"
+        @cancel="croppedOutput = null"
+      />
+
+      <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
+        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+          <span class="mfs-text-sm mfs-font-semibold mfs-text">Pick Image → Instant Crop (Square / Circle)</span>
+          <Badge variant="primary" size="sm">FileUpload crop</Badge>
+        </div>
+        <FileUpload
+          crop
+          :crop-shape="cropShape"
+          :crop-aspect-ratio="cropAspectRatio"
+          accept="image/*"
+          @select="onCroppedUploadSelect"
+          @clear="croppedUploadStatus = 'No cropped image yet'"
+        />
+        <p class="mfs-m-0 mfs-text-xs mfs-text-muted">
+          {{ croppedUploadStatus }}
+        </p>
+      </div>
+
+      <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
+        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+          <span class="mfs-text-sm mfs-font-semibold mfs-text">Cropped Output Preview</span>
+          <Badge v-if="croppedOutput" variant="success" size="sm">Ready to Upload</Badge>
+          <Badge v-else variant="surface" size="sm">Waiting</Badge>
+        </div>
+
+        <div v-if="croppedOutput" class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-4">
+          <img
+            :src="croppedOutput.dataUrl"
+            alt="Cropped output preview"
+            class="mfs-border mfs-surface"
+            :class="cropShape === 'circle' ? 'mfs-rounded-full' : 'mfs-rounded-md'"
+            style="width: 96px; height: 96px; object-fit: cover;"
+          />
+          <div class="mfs-flex mfs-flex-col mfs-gap-1">
+            <span class="mfs-text-sm mfs-font-semibold mfs-font-mono mfs-text">
+              {{ croppedOutput.file.name }}
+            </span>
+            <span class="mfs-text-xs mfs-text-muted">
+              Size: {{ formatFileSize(croppedOutput.file.size) }} · Type: {{ croppedOutput.file.type }}
+            </span>
+          </div>
+        </div>
+
+        <p v-else class="mfs-m-0 mfs-text-sm mfs-text-muted">
+          Pan, zoom, or rotate the image above, then click Apply Crop to inspect the resulting File.
+        </p>
+      </div>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
-import { Badge, Button, Input } from '../../lib'
+import { Badge, Button, Input, ImageCropper, type ImageCropResult } from '../../lib'
 import OrderList from '../../lib/components/OrderList.vue'
 import PickList from '../../lib/components/PickList.vue'
 import TreeTable, {
@@ -169,6 +298,7 @@ import OrganizationChart, { type OrgChartNode } from '../../lib/components/Organ
 import VirtualScroller from '../../lib/components/VirtualScroller.vue'
 import MeterGroup, { type MeterItem } from '../../lib/components/MeterGroup.vue'
 import Inplace from '../../lib/components/Inplace.vue'
+import FileUpload from '../../lib/components/FileUpload.vue'
 
 defineProps<{
   activeSlug: string
@@ -271,6 +401,73 @@ const bumpAppsMeter = (delta: number) => {
 const inplaceEditing = ref(false)
 const projectTitle = ref('MFS Design System')
 
+// 8. ImageCropper & FileUpload instant crop
+const croppedUploadStatus = ref('No cropped image yet')
+
+const onCroppedUploadSelect = (selected: File[]) => {
+  const latest = selected[selected.length - 1]
+  croppedUploadStatus.value = latest
+    ? `Cropped & ready: ${latest.name} (${Math.round(latest.size / 1024)} KB)`
+    : 'No cropped image yet'
+}
+
+// 8. ImageCropper
+const sampleCropperImage =
+  'data:image/svg+xml;charset=utf-8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#4f46e5"/>
+          <stop offset="55%" stop-color="#06b6d4"/>
+          <stop offset="100%" stop-color="#10b981"/>
+        </linearGradient>
+      </defs>
+      <rect width="640" height="480" fill="url(#sky)"/>
+      <circle cx="480" cy="120" r="56" fill="#fde047" opacity="0.92"/>
+      <path d="M0 360 L180 210 L320 310 L460 185 L640 330 L640 480 L0 480 Z" fill="#1e293b" opacity="0.72"/>
+      <path d="M0 400 L140 295 L290 385 L430 270 L640 400 L640 480 L0 480 Z" fill="#0f172a" opacity="0.88"/>
+      <text x="36" y="64" fill="#ffffff" font-family="system-ui, sans-serif" font-size="28" font-weight="700">MFS Theme Sample</text>
+    </svg>`
+  )
+
+const cropperFileInputRef = ref<HTMLInputElement | null>(null)
+const cropperSrc = ref<string>(sampleCropperImage)
+const cropShape = ref<'rect' | 'circle'>('rect')
+const cropAspectRatio = ref<number>(1)
+const croppedOutput = ref<ImageCropResult | null>(null)
+
+const onCropperFileSelect = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = () => {
+    if (typeof reader.result === 'string') {
+      cropperSrc.value = reader.result
+      croppedOutput.value = null
+    }
+  }
+  reader.readAsDataURL(file)
+}
+
+const resetSampleImage = () => {
+  cropperSrc.value = sampleCropperImage
+  croppedOutput.value = null
+  if (cropperFileInputRef.value) {
+    cropperFileInputRef.value.value = ''
+  }
+}
+
+const onCropComplete = (result: ImageCropResult) => {
+  croppedOutput.value = result
+}
+
+const formatFileSize = (bytes: number) => {
+  if (bytes < 1024) return `${bytes} B`
+  return `${(bytes / 1024).toFixed(1)} KB`
+}
+
 // Code snippets
 const orderListCode = `<script setup lang="ts">
 import { ref } from 'vue'
@@ -346,6 +543,23 @@ const inplaceCode = `<template>
       <Button size="sm" @click="editing = false">Save</Button>
     </template>
   </Inplace>
+</template>`
+
+const imageCropperCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { ImageCropper, type ImageCropResult } from '@mfs-atomic/theme'
+
+const cropped = ref<ImageCropResult | null>(null)
+<\/script>
+
+<template>
+  <ImageCropper
+    :src="imageSrc"
+    shape="circle"
+    :aspect-ratio="1"
+    file-name="avatar.png"
+    @crop="(result) => (cropped = result)"
+  />
 </template>`
 
 // API tables
@@ -451,6 +665,33 @@ const inplaceApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
   slots: [
     { name: 'display', description: 'Read-only trigger content.' },
     { name: 'content', description: 'Interactive edit content shown when active.' }
+  ]
+}
+
+const imageCropperApi: { props: ApiRow[]; events: ApiRow[]; exposed: ApiRow[] } = {
+  props: [
+    { name: 'modelValue', type: 'File | string | null', default: 'null', description: 'Bound source or cropped File/data URL (v-model).' },
+    { name: 'src', type: 'string | null', default: 'null', description: 'Source image URL or data URL to load into the cropper.' },
+    { name: 'aspectRatio', type: 'number', default: '1', description: 'Crop frame width-to-height ratio (e.g. 1 or 16 / 9).' },
+    { name: 'shape', type: "'rect' | 'circle'", default: "'rect'", description: 'Crop mask and output clipping shape (v-model:shape).' },
+    { name: 'allowShapeToggle', type: 'boolean', default: 'true', description: 'Shows Square / Circle toggle buttons in cropper controls.' },
+    { name: 'outputType', type: "'image/png' | 'image/jpeg' | 'image/webp'", default: "'image/png'", description: 'MIME type used when exporting the cropped canvas.' },
+    { name: 'outputSize', type: 'number', default: '512', description: 'Target output width in pixels.' },
+    { name: 'quality', type: 'number', default: '0.92', description: 'Compression quality (0-1) for JPEG/WebP exports.' },
+    { name: 'fileName', type: 'string', default: "'cropped-image.png'", description: 'Filename assigned to the emitted File object.' },
+    { name: 'showControls', type: 'boolean', default: 'true', description: 'Displays zoom slider, rotation, reset, and apply buttons.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables panning, zooming, and file selection.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: '(value: File | string | null) => void', description: 'Emitted with the cropped File on apply or null on reset.' },
+    { name: 'update:shape', type: "(value: 'rect' | 'circle') => void", description: 'Emitted when the Square / Circle toggle changes.' },
+    { name: 'crop', type: '(result: ImageCropResult) => void', description: 'Emitted with { blob, dataUrl, file } when crop is applied.' },
+    { name: 'cancel', type: '() => void', description: 'Emitted when the crop operation is cancelled or reset.' },
+    { name: 'error', type: '(message: string) => void', description: 'Emitted when an image fails to load or export.' }
+  ],
+  exposed: [
+    { name: 'crop', type: '() => Promise<ImageCropResult | null>', description: 'Programmatically exports the current crop region.' },
+    { name: 'reset', type: '() => void', description: 'Resets pan, zoom, and rotation back to defaults.' }
   ]
 }
 </script>

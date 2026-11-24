@@ -15,7 +15,7 @@
 
         <!-- Search & Filter bar -->
         <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3">
-          <div class="mfs-flex mfs-gap-2 mfs-overflow-x-auto mfs-flex-wrap">
+          <div class="mfs-flex mfs-gap-2 mfs-flex-wrap mfs-min-w-0">
             <button
               v-for="cat in filterOptions"
               :key="cat"
@@ -48,11 +48,11 @@
           <p class="mfs-text-muted mfs-m-0">No themes match "{{ searchQuery }}" in {{ activeFilter }}.</p>
         </div>
 
-        <div v-else class="theme-cards-grid">
+        <div v-else class="theme-cards-grid mfs-gap-6">
           <div
             v-for="t in filteredThemes"
             :key="t.id"
-            class="theme-card-item mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden mfs-flex mfs-flex-col"
+            class="theme-card-item mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden mfs-flex mfs-flex-col mfs-h-full"
             :class="{ 'is-selected': activeThemeId === t.id }"
           >
             <!-- Card Header Preview using real [data-theme] -->
@@ -348,8 +348,13 @@ const filteredThemes = computed(() => {
 
 <style scoped>
 /* Hallmark · theme: mfs-theme · ThemeCatalogPage.vue */
+.mfs-container {
+  max-width: 1280px;
+  padding-inline: 24px;
+}
+
 .catalog-header {
-  padding: 48px 0 32px;
+  padding: 48px 0;
 }
 
 .catalog-title {
@@ -398,8 +403,7 @@ const filteredThemes = computed(() => {
 
 .theme-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
 }
 
 .theme-card-item.is-selected {
@@ -478,7 +482,7 @@ const filteredThemes = computed(() => {
 
 .spec-token-row {
   display: grid;
-  grid-template-columns: 95px 1fr;
+  grid-template-columns: 95px minmax(0, 1fr);
   align-items: baseline;
   font-size: 0.78rem;
 }
@@ -537,7 +541,7 @@ const filteredThemes = computed(() => {
 
 /* Comparison section */
 .comparison-section {
-  padding: 60px 0;
+  padding: 56px 0;
 }
 
 .comparison-heading {
@@ -585,12 +589,19 @@ const filteredThemes = computed(() => {
   border: 1px solid var(--border);
 }
 
+@media (max-width: 768px) {
+  .mfs-container {
+    padding-inline: 16px;
+  }
+  .catalog-search-box {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
 @media (max-width: 640px) {
   .catalog-title {
     font-size: 2rem;
-  }
-  .catalog-search-box {
-    width: 100%;
   }
   .card-actions {
     flex-direction: column;

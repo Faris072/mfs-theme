@@ -80,14 +80,35 @@
         </button>
       </li>
     </ul>
+
+    <Modal
+      :model-value="isCropModalOpen"
+      title="Crop Image"
+      size="md"
+      :close-on-backdrop="false"
+      @close="onCropCancel"
+    >
+      <ImageCropper
+        v-if="pendingCropFile"
+        :model-value="pendingCropFile"
+        :shape="cropShape"
+        :aspect-ratio="cropAspectRatio"
+        :file-name="cropOutputFileName"
+        @crop="onCropApply"
+        @cancel="onCropCancel"
+      />
+    </Modal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
+import Modal from './Modal.vue'
+import ImageCropper, { type ImageCropResult } from './ImageCropper.vue'
 
 const props = withDefaults(
   defineProps<{
+    modelValue?: File[]
     accept?: string
     multiple?: boolean
     maxFileSize?: number
@@ -95,15 +116,22 @@ const props = withDefaults(
     progress?: number
     loading?: boolean
     error?: string
+    crop?: boolean
+    cropShape?: 'rect' | 'circle'
+    cropAspectRatio?: number
   }>(),
   {
     multiple: false,
     disabled: false,
-    loading: false
+    loading: false,
+    crop: false,
+    cropShape: 'rect',
+    cropAspectRatio: 1
   }
 )
 
 const emit = defineEmits<{
+  (e: 'update:modelValue', files: File[]): void
   (e: 'select', files: File[]): void
   (e: 'remove', file: File): void
   (e: 'error', message: string): void
@@ -111,10 +139,28 @@ const emit = defineEmits<{
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
-const files = ref<File[]>([])
+const files = ref<File[]>(props.modelValue ? [...props.modelValue] : [])
+const cropQueue = ref<File[]>([])
 const isDragging = ref(false)
 const internalError = ref<string | null>(null)
 const displayError = computed(() => props.error || internalError.value)
+const pendingCropFile = computed(() => cropQueue.value[0] ?? null)
+const isCropModalOpen = computed(() => pendingCropFile.value !== null)
+const cropOutputFileName = computed(() => {
+  const file = pendingCropFile.value
+  if (!file) return 'cropped-image.png'
+  const base = file.name.replace(/\.[^.]+$/, '') || 'cropped-image'
+  return `${base}.png`
+})
+
+watch(
+  () => props.modelValue,
+  (val) => {
+    if (val) {
+      files.value = [...val]
+    }
+  }
+)
 
 function formatSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
@@ -155,8 +201,38 @@ function processFiles(fileList: FileList | null) {
     valid.push(file)
   }
   if (valid.length === 0) return
+
+  if (props.crop) {
+    const targets = props.multiple ? valid : [valid[0]]
+    const images = targets.filter((f) => f.type.startsWith('image/'))
+    const nonImages = targets.filter((f) => !f.type.startsWith('image/'))
+
+    if (nonImages.length > 0) {
+      files.value = props.multiple ? [...files.value, ...nonImages] : [nonImages[0]]
+      emit('update:modelValue', files.value)
+      emit('select', files.value)
+    }
+
+    if (images.length > 0) {
+      cropQueue.value = props.multiple ? [...cropQueue.value, ...images] : [images[0]]
+    }
+    return
+  }
+
   files.value = props.multiple ? [...files.value, ...valid] : [valid[0]]
+  emit('update:modelValue', files.value)
   emit('select', files.value)
+}
+
+function onCropApply(result: ImageCropResult) {
+  files.value = props.multiple ? [...files.value, result.file] : [result.file]
+  emit('update:modelValue', files.value)
+  emit('select', files.value)
+  cropQueue.value.shift()
+}
+
+function onCropCancel() {
+  cropQueue.value.shift()
 }
 
 const openPicker = () => {
@@ -180,6 +256,7 @@ const onDrop = (e: DragEvent) => {
 
 const removeFile = (idx: number) => {
   const [removed] = files.value.splice(idx, 1)
+  emit('update:modelValue', files.value)
   if (removed) emit('remove', removed)
   if (files.value.length === 0) emit('clear')
 }

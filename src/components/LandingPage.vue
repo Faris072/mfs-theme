@@ -1,86 +1,90 @@
 <template>
   <div class="mfs-w-full">
     <!-- Hero Section -->
-    <section class="landing-hero mfs-items-center">
-      <div class="mfs-flex mfs-flex-col">
-        <h1 class="landing-title mfs-text mfs-mb-4">
-          Multi-theme Vue 3 component library
-        </h1>
+    <section class="hero-section">
+      <div class="mfs-container">
+        <div class="landing-hero mfs-items-center">
+          <div class="mfs-flex mfs-flex-col mfs-min-w-0">
+            <h1 class="landing-title mfs-text mfs-mb-4">
+              Multi-theme Vue 3 component library
+            </h1>
 
-        <p class="landing-subtitle mfs-text-muted">
-          Switch between {{ allThemes.length }} distinct aesthetic themes—from tactile clay and frosted glass to cyberpunk, terminal, and brutalism—instantly.
-        </p>
+            <p class="landing-subtitle mfs-text-muted">
+              Switch between {{ allThemes.length }} distinct aesthetic themes—from tactile clay and frosted glass to cyberpunk, terminal, and brutalism—instantly.
+            </p>
 
-        <!-- CTA Actions -->
-        <div class="landing-actions mfs-flex mfs-items-center mfs-flex-wrap">
-          <button class="action-primary mfs-bg-primary mfs-pill mfs-font-semibold mfs-inline-flex mfs-items-center mfs-gap-2 mfs-shadow mfs-cursor-pointer mfs-transition" @click="$emit('explore-catalog')">
-            <span>Next: Choose Theme</span>
-            <ArrowRight class="icon-inline" :size="16" />
-          </button>
-          <router-link to="/components" class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition">
-            <span>Browse components</span>
-          </router-link>
-          <button class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition" @click="scrollToSection('install-guide')">
-            <span>Installation guide</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Live Component Morphing Test (Real UI, No fake OS chrome) -->
-      <div class="mfs-w-full mfs-min-w-0">
-        <div class="mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden">
-          <div class="surface-header mfs-surface-subtle mfs-border-none mfs-border-b mfs-flex mfs-flex-col mfs-gap-2">
-            <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
-              <span class="surface-label mfs-font-semibold mfs-text-muted">Live component state</span>
-              <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">{{ currentThemeName }}</span>
-            </div>
-            <div class="theme-switch-group mfs-flex mfs-surface mfs-pill mfs-shadow-inset mfs-overflow-x-auto">
-              <button
-                v-for="t in allThemes"
-                :key="t.id"
-                class="theme-toggle-btn mfs-border-none mfs-pill mfs-font-semibold mfs-text-muted mfs-flex mfs-items-center mfs-bg-transparent mfs-cursor-pointer mfs-whitespace-nowrap mfs-shrink-0 mfs-transition"
-                :class="{ 'is-active': currentTheme === t.id }"
-                @click="$emit('select-theme', t.id)"
-              >
-                <component :is="getThemeIcon(t)" :size="13" class="theme-toggle-icon" />
-                <span>{{ t.name }}</span>
+            <!-- CTA Actions -->
+            <div class="landing-actions mfs-flex mfs-items-center mfs-flex-wrap">
+              <button class="action-primary mfs-bg-primary mfs-pill mfs-font-semibold mfs-inline-flex mfs-items-center mfs-gap-2 mfs-shadow mfs-cursor-pointer mfs-transition" @click="$emit('explore-catalog')">
+                <span>Next: Choose Theme</span>
+                <ArrowRight class="icon-inline" :size="16" />
+              </button>
+              <router-link to="/components" class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition">
+                <span>Browse components</span>
+              </router-link>
+              <button class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition" @click="scrollToSection('install-guide')">
+                <span>Installation guide</span>
               </button>
             </div>
           </div>
 
-          <div class="mfs-p-6">
-            <div class="demo-card-inner mfs-flex mfs-flex-col">
-              <div class="demo-card-row mfs-flex mfs-items-center">
-                <div class="demo-avatar mfs-rounded-md mfs-bg-primary mfs-flex mfs-items-center mfs-justify-center mfs-shadow mfs-shrink-0">
-                  {{ inputName ? inputName.charAt(0).toUpperCase() : 'U' }}
+          <!-- Live Component Morphing Test (Real UI, No fake OS chrome) -->
+          <div class="mfs-w-full mfs-min-w-0">
+            <div class="mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden">
+              <div class="surface-header mfs-surface-subtle mfs-border-none mfs-border-b mfs-flex mfs-flex-col mfs-gap-2">
+                <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
+                  <span class="surface-label mfs-font-semibold mfs-text-muted">Live component state</span>
+                  <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">{{ currentThemeName }}</span>
                 </div>
-                <div class="mfs-flex mfs-flex-col mfs-min-w-0">
-                  <span class="demo-user-name mfs-text mfs-truncate">{{ inputName || 'Developer' }}</span>
-                  <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">Theme: {{ currentThemeName }}</span>
-                </div>
-              </div>
-
-              <div class="mfs-flex mfs-flex-col mfs-gap-1-5">
-                <label class="demo-label mfs-font-bold mfs-text-muted" for="hero-user-input">User handle</label>
-                <div class="demo-input-box mfs-surface-subtle mfs-rounded-sm mfs-shadow-inset mfs-transition">
-                  <input
-                    id="hero-user-input"
-                    v-model="inputName"
-                    type="text"
-                    class="demo-input-element mfs-w-full mfs-border-none mfs-text mfs-font-semibold mfs-bg-transparent mfs-outline-none"
-                    placeholder="Type name here"
-                  />
+                <div class="theme-switch-group mfs-flex mfs-surface mfs-pill mfs-shadow-inset mfs-overflow-x-auto">
+                  <button
+                    v-for="t in allThemes"
+                    :key="t.id"
+                    class="theme-toggle-btn mfs-border-none mfs-pill mfs-font-semibold mfs-text-muted mfs-flex mfs-items-center mfs-bg-transparent mfs-cursor-pointer mfs-whitespace-nowrap mfs-shrink-0 mfs-transition"
+                    :class="{ 'is-active': currentTheme === t.id }"
+                    @click="$emit('select-theme', t.id)"
+                  >
+                    <component :is="getThemeIcon(t)" :size="13" class="theme-toggle-icon" />
+                    <span>{{ t.name }}</span>
+                  </button>
                 </div>
               </div>
 
-              <div class="demo-action-row mfs-flex mfs-gap-3">
-                <button class="demo-button-primary mfs-bg-primary mfs-pill mfs-font-bold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="handleAction">
-                  <Sparkles v-if="actionDone" :size="15" class="icon-inline" />
-                  <span>{{ actionDone ? 'Saved to state!' : 'Action button' }}</span>
-                </button>
-                <button class="demo-button-secondary mfs-surface mfs-text mfs-pill mfs-font-semibold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="$emit('open-theme-detail', currentTheme)">
-                  <span>View specs</span>
-                </button>
+              <div class="mfs-p-6">
+                <div class="demo-card-inner mfs-flex mfs-flex-col">
+                  <div class="demo-card-row mfs-flex mfs-items-center">
+                    <div class="demo-avatar mfs-rounded-md mfs-bg-primary mfs-flex mfs-items-center mfs-justify-center mfs-shadow mfs-shrink-0">
+                      {{ inputName ? inputName.charAt(0).toUpperCase() : 'U' }}
+                    </div>
+                    <div class="mfs-flex mfs-flex-col mfs-min-w-0">
+                      <span class="demo-user-name mfs-text mfs-truncate">{{ inputName || 'Developer' }}</span>
+                      <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">Theme: {{ currentThemeName }}</span>
+                    </div>
+                  </div>
+
+                  <div class="mfs-flex mfs-flex-col mfs-gap-1-5">
+                    <label class="demo-label mfs-font-bold mfs-text-muted" for="hero-user-input">User handle</label>
+                    <div class="demo-input-box mfs-surface-subtle mfs-rounded-sm mfs-shadow-inset mfs-transition">
+                      <input
+                        id="hero-user-input"
+                        v-model="inputName"
+                        type="text"
+                        class="demo-input-element mfs-w-full mfs-border-none mfs-text mfs-font-semibold mfs-bg-transparent mfs-outline-none"
+                        placeholder="Type name here"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="demo-action-row mfs-flex mfs-flex-wrap mfs-gap-3">
+                    <button class="demo-button-primary mfs-bg-primary mfs-pill mfs-font-bold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="handleAction">
+                      <Sparkles v-if="actionDone" :size="15" class="icon-inline" />
+                      <span>{{ actionDone ? 'Saved to state!' : 'Action button' }}</span>
+                    </button>
+                    <button class="demo-button-secondary mfs-surface mfs-text mfs-pill mfs-font-semibold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="$emit('open-theme-detail', currentTheme)">
+                      <span>View specs</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -96,12 +100,12 @@
           Single component specification adapted across {{ allThemes.length }} visual depth models without changing template markup. Click any theme card to preview it live.
         </p>
 
-        <div class="pillars-grid">
+        <div class="pillars-grid mfs-gap-6">
           <div
             v-for="t in allThemes"
             :key="t.id"
             :data-theme="t.id"
-            class="pillar-card mfs-card mfs-flex mfs-flex-col mfs-cursor-pointer mfs-transition"
+            class="pillar-card mfs-card mfs-p-6 mfs-h-full mfs-flex mfs-flex-col mfs-cursor-pointer mfs-transition"
             :class="{ 'is-selected': currentTheme === t.id }"
             @click="$emit('select-theme', t.id)"
           >
@@ -140,7 +144,7 @@
           Install the package and register the plugin with your preferred initial theme.
         </p>
 
-        <div class="code-flow-grid">
+        <div class="code-flow-grid mfs-gap-6">
           <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <span class="code-step-label mfs-font-semibold mfs-text">1. Terminal</span>
             <div class="code-box mfs-relative mfs-overflow-x-auto mfs-surface-subtle mfs-rounded-md mfs-shadow-inset mfs-p-4 mfs-font-mono mfs-text">
@@ -292,10 +296,16 @@ const scrollToSection = (id: string) => {
 
 <style scoped>
 /* Hallmark · theme: mfs-theme · LandingPage.vue */
+.mfs-container {
+  max-width: 1280px;
+  padding-inline: 24px;
+}
+
+.hero-section {
+  padding: 56px 0 64px;
+}
+
 .landing-hero {
-  max-width: var(--container-max, 1200px);
-  margin: 0 auto;
-  padding: 56px 24px 72px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 48px;
@@ -465,7 +475,7 @@ const scrollToSection = (id: string) => {
 
 /* Pillars / Showcase Section */
 .pillars-section {
-  padding: 72px 0;
+  padding: 64px 0;
 }
 
 .section-title {
@@ -478,18 +488,13 @@ const scrollToSection = (id: string) => {
 .section-caption {
   font-size: 1rem;
   max-width: 660px;
-  margin: 0 0 40px;
+  margin: 0 0 32px;
   line-height: 1.6;
 }
 
 .pillars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
-}
-
-.pillar-card {
-  padding: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
 }
 
 .pillar-card:hover {
@@ -543,8 +548,7 @@ const scrollToSection = (id: string) => {
 
 .code-flow-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 }
 
 .code-step-label {
@@ -553,6 +557,7 @@ const scrollToSection = (id: string) => {
 
 .code-box {
   font-size: 0.85rem;
+  padding-right: 48px;
 }
 
 .btn-copy-code {
@@ -572,7 +577,7 @@ const scrollToSection = (id: string) => {
 
 /* Closing Action */
 .closing-action {
-  padding: 56px 0 64px;
+  padding: 56px 0;
 }
 
 .closing-title {
@@ -588,11 +593,22 @@ const scrollToSection = (id: string) => {
 @media (max-width: 840px) {
   .landing-hero {
     grid-template-columns: 1fr;
-    gap: 36px;
-    padding-top: 36px;
+    gap: 32px;
   }
   .landing-title {
     font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .mfs-container {
+    padding-inline: 16px;
+  }
+  .hero-section,
+  .pillars-section,
+  .install-section,
+  .closing-action {
+    padding: 48px 0;
   }
 }
 </style>

@@ -731,6 +731,15 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     summary: 'Drag-and-drop file uploader with queue preview and size validation.'
   },
   {
+    slug: 'image-cropper',
+    name: 'ImageCropper',
+    category: 'Media',
+    phase: 10,
+    status: 'Ready',
+    importSymbol: 'ImageCropper',
+    summary: 'Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload.'
+  },
+  {
     slug: 'terminal',
     name: 'Terminal',
     category: 'Overlays, Media & Directives',

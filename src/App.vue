@@ -64,7 +64,7 @@
             target="_blank"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
-            <span>npm v1.0.4</span>
+            <span>npm v1.0.5</span>
           </a>
         </div>
 

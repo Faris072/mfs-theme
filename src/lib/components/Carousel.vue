@@ -23,55 +23,61 @@
       <slot name="empty">{{ emptyText }}</slot>
     </div>
 
-    <div
-      v-else
-      class="carousel__viewport"
-      @pointerdown="onPointerDown"
-      @pointerup="onPointerUp"
-      @pointercancel="resetPointer"
-    >
+    <div v-else class="carousel__stage">
       <div
-        class="carousel__track"
-        :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
+        class="carousel__viewport"
+        @pointerdown="onPointerDown"
+        @pointerup="onPointerUp"
+        @pointercancel="resetPointer"
       >
         <div
-          v-for="(item, index) in items"
-          :key="index"
-          class="carousel__slide"
-          :aria-hidden="index !== currentIndex"
+          class="carousel__track"
+          :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
         >
-          <slot :item="item" :index="index">
-            <div class="carousel__fallback mfs-text">{{ item }}</div>
-          </slot>
+          <div
+            v-for="(item, index) in items"
+            :key="index"
+            class="carousel__slide"
+            :aria-hidden="index !== currentIndex"
+          >
+            <slot :item="item" :index="index">
+              <div class="carousel__fallback mfs-text">{{ item }}</div>
+            </slot>
+          </div>
         </div>
       </div>
+
+      <template v-if="items.length > 1">
+        <button
+          type="button"
+          class="carousel__btn carousel__btn--prev mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
+          aria-label="Previous slide"
+          :disabled="!loop && currentIndex === 0"
+          @click="prev"
+        >
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true">
+            <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="carousel__btn carousel__btn--next mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
+          aria-label="Next slide"
+          :disabled="!loop && currentIndex === items.length - 1"
+          @click="next"
+        >
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true">
+            <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+      </template>
     </div>
 
-    <template v-if="items.length > 1">
-      <button
-        type="button"
-        class="carousel__btn carousel__btn--prev mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
-        aria-label="Previous slide"
-        :disabled="!loop && currentIndex === 0"
-        @click="prev"
-      >
-        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true">
-          <path d="M12.5 5L7.5 10L12.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-
-      <button
-        type="button"
-        class="carousel__btn carousel__btn--next mfs-surface mfs-shadow mfs-pill mfs-focus-ring"
-        aria-label="Next slide"
-        :disabled="!loop && currentIndex === items.length - 1"
-        @click="next"
-      >
-        <svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true">
-          <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
-
+    <div
+      v-if="items.length > 1"
+      class="carousel__indicators mfs-flex mfs-justify-center mfs-py-3"
+    >
       <div class="carousel__dots mfs-surface-subtle mfs-pill mfs-blur" role="tablist" aria-label="Slide indicators">
         <button
           v-for="(_, index) in items"
@@ -84,7 +90,7 @@
           @click="goTo(index)"
         />
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -203,6 +209,10 @@ onBeforeUnmount(stopAutoplay)
   min-height: 120px;
 }
 
+.carousel__stage {
+  position: relative;
+}
+
 .carousel__viewport {
   width: 100%;
   overflow: hidden;
@@ -259,17 +269,14 @@ onBeforeUnmount(stopAutoplay)
 .carousel__btn--next { right: 12px; }
 
 .carousel__dots {
-  position: absolute;
-  bottom: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
+  position: static;
+  transform: none;
+  display: inline-flex;
   gap: 8px;
   padding: 6px 10px;
   border-radius: var(--radius-pill, 9999px);
   background-color: var(--surface-subtle);
   backdrop-filter: var(--backdrop-blur, none);
-  z-index: 2;
 }
 
 .carousel__dot {

@@ -101,6 +101,7 @@ import Galleria from './components/Galleria.vue'
 import FileUpload from './components/FileUpload.vue'
 import Terminal from './components/Terminal.vue'
 import Chart from './components/Chart.vue'
+import ImageCropper, { type ImageCropResult } from './components/ImageCropper.vue'
 
 import { useTheme, type ThemeType, THEME_OPTIONS } from './composables/useTheme'
 import { useToast } from './composables/useToast'
@@ -220,6 +221,8 @@ export {
   FileUpload,
   Terminal,
   Chart,
+  ImageCropper,
+  type ImageCropResult,
   useTheme,
   useToast,
   useConfirm,
@@ -340,7 +343,8 @@ const components: Record<string, Component> = {
   Galleria,
   FileUpload,
   Terminal,
-  Chart
+  Chart,
+  ImageCropper
 }
 
 const directives: Record<string, Directive> = {
