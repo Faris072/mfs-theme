@@ -26,7 +26,7 @@
   --danger: #d92b2b;
 
   /* Typography & Layout */
-  --font-display: "Futura", "Century Gothic", "Avenir Next", system-ui, sans-serif;
+  --font-display: "Futura", "Century Gothic", "Avenir Next", 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --grid-gap: 16px;
 
   /* Geometric Block Shadows */

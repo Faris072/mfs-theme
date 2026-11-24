@@ -10,11 +10,9 @@
           @mouseenter="openLevel1 = idx"
           @mouseleave="openLevel1 = null; openLevel2 = null"
         >
-          <component
-            :is="item.items?.length ? 'button' : item.to ? 'router-link' : item.href ? 'a' : 'button'"
-            :to="!item.items?.length ? item.to : undefined"
-            :href="!item.items?.length ? item.href : undefined"
-            :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
+          <button
+            v-if="item.items?.length || (!item.to && !item.href)"
+            type="button"
             role="menuitem"
             class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
             :class="{
@@ -43,6 +41,24 @@
             >
               <polyline points="9 18 15 12 9 6" />
             </svg>
+          </button>
+
+          <component
+            :is="item.to ? 'router-link' : 'a'"
+            v-else
+            :to="item.to"
+            :href="item.href"
+            role="menuitem"
+            class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+            :class="{
+              'tiered-menu__item--active': openLevel1 === idx,
+              'tiered-menu__item--disabled mfs-disabled': item.disabled
+            }"
+            :disabled="item.disabled"
+            @click="onClickItem(item, 1, idx)"
+          >
+            <span v-if="item.icon" class="tiered-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+            <span class="tiered-menu__label">{{ item.label }}</span>
           </component>
 
           <ul
@@ -59,11 +75,9 @@
                 @mouseenter="openLevel2 = sIdx"
                 @mouseleave="openLevel2 = null"
               >
-                <component
-                  :is="sub.items?.length ? 'button' : sub.to ? 'router-link' : sub.href ? 'a' : 'button'"
-                  :to="!sub.items?.length ? sub.to : undefined"
-                  :href="!sub.items?.length ? sub.href : undefined"
-                  :type="sub.items?.length || (!sub.to && !sub.href) ? 'button' : undefined"
+                <button
+                  v-if="sub.items?.length || (!sub.to && !sub.href)"
+                  type="button"
                   role="menuitem"
                   class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                   :class="{
@@ -92,6 +106,24 @@
                   >
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
+                </button>
+
+                <component
+                  :is="sub.to ? 'router-link' : 'a'"
+                  v-else
+                  :to="sub.to"
+                  :href="sub.href"
+                  role="menuitem"
+                  class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                  :class="{
+                    'tiered-menu__item--active': openLevel2 === sIdx,
+                    'tiered-menu__item--disabled mfs-disabled': sub.disabled
+                  }"
+                  :disabled="sub.disabled"
+                  @click="onClickItem(sub, 2, sIdx)"
+                >
+                  <span v-if="sub.icon" class="tiered-menu__icon" aria-hidden="true">{{ sub.icon }}</span>
+                  <span class="tiered-menu__label">{{ sub.label }}</span>
                 </component>
 
                 <ul
@@ -102,11 +134,24 @@
                   <template v-for="(leaf, lIdx) in sub.items" :key="lIdx">
                     <li v-if="leaf.separator" class="tiered-menu__separator mfs-divider" role="separator" />
                     <li v-else role="none">
+                      <button
+                        v-if="!leaf.to && !leaf.href"
+                        type="button"
+                        role="menuitem"
+                        class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                        :class="{ 'tiered-menu__item--disabled mfs-disabled': leaf.disabled }"
+                        :disabled="leaf.disabled"
+                        @click="onClickItem(leaf, 3, lIdx)"
+                      >
+                        <span v-if="leaf.icon" class="tiered-menu__icon" aria-hidden="true">{{ leaf.icon }}</span>
+                        <span class="tiered-menu__label">{{ leaf.label }}</span>
+                      </button>
+
                       <component
-                        :is="leaf.to ? 'router-link' : leaf.href ? 'a' : 'button'"
+                        :is="leaf.to ? 'router-link' : 'a'"
+                        v-else
                         :to="leaf.to"
                         :href="leaf.href"
-                        :type="!leaf.to && !leaf.href ? 'button' : undefined"
                         role="menuitem"
                         class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                         :class="{ 'tiered-menu__item--disabled mfs-disabled': leaf.disabled }"

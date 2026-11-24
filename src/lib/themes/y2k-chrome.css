@@ -28,7 +28,7 @@
   --danger: #e11d48;
 
   /* Typography & Layout */
-  --font-display: "Trebuchet MS", "Segoe UI", Tahoma, Geneva, sans-serif;
+  --font-display: "Trebuchet MS", "Segoe UI", Tahoma, 'Inter', system-ui, sans-serif;
   --grid-gap: 14px;
 
   /* Metallic Gloss & Bevel Tokens */

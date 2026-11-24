@@ -22,7 +22,7 @@
       >
         <div
           v-for="entry in visibleItems"
-          :key="getItemKey(entry.item, entry.index)"
+          :key="getItemKey(entry.item, entry.index, itemKey)"
           class="virtual-scroller__item"
           :style="{ height: `${itemSize}px` }"
         >
@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
+import { getItemKey } from '../utils/itemKey'
 
 const props = withDefaults(
   defineProps<{
@@ -109,13 +110,6 @@ const visibleItems = computed(() =>
     index: startIndex.value + idx
   }))
 )
-
-function getItemKey(item: any, index: number): string | number {
-  if (item && typeof item === 'object' && props.itemKey in item) {
-    return item[props.itemKey]
-  }
-  return index
-}
 </script>
 
 <style scoped>

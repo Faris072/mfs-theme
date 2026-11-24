@@ -8,28 +8,47 @@
       @keydown="handleKeydown"
     >
       <span class="tab-menu__indicator mfs-rounded-sm" :style="indicatorStyle" aria-hidden="true" />
-      <component
-        :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
-        v-for="(item, idx) in items"
-        :key="item.key ?? idx"
-        :ref="(el: unknown) => setItemRef(idx, el)"
-        :to="item.to"
-        :href="item.href"
-        :type="!item.to && !item.href ? 'button' : undefined"
-        role="tab"
-        class="tab-menu__item mfs-rounded-sm mfs-text"
-        :class="{
-          'tab-menu__item--active': idx === modelValue,
-          'tab-menu__item--disabled mfs-disabled': item.disabled
-        }"
-        :aria-selected="idx === modelValue"
-        :aria-disabled="item.disabled || undefined"
-        :tabindex="idx === modelValue ? 0 : -1"
-        @click="selectItem(item, idx, $event)"
-      >
-        <span v-if="item.icon" class="tab-menu__icon" aria-hidden="true">{{ item.icon }}</span>
-        <span>{{ item.label }}</span>
-      </component>
+      <template v-for="(item, idx) in items" :key="item.key ?? idx">
+        <button
+          v-if="!item.to && !item.href"
+          :ref="(el: unknown) => setItemRef(idx, el)"
+          type="button"
+          role="tab"
+          class="tab-menu__item mfs-rounded-sm mfs-text"
+          :class="{
+            'tab-menu__item--active': idx === modelValue,
+            'tab-menu__item--disabled mfs-disabled': item.disabled
+          }"
+          :aria-selected="idx === modelValue"
+          :aria-disabled="item.disabled || undefined"
+          :tabindex="idx === modelValue ? 0 : -1"
+          @click="selectItem(item, idx, $event)"
+        >
+          <span v-if="item.icon" class="tab-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </button>
+
+        <component
+          :is="item.to ? 'router-link' : 'a'"
+          v-else
+          :ref="(el: unknown) => setItemRef(idx, el)"
+          :to="item.to"
+          :href="item.href"
+          role="tab"
+          class="tab-menu__item mfs-rounded-sm mfs-text"
+          :class="{
+            'tab-menu__item--active': idx === modelValue,
+            'tab-menu__item--disabled mfs-disabled': item.disabled
+          }"
+          :aria-selected="idx === modelValue"
+          :aria-disabled="item.disabled || undefined"
+          :tabindex="idx === modelValue ? 0 : -1"
+          @click="selectItem(item, idx, $event)"
+        >
+          <span v-if="item.icon" class="tab-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+          <span>{{ item.label }}</span>
+        </component>
+      </template>
     </div>
   </nav>
 </template>

@@ -55,7 +55,7 @@
     >
       <div
         v-for="(item, index) in items"
-        :key="getItemKey(item, index)"
+        :key="getItemKey(item, index, itemKey)"
         class="data-view__item"
       >
         <slot
@@ -91,6 +91,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import { getItemKey } from '../utils/itemKey'
 
 export type DataViewLayout = 'grid' | 'list'
 
@@ -143,13 +144,6 @@ function setLayout(next: DataViewLayout) {
   if (localLayout.value === next) return
   localLayout.value = next
   emit('update:layout', next)
-}
-
-function getItemKey(item: any, index: number): string | number {
-  if (item && typeof item === 'object' && props.itemKey in item) {
-    return item[props.itemKey]
-  }
-  return index
 }
 </script>
 

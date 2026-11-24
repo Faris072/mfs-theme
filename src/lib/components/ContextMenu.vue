@@ -16,7 +16,7 @@
             <li v-if="item.divider" class="ctx-menu__divider mfs-divider" role="separator" />
             <li v-else role="none">
               <button
-                ref="(el) => setItemRef(index, el as HTMLButtonElement | null)"
+                :ref="(el) => setItemRef(index, el as HTMLButtonElement | null)"
                 type="button"
                 role="menuitem"
                 class="ctx-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"

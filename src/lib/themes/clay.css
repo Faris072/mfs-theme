@@ -33,31 +33,19 @@
   --glow: none;
   --bevel-light: rgba(255, 255, 255, 0.9);
   --bevel-dark: rgba(109, 40, 217, 0.16);
-  --shadow:
-    4px 8px 16px rgba(109, 40, 217, 0.12),
-    inset -2px -2px 5px rgba(109, 40, 217, 0.16),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.9);
+  --shadow: var(--clay-shadow);
 
   /* Clay Shadows (Exterior soft blur + Interior 3D bevel) */
-  --clay-shadow: 
-    4px 8px 16px rgba(109, 40, 217, 0.12),
-    inset -2px -2px 5px rgba(109, 40, 217, 0.16),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.9);
+  --clay-shadow: 0 5px 12px rgba(76, 29, 149, 0.08), inset -2px -3px 6px rgba(109, 40, 217, 0.13), inset 3px 3px 6px rgba(255, 255, 255, 0.90);
 
-  --clay-shadow-hover: 
-    6px 12px 22px rgba(109, 40, 217, 0.16),
-    inset -3px -3px 6px rgba(109, 40, 217, 0.2),
-    inset 3px 3px 6px rgba(255, 255, 255, 0.95);
+  --clay-shadow-hover: 0 8px 18px rgba(76, 29, 149, 0.12), inset -2px -3px 6px rgba(109, 40, 217, 0.15), inset 3px 3px 8px rgba(255, 255, 255, 0.95);
 
   --clay-shadow-active: 
     2px 4px 8px rgba(109, 40, 217, 0.14),
     inset 2px 2px 5px rgba(109, 40, 217, 0.28),
     inset -2px -2px 5px rgba(255, 255, 255, 0.7);
 
-  --card-shadow: 
-    8px 14px 26px rgba(109, 40, 217, 0.10),
-    inset -4px -4px 10px rgba(139, 92, 246, 0.08),
-    inset 4px 4px 10px rgba(255, 255, 255, 0.95);
+  --card-shadow: 0 10px 22px rgba(76, 29, 149, 0.08), inset -3px -4px 8px rgba(109, 40, 217, 0.08), inset 4px 4px 10px rgba(255, 255, 255, 0.92);
 
   --input-shadow: 
     inset 3px 3px 7px rgba(109, 40, 217, 0.16),

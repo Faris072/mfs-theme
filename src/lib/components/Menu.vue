@@ -16,11 +16,26 @@
               <div v-if="item.label" class="menu__group-label mfs-text-muted">{{ item.label }}</div>
               <ul class="menu__sublist">
                 <li v-for="(sub, sIdx) in item.items" :key="sIdx" role="none">
+                  <button
+                    v-if="!sub.to && !sub.href"
+                    type="button"
+                    role="menuitem"
+                    class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                    :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
+                    :disabled="sub.disabled"
+                    @click="handleSelect(sub)"
+                  >
+                    <slot name="item" :item="sub">
+                      <span v-if="sub.icon" class="menu__icon" aria-hidden="true">{{ sub.icon }}</span>
+                      <span class="menu__label">{{ sub.label }}</span>
+                    </slot>
+                  </button>
+
                   <component
-                    :is="sub.to ? 'router-link' : sub.href ? 'a' : 'button'"
+                    :is="sub.to ? 'router-link' : 'a'"
+                    v-else
                     :to="sub.to"
                     :href="sub.href"
-                    :type="!sub.to && !sub.href ? 'button' : undefined"
                     role="menuitem"
                     class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                     :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
@@ -36,11 +51,26 @@
               </ul>
             </li>
             <li v-else role="none">
+              <button
+                v-if="!item.to && !item.href"
+                type="button"
+                role="menuitem"
+                class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
+                :disabled="item.disabled"
+                @click="handleSelect(item)"
+              >
+                <slot name="item" :item="item">
+                  <span v-if="item.icon" class="menu__icon" aria-hidden="true">{{ item.icon }}</span>
+                  <span class="menu__label">{{ item.label }}</span>
+                </slot>
+              </button>
+
               <component
-                :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+                :is="item.to ? 'router-link' : 'a'"
+                v-else
                 :to="item.to"
                 :href="item.href"
-                :type="!item.to && !item.href ? 'button' : undefined"
                 role="menuitem"
                 class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                 :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
@@ -67,11 +97,26 @@
           <div v-if="item.label" class="menu__group-label mfs-text-muted">{{ item.label }}</div>
           <ul class="menu__sublist">
             <li v-for="(sub, sIdx) in item.items" :key="sIdx" role="none">
+              <button
+                v-if="!sub.to && !sub.href"
+                type="button"
+                role="menuitem"
+                class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+                :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
+                :disabled="sub.disabled"
+                @click="handleSelect(sub)"
+              >
+                <slot name="item" :item="sub">
+                  <span v-if="sub.icon" class="menu__icon" aria-hidden="true">{{ sub.icon }}</span>
+                  <span class="menu__label">{{ sub.label }}</span>
+                </slot>
+              </button>
+
               <component
-                :is="sub.to ? 'router-link' : sub.href ? 'a' : 'button'"
+                :is="sub.to ? 'router-link' : 'a'"
+                v-else
                 :to="sub.to"
                 :href="sub.href"
-                :type="!sub.to && !sub.href ? 'button' : undefined"
                 role="menuitem"
                 class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                 :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
@@ -87,11 +132,26 @@
           </ul>
         </li>
         <li v-else role="none">
+          <button
+            v-if="!item.to && !item.href"
+            type="button"
+            role="menuitem"
+            class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
+            :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
+            :disabled="item.disabled"
+            @click="handleSelect(item)"
+          >
+            <slot name="item" :item="item">
+              <span v-if="item.icon" class="menu__icon" aria-hidden="true">{{ item.icon }}</span>
+              <span class="menu__label">{{ item.label }}</span>
+            </slot>
+          </button>
+
           <component
-            :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+            :is="item.to ? 'router-link' : 'a'"
+            v-else
             :to="item.to"
             :href="item.href"
-            :type="!item.to && !item.href ? 'button' : undefined"
             role="menuitem"
             class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
             :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"

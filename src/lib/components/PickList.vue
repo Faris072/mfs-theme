@@ -16,7 +16,7 @@
         </li>
         <li
           v-for="(item, index) in source"
-          :key="getItemKey(item, index)"
+          :key="getItemKey(item, index, itemKey)"
           class="pick-list__item mfs-rounded-sm"
           :class="{ 'pick-list__item--selected': isSelected('source', index) }"
           role="option"
@@ -90,7 +90,7 @@
         </li>
         <li
           v-for="(item, index) in target"
-          :key="getItemKey(item, index)"
+          :key="getItemKey(item, index, itemKey)"
           class="pick-list__item mfs-rounded-sm"
           :class="{ 'pick-list__item--selected': isSelected('target', index) }"
           role="option"
@@ -111,6 +111,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { getItemKey } from '../utils/itemKey'
 
 const props = withDefaults(
   defineProps<{
@@ -148,13 +149,6 @@ defineSlots<{
 
 const selectedSource = ref<number[]>([])
 const selectedTarget = ref<number[]>([])
-
-function getItemKey(item: any, index: number): string | number {
-  if (item && typeof item === 'object' && props.itemKey in item) {
-    return item[props.itemKey]
-  }
-  return index
-}
 
 function isSelected(list: 'source' | 'target', index: number): boolean {
   const arr = list === 'source' ? selectedSource.value : selectedTarget.value

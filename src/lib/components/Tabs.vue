@@ -7,7 +7,7 @@
       role="tablist"
       @keydown="handleKeydown"
     >
-      <span class="tabs__indicator mfs-pill mfs-shadow" :style="indicatorStyle" aria-hidden="true" />
+      <span class="tabs__indicator mfs-pill" :style="indicatorStyle" aria-hidden="true" />
       <button
         v-for="(item, index) in items"
         :key="item.key"
@@ -197,7 +197,7 @@ onUnmounted(() => {
   left: 0;
   border-radius: var(--radius-pill, 9999px);
   background-color: var(--primary);
-  box-shadow: var(--clay-shadow);
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.28);
   transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
   pointer-events: none;
   z-index: 0;

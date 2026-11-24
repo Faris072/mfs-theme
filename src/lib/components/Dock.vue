@@ -13,11 +13,31 @@
         role="none"
         @mouseenter="hoveredIndex = idx"
       >
+        <button
+          v-if="!item.to && !item.href"
+          type="button"
+          role="menuitem"
+          class="dock__item mfs-rounded-sm mfs-text"
+          :class="{
+            'dock__item--active': item.active,
+            'dock__item--disabled mfs-disabled': item.disabled
+          }"
+          :style="getItemStyle(idx)"
+          :aria-label="item.label"
+          :disabled="item.disabled"
+          @click="handleSelect(item, idx)"
+        >
+          <slot name="item" :item="item" :index="idx" :active="!!item.active">
+            <span class="dock__glyph mfs-text">{{ item.icon ?? item.label.slice(0, 2).toUpperCase() }}</span>
+          </slot>
+          <span v-if="item.active" class="dock__dot" aria-hidden="true" />
+        </button>
+
         <component
-          :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+          :is="item.to ? 'router-link' : 'a'"
+          v-else
           :to="item.to"
           :href="item.href"
-          :type="!item.to && !item.href ? 'button' : undefined"
           role="menuitem"
           class="dock__item mfs-rounded-sm mfs-text"
           :class="{

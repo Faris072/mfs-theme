@@ -68,7 +68,7 @@
         </li>
         <li
           v-for="(item, index) in modelValue"
-          :key="getItemKey(item, index)"
+          :key="getItemKey(item, index, itemKey)"
           class="order-list__item mfs-rounded-sm"
           :class="{ 'order-list__item--selected': selectedIndex === index }"
           role="option"
@@ -89,6 +89,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { getItemKey } from '../utils/itemKey'
 
 const props = withDefaults(
   defineProps<{
@@ -127,13 +128,6 @@ const canMoveUp = computed(
 const canMoveDown = computed(
   () => selectedIndex.value !== null && selectedIndex.value < props.modelValue.length - 1
 )
-
-function getItemKey(item: any, index: number): string | number {
-  if (item && typeof item === 'object' && props.itemKey in item) {
-    return item[props.itemKey]
-  }
-  return index
-}
 
 function updateOrder(next: any[], nextIndex: number) {
   selectedIndex.value = nextIndex

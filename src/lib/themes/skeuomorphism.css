@@ -27,7 +27,7 @@
   --danger: #b91c1c;
 
   /* Typography & Layout */
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-display: Georgia, "Liberation Serif", "Noto Serif", ui-serif, serif;
   --grid-gap: 16px;
 
   /* Tactile Drop & Bevel Tokens */
@@ -55,7 +55,7 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.65);
 
   --card-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.2),
+    0 8px 18px rgba(0, 0, 0, 0.2),
     0 2px 5px rgba(0, 0, 0, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.92),
     inset 0 -2px 4px rgba(0, 0, 0, 0.08);

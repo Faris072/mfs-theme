@@ -206,7 +206,7 @@ const props = withDefaults(
     searchable?: boolean
     searchQuery?: string
     selectable?: boolean | 'single' | 'multiple'
-    selection?: Record<string, any> | Record<string, any>[] | null
+    selection?: Record<string, unknown> | Record<string, unknown>[] | null
     responsiveMode?: 'card' | 'scroll'
     emptyText?: string
     loading?: boolean
@@ -235,7 +235,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  'update:selection': [value: Record<string, any> | Record<string, any>[] | null]
+  'update:selection': [value: Record<string, unknown> | Record<string, unknown>[] | null]
   'update:searchQuery': [value: string]
   'update:page': [page: number]
   'update:rows': [rows: number]
@@ -244,7 +244,7 @@ const emit = defineEmits<{
   page: [payload: { page: number; first: number; rows: number; pageCount: number; rowsPerPage?: number }]
   sort: [payload: { key: string; order: SortOrder }]
   filter: [query: string]
-  'row-click': [row: Record<string, any>]
+  'row-click': [row: Record<string, unknown>]
 }>()
 
 const radioGroupName = `dt-radio-${useId()}`
@@ -333,9 +333,9 @@ const selectionType = computed<'single' | 'multiple' | null>(() => {
   return null
 })
 
-function getRowId(row: Record<string, any>, index: number): string | number {
+function getRowId(row: Record<string, unknown>, index: number): string | number {
   const keyVal = row?.[props.rowKey]
-  return keyVal !== undefined && keyVal !== null ? keyVal : index
+  return typeof keyVal === 'string' || typeof keyVal === 'number' ? keyVal : index
 }
 
 function onSearchInput(e: Event) {
@@ -452,7 +452,7 @@ function onRowsPerPageChange(e: Event) {
   })
 }
 
-function isRowSelected(row: Record<string, any>, index: number): boolean {
+function isRowSelected(row: Record<string, unknown>, index: number): boolean {
   if (!selectionType.value || !props.selection) return false
   const id = getRowId(row, index)
   if (selectionType.value === 'single') {
@@ -476,7 +476,7 @@ const someSelected = computed(() => {
   return count > 0 && count < processedRows.value.length
 })
 
-function toggleRowSelection(row: Record<string, any>, index: number) {
+function toggleRowSelection(row: Record<string, unknown>, index: number) {
   if (!selectionType.value) return
   if (selectionType.value === 'single') {
     emit('update:selection', row)
@@ -502,7 +502,7 @@ function toggleSelectAll() {
   }
 }
 
-function onRowClick(row: Record<string, any>, index: number) {
+function onRowClick(row: Record<string, unknown>, index: number) {
   emit('row-click', row)
   if (selectionType.value) {
     toggleRowSelection(row, index)

@@ -34,11 +34,9 @@
           @mouseenter="onHover(idx)"
           @mouseleave="onLeave"
         >
-          <component
-            :is="item.columns?.length ? 'button' : item.to ? 'router-link' : item.href ? 'a' : 'button'"
-            :to="!item.columns?.length ? item.to : undefined"
-            :href="!item.columns?.length ? item.href : undefined"
-            :type="item.columns?.length || (!item.to && !item.href) ? 'button' : undefined"
+          <button
+            v-if="item.columns?.length || (!item.to && !item.href)"
+            type="button"
             role="menuitem"
             class="mega-menu__trigger mfs-rounded-sm mfs-text mfs-inline-flex mfs-items-center mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-cursor-pointer"
             :class="{
@@ -67,6 +65,24 @@
             >
               <polyline points="6 9 12 15 18 9" />
             </svg>
+          </button>
+
+          <component
+            :is="item.to ? 'router-link' : 'a'"
+            v-else
+            :to="item.to"
+            :href="item.href"
+            role="menuitem"
+            class="mega-menu__trigger mfs-rounded-sm mfs-text mfs-inline-flex mfs-items-center mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-cursor-pointer"
+            :class="{
+              'mega-menu__trigger--active': activeIndex === idx,
+              'mega-menu__trigger--disabled mfs-disabled': item.disabled
+            }"
+            :disabled="item.disabled"
+            @click="onTriggerClick(item, idx)"
+          >
+            <span v-if="item.icon" aria-hidden="true">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
           </component>
 
           <Transition name="mega-fade">
@@ -80,11 +96,24 @@
                   <div v-if="col.title" class="mega-menu__col-title mfs-text-muted mfs-font-bold mfs-mb-2 mfs-px-2">{{ col.title }}</div>
                   <ul class="mega-menu__col-list mfs-flex mfs-flex-col mfs-gap-1">
                     <li v-for="(link, lIdx) in col.items" :key="lIdx" role="none">
+                      <button
+                        v-if="!link.to && !link.href"
+                        type="button"
+                        role="menuitem"
+                        class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
+                        @click="onLinkClick(link)"
+                      >
+                        <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
+                        <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
+                          {{ link.description }}
+                        </span>
+                      </button>
+
                       <component
-                        :is="link.to ? 'router-link' : link.href ? 'a' : 'button'"
+                        :is="link.to ? 'router-link' : 'a'"
+                        v-else
                         :to="link.to"
                         :href="link.href"
-                        :type="!link.to && !link.href ? 'button' : undefined"
                         role="menuitem"
                         class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
                         @click="onLinkClick(link)"

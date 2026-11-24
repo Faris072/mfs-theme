@@ -20,7 +20,7 @@ export function useFloatingOverlay(
   triggerRef: Ref<HTMLElement | null>,
   overlayRef: Ref<HTMLElement | null>,
   isOpen: Ref<boolean>,
-  options?: { offset?: number; matchWidth?: boolean; align?: 'left' | 'right' | 'center' }
+  options?: UseFloatingOverlayOptions
 ): {
   overlayStyle: ComputedRef<CSSProperties>
   updatePosition: () => void

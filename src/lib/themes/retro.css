@@ -28,7 +28,7 @@
   --danger: #800000;
 
   /* Typography & Layout */
-  --font-display: "MS Sans Serif", Tahoma, Geneva, Verdana, sans-serif;
+  --font-display: Tahoma, Verdana, 'Inter', system-ui, sans-serif;
   --grid-gap: 10px;
 
   /* Classic 3D Bevel Tokens */

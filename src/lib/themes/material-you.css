@@ -26,7 +26,7 @@
   --danger: #b3261e;
 
   /* Typography & Layout */
-  --font-display: "Google Sans", "Roboto", system-ui, -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --grid-gap: 16px;
 
   /* Tonal Elevation Tokens */

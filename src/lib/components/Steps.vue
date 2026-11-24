@@ -11,9 +11,9 @@
       :class="[`steps__item--${resolveStatus(item, index)}`, { 'steps__item--clickable': clickable }]"
       :aria-current="resolveStatus(item, index) === 'active' ? 'step' : undefined"
     >
-      <component
-        :is="clickable ? 'button' : 'div'"
-        :type="clickable ? 'button' : undefined"
+      <button
+        v-if="clickable"
+        type="button"
         class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md"
         @click="handleStepClick(index)"
       >
@@ -54,7 +54,50 @@
           <span class="steps__label mfs-font-semibold">{{ item.label }}</span>
           <span v-if="item.description" class="steps__desc mfs-text-muted">{{ item.description }}</span>
         </span>
-      </component>
+      </button>
+
+      <div
+        v-else
+        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md"
+      >
+        <span class="steps__circle mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-bold mfs-surface mfs-shadow">
+          <svg
+            v-if="resolveStatus(item, index) === 'completed'"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <svg
+            v-else-if="resolveStatus(item, index) === 'error'"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+          <span v-else>{{ index + 1 }}</span>
+        </span>
+
+        <span class="steps__content mfs-flex mfs-flex-col">
+          <span class="steps__label mfs-font-semibold">{{ item.label }}</span>
+          <span v-if="item.description" class="steps__desc mfs-text-muted">{{ item.description }}</span>
+        </span>
+      </div>
 
       <span
         v-if="index < items.length - 1"
@@ -139,10 +182,11 @@ const handleStepClick = (index: number) => {
 .steps__trigger {
   gap: 10px;
   background: transparent;
-  padding: 6px;
+  padding: 6px 10px;
   font-family: inherit;
   color: inherit;
   text-align: left;
+  overflow: visible;
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 

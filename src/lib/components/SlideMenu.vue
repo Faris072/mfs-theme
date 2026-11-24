@@ -18,11 +18,9 @@
       <Transition :name="direction === 'forward' ? 'slide-fwd' : 'slide-bck'" mode="out-in">
         <ul :key="stack.length" class="slide-menu__list" role="menu">
           <li v-for="(item, idx) in currentItems" :key="idx" role="none">
-            <component
-              :is="item.items?.length ? 'button' : item.to ? 'router-link' : item.href ? 'a' : 'button'"
-              :to="!item.items?.length ? item.to : undefined"
-              :href="!item.items?.length ? item.href : undefined"
-              :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
+            <button
+              v-if="item.items?.length || (!item.to && !item.href)"
+              type="button"
               role="menuitem"
               class="slide-menu__item mfs-rounded-sm mfs-text"
               :class="{ 'slide-menu__item--disabled mfs-disabled': item.disabled }"
@@ -45,6 +43,21 @@
               >
                 <polyline points="9 18 15 12 9 6" />
               </svg>
+            </button>
+
+            <component
+              :is="item.to ? 'router-link' : 'a'"
+              v-else
+              :to="item.to"
+              :href="item.href"
+              role="menuitem"
+              class="slide-menu__item mfs-rounded-sm mfs-text"
+              :class="{ 'slide-menu__item--disabled mfs-disabled': item.disabled }"
+              :disabled="item.disabled"
+              @click="handleItem(item)"
+            >
+              <span v-if="item.icon" class="slide-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+              <span class="slide-menu__label">{{ item.label }}</span>
             </component>
           </li>
         </ul>

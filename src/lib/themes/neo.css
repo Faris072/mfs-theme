@@ -26,31 +26,31 @@
   --danger: #ef4444;
 
   /* Typography & Layout */
-  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --grid-gap: 16px;
   --glow: none;
   --bevel-light: #ffffff;
   --bevel-dark: #c4cad3;
   --shadow:
-    6px 6px 12px #c4cad3,
-    -6px -6px 12px #ffffff;
+    4px 4px 9px #c8d0dc,
+    -4px -4px 9px #ffffff;
 
   /* Neumorphic Extrusion Shadows */
-  --clay-shadow: 
-    6px 6px 12px #c4cad3,
-    -6px -6px 12px #ffffff;
+  --clay-shadow:
+    4px 4px 9px #c8d0dc,
+    -4px -4px 9px #ffffff;
 
-  --clay-shadow-hover: 
-    8px 8px 16px #c4cad3,
-    -8px -8px 16px #ffffff;
+  --clay-shadow-hover:
+    6px 6px 13px #c5cdd9,
+    -6px -6px 13px #ffffff;
 
   --clay-shadow-active: 
     inset 4px 4px 8px #c4cad3,
     inset -4px -4px 8px #ffffff;
 
-  --card-shadow: 
-    10px 10px 20px #c4cad3,
-    -10px -10px 20px #ffffff;
+  --card-shadow:
+    8px 8px 18px #c5cdd9,
+    -8px -8px 18px #ffffff;
 
   --input-shadow: 
     inset 4px 4px 8px #c4cad3,

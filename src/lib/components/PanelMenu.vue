@@ -5,11 +5,9 @@
       :key="getKey(item, idx)"
       class="panel-menu__panel mfs-surface mfs-rounded-md mfs-blur"
     >
-      <component
-        :is="item.items?.length ? 'button' : item.to ? 'router-link' : item.href ? 'a' : 'button'"
-        :to="!item.items?.length ? item.to : undefined"
-        :href="!item.items?.length ? item.href : undefined"
-        :type="item.items?.length || (!item.to && !item.href) ? 'button' : undefined"
+      <button
+        v-if="item.items?.length || (!item.to && !item.href)"
+        type="button"
         class="panel-menu__header mfs-text"
         :class="{ 'panel-menu__header--disabled mfs-disabled': item.disabled }"
         :aria-expanded="item.items?.length ? isExpanded(getKey(item, idx)) : undefined"
@@ -34,16 +32,42 @@
         >
           <polyline points="6 9 12 15 18 9" />
         </svg>
+      </button>
+
+      <component
+        :is="item.to ? 'router-link' : 'a'"
+        v-else
+        :to="item.to"
+        :href="item.href"
+        class="panel-menu__header mfs-text"
+        :class="{ 'panel-menu__header--disabled mfs-disabled': item.disabled }"
+        :disabled="item.disabled"
+        @click="onHeaderClick(item, idx)"
+      >
+        <span v-if="item.icon" class="panel-menu__icon" aria-hidden="true">{{ item.icon }}</span>
+        <span class="panel-menu__label">{{ item.label }}</span>
       </component>
 
       <Transition name="panel-collapse">
         <ul v-if="item.items?.length && isExpanded(getKey(item, idx))" class="panel-menu__list">
           <li v-for="(sub, sIdx) in item.items" :key="sIdx">
+            <button
+              v-if="!sub.to && !sub.href"
+              type="button"
+              class="panel-menu__subitem mfs-rounded-sm mfs-text"
+              :class="{ 'panel-menu__subitem--disabled mfs-disabled': sub.disabled }"
+              :disabled="sub.disabled"
+              @click="onLeafClick(sub)"
+            >
+              <span v-if="sub.icon" class="panel-menu__icon" aria-hidden="true">{{ sub.icon }}</span>
+              <span>{{ sub.label }}</span>
+            </button>
+
             <component
-              :is="sub.to ? 'router-link' : sub.href ? 'a' : 'button'"
+              :is="sub.to ? 'router-link' : 'a'"
+              v-else
               :to="sub.to"
               :href="sub.href"
-              :type="!sub.to && !sub.href ? 'button' : undefined"
               class="panel-menu__subitem mfs-rounded-sm mfs-text"
               :class="{ 'panel-menu__subitem--disabled mfs-disabled': sub.disabled }"
               :disabled="sub.disabled"

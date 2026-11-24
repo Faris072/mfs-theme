@@ -8,7 +8,7 @@
         'accordion__item',
         'mfs-surface',
         'mfs-rounded',
-        'mfs-shadow-card',
+        'mfs-shadow',
         'mfs-overflow-hidden',
         { 'is-open': isOpen(item.key), 'is-disabled mfs-disabled': item.disabled }
       ]"

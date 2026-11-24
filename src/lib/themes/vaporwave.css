@@ -32,7 +32,7 @@
   --tooltip-border: rgba(255, 255, 255, 0.24);
 
   /* Typography & Layout */
-  --font-display: "Arial Black", Impact, "Segoe UI", sans-serif;
+  --font-display: 'Plus Jakarta Sans', 'Inter', 'Segoe UI', system-ui, sans-serif;
   --grid-gap: 14px;
 
   /* Synth Neon & Retro Bevel */
@@ -41,7 +41,7 @@
   --bevel-dark: rgba(15, 4, 30, 0.85);
   --shadow:
     4px 4px 0 #00f0ff,
-    0 0 16px rgba(255, 78, 205, 0.35);
+    0 0 14px rgba(255, 78, 205, 0.35);
 
   --clay-shadow:
     3px 3px 0 #00f0ff,
@@ -49,14 +49,14 @@
 
   --clay-shadow-hover:
     5px 5px 0 #00f0ff,
-    0 0 20px rgba(255, 78, 205, 0.45);
+    0 0 16px rgba(255, 78, 205, 0.42);
 
   --clay-shadow-active:
     1px 1px 0 #00f0ff;
 
   --card-shadow:
     5px 5px 0 #00f0ff,
-    0 12px 28px rgba(10, 2, 24, 0.65);
+    0 10px 20px rgba(10, 2, 24, 0.65);
 
   --input-shadow:
     inset 0 2px 6px rgba(10, 2, 24, 0.75),

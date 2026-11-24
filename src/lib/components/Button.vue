@@ -126,24 +126,108 @@ const handleClick = (e: MouseEvent) => {
 }
 
 [data-theme="clay"] .btn--primary {
-  box-shadow: 
-    6px 12px 22px rgba(124, 58, 237, 0.35),
-    inset -3px -3px 7px rgba(46, 16, 101, 0.4),
-    inset 3px 3px 7px rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 5px 12px rgba(124, 58, 237, 0.22),
+    inset -2px -2px 5px rgba(46, 16, 101, 0.22),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.48);
 }
 
 [data-theme="clay"] .btn--primary:hover:not(:disabled) {
-  box-shadow: 
-    8px 16px 28px rgba(124, 58, 237, 0.45),
-    inset -4px -4px 8px rgba(46, 16, 101, 0.45),
-    inset 4px 4px 8px rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 8px 18px rgba(124, 58, 237, 0.28),
+    inset -3px -3px 6px rgba(46, 16, 101, 0.26),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.58);
 }
 
 [data-theme="clay"] .btn--primary:active:not(:disabled) {
-  box-shadow: 
-    2px 4px 10px rgba(124, 58, 237, 0.3),
-    inset 3px 3px 6px rgba(46, 16, 101, 0.6),
-    inset -2px -2px 6px rgba(255, 255, 255, 0.4);
+  box-shadow:
+    0 2px 6px rgba(124, 58, 237, 0.2),
+    inset 2px 2px 5px rgba(46, 16, 101, 0.34),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="clay"] .btn--secondary {
+  box-shadow:
+    0 5px 12px rgba(6, 182, 212, 0.22),
+    inset -2px -2px 5px rgba(8, 51, 68, 0.22),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.48);
+}
+
+[data-theme="clay"] .btn--secondary:hover:not(:disabled) {
+  box-shadow:
+    0 8px 18px rgba(6, 182, 212, 0.28),
+    inset -3px -3px 6px rgba(8, 51, 68, 0.26),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.58);
+}
+
+[data-theme="clay"] .btn--secondary:active:not(:disabled) {
+  box-shadow:
+    0 2px 6px rgba(6, 182, 212, 0.2),
+    inset 2px 2px 5px rgba(8, 51, 68, 0.34),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="clay"] .btn--success {
+  box-shadow:
+    0 5px 12px rgba(4, 120, 87, 0.22),
+    inset -2px -2px 5px rgba(2, 44, 34, 0.22),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.48);
+}
+
+[data-theme="clay"] .btn--success:hover:not(:disabled) {
+  box-shadow:
+    0 8px 18px rgba(4, 120, 87, 0.28),
+    inset -3px -3px 6px rgba(2, 44, 34, 0.26),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.58);
+}
+
+[data-theme="clay"] .btn--success:active:not(:disabled) {
+  box-shadow:
+    0 2px 6px rgba(4, 120, 87, 0.2),
+    inset 2px 2px 5px rgba(2, 44, 34, 0.34),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="clay"] .btn--warning {
+  box-shadow:
+    0 5px 12px rgba(245, 158, 11, 0.22),
+    inset -2px -2px 5px rgba(120, 53, 15, 0.22),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.48);
+}
+
+[data-theme="clay"] .btn--warning:hover:not(:disabled) {
+  box-shadow:
+    0 8px 18px rgba(245, 158, 11, 0.28),
+    inset -3px -3px 6px rgba(120, 53, 15, 0.26),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.58);
+}
+
+[data-theme="clay"] .btn--warning:active:not(:disabled) {
+  box-shadow:
+    0 2px 6px rgba(245, 158, 11, 0.2),
+    inset 2px 2px 5px rgba(120, 53, 15, 0.34),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="clay"] .btn--danger {
+  box-shadow:
+    0 5px 12px rgba(244, 63, 94, 0.22),
+    inset -2px -2px 5px rgba(136, 19, 55, 0.22),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.48);
+}
+
+[data-theme="clay"] .btn--danger:hover:not(:disabled) {
+  box-shadow:
+    0 8px 18px rgba(244, 63, 94, 0.28),
+    inset -3px -3px 6px rgba(136, 19, 55, 0.26),
+    inset 3px 3px 6px rgba(255, 255, 255, 0.58);
+}
+
+[data-theme="clay"] .btn--danger:active:not(:disabled) {
+  box-shadow:
+    0 2px 6px rgba(244, 63, 94, 0.2),
+    inset 2px 2px 5px rgba(136, 19, 55, 0.34),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.35);
 }
 
 [data-theme="glass"] .btn--primary {

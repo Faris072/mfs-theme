@@ -9,11 +9,22 @@
         <slot name="links" :items="items" :navigate="handleNavigate">
           <ul class="navbar__list mfs-flex mfs-items-center">
             <li v-for="(item, idx) in items" :key="idx" class="navbar__item">
+              <button
+                v-if="!item.to && !item.href"
+                type="button"
+                class="navbar__link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-pill"
+                :class="{ 'navbar__link--active': item.active }"
+                :aria-current="item.active ? 'page' : undefined"
+                @click="handleNavigate(item, $event)"
+              >
+                {{ item.label }}
+              </button>
+
               <component
-                :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+                :is="item.to ? 'router-link' : 'a'"
+                v-else
                 :to="item.to"
                 :href="item.href"
-                :type="!item.to && !item.href ? 'button' : undefined"
                 class="navbar__link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-pill"
                 :class="{ 'navbar__link--active': item.active }"
                 :aria-current="item.active ? 'page' : undefined"
@@ -82,11 +93,22 @@
         <slot name="links" :items="items" :navigate="handleMobileNavigate">
           <ul class="navbar__mobile-list mfs-flex mfs-flex-col">
             <li v-for="(item, idx) in items" :key="idx">
+              <button
+                v-if="!item.to && !item.href"
+                type="button"
+                class="navbar__mobile-link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-w-full mfs-rounded-md"
+                :class="{ 'navbar__mobile-link--active': item.active }"
+                :aria-current="item.active ? 'page' : undefined"
+                @click="handleMobileNavigate(item, $event)"
+              >
+                {{ item.label }}
+              </button>
+
               <component
-                :is="item.to ? 'router-link' : item.href ? 'a' : 'button'"
+                :is="item.to ? 'router-link' : 'a'"
+                v-else
                 :to="item.to"
                 :href="item.href"
-                :type="!item.to && !item.href ? 'button' : undefined"
                 class="navbar__mobile-link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-w-full mfs-rounded-md"
                 :class="{ 'navbar__mobile-link--active': item.active }"
                 :aria-current="item.active ? 'page' : undefined"

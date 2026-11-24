@@ -5,7 +5,6 @@
       `badge--${variant}`,
       `badge--${size}`,
       'mfs-pill',
-      'mfs-shadow',
       variant === 'surface' ? 'mfs-surface' : `mfs-bg-${variant}`
     ]"
   >
@@ -67,5 +66,9 @@ withDefaults(
 
 .badge--danger {
   color: var(--danger-text, #ffffff);
+}
+
+[data-theme="clay"] .badge {
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.45);
 }
 </style>
