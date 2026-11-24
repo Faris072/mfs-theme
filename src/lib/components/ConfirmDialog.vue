@@ -3,11 +3,11 @@
     <Transition name="mfs-confirm-fade">
       <div
         v-if="state.isOpen && state.options"
-        class="mfs-confirm-backdrop mfs-backdrop"
+        class="mfs-confirm-backdrop mfs-backdrop mfs-fixed mfs-inset-0 mfs-flex mfs-items-center mfs-justify-center mfs-p-4"
         @click="reject"
       >
         <div
-          class="mfs-confirm mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+          class="mfs-confirm mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-w-full"
           role="alertdialog"
           aria-modal="true"
           :aria-labelledby="titleId"
@@ -15,7 +15,7 @@
           @click.stop
         >
           <div class="mfs-confirm__header">
-            <h3 :id="titleId" class="mfs-confirm__title mfs-title">
+            <h3 :id="titleId" class="mfs-confirm__title mfs-title mfs-m-0">
               {{ state.options.title }}
             </h3>
           </div>
@@ -24,18 +24,18 @@
             {{ state.options.message }}
           </p>
 
-          <div class="mfs-confirm__actions">
+          <div class="mfs-flex mfs-justify-end mfs-gap-2-5 mfs-flex-wrap">
             <button
               type="button"
-              class="mfs-confirm__btn mfs-confirm__btn--cancel mfs-surface-subtle mfs-pill mfs-shadow mfs-focus-ring"
+              class="mfs-confirm__btn mfs-surface-subtle mfs-pill mfs-shadow mfs-focus-ring mfs-cursor-pointer mfs-font-semibold"
               @click="reject"
             >
               {{ state.options.cancelLabel ?? 'Cancel' }}
             </button>
             <button
               type="button"
-              class="mfs-confirm__btn mfs-confirm__btn--accept mfs-pill mfs-shadow mfs-focus-ring"
-              :class="[`mfs-confirm__btn--${state.options.variant ?? 'primary'}`]"
+              class="mfs-confirm__btn mfs-pill mfs-shadow mfs-focus-ring mfs-cursor-pointer mfs-font-semibold"
+              :class="[`mfs-bg-${state.options.variant ?? 'primary'}`]"
               @click="accept"
             >
               {{ state.options.confirmLabel ?? 'Confirm' }}
@@ -83,27 +83,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .mfs-confirm-backdrop {
-  position: fixed;
-  inset: 0;
   z-index: 10040;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(6px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
 }
 
 .mfs-confirm {
-  width: 100%;
   max-width: 420px;
   padding: 22px 24px;
-  border-radius: var(--radius, 20px);
-  background-color: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border, transparent);
-  box-shadow: var(--card-shadow);
-  backdrop-filter: var(--backdrop-blur, none);
 }
 
 .mfs-confirm__header {
@@ -111,33 +96,20 @@ onBeforeUnmount(() => {
 }
 
 .mfs-confirm__title {
-  margin: 0;
   font-size: 1.15rem;
-  font-weight: 700;
 }
 
 .mfs-confirm__message {
   margin: 0 0 20px;
   font-size: 0.92rem;
-  color: var(--text-muted);
   line-height: 1.5;
-}
-
-.mfs-confirm__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
 }
 
 .mfs-confirm__btn {
   padding: 9px 18px;
-  border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border);
   font-family: inherit;
   font-size: 0.9rem;
-  font-weight: 600;
-  cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
 }
 
@@ -147,33 +119,6 @@ onBeforeUnmount(() => {
 
 .mfs-confirm__btn:active {
   transform: translateY(0);
-}
-
-.mfs-confirm__btn--cancel {
-  background-color: var(--surface-subtle);
-  color: var(--text);
-  box-shadow: var(--clay-shadow);
-}
-
-.mfs-confirm__btn--accept {
-  color: var(--primary-text, #ffffff);
-  box-shadow: var(--clay-shadow);
-}
-
-.mfs-confirm__btn--primary { background-color: var(--primary); }
-.mfs-confirm__btn--success { background-color: var(--success); }
-.mfs-confirm__btn--warning { background-color: var(--warning); color: var(--warning-text, #1e293b); }
-.mfs-confirm__btn--danger { background-color: var(--danger); color: var(--danger-text, #ffffff); }
-
-/* Theme Overrides */
-[data-theme="glass"] .mfs-confirm {
-  background-color: rgba(15, 23, 42, 0.88);
-  backdrop-filter: blur(20px);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-[data-theme="neo"] .mfs-confirm {
-  border: none;
 }
 
 /* Transition */

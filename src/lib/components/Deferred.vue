@@ -1,8 +1,8 @@
 <template>
-  <div ref="targetRef" class="deferred">
+  <div ref="targetRef" class="mfs-w-full">
     <slot v-if="loaded" />
     <slot v-else name="placeholder">
-      <div class="deferred__placeholder mfs-surface-subtle mfs-rounded mfs-caption">
+      <div class="mfs-inset mfs-rounded mfs-p-6 mfs-text-center mfs-text-sm mfs-text-muted">
         Loading...
       </div>
     </slot>
@@ -63,23 +63,3 @@ onBeforeUnmount(() => {
   observer = null
 })
 </script>
-
-<style scoped>
-.deferred {
-  width: 100%;
-}
-
-.deferred__placeholder {
-  padding: 24px;
-  text-align: center;
-  font-size: 0.9rem;
-}
-
-[data-theme="glass"] .deferred__placeholder {
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-[data-theme="neo"] .deferred__placeholder {
-  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.08), inset -2px -2px 6px rgba(255, 255, 255, 0.7);
-}
-</style>

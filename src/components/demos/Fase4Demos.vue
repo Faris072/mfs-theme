@@ -287,6 +287,7 @@
     title="ConfirmDialog"
     description="Promise-based modal confirmation driven by useConfirm(). Globally mounted in App.vue."
     :code="confirmDialogCode"
+    :code-tabs="confirmDialogCodeTabs"
     :api="confirmDialogApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -310,6 +311,7 @@
     title="DynamicDialog"
     description="Programmatic modal host rendering arbitrary Vue components via useDialog().open()."
     :code="dynamicDialogCode"
+    :code-tabs="dynamicDialogCodeTabs"
     :api="dynamicDialogApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -426,24 +428,48 @@ const notify = () => {
   <Button variant="success" @click="notify">Success Toast</Button>
 </template>`
 
-const alertCode = `<template>
+const alertCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Alert, Button } from '@mfs-atomic/ui'
+
+const showAlert = ref(true)
+<\/script>
+
+<template>
   <Alert severity="info" title="Information">
     Theme tokens update automatically.
   </Alert>
 
   <Alert
+    v-if="showAlert"
     severity="danger"
     title="Action Required"
     closable
-    @close="onClose"
+    @close="showAlert = false"
   >
     Your session is about to expire.
   </Alert>
+  <Button v-else size="sm" variant="surface" @click="showAlert = true">
+    Restore Alert
+  </Button>
 </template>`
 
-const tooltipCode = `<template>
+const tooltipCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Tooltip } from '@mfs-atomic/ui'
+
+const disabled = ref(false)
+<\/script>
+
+<template>
   <Tooltip content="Appears above trigger" placement="top">
-    <Button variant="surface">Hover or focus me</Button>
+    <Button variant="surface" size="sm">Hover or focus me</Button>
+  </Tooltip>
+
+  <Tooltip content="Conditional tooltip" placement="right" :disabled="disabled">
+    <Button variant="secondary" size="sm" @click="disabled = !disabled">
+      {{ disabled ? 'Enable' : 'Disable' }}
+    </Button>
   </Tooltip>
 </template>`
 
@@ -465,8 +491,15 @@ const open = ref(false)
   </Drawer>
 </template>`
 
-const popoverCode = `<template>
-  <Popover placement="bottom">
+const popoverCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Popover } from '@mfs-atomic/ui'
+
+const placement = ref<'top' | 'bottom' | 'left' | 'right'>('bottom')
+<\/script>
+
+<template>
+  <Popover :placement="placement">
     <template #trigger="{ open }">
       <Button variant="primary">{{ open ? 'Close' : 'Open Popover' }}</Button>
     </template>
@@ -477,18 +510,46 @@ const popoverCode = `<template>
   </Popover>
 </template>`
 
-const skeletonCode = `<template>
-  <Skeleton variant="circle" width="48px" />
-  <Skeleton variant="rect" height="110px" />
-  <Skeleton variant="text" :lines="3" animated />
+const skeletonCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Skeleton } from '@mfs-atomic/ui'
+
+const animated = ref(true)
+<\/script>
+
+<template>
+  <Button size="sm" variant="surface" @click="animated = !animated">
+    Shimmer: {{ animated ? 'On' : 'Off' }}
+  </Button>
+
+  <Skeleton variant="circle" width="48px" :animated="animated" />
+  <Skeleton variant="rect" height="110px" :animated="animated" />
+  <Skeleton variant="text" :lines="3" :animated="animated" />
 </template>`
 
-const progressBarCode = `<template>
-  <ProgressBar :value="78" show-value variant="success" />
+const progressBarCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, ProgressBar } from '@mfs-atomic/ui'
+
+const progress = ref(45)
+const adjust = (delta: number) => {
+  progress.value = Math.min(100, Math.max(0, progress.value + delta))
+}
+<\/script>
+
+<template>
+  <Button size="sm" @click="adjust(-15)">-15%</Button>
+  <Button size="sm" variant="primary" @click="adjust(15)">+15%</Button>
+
+  <ProgressBar :value="progress" show-value variant="success" />
   <ProgressBar indeterminate variant="primary" height="8px" />
 </template>`
 
-const progressSpinnerCode = `<template>
+const progressSpinnerCode = `<script setup lang="ts">
+import { ProgressSpinner } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
   <ProgressSpinner size="sm" variant="primary" />
   <ProgressSpinner size="lg" variant="success" />
   <ProgressSpinner :size="60" :stroke-width="5" variant="warning" />
@@ -517,6 +578,27 @@ const handleDelete = async () => {
   <!-- <ConfirmDialog /> mounted once at app root -->
   <Button variant="danger" @click="handleDelete">Delete Item</Button>
 </template>`
+
+const confirmDialogCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: confirmDialogCode
+  },
+  {
+    label: 'Options',
+    filename: 'confirm.ts',
+    code: `import type { ConfirmOptions } from '@mfs-atomic/ui'
+
+export const deletePreset: ConfirmOptions = {
+  title: 'Delete Workspace?',
+  message: 'This action cannot be undone and removes all saved presets.',
+  confirmLabel: 'Delete',
+  cancelLabel: 'Keep',
+  variant: 'danger'
+}`
+  }
+]
 
 // API tables
 const toastApi: { props: ApiRow[] } = {
@@ -845,12 +927,59 @@ const openDynamicNote = () => {
 }
 
 const dynamicDialogCode = `<script setup lang="ts">
-import { DynamicDialog, useDialog } from '@mfs-atomic/ui'
+import { ref } from 'vue'
+import { Button, DynamicDialog, useDialog } from '@mfs-atomic/ui'
 import MyModalBody from './MyModalBody.vue'
 
 const dialog = useDialog()
-const open = () => dialog.open(MyModalBody, { header: 'Details', width: '420px' })
-<\/script>`
+const result = ref('None yet')
+
+const openModal = () => {
+  dialog.open(MyModalBody, {
+    header: 'Programmatic Dialog',
+    width: '420px',
+    props: { message: 'Rendered via useDialog().open().' },
+    onClose: (data) => {
+      result.value = String(data ?? 'Closed')
+    }
+  })
+}
+<\/script>
+
+<template>
+  <Button variant="primary" @click="openModal">Open Dynamic Dialog</Button>
+  <p>Returned: {{ result }}</p>
+  <DynamicDialog />
+</template>`
+
+const dynamicDialogCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: dynamicDialogCode
+  },
+  {
+    label: 'MyModalBody.vue',
+    filename: 'MyModalBody.vue',
+    code: `<script setup lang="ts">
+import { inject } from 'vue'
+import { Button, type DialogRef } from '@mfs-atomic/ui'
+
+defineProps<{ message: string }>()
+const dialogRef = inject<DialogRef>('dialogRef')
+<\/script>
+
+<template>
+  <div class="mfs-stack">
+    <p>{{ message }}</p>
+    <div class="mfs-row mfs-justify-end mfs-gap-2">
+      <Button variant="surface" @click="dialogRef?.close('Dismissed')">Cancel</Button>
+      <Button variant="primary" @click="dialogRef?.close('Confirmed!')">Confirm</Button>
+    </div>
+  </div>
+</template>`
+  }
+]
 
 const dynamicDialogApi: { props: ApiRow[] } = {
   props: [

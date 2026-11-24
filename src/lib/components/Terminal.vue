@@ -1,27 +1,27 @@
 <template>
   <div
-    class="mfs-terminal mfs-font-mono mfs-rounded mfs-shadow-card mfs-blur"
+    class="mfs-terminal mfs-surface mfs-font-mono mfs-rounded mfs-shadow-card mfs-blur mfs-p-4"
     @click="focusInput"
   >
-    <div v-if="welcomeMessage" class="mfs-terminal__welcome">{{ welcomeMessage }}</div>
+    <div v-if="welcomeMessage" class="mfs-terminal__welcome mfs-text-muted">{{ welcomeMessage }}</div>
 
-    <div ref="logRef" class="mfs-terminal__logs">
+    <div ref="logRef" class="mfs-terminal__logs mfs-overflow-y-auto mfs-flex mfs-flex-col mfs-gap-1-5">
       <div v-for="(entry, idx) in entries" :key="idx" class="mfs-terminal__entry">
-        <div class="mfs-terminal__cmd-line">
-          <span class="mfs-terminal__prompt">{{ prompt }}</span>
+        <div class="mfs-flex mfs-gap-2">
+          <span class="mfs-text-primary mfs-font-bold mfs-select-none">{{ prompt }}</span>
           <span class="mfs-terminal__cmd">{{ entry.command }}</span>
         </div>
         <div v-if="entry.response" class="mfs-terminal__response">{{ entry.response }}</div>
       </div>
     </div>
 
-    <form class="mfs-terminal__input-row" @submit.prevent="submitCommand">
-      <span class="mfs-terminal__prompt">{{ prompt }}</span>
+    <form class="mfs-flex mfs-items-center mfs-gap-2 mfs-mt-2" @submit.prevent="submitCommand">
+      <span class="mfs-text-primary mfs-font-bold mfs-select-none">{{ prompt }}</span>
       <input
         ref="inputRef"
         v-model="currentInput"
         type="text"
-        class="mfs-terminal__input"
+        class="mfs-terminal__input mfs-flex-1 mfs-bg-transparent mfs-border-none mfs-outline-none"
         autocomplete="off"
         spellcheck="false"
         aria-label="Terminal command input"
@@ -131,77 +131,29 @@ defineExpose({ clear: () => { entries.value = [] } })
 
 <style scoped>
 .mfs-terminal {
-  font-family: var(--font-mono, monospace);
   font-size: 0.88rem;
   line-height: 1.5;
-  padding: 16px;
-  background-color: #0f172a;
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
   cursor: text;
 }
 
 .mfs-terminal__welcome {
-  color: #94a3b8;
   margin-bottom: 10px;
 }
 
 .mfs-terminal__logs {
   max-height: 260px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mfs-terminal__cmd-line {
-  display: flex;
-  gap: 8px;
-}
-
-.mfs-terminal__prompt {
-  color: var(--primary, #38bdf8);
-  font-weight: 700;
-  user-select: none;
 }
 
 .mfs-terminal__response {
-  color: #cbd5e1;
+  color: color-mix(in srgb, var(--text) 85%, var(--text-muted));
   white-space: pre-wrap;
   padding-left: 16px;
   margin-top: 2px;
 }
 
-.mfs-terminal__input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
 .mfs-terminal__input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
   color: inherit;
   font-family: inherit;
   font-size: inherit;
-}
-
-[data-theme="clay"] .mfs-terminal {
-  background-color: #1e1538;
-  box-shadow: var(--clay-shadow);
-}
-
-[data-theme="glass"] .mfs-terminal {
-  background-color: rgba(2, 6, 23, 0.78);
-  backdrop-filter: blur(16px);
-}
-
-[data-theme="neo"] .mfs-terminal {
-  background-color: #1e293b;
-  box-shadow: var(--clay-shadow);
-  border: none;
 }
 </style>

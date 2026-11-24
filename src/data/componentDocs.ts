@@ -156,7 +156,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Form',
     phase: 2,
     status: 'Ready',
-    summary: 'Accessible group container managing shared array v-model, direction, and invalid/disabled states for Checkboxes.'
+    summary: 'Accessible group container managing shared array v-model, direction, and invalid/disabled states for Checkboxes.',
+    a11y: {
+      keyboard: ['Tab moves between checkboxes', 'Space toggles each checkbox'],
+      aria: ['role="group"', 'aria-invalid when invalid']
+    }
   },
   {
     slug: 'radio-button',
@@ -171,7 +175,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Form',
     phase: 2,
     status: 'Ready',
-    summary: 'Accessible radiogroup container coordinating shared name, single-value v-model, and layout direction.'
+    summary: 'Accessible radiogroup container coordinating shared name, single-value v-model, and layout direction.',
+    a11y: {
+      keyboard: ['ArrowUp / ArrowDown or ArrowLeft / ArrowRight cycle options', 'Space selects focused radio'],
+      aria: ['role="radiogroup"', 'aria-invalid when invalid']
+    }
   },
   {
     slug: 'chips',
@@ -179,7 +187,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Form',
     phase: 2,
     status: 'Ready',
-    summary: 'Multi-tag text input creating removable Chip pills via Enter or separator keys.'
+    summary: 'Multi-tag text input creating removable Chip pills via Enter or separator keys.',
+    a11y: {
+      keyboard: ['Enter or separator key adds chip', 'Backspace removes last chip when input is empty'],
+      aria: ['aria-invalid when invalid or error is set', 'Native remove buttons for each chip']
+    }
   },
   {
     slug: 'select',
@@ -197,35 +209,55 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'MultiSelect',
     category: 'Form',
     phase: 2,
-    summary: 'Multi-value dropdown selector displaying chosen items as removable chips.'
+    summary: 'Multi-value searchable dropdown selector displaying chosen items as removable chips with select-all support.',
+    a11y: {
+      keyboard: ['Enter toggles dropdown', 'Escape closes dropdown', 'Tab navigates chip remove buttons and options'],
+      aria: ['role="combobox"', 'aria-expanded', 'aria-invalid', 'role="listbox" with aria-multiselectable="true"', 'role="option" with aria-selected']
+    }
   },
   {
     slug: 'slider',
     name: 'Slider',
     category: 'Form',
     phase: 2,
-    summary: 'Continuous or stepped range slider supporting single value or dual-thumb range.'
+    summary: 'Continuous or stepped range slider supporting single value, dual-thumb range, and keyboard arrow stepping.',
+    a11y: {
+      keyboard: ['ArrowLeft / ArrowDown decrease value', 'ArrowRight / ArrowUp increase value', 'Home / End jump to min/max'],
+      aria: ['role="slider"', 'aria-valuemin, aria-valuemax, aria-valuenow', 'aria-label on single and dual thumbs']
+    }
   },
   {
     slug: 'rating',
     name: 'Rating',
     category: 'Form',
     phase: 2,
-    summary: 'Interactive star rating input with readonly display and clearable selection.'
+    summary: 'Interactive star rating slider with readonly display, clearable selection, and keyboard arrow support.',
+    a11y: {
+      keyboard: ['ArrowRight / ArrowUp increment rating', 'ArrowLeft / ArrowDown decrement rating', 'Tab focuses rating control'],
+      aria: ['role="slider"', 'aria-valuemin="0", aria-valuemax, aria-valuenow', 'aria-label on container and individual star buttons']
+    }
   },
   {
     slug: 'color-picker',
     name: 'ColorPicker',
     category: 'Form',
     phase: 2,
-    summary: 'Color swatch and hex picker with preset palette and live preview.'
+    summary: 'Color swatch and hex picker popover with preset palette, hex input, and live preview.',
+    a11y: {
+      keyboard: ['Tab navigates trigger, hex input, and swatches', 'Escape closes popover'],
+      aria: ['aria-expanded on trigger', 'aria-label="Pick a color"', 'aria-label on palette, hex input, and each swatch']
+    }
   },
   {
     slug: 'date-picker',
     name: 'DatePicker',
     category: 'Form',
     phase: 2,
-    summary: 'Calendar popover date selector with min/max constraints and formatted output.'
+    summary: 'Calendar popover date selector with min/max constraints, disabled dates, and formatted output.',
+    a11y: {
+      keyboard: ['Tab navigates trigger, month controls, and day buttons', 'Escape closes calendar popover'],
+      aria: ['aria-expanded on trigger', 'aria-invalid when error is set', 'Native button semantics for day and month controls']
+    }
   },
   {
     slug: 'form',
@@ -234,7 +266,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 2,
     status: 'Ready',
     importSymbol: 'Form',
-    summary: 'Schema/resolver form container with FormField context, submit handling, and server 422 error mapping.'
+    summary: 'Schema/resolver form container with FormField context, submit handling, and server 422 error mapping.',
+    a11y: {
+      keyboard: ['Enter submits form from inputs', 'Tab moves sequentially across FormField controls'],
+      aria: ['Native <form> submission semantics', 'Associated <label> and inline error messages via FormField']
+    }
   },
   {
     slug: 'mentions',
@@ -242,7 +278,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Form',
     phase: 2,
     status: 'Ready',
-    summary: 'Textarea with @ trigger detection, floating suggestion list, and async remote search support.'
+    summary: 'Textarea with @ trigger detection, floating suggestion list, and async remote search support.',
+    a11y: {
+      keyboard: ['ArrowUp / ArrowDown navigate suggestions', 'Enter inserts selected mention', 'Escape closes suggestion list'],
+      aria: ['role="combobox" with aria-autocomplete="list" and aria-expanded', 'role="listbox" and role="option" with aria-selected']
+    }
   },
 
   // Phase 3 (7)
@@ -350,7 +390,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Popover',
     category: 'Overlay',
     phase: 4,
-    summary: 'Click-triggered floating surface anchored to a trigger element.'
+    summary: 'Click-triggered floating surface anchored to a trigger element with outside-click and Escape dismissal.',
+    a11y: {
+      keyboard: ['Escape closes popover', 'Tab moves through interactive popover content'],
+      aria: ['aria-expanded and aria-haspopup="dialog" on trigger', 'role="dialog" on floating surface']
+    }
   },
   {
     slug: 'skeleton',
@@ -378,7 +422,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'ConfirmDialog',
     category: 'Overlay',
     phase: 4,
-    summary: 'Promise-based confirmation modal triggered via the useConfirm() composable.'
+    summary: 'Promise-based confirmation alert dialog triggered via the useConfirm() composable with Escape and backdrop dismissal.',
+    a11y: {
+      keyboard: ['Escape cancels and closes dialog', 'Tab moves between cancel and confirm actions'],
+      aria: ['role="alertdialog"', 'aria-modal="true"', 'aria-labelledby and aria-describedby']
+    }
   },
   {
     slug: 'dynamic-dialog',
@@ -386,7 +434,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Overlay',
     phase: 4,
     status: 'Ready',
-    summary: 'Programmatic modal host rendering arbitrary Vue components via useDialog().open().'
+    summary: 'Programmatic modal host rendering arbitrary Vue components via useDialog().open().',
+    a11y: {
+      keyboard: ['Escape closes active dialog', 'Tab cycles focus inside Modal host'],
+      aria: ['role="dialog"', 'aria-modal="true"', 'aria-labelledby bound to dialog header']
+    }
   },
 
   // Phase 5 (7)
@@ -402,10 +454,10 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Tabs',
     category: 'Navigation',
     phase: 5,
-    summary: 'Tabbed content switcher with keyboard arrow support and active indicator.',
+    summary: 'Tabbed content switcher with animated active indicator, disabled tab support, and ARIA keyboard navigation.',
     a11y: {
       keyboard: ['ArrowLeft / ArrowRight switch tabs', 'Home / End jump to first/last'],
-      aria: ['role="tablist"', 'role="tab"', 'aria-selected', 'role="tabpanel"']
+      aria: ['role="tablist"', 'role="tab"', 'aria-selected and aria-disabled', 'role="tabpanel"']
     }
   },
   {
@@ -420,21 +472,33 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Pagination',
     category: 'Navigation',
     phase: 5,
-    summary: 'Page navigation controls with page size, boundary buttons, and active state.'
+    summary: 'Accessible page navigation controls with page size, first/last boundary buttons, and active page state.',
+    a11y: {
+      keyboard: ['Tab navigates page and boundary buttons', 'Enter / Space activates selected page'],
+      aria: ['aria-current="page" on active page', 'Descriptive aria-label on first, previous, page, next, and last buttons']
+    }
   },
   {
     slug: 'steps',
     name: 'Steps',
     category: 'Navigation',
     phase: 5,
-    summary: 'Multi-step progress stepper for wizards and sequential workflows.'
+    summary: 'Multi-step progress stepper with active, completed, and interactive step states for wizards.',
+    a11y: {
+      keyboard: ['Tab navigates interactive steps', 'Enter / Space activates clickable step'],
+      aria: ['aria-label="Progress steps"', 'aria-current="step" on active step']
+    }
   },
   {
     slug: 'context-menu',
     name: 'ContextMenu',
     category: 'Navigation',
     phase: 5,
-    summary: 'Right-click or trigger-bound contextual action menu with keyboard navigation.'
+    summary: 'Right-click or trigger-bound contextual action menu with icons, dividers, and keyboard arrow navigation.',
+    a11y: {
+      keyboard: ['ArrowUp / ArrowDown navigate menu items', 'Enter / Space invokes item', 'Escape closes menu'],
+      aria: ['role="menu"', 'role="menuitem"', 'role="separator" on dividers']
+    }
   },
   {
     slug: 'scroll-top',
@@ -449,7 +513,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Navigation',
     phase: 5,
     status: 'Ready',
-    summary: 'Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and remote search.'
+    summary: 'Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and remote search.',
+    a11y: {
+      keyboard: ['⌘K / Ctrl+K toggles palette', 'ArrowUp / ArrowDown navigate commands', 'Enter executes active item', 'Escape closes palette'],
+      aria: ['role="dialog" and aria-modal="true"', 'role="listbox", role="group", and role="option" with aria-selected']
+    }
   },
 
   // Phase 6 (3)
@@ -491,7 +559,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Data',
     phase: 6,
     status: 'Ready',
-    summary: 'IntersectionObserver sentinel container for incremental batch loading with retryable error and finished states.'
+    summary: 'IntersectionObserver sentinel container for incremental batch loading with retryable error and finished states.',
+    a11y: {
+      keyboard: ['Tab focuses retry button when an error state is displayed'],
+      aria: ['role="status" and aria-live="polite" during loading', 'role="alert" for error state', 'aria-hidden="true" on intersection sentinel']
+    }
   },
 
   // Phase 7 (13)
@@ -500,7 +572,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'AutoComplete',
     category: 'Forms Advanced',
     phase: 7,
-    summary: 'Text input with live suggestion filtering and keyboard selection.'
+    summary: 'Combobox text input with live local or remote suggestion filtering, keyboard navigation, and custom item templates.',
+    a11y: {
+      keyboard: ['ArrowUp / ArrowDown navigate suggestions', 'Enter selects active option', 'Escape closes suggestion list'],
+      aria: ['role="combobox" with aria-expanded and aria-autocomplete="list"', 'role="listbox" and role="option" with aria-selected', 'role="status" for empty state']
+    }
   },
   {
     slug: 'cascader',
@@ -591,14 +667,29 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'Editor',
     category: 'Forms Advanced',
     phase: 7,
-    summary: 'Rich text formatting editor with toolbar controls and HTML output.'
+    summary: 'Rich text formatting editor with formatting toolbar, readonly mode, and sanitized HTML output.',
+    a11y: {
+      keyboard: ['Tab navigates formatting toolbar buttons and editable region', 'Standard rich-text editing shortcuts inside contenteditable'],
+      aria: ['role="toolbar" with aria-label="Formatting" and labeled action buttons', 'role="textbox" with aria-multiline="true"']
+    }
+  },
+  {
+    slug: 'code-editor',
+    name: 'CodeEditor',
+    category: 'Forms Advanced',
+    phase: 7,
+    summary: 'XSS-safe VSCode-style code editor and readonly viewer with line numbers and zero-v-html syntax highlighting.',
+    a11y: {
+      keyboard: ['Tab inserts indentation inside editor', 'Tab navigates copy button when outside textarea'],
+      aria: ['aria-label="Code editor" and aria-invalid on textarea', 'aria-hidden="true" on decorative gutter and syntax overlay', 'aria-label on copy button']
+    }
   },
   {
     slug: 'icon-field',
     name: 'IconField',
     category: 'Forms Advanced',
     phase: 7,
-    summary: 'Wrapper input dengan posisi ikon kiri/kanan adaptif tema.'
+    summary: 'Theme-adaptive input wrapper positioning leading and trailing icons around form fields.'
   },
   {
     slug: 'input-icon',
@@ -781,7 +872,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'ConfirmPopup',
     category: 'Overlays, Media & Directives',
     phase: 11,
-    summary: 'Anchored confirmation popover for inline destructive actions.'
+    summary: 'Anchored confirmation alert dialog popover for inline destructive actions via useConfirm().',
+    a11y: {
+      keyboard: ['Escape cancels and closes popup', 'Tab moves between cancel and confirm buttons'],
+      aria: ['role="alertdialog"', 'aria-modal="false"']
+    }
   },
   {
     slug: 'inline-message',
@@ -809,7 +904,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'FileUpload',
     category: 'Overlays, Media & Directives',
     phase: 11,
-    summary: 'Drag-and-drop file uploader with queue preview and size validation.'
+    summary: 'Drag-and-drop file uploader with keyboard trigger, queue preview, MIME/size validation, and loading state.',
+    a11y: {
+      keyboard: ['Enter / Space on dropzone opens native file picker', 'Tab navigates dropzone and file remove buttons'],
+      aria: ['role="button" and aria-label="Upload files" on dropzone', 'aria-busy and role="status" with aria-live="polite" when loading', 'role="alert" for validation errors']
+    }
   },
   {
     slug: 'image-cropper',
@@ -818,7 +917,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 10,
     status: 'Ready',
     importSymbol: 'ImageCropper',
-    summary: 'Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload.'
+    summary: 'Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload.',
+    a11y: {
+      keyboard: ['Enter / Space on empty dropzone opens file picker', 'Tab navigates zoom, rotation, and crop action controls'],
+      aria: ['role="button" and aria-label="Select an image to crop"', 'Descriptive aria-label on zoom and rotate controls', 'role="alert" for error messages']
+    }
   },
   {
     slug: 'image-compare',
@@ -834,7 +937,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Media',
     phase: 10,
     status: 'Ready',
-    summary: 'Pointer-driven canvas signature pad exporting PNG/JPEG data URLs, Blobs, and File objects.'
+    summary: 'Pointer-driven canvas signature pad exporting PNG/JPEG data URLs, Blobs, and File objects.',
+    a11y: {
+      keyboard: ['Tab navigates Clear and Save action buttons', 'Enter / Space activates Clear or Save'],
+      aria: ['Native button semantics and disabled state on Clear and Save controls']
+    }
   },
   {
     slug: 'terminal',
@@ -862,14 +969,23 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     name: 'v-focus-trap',
     category: 'Overlays, Media & Directives',
     phase: 11,
-    summary: 'Directive confining keyboard Tab focus within a modal or region.'
+    summary: 'Directive confining keyboard Tab and Shift+Tab focus within a modal or active region.',
+    a11y: {
+      keyboard: ['Tab wraps from last focusable element back to first', 'Shift+Tab wraps from first focusable element to last'],
+      aria: ['Preserves native focusable element semantics inside trapped container']
+    }
   },
   {
     slug: 'v-animate-on-scroll',
     name: 'v-animate-on-scroll',
     category: 'Overlays, Media & Directives',
     phase: 11,
-    summary: 'Directive applying enter/leave animation classes on viewport intersection.'
+    importSymbol: 'vAnimateOnScroll',
+    summary: 'Zero-CSS IntersectionObserver directive with built-in motion presets (fade-up, fade-down, fade-left, fade-right, zoom-in) and custom class support.',
+    a11y: {
+      keyboard: ['No keyboard interception; purely visual scroll-reveal behavior'],
+      aria: ['Respects prefers-reduced-motion: reduce by skipping enter transforms']
+    }
   },
   {
     slug: 'v-style-class',
@@ -885,7 +1001,11 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Overlays, Media & Directives',
     phase: 11,
     importSymbol: 'vTooltip',
-    summary: 'Directive attaching hover/focus floating tooltips with top, right, bottom, or left modifiers.'
+    summary: 'Directive attaching hover and focus-triggered floating tooltips with top, right, bottom, or left placement modifiers.',
+    a11y: {
+      keyboard: ['Focusin reveals tooltip on focusable triggers', 'Focusout hides tooltip'],
+      aria: ['role="tooltip" on dynamically mounted floating element']
+    }
   },
   {
     slug: 'portal',

@@ -69,6 +69,107 @@ const name = ref('')
 
 > Components can also be imported individually (e.g., `import { Button, Card, Input } from '@mfs-atomic/ui'`).
 
+## Highlighted & Newly Added Components
+
+| Category | Components |
+| --- | --- |
+| **Forms & Validation** | `Form`, `FormField`, `Mentions`, `SignaturePad`, `CodeEditor` |
+| **Overlays & Portals** | `CommandPalette`, `DynamicDialog`, `Portal`, `OverlayBadge` |
+| **Media & Visuals** | `ImageCropper`, `ImageCompare`, `AvatarGroup` |
+| **Data & Lists** | `DataTable`, `InfiniteScroll`, `Select`, `AutoComplete` |
+
+## Local Filter vs Remote Search & Server-Side Data
+
+Choose the data mode based on dataset size:
+
+- **Local filtering (default)**: Best for small, in-memory datasets (< 200 items). Leave `remote` / `lazy` off and pass the full `options`, `items`, or `value` array; the component filters/sorts/paginates on the client.
+- **Remote search (`remote` + `@search` + `loading`)**: Best for large or server-backed lists in `CommandPalette`, `Mentions`, `Select`, and `AutoComplete`. Setting `remote` disables built-in client filtering so your `@search` handler can fetch and update options while `loading` displays a spinner.
+- **Server-side pagination & scrolling (`lazy`)**: Best for unbounded tables and feeds. Use `DataTable` with `lazy` (`@page`, `@sort`, `@filter`) or `InfiniteScroll` (`@load`, `hasMore`, `loading`).
+
+```vue
+<!-- Remote Search (CommandPalette / Mentions / Select / AutoComplete) -->
+<CommandPalette
+  v-model:open="isOpen"
+  :items="remoteItems"
+  remote
+  :loading="isSearching"
+  @search="fetchCommands"
+/>
+
+<Mentions
+  v-model="comment"
+  :options="userSuggestions"
+  remote
+  :loading="isSearchingUsers"
+  @search="({ trigger, query }) => fetchMentions(trigger, query)"
+/>
+
+<!-- Server-Side DataTable & InfiniteScroll -->
+<DataTable
+  :value="rows"
+  :columns="columns"
+  lazy
+  paginator
+  :loading="isLoadingTable"
+  @page="onPage"
+  @sort="onSort"
+  @filter="onFilter"
+/>
+
+<InfiniteScroll :loading="isLoadingMore" :has-more="hasNextPage" @load="loadNextPage">
+  <div v-for="item in feed" :key="item.id">{{ item.title }}</div>
+</InfiniteScroll>
+```
+
+## XSS-Safe `CodeEditor`
+
+`CodeEditor` tokenizes source code into plain-text `<span>` elements (`{{ tok.text }}`) rather than `v-html`, preventing XSS injection even when rendering untrusted user input.
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CodeEditor } from '@mfs-atomic/ui'
+
+const code = ref(`<script setup>\nconst msg = 'Safe by default'\n<\/script>`)
+</script>
+
+<template>
+  <CodeEditor
+    v-model="code"
+    language="vue"
+    filename="Example.vue"
+    :line-numbers="true"
+    :copyable="true"
+  />
+</template>
+```
+
+## `v-animate-on-scroll` Zero-CSS Presets
+
+Animate elements on viewport entry without writing custom keyframes. Supports 5 built-in presets (`fade-up`, `fade-down`, `fade-left`, `fade-right`, `zoom-in`), respects `prefers-reduced-motion`, and also accepts custom `enterClass` / `leaveClass` options.
+
+```vue
+<script setup lang="ts">
+import { vAnimateOnScroll } from '@mfs-atomic/ui'
+</script>
+
+<template>
+  <!-- Default preset ('fade-up') -->
+  <Card v-animate-on-scroll title="Fade Up" />
+
+  <!-- Shorthand preset string -->
+  <Card v-animate-on-scroll="'fade-left'" title="Slide Left" />
+
+  <!-- Full options object -->
+  <Card
+    v-animate-on-scroll="{ animation: 'zoom-in', duration: 600, delay: 150, once: false }"
+    title="Zoom In"
+  />
+</template>
+```
+
+> When registered globally via `ThemePlugin`, the directive is available as `v-animateonscroll`.
+
 ## Built-in Themes
 
 All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:

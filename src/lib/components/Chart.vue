@@ -171,7 +171,7 @@
                 :cx="getX(idx) - 1.5"
                 :cy="getY(val) - 1.5"
                 r="1.6"
-                fill="#ffffff"
+                fill="var(--bevel-light, currentColor)"
                 fill-opacity="0.7"
                 class="mfs-chart__clay-gloss"
               />
@@ -204,7 +204,7 @@
 
       <div
         v-if="tip"
-        class="mfs-chart__tooltip mfs-rounded-sm"
+        class="mfs-chart__tooltip mfs-surface mfs-rounded-sm mfs-shadow-card mfs-blur mfs-whitespace-nowrap mfs-font-semibold"
         :style="{ left: `${tip.x}px`, top: `${tip.y}px` }"
       >
         {{ tip.text }}
@@ -215,7 +215,7 @@
       <span
         v-for="(item, idx) in legendItems"
         :key="idx"
-        class="mfs-chart__legend-item mfs-caption mfs-inline-flex mfs-items-center mfs-gap-1-5"
+        class="mfs-caption mfs-font-semibold mfs-inline-flex mfs-items-center mfs-gap-1-5"
       >
         <span class="mfs-chart__swatch mfs-rounded-full" :style="{ backgroundColor: item.color }" />
         {{ item.label }}
@@ -385,7 +385,7 @@ const showTip = (e: MouseEvent, text: string) => {
 }
 
 .mfs-chart__grid {
-  stroke: var(--border, rgba(100, 116, 139, 0.2));
+  stroke: color-mix(in srgb, var(--text-muted) 24%, transparent);
   stroke-dasharray: 4 4;
 }
 
@@ -418,16 +418,6 @@ const showTip = (e: MouseEvent, text: string) => {
   pointer-events: none;
   padding: 4px 10px;
   font-size: 0.78rem;
-  font-weight: 600;
-  background-color: #0f172a;
-  color: #f8fafc;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-}
-
-.mfs-chart__legend-item {
-  font-size: 0.8rem;
-  font-weight: 600;
 }
 
 .mfs-chart__swatch {
@@ -442,7 +432,7 @@ const showTip = (e: MouseEvent, text: string) => {
 }
 
 [data-theme="clay"] .mfs-chart__slice {
-  stroke: rgba(255, 255, 255, 0.35);
+  stroke: var(--bevel-light, var(--border));
   stroke-width: 1.25px;
   filter: var(--mfs-clay-filter);
 }
@@ -462,79 +452,72 @@ const showTip = (e: MouseEvent, text: string) => {
 }
 
 [data-theme="clay"] .mfs-chart__swatch {
-  box-shadow:
-    1px 2px 4px rgba(109, 40, 217, 0.22),
-    inset -1px -1px 2px rgba(30, 27, 75, 0.2),
-    inset 1px 1px 2px rgba(255, 255, 255, 0.8);
+  box-shadow: var(--clay-shadow);
 }
 
-/* Glassmorphism: translucent frosted fills + crisp white border */
+/* Glassmorphism: translucent frosted fills + crisp border */
 [data-theme="glass"] .mfs-chart__bar,
 [data-theme="glass"] .mfs-chart__slice {
   fill-opacity: 0.76;
-  stroke: rgba(255, 255, 255, 0.45);
+  stroke: var(--border);
   stroke-width: 1.25px;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.28));
+  filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--bg) 55%, transparent));
 }
 
 [data-theme="glass"] .mfs-chart__point {
   fill-opacity: 0.85;
-  stroke: rgba(255, 255, 255, 0.45);
+  stroke: var(--border);
   stroke-width: 1.5px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--bg) 60%, transparent));
 }
 
 [data-theme="glass"] .mfs-chart__line {
   stroke-opacity: 0.9;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--bg) 50%, transparent));
 }
 
 /* Neumorphism: soft dual-shadow depth */
-[data-theme="neo"] .mfs-chart {
-  border: none;
-}
-
 [data-theme="neo"] .mfs-chart__bar,
 [data-theme="neo"] .mfs-chart__slice,
 [data-theme="neo"] .mfs-chart__point {
-  filter: drop-shadow(3px 3px 5px rgba(163, 177, 198, 0.55))
-    drop-shadow(-2px -2px 4px rgba(255, 255, 255, 0.85));
+  filter: drop-shadow(3px 3px 5px color-mix(in srgb, var(--bevel-dark) 65%, transparent))
+    drop-shadow(-2px -2px 4px color-mix(in srgb, var(--bevel-light) 85%, transparent));
 }
 
 [data-theme="neo"] .mfs-chart__line {
-  filter: drop-shadow(2px 2px 3px rgba(163, 177, 198, 0.5));
+  filter: drop-shadow(2px 2px 3px color-mix(in srgb, var(--bevel-dark) 60%, transparent));
 }
 
 /* Neubrutalism: crisp dark stroke + hard offset drop shadow */
 [data-theme="brutalism"] .mfs-chart__bar {
   rx: 0px;
-  stroke: #0f172a;
+  stroke: var(--border);
   stroke-width: 2.25px;
-  filter: drop-shadow(3px 3px 0px #0f172a);
+  filter: drop-shadow(3px 3px 0px var(--border));
 }
 
 [data-theme="brutalism"] .mfs-chart__slice,
 [data-theme="brutalism"] .mfs-chart__point {
-  stroke: #0f172a;
+  stroke: var(--border);
   stroke-width: 2px;
-  filter: drop-shadow(2.5px 2.5px 0px #0f172a);
+  filter: drop-shadow(2.5px 2.5px 0px var(--border));
 }
 
 [data-theme="brutalism"] .mfs-chart__line {
   stroke-width: 3.5px;
-  filter: drop-shadow(2px 2px 0px #0f172a);
+  filter: drop-shadow(2px 2px 0px var(--border));
 }
 
 /* Cyberpunk: subtle neon glow */
 [data-theme="cyberpunk"] .mfs-chart__bar,
 [data-theme="cyberpunk"] .mfs-chart__slice {
-  stroke: rgba(255, 255, 255, 0.35);
+  stroke: var(--border);
   stroke-width: 1px;
-  filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--primary) 50%, transparent));
 }
 
 [data-theme="cyberpunk"] .mfs-chart__point,
 [data-theme="cyberpunk"] .mfs-chart__line {
-  filter: drop-shadow(0 0 6px rgba(236, 72, 153, 0.55));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--secondary) 55%, transparent));
 }
 </style>

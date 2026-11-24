@@ -6,6 +6,7 @@
       title="Menu"
       description="Vertical action menu supporting grouped sections, separators, icons, keyboard Escape, and inline or popup mode."
       :code="menuCode"
+      :code-tabs="menuCodeTabs"
       :api="menuApi"
     >
       <div class="mfs-stack">
@@ -34,6 +35,7 @@
       title="TieredMenu"
       description="Multi-level cascading menu with hover/click submenus, separators, icons, and mobile-friendly nested collapse."
       :code="tieredMenuCode"
+      :code-tabs="tieredMenuCodeTabs"
       :api="tieredMenuApi"
     >
       <div class="mfs-stack">
@@ -53,6 +55,7 @@
       title="SlideMenu"
       description="Drill-down navigation menu with smooth forward/back slide transitions and automatic breadcrumb header."
       :code="slideMenuCode"
+      :code-tabs="slideMenuCodeTabs"
       :api="slideMenuApi"
     >
       <div class="mfs-stack">
@@ -75,6 +78,7 @@
       title="PanelMenu"
       description="Collapsible accordion-style navigation panels supporting single or multiple expanded groups and controlled keys."
       :code="panelMenuCode"
+      :code-tabs="panelMenuCodeTabs"
       :api="panelMenuApi"
     >
       <div class="mfs-stack">
@@ -111,6 +115,7 @@
       title="MegaMenu"
       description="Responsive multi-column dropdown navigation supporting horizontal and vertical orientations plus mobile drawer toggle."
       :code="megaMenuCode"
+      :code-tabs="megaMenuCodeTabs"
       :api="megaMenuApi"
     >
       <div class="mfs-stack">
@@ -150,6 +155,7 @@
       title="Dock"
       description="macOS-inspired floating icon dock with proximity magnification, active indicator dot, tooltips, and 4 edge positions."
       :code="dockCode"
+      :code-tabs="dockCodeTabs"
       :api="dockApi"
     >
       <div class="mfs-stack">
@@ -192,6 +198,7 @@
       title="TabMenu"
       description="Animated sliding-indicator tab bar with keyboard arrow navigation, disabled states, and horizontal scroll."
       :code="tabMenuCode"
+      :code-tabs="tabMenuCodeTabs"
       :api="tabMenuApi"
     >
       <div class="mfs-stack">
@@ -209,6 +216,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
+import type { CodeTab } from '../CodeEditorBlock.vue'
 import Menu, { type MenuItem } from '../../lib/components/Menu.vue'
 import TieredMenu, { type TieredMenuItem } from '../../lib/components/TieredMenu.vue'
 import SlideMenu, { type SlideMenuItem } from '../../lib/components/SlideMenu.vue'
@@ -408,35 +416,479 @@ const tabDescriptions = [
 ]
 
 // Code snippets
-const menuCode = `<template>
+const menuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Menu, type MenuItem } from '@mfs-atomic/ui'
+
+const popupRef = ref<InstanceType<typeof Menu> | null>(null)
+const selected = ref('None')
+
+const items = ref<MenuItem[]>([
+  {
+    label: 'Documents',
+    items: [
+      { label: 'New File' },
+      { label: 'Search' }
+    ]
+  },
+  { separator: true },
+  {
+    label: 'Account',
+    items: [
+      { label: 'Profile' },
+      { label: 'Settings' },
+      { label: 'Billing (Locked)', disabled: true }
+    ]
+  }
+])
+
+const onSelect = (item: MenuItem) => {
+  selected.value = item.label || '—'
+}
+<\/script>
+
+<template>
   <Menu :items="items" @select="onSelect" />
   <button @click="popupRef?.toggle($event)">Open Popup</button>
   <Menu ref="popupRef" :items="items" popup @select="onSelect" />
 </template>`
 
-const tieredMenuCode = `<template>
+const menuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'MenuDemo.vue', language: 'vue', code: menuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface MenuItem {
+  label?: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  separator?: boolean
+  command?: () => void
+  items?: MenuItem[]
+}
+
+export const menuItems: MenuItem[] = [
+  {
+    label: 'Documents',
+    items: [
+      { label: 'New File', icon: 'file-plus' },
+      { label: 'Search', icon: 'search' }
+    ]
+  },
+  { separator: true },
+  {
+    label: 'Account',
+    items: [
+      { label: 'Profile', to: '/profile' },
+      { label: 'Settings', to: '/settings' },
+      { label: 'Billing (Locked)', disabled: true }
+    ]
+  }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { MenuItem } from '@mfs-atomic/ui'
+
+interface ApiMenuGroup {
+  group: string
+  links: { title: string; path: string; locked?: boolean }[]
+}
+
+export function useMenuItems() {
+  const items = ref<MenuItem[]>([])
+  const loading = ref(false)
+
+  onMounted(async () => {
+    loading.value = true
+    try {
+      const res = await fetch('/api/navigation/menu')
+      const groups: ApiMenuGroup[] = await res.json()
+      items.value = groups.flatMap((g, idx) => [
+        ...(idx > 0 ? [{ separator: true }] : []),
+        {
+          label: g.group,
+          items: g.links.map((l) => ({
+            label: l.title,
+            to: l.path,
+            disabled: Boolean(l.locked)
+          }))
+        }
+      ])
+    } finally {
+      loading.value = false
+    }
+  })
+
+  return { items, loading }
+}`
+  }
+]
+
+const tieredMenuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { TieredMenu, type TieredMenuItem } from '@mfs-atomic/ui'
+
+const selected = ref('None')
+
+const items = ref<TieredMenuItem[]>([
+  {
+    label: 'File',
+    items: [
+      { label: 'New', items: [{ label: 'Project' }, { label: 'Component' }] },
+      { label: 'Open Recent' },
+      { separator: true },
+      { label: 'Save' }
+    ]
+  },
+  { label: 'Edit', items: [{ label: 'Undo' }, { label: 'Redo' }] },
+  { separator: true },
+  { label: 'Archive', disabled: true },
+  { label: 'Quit' }
+])
+
+const onSelect = (item: TieredMenuItem) => {
+  selected.value = item.label || '—'
+}
+<\/script>
+
+<template>
   <TieredMenu :items="items" @select="onSelect" />
 </template>`
 
-const slideMenuCode = `<template>
+const tieredMenuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'TieredMenuDemo.vue', language: 'vue', code: tieredMenuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface TieredMenuItem {
+  label?: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  separator?: boolean
+  command?: () => void
+  items?: TieredMenuItem[]
+}
+
+export const tieredItems: TieredMenuItem[] = [
+  {
+    label: 'File',
+    items: [
+      {
+        label: 'New',
+        items: [{ label: 'Project' }, { label: 'Component' }]
+      },
+      { label: 'Open Recent' },
+      { separator: true },
+      { label: 'Save' }
+    ]
+  },
+  { label: 'Archive', disabled: true }
+]`
+  }
+]
+
+const slideMenuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SlideMenu, type SlideMenuItem } from '@mfs-atomic/ui'
+
+const selected = ref('None')
+
+const items = ref<SlideMenuItem[]>([
+  {
+    label: 'Workspace',
+    items: [
+      { label: 'Design System', items: [{ label: 'Tokens' }, { label: 'Typography' }] },
+      { label: 'Components' }
+    ]
+  },
+  { label: 'Team', items: [{ label: 'Members' }, { label: 'Permissions' }] },
+  { label: 'Billing', disabled: true }
+])
+
+const onSelect = (item: SlideMenuItem) => {
+  selected.value = item.label
+}
+<\/script>
+
+<template>
   <SlideMenu :items="items" back-label="Back" menu-width="280px" @select="onSelect" />
 </template>`
 
-const panelMenuCode = `<template>
+const slideMenuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'SlideMenuDemo.vue', language: 'vue', code: slideMenuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface SlideMenuItem {
+  label: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  command?: () => void
+  items?: SlideMenuItem[]
+}
+
+export const slideItems: SlideMenuItem[] = [
+  {
+    label: 'Workspace',
+    items: [
+      { label: 'Design System', items: [{ label: 'Tokens' }, { label: 'Typography' }] },
+      { label: 'Components' }
+    ]
+  },
+  { label: 'Billing', disabled: true }
+]`
+  }
+]
+
+const panelMenuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { PanelMenu, type PanelMenuItem } from '@mfs-atomic/ui'
+
+const expanded = ref<string[]>(['files'])
+const selected = ref('None')
+
+const items = ref<PanelMenuItem[]>([
+  {
+    key: 'files',
+    label: 'Files',
+    items: [{ label: 'New Document' }, { label: 'Shared Drives' }]
+  },
+  {
+    key: 'analytics',
+    label: 'Analytics',
+    items: [{ label: 'Traffic' }, { label: 'Conversions' }]
+  },
+  { key: 'security', label: 'Security', disabled: true }
+])
+
+const onSelect = (item: PanelMenuItem) => {
+  selected.value = item.label
+}
+<\/script>
+
+<template>
   <PanelMenu v-model:expanded-keys="expanded" :items="items" multiple @select="onSelect" />
 </template>`
 
-const megaMenuCode = `<template>
+const panelMenuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'PanelMenuDemo.vue', language: 'vue', code: panelMenuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface PanelMenuItem {
+  key?: string
+  label: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  command?: () => void
+  items?: PanelMenuItem[]
+}
+
+export const panelItems: PanelMenuItem[] = [
+  {
+    key: 'files',
+    label: 'Files',
+    items: [{ label: 'New Document' }, { label: 'Shared Drives' }]
+  },
+  {
+    key: 'analytics',
+    label: 'Analytics',
+    items: [{ label: 'Traffic' }, { label: 'Conversions' }]
+  },
+  { key: 'security', label: 'Security', disabled: true }
+]`
+  }
+]
+
+const megaMenuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { MegaMenu, type MegaMenuItem, type MegaMenuLink } from '@mfs-atomic/ui'
+
+const selected = ref('None')
+
+const items = ref<MegaMenuItem[]>([
+  {
+    label: 'Products',
+    columns: [
+      {
+        title: 'UI Kits',
+        items: [
+          { label: 'Clay Theme', description: 'Soft tactile surfaces' },
+          { label: 'Glass Theme', description: 'Frosted translucent layers' }
+        ]
+      },
+      {
+        title: 'Tooling',
+        items: [{ label: 'Token Studio', description: 'Live CSS variable editor' }]
+      }
+    ]
+  },
+  { label: 'Pricing', to: '/pricing' }
+])
+
+const onSelect = (item: MegaMenuItem | MegaMenuLink) => {
+  selected.value = item.label
+}
+<\/script>
+
+<template>
   <MegaMenu :items="items" orientation="horizontal" @select="onSelect" />
 </template>`
 
-const dockCode = `<template>
+const megaMenuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'MegaMenuDemo.vue', language: 'vue', code: megaMenuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface MegaMenuLink {
+  label: string
+  description?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  command?: () => void
+}
+
+export interface MegaMenuColumn {
+  title?: string
+  items: MegaMenuLink[]
+}
+
+export interface MegaMenuItem {
+  label: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  command?: () => void
+  columns?: MegaMenuColumn[]
+}
+
+export const megaItems: MegaMenuItem[] = [
+  {
+    label: 'Products',
+    columns: [
+      {
+        title: 'UI Kits',
+        items: [
+          { label: 'Clay Theme', description: 'Soft tactile surfaces' },
+          { label: 'Glass Theme', description: 'Frosted translucent layers' }
+        ]
+      }
+    ]
+  },
+  { label: 'Pricing', to: '/pricing' }
+]`
+  }
+]
+
+const dockCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Dock, type DockItem } from '@mfs-atomic/ui'
+
+const items = ref<DockItem[]>([
+  { label: 'Finder', active: true },
+  { label: 'Terminal', active: false },
+  { label: 'Browser', active: false },
+  { label: 'Settings', active: false }
+])
+
+const onSelect = (_item: DockItem, index: number) => {
+  items.value = items.value.map((d, i) => ({ ...d, active: i === index }))
+}
+<\/script>
+
+<template>
   <Dock :items="items" position="bottom" magnification @select="onSelect" />
 </template>`
 
-const tabMenuCode = `<template>
-  <TabMenu v-model="activeIndex" :items="items" scrollable />
+const dockCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'DockDemo.vue', language: 'vue', code: dockCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface DockItem {
+  label: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  active?: boolean
+  command?: () => void
+}
+
+export const dockItems: DockItem[] = [
+  { label: 'Finder', active: true },
+  { label: 'Terminal', active: false },
+  { label: 'Browser', active: false },
+  { label: 'Settings', active: false }
+]`
+  }
+]
+
+const tabMenuCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { TabMenu, type TabMenuItem } from '@mfs-atomic/ui'
+
+const activeIndex = ref(0)
+
+const items = ref<TabMenuItem[]>([
+  { key: 'overview', label: 'Overview' },
+  { key: 'components', label: 'Components' },
+  { key: 'themes', label: 'Themes' },
+  { key: 'locked', label: 'Archive', disabled: true }
+])
+
+const onChange = ({ index, item }: { index: number; item: TabMenuItem }) => {
+  console.log('Active tab:', index, item.label)
+}
+<\/script>
+
+<template>
+  <TabMenu v-model="activeIndex" :items="items" scrollable @change="onChange" />
 </template>`
+
+const tabMenuCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'TabMenuDemo.vue', language: 'vue', code: tabMenuCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface TabMenuItem {
+  key?: string
+  label: string
+  icon?: string
+  to?: string | Record<string, unknown>
+  href?: string
+  disabled?: boolean
+  command?: () => void
+}
+
+export const tabItems: TabMenuItem[] = [
+  { key: 'overview', label: 'Overview' },
+  { key: 'components', label: 'Components' },
+  { key: 'themes', label: 'Themes' },
+  { key: 'locked', label: 'Archive', disabled: true }
+]`
+  }
+]
 
 // API Docs
 const menuApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {

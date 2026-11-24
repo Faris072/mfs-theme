@@ -48,8 +48,14 @@
       <slot />
     </div>
 
-    <div v-if="tab === 'code'" class="preview-code mfs-surface-subtle mfs-border-none mfs-border-t mfs-overflow-x-auto">
-      <pre class="mfs-m-0 mfs-font-mono mfs-text"><code>{{ code }}</code></pre>
+    <div v-if="tab === 'code'" class="preview-code mfs-border-none mfs-border-t">
+      <CodeEditorBlock
+        :code="code ?? ''"
+        :tabs="codeTabs"
+        :filename="`${title.replace(/[^a-zA-Z0-9_-]/g, '') || 'Example'}.vue`"
+        max-height="460px"
+        @tab-change="activeCodeTabIndex = $event"
+      />
     </div>
 
     <div v-if="hasApi && docContext?.activeTab.value !== 'features'" class="api-section mfs-py-5 mfs-px-6 mfs-flex mfs-flex-col mfs-gap-4 mfs-surface-subtle mfs-border-none mfs-border-t">
@@ -104,6 +110,7 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeUnmount, ref, watch, type Ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
+import CodeEditorBlock, { type CodeTab } from './CodeEditorBlock.vue'
 import type { ApiRow } from '../data/componentDocs'
 
 export interface ComponentApiSpec {
@@ -120,7 +127,8 @@ export interface DocsContext {
 const props = defineProps<{
   title: string
   description?: string
-  code: string
+  code?: string
+  codeTabs?: CodeTab[]
   api?: ComponentApiSpec
 }>()
 
@@ -137,12 +145,25 @@ watch(
 )
 
 const tab = ref<'preview' | 'code'>('preview')
+const activeCodeTabIndex = ref(0)
 const copied = ref(false)
 let copyTimer: ReturnType<typeof setTimeout> | null = null
 
+watch(
+  () => props.codeTabs,
+  () => {
+    activeCodeTabIndex.value = 0
+  }
+)
+
 const handleCopy = async () => {
   try {
-    await navigator.clipboard.writeText(props.code)
+    const textToCopy =
+      props.codeTabs?.[activeCodeTabIndex.value]?.code ??
+      props.codeTabs?.[0]?.code ??
+      props.code ??
+      ''
+    await navigator.clipboard.writeText(textToCopy)
     copied.value = true
     if (copyTimer) clearTimeout(copyTimer)
     copyTimer = setTimeout(() => {
@@ -252,14 +273,9 @@ const currentApiSection = computed(
 }
 
 .preview-code {
-  max-height: 420px;
-}
-
-.preview-code pre {
-  padding: 18px 20px;
-  font-size: 0.82rem;
-  line-height: 1.55;
-  tab-size: 2;
+  overflow: hidden;
+  padding: 16px;
+  background: var(--surface-subtle);
 }
 
 .api-heading {

@@ -5,9 +5,21 @@
     title="Interactive DataTable"
     description="Sort columns, filter rows via live search, select single or multiple rows, and switch mobile responsive mode between stacked cards and horizontal scroll."
     :code="dataTableCode"
+    :code-tabs="dataTableCodeTabs"
     :api="dataTableApi"
   >
     <div class="mfs-stack">
+      <Alert severity="info" title="Client-Side vs Server-Side (Lazy)">
+        <div class="mfs-stack mfs-gap-1 mfs-text-xs">
+          <span>
+            <strong>Client-Side (default):</strong> Pass the full <code>:rows</code> array; <code>DataTable</code> handles <code>searchable</code>, <code>paginator</code>, and column sorting automatically.
+          </span>
+          <span>
+            <strong>Server-Side (<code>lazy</code>):</strong> Set <code>:lazy="true"</code> and <code>:total-records="total"</code>, then fetch new slices on <code>@page</code>, <code>@sort</code>, and debounced <code>@update:search-query</code> while binding <code>:loading</code>.
+          </span>
+        </div>
+      </Alert>
+
       <div class="mfs-row mfs-justify-between demo-controls">
         <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Responsive mode">
           <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mobile Mode:</span>
@@ -48,6 +60,26 @@
             Single
           </button>
         </div>
+
+        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Sort mode">
+          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Sort Mode:</span>
+          <button
+            type="button"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
+            :class="{ 'is-active': tableSortMode === 'single' }"
+            @click="setTableSortMode('single')"
+          >
+            Single
+          </button>
+          <button
+            type="button"
+            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
+            :class="{ 'is-active': tableSortMode === 'multiple' }"
+            @click="setTableSortMode('multiple')"
+          >
+            Multiple
+          </button>
+        </div>
       </div>
 
       <DataTable
@@ -55,11 +87,13 @@
         v-model:search-query="tableQuery"
         v-model:page="tablePage"
         v-model:rows-per-page="tableRowsPerPage"
+        v-model:multi-sort-meta="tableMultiSortMeta"
         :columns="tableColumns"
         :rows="tableRows"
         :rows-per-page-options="[5, 10, 20]"
         :selectable="tableSelectionMode"
         :responsive-mode="tableResponsiveMode"
+        :sort-mode="tableSortMode"
         paginator
         searchable
         @sort="onTableSort"
@@ -92,6 +126,7 @@
     title="Interactive DataView"
     description="Toggle seamlessly between responsive Grid and List layouts using custom #grid and #list slots."
     :code="dataViewCode"
+    :code-tabs="dataViewCodeTabs"
     :api="dataViewApi"
   >
     <div class="mfs-stack">
@@ -157,6 +192,7 @@
     title="Interactive Tree"
     description="Expand or collapse hierarchical nodes, navigate with arrow keys, and switch between checkbox and single selection modes."
     :code="treeCode"
+    :code-tabs="treeCodeTabs"
     :api="treeApi"
   >
     <div class="mfs-stack">
@@ -250,9 +286,18 @@
     title="InfiniteScroll"
     description="IntersectionObserver sentinel container loading incremental batches with retryable error and finished states."
     :code="infiniteScrollCode"
+    :code-tabs="infiniteScrollCodeTabs"
     :api="infiniteScrollApi"
   >
     <div class="mfs-stack mfs-w-full">
+      <Alert severity="info" title="Cursor / Page Batch Loading">
+        <div class="mfs-stack mfs-gap-1 mfs-text-xs">
+          <span>
+            <strong>Client-Side vs Server-Side:</strong> <code>InfiniteScroll</code> watches a bottom sentinel and emits <code>@load</code> for the next batch. For APIs, track a cursor or page number and bind <code>:has-more</code>, <code>:loading</code> (prevents duplicate calls), and <code>:error</code> (shows inline Retry).
+          </span>
+        </div>
+      </Alert>
+
       <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-2 demo-controls">
         <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">
           Loaded {{ infItems.length }} / {{ INF_MAX_ITEMS }} items
@@ -298,8 +343,8 @@
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
-import { Badge, Button, Column, DataTable, DataView, Tree } from '../../lib'
-import type { DataTableColumn, SortOrder } from '../../lib/components/DataTable.vue'
+import { Alert, Badge, Button, Column, DataTable, DataView, Tree } from '../../lib'
+import type { DataTableColumn, DataTableSortMeta, SortOrder } from '../../lib'
 import type { DataViewLayout } from '../../lib/components/DataView.vue'
 import type { TreeNode } from '../../lib/components/Tree.vue'
 import InfiniteScroll from '../../lib/components/InfiniteScroll.vue'
@@ -334,15 +379,32 @@ const tablePage = ref(1)
 const tableRowsPerPage = ref(5)
 const tableResponsiveMode = ref<'card' | 'scroll'>('card')
 const tableSelectionMode = ref<'single' | 'multiple'>('multiple')
+const tableSortMode = ref<'single' | 'multiple'>('multiple')
+const tableMultiSortMeta = ref<DataTableSortMeta[]>([
+  { key: 'status', order: 'asc' },
+  { key: 'score', order: 'desc' }
+])
 const tableSelection = ref<Record<string, any> | Record<string, any>[] | null>([tableRows[0]])
-const lastSort = ref('')
+const lastSort = ref('1. status (asc), 2. score (desc)')
 
 function setTableSelectionMode(mode: 'single' | 'multiple') {
   tableSelectionMode.value = mode
   tableSelection.value = mode === 'multiple' ? [] : null
 }
 
-function onTableSort(payload: { key: string; order: SortOrder }) {
+function setTableSortMode(mode: 'single' | 'multiple') {
+  tableSortMode.value = mode
+  tableMultiSortMeta.value = []
+  lastSort.value = ''
+}
+
+function onTableSort(payload: { key: string; order: SortOrder; multiSortMeta?: DataTableSortMeta[] }) {
+  if (payload.multiSortMeta) {
+    lastSort.value = payload.multiSortMeta.length
+      ? payload.multiSortMeta.map((m, i) => `${i + 1}. ${m.key} (${m.order})`).join(', ')
+      : 'default'
+    return
+  }
   lastSort.value = payload.order ? `${payload.key} (${payload.order})` : 'default'
 }
 
@@ -368,13 +430,21 @@ const dataTableCode = `<template>
     v-model:search-query="query"
     v-model:page="page"
     v-model:rows-per-page="rowsPerPage"
+    v-model:multi-sort-meta="multiSortMeta"
     :columns="columns"
     :rows="rows"
+    :total-records="totalRecords"
     :rows-per-page-options="[5, 10, 20]"
+    :loading="loading"
     selectable="multiple"
     responsive-mode="card"
+    sort-mode="multiple"
+    lazy
     paginator
     searchable
+    @page="loadTable"
+    @sort="loadTable"
+    @update:search-query="loadTable"
   >
     <template #cell-status="{ value }">
       <Badge :variant="value === 'Active' ? 'success' : 'surface'">{{ value }}</Badge>
@@ -383,24 +453,97 @@ const dataTableCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { Badge, DataTable } from '@mfs-atomic/ui'
+import { onMounted, ref } from 'vue'
+import { Badge, DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
+import { columns, initialRows, type MemberRow } from './data'
+import { fetchMembers } from './fetchApi'
 
 const query = ref('')
 const page = ref(1)
 const rowsPerPage = ref(5)
-const selected = ref([])
-const columns = [
+const totalRecords = ref(initialRows.length)
+const loading = ref(false)
+const selected = ref<MemberRow[]>([])
+const rows = ref<MemberRow[]>(initialRows)
+const multiSortMeta = ref<DataTableSortMeta[]>([
+  { key: 'status', order: 'asc' },
+  { key: 'score', order: 'desc' }
+])
+
+const loadTable = async () => {
+  loading.value = true
+  try {
+    const res = await fetchMembers({
+      page: page.value,
+      perPage: rowsPerPage.value,
+      search: query.value,
+      sort: multiSortMeta.value
+    })
+    rows.value = res.data
+    totalRecords.value = res.total
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(loadTable)
+<\/script>`
+
+const dataTableCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: dataTableCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { DataTableColumn } from '@mfs-atomic/ui'
+
+export interface MemberRow {
+  id: number
+  name: string
+  role: string
+  status: 'Active' | 'Review' | 'Offline'
+  score: number
+}
+
+export const columns: DataTableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },
   { key: 'role', label: 'Role', sortable: true },
   { key: 'status', label: 'Status', sortable: true },
-  { key: 'score', label: 'Score', sortable: true, align: 'right' }
+  { key: 'score', label: 'Score', sortable: true, align: 'right', width: '90px' }
 ]
-const rows = [
+
+export const initialRows: MemberRow[] = [
   { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
   { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 }
+]`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { DataTableSortMeta } from '@mfs-atomic/ui'
+import type { MemberRow } from './data'
+
+export interface TableQuery {
+  page: number
+  perPage: number
+  search: string
+  sort: DataTableSortMeta[]
+}
+
+export async function fetchMembers(
+  query: TableQuery
+): Promise<{ data: MemberRow[]; total: number }> {
+  const params = new URLSearchParams({
+    page: String(query.page),
+    per_page: String(query.perPage),
+    q: query.search,
+    sort: query.sort.map((s) => \`\${s.key}:\${s.order}\`).join(',')
+  })
+  const res = await fetch(\`/api/members?\${params.toString()}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
 ]
-<\/script>`
 
 const dataTableApi = {
   props: [
@@ -421,7 +564,9 @@ const dataTableApi = {
     { name: 'first', type: 'number', default: '0', description: 'Zero-based index of the first row on the active page.' },
     { name: 'totalRecords', type: 'number', description: 'Total number of records (required in lazy/server mode).' },
     { name: 'lazy', type: 'boolean', default: 'false', description: 'Disables client-side slicing/filtering/sorting for server-driven pagination.' },
-    { name: 'loading', type: 'boolean', default: 'false', description: 'Displays loading overlay and disables pagination controls.' }
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Displays loading overlay and disables pagination controls.' },
+    { name: 'sortMode', type: "'single' | 'multiple'", default: "'single'", description: 'Enables single-column sorting or prioritized multi-column sorting.' },
+    { name: 'multiSortMeta', type: 'DataTableSortMeta[]', default: '[]', description: 'Ordered array of active sort descriptors ({ key, order }) for multiple sort mode (supports v-model:multi-sort-meta).' }
   ],
   events: [
     { name: 'update:selection', type: '(value: Record<string, any> | Record<string, any>[] | null) => void', description: 'Emitted when row selection changes.' },
@@ -430,8 +575,9 @@ const dataTableApi = {
     { name: 'update:rows', type: '(rows: number) => void', description: 'Emitted when rows per page changes (OpenVue alias).' },
     { name: 'update:rowsPerPage', type: '(rowsPerPage: number) => void', description: 'Emitted when rows per page changes.' },
     { name: 'update:first', type: '(first: number) => void', description: 'Emitted with the new zero-based first row index.' },
+    { name: 'update:multiSortMeta', type: '(meta: DataTableSortMeta[]) => void', description: 'Emitted when the active multi-column sort stack changes.' },
     { name: 'page', type: '(payload: { page: number; first: number; rows: number; pageCount: number }) => void', description: 'Emitted on page or page-size changes.' },
-    { name: 'sort', type: "(payload: { key: string; order: 'asc' | 'desc' | null }) => void", description: 'Emitted when a sortable column header is clicked.' },
+    { name: 'sort', type: "(payload: { key: string; order: 'asc' | 'desc' | null; multiSortMeta?: DataTableSortMeta[] }) => void", description: 'Emitted when a sortable column header is clicked.' },
     { name: 'row-click', type: '(row: Record<string, any>) => void', description: 'Emitted when a table row is clicked.' }
   ],
   slots: [
@@ -493,15 +639,48 @@ const dataViewCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { DataView } from '@mfs-atomic/ui'
+import { onMounted, ref } from 'vue'
+import { DataView, type DataViewLayout } from '@mfs-atomic/ui'
+import { presetItems, type PresetItem } from './data'
+import { fetchPresets } from './fetchApi'
 
-const layout = ref<'grid' | 'list'>('grid')
-const items = [
-  { id: 1, name: 'Claymorphism', description: 'Soft 3D tactile surfaces' },
-  { id: 2, name: 'Glassmorphism', description: 'Frosted translucent layers' }
-]
+const layout = ref<DataViewLayout>('grid')
+const items = ref<PresetItem[]>(presetItems)
+
+onMounted(async () => {
+  items.value = await fetchPresets()
+})
 <\/script>`
+
+const dataViewCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: dataViewCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `export interface PresetItem {
+  id: string
+  name: string
+  tag: string
+  description: string
+}
+
+export const presetItems: PresetItem[] = [
+  { id: 'clay', name: 'Claymorphism', tag: 'Soft 3D', description: 'Soft 3D tactile surfaces' },
+  { id: 'glass', name: 'Glassmorphism', tag: 'Frosted', description: 'Frosted translucent layers' }
+]`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { PresetItem } from './data'
+
+export async function fetchPresets(): Promise<PresetItem[]> {
+  const res = await fetch('/api/presets')
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
+]
 
 const dataViewApi = {
   props: [
@@ -591,20 +770,39 @@ const treeCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Tree } from '@mfs-atomic/ui'
+import { nodes } from './data'
 
-const expanded = ref(['src'])
-const selected = ref(['Tree.vue'])
-const nodes = [
+const expanded = ref<string[]>(['src', 'components'])
+const selected = ref<string[]>(['Tree.vue'])
+<\/script>`
+
+const treeCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: treeCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { TreeNode } from '@mfs-atomic/ui'
+
+export const nodes: TreeNode[] = [
   {
     key: 'src',
     label: 'src',
     children: [
-      { key: 'DataTable.vue', label: 'DataTable.vue' },
-      { key: 'Tree.vue', label: 'Tree.vue' }
+      {
+        key: 'components',
+        label: 'components',
+        children: [
+          { key: 'DataTable.vue', label: 'DataTable.vue' },
+          { key: 'Tree.vue', label: 'Tree.vue' }
+        ]
+      }
     ]
+  },
+  { key: 'docs', label: 'docs (archived)', disabled: true },
+  { key: 'package.json', label: 'package.json' }
+]`
   }
 ]
-<\/script>`
 
 const treeApi = {
   props: [
@@ -641,6 +839,10 @@ const columnRows = [
 ]
 
 const columnCode = `<template>
+  <Button size="sm" variant="surface" @click="hideRole = !hideRole">
+    {{ hideRole ? 'Show Role' : 'Hide Role' }}
+  </Button>
+
   <DataTable :value="rows">
     <Column field="name" header="Member" sortable />
     <Column field="role" header="Role" :hidden="hideRole" />
@@ -650,7 +852,19 @@ const columnCode = `<template>
       </template>
     </Column>
   </DataTable>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Column, DataTable } from '@mfs-atomic/ui'
+
+const hideRole = ref(false)
+const rows = [
+  { name: 'Ari Pratama', role: 'Maintainer', status: 'Active' },
+  { name: 'Nadia Kusuma', role: 'Designer', status: 'Active' },
+  { name: 'Raka Putra', role: 'Reviewer', status: 'Idle' }
+]
+<\/script>`
 
 const columnApi: { props: ApiRow[]; slots: ApiRow[] } = {
   props: [
@@ -726,15 +940,69 @@ const infiniteScrollCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { InfiniteScroll } from '@mfs-atomic/ui'
+import { initialEvents, type ActivityItem } from './data'
+import { fetchActivityPage } from './fetchApi'
 
-const items = ref([{ id: 1, title: 'Event #1' }])
+const items = ref<ActivityItem[]>(initialEvents)
+const cursor = ref<string | null>('cursor_1')
 const loading = ref(false)
 const hasMore = ref(true)
 const error = ref<string | undefined>(undefined)
-const loadMore = () => {
-  // Fetch next batch and append to items
+
+const loadMore = async () => {
+  if (loading.value || !hasMore.value) return
+  loading.value = true
+  error.value = undefined
+  try {
+    const res = await fetchActivityPage(cursor.value)
+    items.value = [...items.value, ...res.items]
+    cursor.value = res.nextCursor
+    hasMore.value = res.nextCursor !== null
+  } catch (err) {
+    error.value = err instanceof Error ? err.message : 'Failed to load batch'
+  } finally {
+    loading.value = false
+  }
 }
 <\/script>`
+
+const infiniteScrollCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: infiniteScrollCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `export interface ActivityItem {
+  id: number
+  title: string
+  batch: number
+}
+
+export interface CursorPage<T> {
+  items: T[]
+  nextCursor: string | null
+}
+
+export const initialEvents: ActivityItem[] = [
+  { id: 1, title: 'Activity Event #1', batch: 1 },
+  { id: 2, title: 'Activity Event #2', batch: 1 }
+]`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { ActivityItem, CursorPage } from './data'
+
+export async function fetchActivityPage(
+  cursor: string | null
+): Promise<CursorPage<ActivityItem>> {
+  const params = new URLSearchParams()
+  if (cursor) params.set('cursor', cursor)
+  const res = await fetch(\`/api/activity?\${params.toString()}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
+]
 
 const infiniteScrollApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
   props: [

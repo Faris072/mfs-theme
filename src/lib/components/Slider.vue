@@ -1,24 +1,24 @@
 <template>
-  <div class="slider-wrapper" :class="{ 'slider-wrapper--disabled mfs-disabled': disabled }">
-    <div v-if="label" class="slider-header">
-      <span class="slider-label mfs-text">{{ label }}</span>
-      <span class="slider-readout">
+  <div class="slider-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'mfs-disabled': disabled }">
+    <div v-if="label" class="mfs-flex mfs-justify-between mfs-items-center mfs-text-sm">
+      <span class="mfs-font-semibold mfs-text">{{ label }}</span>
+      <span class="slider-readout mfs-text-primary mfs-font-semibold">
         {{ range && Array.isArray(modelValue) ? `${modelValue[0]} – ${modelValue[1]}` : currentSingle }}
       </span>
     </div>
 
     <div
       ref="trackRef"
-      class="slider-track mfs-surface mfs-pill mfs-shadow-inset"
+      class="slider-track mfs-relative mfs-surface mfs-pill mfs-shadow-inset mfs-cursor-pointer"
       @pointerdown="onTrackPointerDown"
     >
-      <div class="slider-fill mfs-pill" :style="fillStyle" />
+      <div class="slider-fill mfs-absolute mfs-pill mfs-bg-primary" :style="fillStyle" />
 
       <div
         v-if="range"
         role="slider"
         tabindex="0"
-        class="slider-thumb mfs-shadow mfs-focus-ring"
+        class="slider-thumb mfs-absolute mfs-rounded-full mfs-shadow mfs-focus-ring"
         :class="{ 'slider-thumb--active': activeHandle === 0 }"
         :style="{ left: `${pct(lowVal)}%` }"
         :aria-valuemin="min"
@@ -28,13 +28,13 @@
         @pointerdown.stop="startDrag(0, $event)"
         @keydown="onKeydown(0, $event)"
       >
-        <span v-if="showTooltip" class="slider-tooltip">{{ lowVal }}</span>
+        <span v-if="showTooltip" class="slider-tooltip mfs-absolute mfs-surface mfs-rounded-sm mfs-shadow-card mfs-whitespace-nowrap mfs-font-semibold">{{ lowVal }}</span>
       </div>
 
       <div
         role="slider"
         tabindex="0"
-        class="slider-thumb mfs-shadow mfs-focus-ring"
+        class="slider-thumb mfs-absolute mfs-rounded-full mfs-shadow mfs-focus-ring"
         :class="{ 'slider-thumb--active': activeHandle === (range ? 1 : 0) }"
         :style="{ left: `${pct(range ? highVal : currentSingle)}%` }"
         :aria-valuemin="range ? lowVal : min"
@@ -44,7 +44,7 @@
         @pointerdown.stop="startDrag(range ? 1 : 0, $event)"
         @keydown="onKeydown(range ? 1 : 0, $event)"
       >
-        <span v-if="showTooltip" class="slider-tooltip">{{ range ? highVal : currentSingle }}</span>
+        <span v-if="showTooltip" class="slider-tooltip mfs-absolute mfs-surface mfs-rounded-sm mfs-shadow-card mfs-whitespace-nowrap mfs-font-semibold">{{ range ? highVal : currentSingle }}</span>
       </div>
     </div>
   </div>
@@ -174,65 +174,31 @@ onBeforeUnmount(stopDrag)
 
 <style scoped>
 .slider-wrapper {
-  display: flex;
-  flex-direction: column;
   gap: 10px;
-  width: 100%;
   padding: 6px 0;
-}
-
-.slider-wrapper--disabled {
-  opacity: 0.55;
-  pointer-events: none;
-}
-
-.slider-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.slider-label {
-  font-weight: 600;
-  color: var(--text);
 }
 
 .slider-readout {
   font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--primary);
   font-variant-numeric: tabular-nums;
 }
 
 .slider-track {
-  position: relative;
   height: 10px;
-  border-radius: var(--radius-pill, 9999px);
-  background-color: var(--surface);
-  box-shadow: var(--input-shadow);
-  border: 1px solid var(--border, transparent);
-  cursor: pointer;
   touch-action: none;
 }
 
 .slider-fill {
-  position: absolute;
   top: 0;
   bottom: 0;
-  border-radius: var(--radius-pill, 9999px);
-  background-color: var(--primary);
 }
 
 .slider-thumb {
-  position: absolute;
   top: 50%;
   width: 22px;
   height: 22px;
-  border-radius: 50%;
-  background-color: #ffffff;
+  background-color: var(--surface);
   border: 2px solid var(--primary);
-  box-shadow: var(--clay-shadow);
   transform: translate(-50%, -50%);
   cursor: grab;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -244,23 +210,12 @@ onBeforeUnmount(stopDrag)
   box-shadow: var(--clay-shadow-hover);
 }
 
-.slider-thumb:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 3px;
-}
-
 .slider-tooltip {
-  position: absolute;
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
   padding: 2px 7px;
-  border-radius: var(--radius-sm, 6px);
-  background-color: var(--tooltip-bg, #0f172a);
-  color: var(--tooltip-text, #f8fafc);
   font-size: 0.72rem;
-  font-weight: 600;
-  white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
@@ -269,21 +224,5 @@ onBeforeUnmount(stopDrag)
 .slider-thumb:hover .slider-tooltip,
 .slider-thumb--active .slider-tooltip {
   opacity: 1;
-}
-
-[data-theme="clay"] .slider-thumb {
-  box-shadow: 3px 5px 10px rgba(124, 58, 237, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.9);
-}
-
-[data-theme="glass"] .slider-track {
-  border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="neo"] .slider-track {
-  box-shadow: inset 2px 2px 5px rgba(163, 177, 198, 0.6), inset -2px -2px 5px rgba(255, 255, 255, 0.85);
-}
-
-[data-theme="neo"] .slider-thumb {
-  box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.85);
 }
 </style>

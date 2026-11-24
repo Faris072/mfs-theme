@@ -5,6 +5,7 @@
     title="OrderList"
     description="Reorderable list with keyboard-accessible selection and move-to-top/up/down/bottom controls."
     :code="orderListCode"
+    :code-tabs="orderListCodeTabs"
     :api="orderListApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -28,6 +29,7 @@
     title="PickList"
     description="Dual-list transfer control for moving single or all items between source and target lists."
     :code="pickListCode"
+    :code-tabs="pickListCodeTabs"
     :api="pickListApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -54,6 +56,7 @@
     title="TreeTable"
     description="Hierarchical data table with expandable nested rows, custom cell slots, and column alignment."
     :code="treeTableCode"
+    :code-tabs="treeTableCodeTabs"
     :api="treeTableApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -77,6 +80,7 @@
     title="OrganizationChart"
     description="Recursive hierarchy tree with collapsible branches, node-click events, and custom node slots."
     :code="orgChartCode"
+    :code-tabs="orgChartCodeTabs"
     :api="orgChartApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -94,6 +98,7 @@
     title="VirtualScroller"
     description="Windowed list renderer that mounts only visible rows + buffer for smooth scrolling over large datasets."
     :code="virtualScrollerCode"
+    :code-tabs="virtualScrollerCodeTabs"
     :api="virtualScrollerApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -115,6 +120,7 @@
     title="MeterGroup"
     description="Multi-segment proportional progress bar with automatic palette colors and optional legend."
     :code="meterGroupCode"
+    :code-tabs="meterGroupCodeTabs"
     :api="meterGroupApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -344,6 +350,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
+import type { CodeTab } from '../CodeEditorBlock.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import { Badge, Button, Input, ImageCropper, type ImageCropResult } from '../../lib'
 import OrderList from '../../lib/components/OrderList.vue'
@@ -531,67 +538,509 @@ const formatFileSize = (bytes: number) => {
 // Code snippets
 const orderListCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { OrderList } from '@mfs-atomic/ui'
+import { OrderList, Badge } from '@mfs-atomic/ui'
 
-const items = ref([
-  { id: 1, name: 'Theme Tokens' },
-  { id: 2, name: 'Form Controls' }
+interface RoadmapItem {
+  id: number
+  name: string
+  priority: 'P0' | 'P1' | 'P2'
+}
+
+const items = ref<RoadmapItem[]>([
+  { id: 1, name: 'Theme Tokens', priority: 'P0' },
+  { id: 2, name: 'Form Controls', priority: 'P1' },
+  { id: 3, name: 'Data Tables', priority: 'P1' },
+  { id: 4, name: 'Virtual Scroll', priority: 'P2' }
+])
+
+const onReorder = (next: RoadmapItem[]) => {
+  console.log('New order:', next.map((i) => i.id))
+}
+<\/script>
+
+<template>
+  <OrderList v-model="items" header="Release Priorities" item-key="id" @reorder="onReorder">
+    <template #item="{ item }">
+      <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+        <span>{{ item.name }}</span>
+        <Badge variant="surface" size="sm">{{ item.priority }}</Badge>
+      </div>
+    </template>
+  </OrderList>
+</template>`
+
+const orderListCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'OrderListDemo.vue', language: 'vue', code: orderListCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface RoadmapItem {
+  id: number | string
+  name: string
+  priority: 'P0' | 'P1' | 'P2'
+}
+
+export const roadmapItems: RoadmapItem[] = [
+  { id: 1, name: 'Theme Tokens', priority: 'P0' },
+  { id: 2, name: 'Form Controls', priority: 'P1' },
+  { id: 3, name: 'Data Tables', priority: 'P1' },
+  { id: 4, name: 'Virtual Scroll', priority: 'P2' }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { RoadmapItem } from './data'
+
+export function useRoadmapOrder() {
+  const items = ref<RoadmapItem[]>([])
+  const loading = ref(false)
+
+  onMounted(async () => {
+    loading.value = true
+    try {
+      const res = await fetch('/api/roadmap/priorities')
+      const rows: { id: number; title: string; tier: 'P0' | 'P1' | 'P2' }[] = await res.json()
+      items.value = rows.map((r) => ({
+        id: r.id,
+        name: r.title,
+        priority: r.tier
+      }))
+    } finally {
+      loading.value = false
+    }
+  })
+
+  return { items, loading }
+}`
+  }
+]
+
+const pickListCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { PickList } from '@mfs-atomic/ui'
+
+interface RoleItem {
+  id: string
+  label: string
+  scope: string
+}
+
+const available = ref<RoleItem[]>([
+  { id: 'read', label: 'Viewer', scope: 'Read-only' },
+  { id: 'write', label: 'Editor', scope: 'Read & Write' },
+  { id: 'billing', label: 'Billing', scope: 'Invoices' }
+])
+
+const assigned = ref<RoleItem[]>([
+  { id: 'admin', label: 'Admin', scope: 'Full access' }
+])
+
+const onTransfer = (payload: { source: RoleItem[]; target: RoleItem[] }) => {
+  console.log('Assigned count:', payload.target.length)
+}
+<\/script>
+
+<template>
+  <PickList
+    v-model:source="available"
+    v-model:target="assigned"
+    source-header="Available Roles"
+    target-header="Assigned Roles"
+    item-key="id"
+    @transfer="onTransfer"
+  >
+    <template #item="{ item }">
+      <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+        <span>{{ item.label }}</span>
+        <span class="mfs-text-xs mfs-text-muted">{{ item.scope }}</span>
+      </div>
+    </template>
+  </PickList>
+</template>`
+
+const pickListCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'PickListDemo.vue', language: 'vue', code: pickListCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface RoleItem {
+  id: string
+  label: string
+  scope: string
+}
+
+export const availableRoles: RoleItem[] = [
+  { id: 'read', label: 'Viewer', scope: 'Read-only' },
+  { id: 'write', label: 'Editor', scope: 'Read & Write' },
+  { id: 'billing', label: 'Billing', scope: 'Invoices' }
+]
+
+export const assignedRoles: RoleItem[] = [
+  { id: 'admin', label: 'Admin', scope: 'Full access' }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { RoleItem } from './data'
+
+interface ApiRoleResponse {
+  available: { slug: string; name: string; permissions: string }[]
+  assigned: { slug: string; name: string; permissions: string }[]
+}
+
+export function useRolePickList(userId: string) {
+  const source = ref<RoleItem[]>([])
+  const target = ref<RoleItem[]>([])
+
+  onMounted(async () => {
+    const res = await fetch(\`/api/users/\${userId}/roles\`)
+    const data: ApiRoleResponse = await res.json()
+    const mapRole = (r: ApiRoleResponse['available'][number]): RoleItem => ({
+      id: r.slug,
+      label: r.name,
+      scope: r.permissions
+    })
+    source.value = data.available.map(mapRole)
+    target.value = data.assigned.map(mapRole)
+  })
+
+  return { source, target }
+}`
+  }
+]
+
+const treeTableCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { TreeTable, Badge, type TreeTableColumn, type TreeTableNode } from '@mfs-atomic/ui'
+
+const expandedKeys = ref<string[]>(['src'])
+
+const columns: TreeTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'size', label: 'Size', align: 'right', width: '90px' },
+  { key: 'type', label: 'Type', align: 'center', width: '110px' }
+]
+
+const nodes = ref<TreeTableNode[]>([
+  {
+    key: 'src',
+    data: { name: 'src', size: '124 KB', type: 'Folder' },
+    children: [
+      { key: 'main', data: { name: 'main.ts', size: '1.4 KB', type: 'File' } }
+    ]
+  },
+  { key: 'pkg', data: { name: 'package.json', size: '1.8 KB', type: 'File' } }
 ])
 <\/script>
 
 <template>
-  <OrderList v-model="items" header="Release Priorities" item-key="id">
-    <template #item="{ item }">{{ item.name }}</template>
-  </OrderList>
-</template>`
-
-const pickListCode = `<template>
-  <PickList
-    v-model:source="available"
-    v-model:target="assigned"
-    source-header="Available"
-    target-header="Selected"
-    item-key="id"
-  >
-    <template #item="{ item }">{{ item.label }}</template>
-  </PickList>
-</template>`
-
-const treeTableCode = `<template>
-  <TreeTable
-    v-model:expanded-keys="expandedKeys"
-    :columns="columns"
-    :nodes="nodes"
-  >
+  <TreeTable v-model:expanded-keys="expandedKeys" :columns="columns" :nodes="nodes">
     <template #cell-type="{ value }">
-      <Badge size="sm">{{ value }}</Badge>
+      <Badge :variant="value === 'Folder' ? 'primary' : 'surface'" size="sm">
+        {{ value }}
+      </Badge>
     </template>
   </TreeTable>
 </template>`
 
-const orgChartCode = `<template>
-  <OrganizationChart :value="orgTree" @node-click="onSelect" />
+const treeTableCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'TreeTableDemo.vue', language: 'vue', code: treeTableCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface TreeTableColumn {
+  key: string
+  label: string
+  width?: string
+  align?: 'left' | 'center' | 'right'
+}
+
+export interface TreeTableNode {
+  key: string
+  data: Record<string, any>
+  children?: TreeTableNode[]
+  leaf?: boolean
+}
+
+export const treeColumns: TreeTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'size', label: 'Size', align: 'right', width: '90px' },
+  { key: 'type', label: 'Type', align: 'center', width: '110px' }
+]
+
+export const treeNodes: TreeTableNode[] = [
+  {
+    key: 'src',
+    data: { name: 'src', size: '124 KB', type: 'Folder' },
+    children: [
+      { key: 'main', data: { name: 'main.ts', size: '1.4 KB', type: 'File' } }
+    ]
+  }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { TreeTableNode } from '@mfs-atomic/ui'
+
+interface ApiFileNode {
+  id: string
+  filename: string
+  bytes: number
+  isDir: boolean
+  items?: ApiFileNode[]
+}
+
+const mapNode = (n: ApiFileNode): TreeTableNode => ({
+  key: n.id,
+  data: {
+    name: n.filename,
+    size: \`\${(n.bytes / 1024).toFixed(1)} KB\`,
+    type: n.isDir ? 'Folder' : 'File'
+  },
+  children: n.items?.map(mapNode),
+  leaf: !n.isDir
+})
+
+export function useFileTree() {
+  const nodes = ref<TreeTableNode[]>([])
+
+  onMounted(async () => {
+    const res = await fetch('/api/files/tree')
+    const raw: ApiFileNode[] = await res.json()
+    nodes.value = raw.map(mapNode)
+  })
+
+  return { nodes }
+}`
+  }
+]
+
+const orgChartCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { OrganizationChart, type OrgChartNode } from '@mfs-atomic/ui'
+
+const selected = ref('None')
+
+const orgTree = ref<OrgChartNode>({
+  key: 'ceo',
+  label: 'Maya Lin',
+  title: 'CEO',
+  children: [
+    {
+      key: 'eng',
+      label: 'Aria Patel',
+      title: 'VP Engineering',
+      children: [
+        { key: 'fe', label: 'Liam Chen', title: 'Frontend Lead' },
+        { key: 'be', label: 'Noah Kim', title: 'Platform Lead' }
+      ]
+    },
+    { key: 'des', label: 'Elena Rossi', title: 'Design Director' }
+  ]
+})
+
+const onNodeClick = (node: OrgChartNode) => {
+  selected.value = \`\${node.label} (\${node.title ?? 'Member'})\`
+}
+<\/script>
+
+<template>
+  <OrganizationChart :value="orgTree" @node-click="onNodeClick" />
 </template>`
 
-const virtualScrollerCode = `<template>
+const orgChartCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'OrganizationChartDemo.vue', language: 'vue', code: orgChartCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface OrgChartNode {
+  key: string
+  label: string
+  title?: string
+  children?: OrgChartNode[]
+}
+
+export const orgTree: OrgChartNode = {
+  key: 'ceo',
+  label: 'Maya Lin',
+  title: 'CEO',
+  children: [
+    {
+      key: 'eng',
+      label: 'Aria Patel',
+      title: 'VP Engineering',
+      children: [
+        { key: 'fe', label: 'Liam Chen', title: 'Frontend Lead' },
+        { key: 'be', label: 'Noah Kim', title: 'Platform Lead' }
+      ]
+    },
+    { key: 'des', label: 'Elena Rossi', title: 'Design Director' }
+  ]
+}`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { OrgChartNode } from '@mfs-atomic/ui'
+
+interface ApiOrgMember {
+  id: string
+  fullName: string
+  role: string
+  reports?: ApiOrgMember[]
+}
+
+const toOrgNode = (m: ApiOrgMember): OrgChartNode => ({
+  key: m.id,
+  label: m.fullName,
+  title: m.role,
+  children: m.reports?.map(toOrgNode)
+})
+
+export function useOrgChart() {
+  const orgTree = ref<OrgChartNode | null>(null)
+
+  onMounted(async () => {
+    const res = await fetch('/api/organization/hierarchy')
+    const root: ApiOrgMember = await res.json()
+    orgTree.value = toOrgNode(root)
+  })
+
+  return { orgTree }
+}`
+  }
+]
+
+const virtualScrollerCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { VirtualScroller, Badge } from '@mfs-atomic/ui'
+
+interface LogEntry {
+  id: number
+  title: string
+  status: 'Synced' | 'Queued'
+}
+
+const items = ref<LogEntry[]>(
+  Array.from({ length: 1000 }, (_, i) => ({
+    id: i + 1,
+    title: \`Log Entry \${String(i + 1).padStart(4, '0')}\`,
+    status: i % 3 === 0 ? 'Synced' : 'Queued'
+  }))
+)
+<\/script>
+
+<template>
   <VirtualScroller :items="items" :item-size="44" height="260px" item-key="id">
     <template #item="{ item, index }">
-      <span>#{{ index + 1 }} · {{ item.title }}</span>
+      <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+        <span>#{{ index + 1 }} · {{ item.title }}</span>
+        <Badge variant="surface" size="sm">{{ item.status }}</Badge>
+      </div>
     </template>
   </VirtualScroller>
 </template>`
 
-const meterGroupCode = `<template>
-  <MeterGroup
-    :values="[
-      { label: 'Apps', value: 28 },
-      { label: 'Media', value: 22 },
-      { label: 'System', value: 16 }
-    ]"
-    :max="100"
-    show-legend
-  />
+const virtualScrollerCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'VirtualScrollerDemo.vue', language: 'vue', code: virtualScrollerCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface VirtualLogItem {
+  id: number | string
+  title: string
+  status: 'Synced' | 'Queued'
+}
+
+export const virtualItems: VirtualLogItem[] = Array.from({ length: 1000 }, (_, i) => ({
+  id: i + 1,
+  title: \`Log Entry \${String(i + 1).padStart(4, '0')}\`,
+  status: i % 3 === 0 ? 'Synced' : 'Queued'
+}))`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'useFetch.ts',
+    language: 'ts',
+    code: `import { ref, onMounted } from 'vue'
+import type { VirtualLogItem } from './data'
+
+export function useAuditLogs() {
+  const items = ref<VirtualLogItem[]>([])
+  const loading = ref(false)
+
+  onMounted(async () => {
+    loading.value = true
+    try {
+      const res = await fetch('/api/logs?limit=5000')
+      const rows: { uuid: string; message: string; synced: boolean }[] = await res.json()
+      items.value = rows.map((r) => ({
+        id: r.uuid,
+        title: r.message,
+        status: r.synced ? 'Synced' : 'Queued'
+      }))
+    } finally {
+      loading.value = false
+    }
+  })
+
+  return { items, loading }
+}`
+  }
+]
+
+const meterGroupCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { MeterGroup, type MeterItem } from '@mfs-atomic/ui'
+
+const meterValues = ref<MeterItem[]>([
+  { label: 'Apps', value: 28 },
+  { label: 'Media', value: 22 },
+  { label: 'System', value: 16 },
+  { label: 'Backups', value: 12 }
+])
+<\/script>
+
+<template>
+  <MeterGroup :values="meterValues" :max="100" show-legend />
 </template>`
+
+const meterGroupCodeTabs: CodeTab[] = [
+  { label: 'Component.vue', filename: 'MeterGroupDemo.vue', language: 'vue', code: meterGroupCode },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export interface MeterItem {
+  label: string
+  value: number
+  color?: string
+}
+
+export const meterValues: MeterItem[] = [
+  { label: 'Apps', value: 28 },
+  { label: 'Media', value: 22 },
+  { label: 'System', value: 16 },
+  { label: 'Backups', value: 12, color: '#06b6d4' }
+]`
+  }
+]
 
 const inplaceCode = `<template>
   <Inplace v-model:active="editing">

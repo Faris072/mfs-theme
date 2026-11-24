@@ -1,10 +1,10 @@
 <template>
-  <fieldset :class="['fieldset', 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card', { 'is-collapsed': isCollapsed }]">
-    <legend v-if="legend || $slots.legend" class="fieldset__legend mfs-surface-subtle mfs-pill mfs-shadow mfs-title">
+  <fieldset :class="['fieldset', 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card', 'mfs-m-0', 'mfs-min-w-0', { 'is-collapsed': isCollapsed }]">
+    <legend v-if="legend || $slots.legend" class="fieldset__legend mfs-surface-subtle mfs-pill mfs-shadow mfs-title mfs-text-sm mfs-font-bold">
       <button
         v-if="toggleable"
         type="button"
-        class="fieldset__btn mfs-text mfs-focus-ring"
+        class="fieldset__btn mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-text mfs-focus-ring"
         :aria-expanded="!isCollapsed"
         @click="toggle"
       >
@@ -20,14 +20,14 @@
         </svg>
         <slot name="legend">{{ legend }}</slot>
       </button>
-      <span v-else class="fieldset__label mfs-text">
+      <span v-else class="mfs-text">
         <slot name="legend">{{ legend }}</slot>
       </span>
     </legend>
 
     <div class="fieldset__collapse">
-      <div class="fieldset__inner">
-        <div class="fieldset__body">
+      <div class="mfs-overflow-hidden">
+        <div class="mfs-pt-2">
           <slot />
         </div>
       </div>
@@ -76,26 +76,16 @@ const toggle = () => {
 
 <style scoped>
 .fieldset {
-  margin: 0;
   padding: 12px 20px 18px;
-  min-width: 0;
 }
 
 .fieldset__legend {
   padding: 4px 14px;
-  font-size: 0.92rem;
-  font-weight: 700;
 }
 
 .fieldset__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
   padding: 2px 0;
-  border: none;
-  background: transparent;
   font: inherit;
-  cursor: pointer;
 }
 
 .fieldset__chevron {
@@ -114,21 +104,5 @@ const toggle = () => {
 
 .fieldset.is-collapsed .fieldset__collapse {
   grid-template-rows: 0fr;
-}
-
-.fieldset__inner {
-  overflow: hidden;
-}
-
-.fieldset__body {
-  padding-top: 8px;
-}
-
-[data-theme="glass"] .fieldset {
-  border-color: rgba(255, 255, 255, 0.25);
-}
-
-[data-theme="neo"] .fieldset__legend {
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1), -2px -2px 6px rgba(255, 255, 255, 0.7);
 }
 </style>

@@ -5,6 +5,7 @@
     title="ConfirmPopup"
     description="Target-anchored confirmation popover triggered imperatively via show(event, options) or v-model."
     :code="confirmPopupCode"
+    :code-tabs="confirmPopupCodeTabs"
     :api="confirmPopupApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -71,6 +72,7 @@
     title="Galleria"
     description="Media gallery with thumbnail strip, keyboard arrow navigation, captions, and fullscreen mode."
     :code="galleriaCode"
+    :code-tabs="galleriaCodeTabs"
     :api="galleriaApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -87,6 +89,7 @@
     title="FileUpload"
     description="Drag-and-drop and click-to-browse file uploader with type/size validation and progress bar."
     :code="fileUploadCode"
+    :code-tabs="fileUploadCodeTabs"
     :api="fileUploadApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -112,6 +115,7 @@
     title="Terminal"
     description="Interactive command prompt with built-in command handlers, history navigation, and clear support."
     :code="terminalCode"
+    :code-tabs="terminalCodeTabs"
     :api="terminalApi"
   >
     <Terminal
@@ -128,6 +132,7 @@
     title="Chart"
     description="Zero-dependency SVG chart supporting bar, line, pie, and doughnut visualizations with hover tooltips."
     :code="chartCode"
+    :code-tabs="chartCodeTabs"
     :api="chartApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -199,19 +204,62 @@
   <ComponentPreview
     v-else-if="activeSlug === 'v-animate-on-scroll'"
     title="v-animate-on-scroll"
-    description="IntersectionObserver directive that toggles enter/leave classes when elements enter the viewport."
+    description="Zero-CSS IntersectionObserver directive with built-in motion presets (fade-up, fade-down, fade-left, fade-right, zoom-in), staggered delays, and custom class support."
     :code="aosCode"
     :api="aosApi"
   >
-    <div class="mfs-flex mfs-flex-col mfs-gap-3 mfs-p-3 mfs-rounded-md mfs-surface-subtle demo-aos-scroll">
-      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">Scroll inside this box to trigger enter/leave animations:</p>
+    <div class="mfs-stack mfs-w-full mfs-gap-3">
+      <div class="mfs-row mfs-justify-between mfs-items-center mfs-gap-2">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
+          Scroll inside the box or click Replay to re-trigger presets:
+        </p>
+        <Button size="sm" variant="secondary" @click="replayAos">Replay</Button>
+      </div>
       <div
-        v-for="n in 4"
-        :key="n"
-        v-animate-on-scroll="{ enterClass: 'demo-aos-in', leaveClass: 'demo-aos-out', once: false, threshold: 0.25 }"
-        class="mfs-px-4 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold demo-aos-card"
+        ref="aosScrollRef"
+        :key="aosReplayKey"
+        class="mfs-flex mfs-flex-col mfs-gap-4 mfs-p-5 mfs-rounded-md mfs-surface-subtle demo-aos-scroll"
       >
-        Animated Card #{{ n }}
+        <div
+          v-animate-on-scroll="{ animation: 'fade-up', once: false }"
+          class="mfs-px-5 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold"
+        >
+          1. Default / fade-up
+        </div>
+        <div
+          v-animate-on-scroll="{ animation: 'fade-down', once: false }"
+          class="mfs-px-5 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold"
+        >
+          2. fade-down
+        </div>
+        <div
+          v-animate-on-scroll="{ animation: 'fade-left', once: false }"
+          class="mfs-px-5 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold"
+        >
+          3. fade-left
+        </div>
+        <div
+          v-animate-on-scroll="{ animation: 'zoom-in', once: false }"
+          class="mfs-px-5 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold"
+        >
+          4. zoom-in
+        </div>
+        <div class="demo-aos-stagger-grid">
+          <div
+            v-for="(delayMs, idx) in [0, 120, 240]"
+            :key="delayMs"
+            v-animate-on-scroll="{ animation: 'fade-up', delay: delayMs, once: false }"
+            class="mfs-px-4 mfs-py-5 mfs-rounded-sm mfs-surface mfs-text-sm mfs-font-semibold mfs-text-center"
+          >
+            Stagger #{{ idx + 1 }} ({{ delayMs }}ms)
+          </div>
+        </div>
+        <div
+          v-animate-on-scroll="{ animation: 'fade-right', distance: 36, duration: 650, once: false }"
+          class="mfs-px-5 mfs-py-6 mfs-rounded-sm mfs-surface mfs-font-semibold"
+        >
+          6. fade-right (36px, 650ms)
+        </div>
       </div>
     </div>
   </ComponentPreview>
@@ -406,24 +454,61 @@ const openConfirm = (event: MouseEvent, variant: 'primary' | 'danger') => {
   })
 }
 
-const confirmPopupCode = `<template>
-  <Button @click="ask($event)">Delete</Button>
-  <ConfirmPopup ref="popupRef" />
-</template>
-
-<script setup lang="ts">
+const confirmPopupCode = `<script setup lang="ts">
 import { ref } from 'vue'
 import { Button, ConfirmPopup } from '@mfs-atomic/ui'
 
 const popupRef = ref<InstanceType<typeof ConfirmPopup> | null>(null)
+const status = ref('Waiting')
+
 const ask = (e: MouseEvent) => {
   popupRef.value?.show(e, {
-    message: 'Delete this item?',
+    message: 'Delete this item permanently?',
+    acceptLabel: 'Delete',
+    rejectLabel: 'Cancel',
     variant: 'danger',
-    onAccept: () => console.log('Accepted')
+    onAccept: () => {
+      status.value = 'Deleted'
+    },
+    onReject: () => {
+      status.value = 'Cancelled'
+    }
   })
 }
-<\/script>`
+<\/script>
+
+<template>
+  <Button variant="danger" @click="ask($event)">Delete Item</Button>
+  <ConfirmPopup ref="popupRef" />
+  <p>Last response: {{ status }}</p>
+</template>`
+
+const confirmPopupCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: confirmPopupCode
+  },
+  {
+    label: 'Options',
+    filename: 'options.ts',
+    code: `export interface ConfirmPopupShowOptions {
+  message?: string
+  acceptLabel?: string
+  rejectLabel?: string
+  variant?: 'primary' | 'success' | 'warning' | 'danger'
+  onAccept?: () => void
+  onReject?: () => void
+}
+
+export const deletePopupOptions: ConfirmPopupShowOptions = {
+  message: 'Delete this item permanently?',
+  acceptLabel: 'Delete',
+  rejectLabel: 'Cancel',
+  variant: 'danger'
+}`
+  }
+]
 
 const confirmPopupApi = {
   props: [
@@ -442,7 +527,11 @@ const confirmPopupApi = {
 }
 
 /* ---------- InlineMessage ---------- */
-const inlineMessageCode = `<template>
+const inlineMessageCode = `<script setup lang="ts">
+import { InlineMessage } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
   <InlineMessage severity="info" text="Theme tokens synced" />
   <InlineMessage severity="success" text="Build passed" />
   <InlineMessage severity="warning" text="Unsaved changes" />
@@ -462,9 +551,23 @@ const inlineMessageApi = {
 /* ---------- BlockUI ---------- */
 const isBlocked = ref(false)
 
-const blockUiCode = `<template>
+const blockUiCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { BlockUI, Button } from '@mfs-atomic/ui'
+
+const isBlocked = ref(false)
+<\/script>
+
+<template>
+  <Button size="sm" variant="primary" @click="isBlocked = !isBlocked">
+    {{ isBlocked ? 'Unblock Panel' : 'Block Panel' }}
+  </Button>
+
   <BlockUI :blocked="isBlocked" label="Syncing workspace...">
-    <div class="panel">Protected content</div>
+    <div class="panel">
+      <h4>Project Settings</h4>
+      <p>Inert and blurred while blocked is true.</p>
+    </div>
   </BlockUI>
 </template>`
 
@@ -493,9 +596,60 @@ const galleriaImages: GalleriaImage[] = [
   { src: makeSlideSvg('Neumorphism', '#10b981', '#06b6d4'), title: 'Neumorphism Depth' }
 ]
 
-const galleriaCode = `<template>
+const galleriaCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Galleria, type GalleriaImage } from '@mfs-atomic/ui'
+
+const activeIndex = ref(0)
+const images: GalleriaImage[] = [
+  { src: '/gallery/clay.jpg', alt: 'Claymorphism', title: 'Claymorphism Surface' },
+  { src: '/gallery/glass.jpg', alt: 'Glassmorphism', title: 'Glassmorphism Blur' },
+  { src: '/gallery/neo.jpg', alt: 'Neumorphism', title: 'Neumorphism Depth' }
+]
+<\/script>
+
+<template>
   <Galleria v-model:active-index="activeIndex" :images="images" />
 </template>`
+
+const galleriaCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: galleriaCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `import type { GalleriaImage } from '@mfs-atomic/ui'
+
+export const galleryImages: GalleriaImage[] = [
+  {
+    src: '/gallery/clay.jpg',
+    thumbnail: '/gallery/clay-thumb.jpg',
+    alt: 'Claymorphism Surface',
+    title: 'Claymorphism Surface'
+  },
+  {
+    src: '/gallery/glass.jpg',
+    thumbnail: '/gallery/glass-thumb.jpg',
+    alt: 'Glassmorphism Blur',
+    title: 'Glassmorphism Blur'
+  }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'api.ts',
+    code: `import type { GalleriaImage } from '@mfs-atomic/ui'
+
+export async function fetchGallery(): Promise<GalleriaImage[]> {
+  const res = await fetch('/api/gallery')
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return (await res.json()) as GalleriaImage[]
+}`
+  }
+]
 
 const galleriaApi = {
   props: [
@@ -523,15 +677,64 @@ const onFilesCleared = () => {
   uploadStatus.value = 'No files selected'
 }
 
-const fileUploadCode = `<template>
+const fileUploadCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { FileUpload } from '@mfs-atomic/ui'
+
+const progress = ref(0)
+const status = ref('No files selected')
+
+const onSelect = (files: File[]) => {
+  status.value = \`\${files.length} file(s) ready\`
+  progress.value = 100
+}
+
+const onClear = () => {
+  progress.value = 0
+  status.value = 'No files selected'
+}
+<\/script>
+
+<template>
   <FileUpload
     multiple
-    accept="image/*,.pdf"
+    accept="image/*,.pdf,.txt"
     :max-file-size="2097152"
     :progress="progress"
     @select="onSelect"
+    @remove="status = \`Removed \${$event.name}\`"
+    @error="status = $event"
+    @clear="onClear"
   />
+  <p>Status: {{ status }}</p>
 </template>`
+
+const fileUploadCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: fileUploadCode
+  },
+  {
+    label: 'Upload API',
+    filename: 'upload.ts',
+    code: `export async function uploadFiles(
+  files: File[],
+  onProgress?: (percent: number) => void
+): Promise<void> {
+  const formData = new FormData()
+  files.forEach((file) => formData.append('files[]', file))
+
+  onProgress?.(25)
+  const res = await fetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  })
+  if (!res.ok) throw new Error(\`Upload failed (\${res.status})\`)
+  onProgress?.(100)
+}`
+  }
+]
 
 const fileUploadApi = {
   props: [
@@ -560,7 +763,21 @@ const onUnknownCommand = (payload: TerminalCommandPayload) => {
   payload.respond(`Command not found: ${payload.command}. Try 'help'.`)
 }
 
-const terminalCode = `<template>
+const terminalCode = `<script setup lang="ts">
+import { Terminal, type TerminalCommandPayload } from '@mfs-atomic/ui'
+
+const commands: Record<string, (args: string[]) => string> = {
+  help: () => 'Available: help, date, echo <text>, clear',
+  date: () => new Date().toLocaleString(),
+  echo: (args) => args.join(' ') || '(empty)'
+}
+
+const onCommand = (payload: TerminalCommandPayload) => {
+  payload.respond(\`Command not found: \${payload.command}. Try 'help'.\`)
+}
+<\/script>
+
+<template>
   <Terminal
     welcome-message="MFS Terminal — type 'help' or 'clear'."
     prompt="mfs $"
@@ -568,6 +785,32 @@ const terminalCode = `<template>
     @command="onCommand"
   />
 </template>`
+
+const terminalCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: terminalCode
+  },
+  {
+    label: 'Commands',
+    filename: 'commands.ts',
+    code: `export type TerminalCommandMap = Record<
+  string,
+  (args: string[]) => string | Promise<string>
+>
+
+export const terminalCommands: TerminalCommandMap = {
+  help: () => 'Available commands: help, date, echo <text>, status, clear',
+  date: () => new Date().toISOString(),
+  echo: (args) => args.join(' ') || '(empty)',
+  status: async () => {
+    const res = await fetch('/api/health')
+    return res.ok ? 'API: healthy' : \`API: degraded (\${res.status})\`
+  }
+}`
+  }
+]
 
 const terminalApi = {
   props: [
@@ -600,9 +843,62 @@ const activeChartData = computed<ChartData>(() => {
   }
 })
 
-const chartCode = `<template>
-  <Chart type="bar" :data="chartData" :height="220" />
+const chartCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Chart, type ChartData } from '@mfs-atomic/ui'
+
+const chartType = ref<'bar' | 'line' | 'pie' | 'doughnut'>('bar')
+const chartData: ChartData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  datasets: [
+    { label: 'Components', data: [18, 28, 36, 44, 52] },
+    { label: 'Adoption', data: [12, 20, 29, 38, 46] }
+  ]
+}
+<\/script>
+
+<template>
+  <Button size="sm" @click="chartType = 'bar'">Bar</Button>
+  <Button size="sm" @click="chartType = 'line'">Line</Button>
+  <Chart :type="chartType" :data="chartData" :height="220" />
 </template>`
+
+const chartCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: chartCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `import type { ChartData } from '@mfs-atomic/ui'
+
+export const barLineData: ChartData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  datasets: [
+    { label: 'Components', data: [18, 28, 36, 44, 52] },
+    { label: 'Adoption', data: [12, 20, 29, 38, 46] }
+  ]
+}
+
+export const pieDoughnutData: ChartData = {
+  labels: ['Clay', 'Glass', 'Neo'],
+  datasets: [{ label: 'Themes', data: [48, 32, 20] }]
+}`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'api.ts',
+    code: `import type { ChartData } from '@mfs-atomic/ui'
+
+export async function fetchChartMetrics(range: '7d' | '30d'): Promise<ChartData> {
+  const res = await fetch(\`/api/analytics/chart?range=\${range}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return (await res.json()) as ChartData
+}`
+  }
+]
 
 const chartApi = {
   props: [
@@ -615,10 +911,14 @@ const chartApi = {
 /* ---------- Directives ---------- */
 const trapActive = ref(false)
 
-const rippleCode = `<template>
-  <button v-ripple>Default Ripple</button>
-  <button v-ripple="{ color: 'var(--primary)' }">Primary Ripple</button>
-  <button v-ripple="false">Disabled</button>
+const rippleCode = `<script setup lang="ts">
+import { vRipple } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
+  <button v-ripple type="button">Default Ripple</button>
+  <button v-ripple="{ color: 'var(--primary)' }" type="button">Primary Ripple</button>
+  <button v-ripple="false" type="button">Disabled</button>
 </template>`
 
 const rippleApi = {
@@ -627,10 +927,21 @@ const rippleApi = {
   ]
 }
 
-const focusTrapCode = `<template>
+const focusTrapCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, vFocusTrap } from '@mfs-atomic/ui'
+
+const trapActive = ref(false)
+<\/script>
+
+<template>
+  <Button size="sm" @click="trapActive = !trapActive">
+    {{ trapActive ? 'Disable Focus Trap' : 'Enable Focus Trap' }}
+  </Button>
+
   <div v-focus-trap="trapActive">
-    <input type="text" />
-    <button @click="trapActive = false">Close</button>
+    <input type="text" placeholder="Focusable input" />
+    <Button size="sm" @click="trapActive = false">Release</Button>
   </div>
 </template>`
 
@@ -640,20 +951,61 @@ const focusTrapApi = {
   ]
 }
 
-const aosCode = `<template>
+const aosScrollRef = ref<HTMLElement | null>(null)
+const aosReplayKey = ref(0)
+
+const replayAos = () => {
+  aosReplayKey.value += 1
+  requestAnimationFrame(() => {
+    if (aosScrollRef.value) {
+      aosScrollRef.value.scrollTop = 0
+    }
+  })
+}
+
+const aosCode = `<script setup lang="ts">
+import { vAnimateOnScroll } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
+  <!-- Default preset ('fade-up') with zero CSS -->
+  <div v-animate-on-scroll>Fade up on scroll</div>
+
+  <!-- Built-in string presets: 'fade-up' | 'fade-down' | 'fade-left' | 'fade-right' | 'zoom-in' -->
+  <div v-animate-on-scroll="'fade-left'">Slide from right</div>
+  <div v-animate-on-scroll="'zoom-in'">Zoom in</div>
+
+  <!-- Staggered delay & custom timing -->
+  <div v-animate-on-scroll="{ animation: 'fade-up', delay: 150, duration: 600 }">
+    Delayed reveal
+  </div>
+
+  <!-- Custom CSS class mode -->
   <div v-animate-on-scroll="{ enterClass: 'fade-in', leaveClass: 'fade-out', once: false }">
-    Animated content
+    Custom classes
   </div>
 </template>`
 
 const aosApi = {
   props: [
-    { name: 'v-animate-on-scroll', type: 'string | { enterClass?: string; leaveClass?: string; threshold?: number; once?: boolean }', default: "'mfs-aos-enter'", description: 'Class or options applied via IntersectionObserver.' }
+    { name: 'v-animate-on-scroll', type: "AnimateOnScrollPreset | string | AnimateOnScrollOptions", default: "'fade-up'", description: "Built-in preset ('fade-up' | 'fade-down' | 'fade-left' | 'fade-right' | 'zoom-in'), custom class string, or options object." },
+    { name: 'animation', type: "'fade-up' | 'fade-down' | 'fade-left' | 'fade-right' | 'zoom-in'", default: "'fade-up'", description: 'Built-in inline transition preset when enterClass is not provided.' },
+    { name: 'duration', type: 'number', default: '500', description: 'Transition duration in milliseconds (cubic-bezier(0.22, 1, 0.36, 1)).' },
+    { name: 'delay', type: 'number', default: '0', description: 'Transition delay in milliseconds (useful for staggered reveals).' },
+    { name: 'distance', type: 'number', default: '24', description: 'Translate offset in pixels for fade-* presets.' },
+    { name: 'threshold', type: 'number', default: '0.1', description: 'IntersectionObserver visibility threshold (0 to 1).' },
+    { name: 'once', type: 'boolean', default: 'true', description: 'Unobserves element after first intersection when true.' },
+    { name: 'enterClass', type: 'string', default: 'undefined', description: 'Custom CSS class added on enter; disables inline preset styling when set.' },
+    { name: 'leaveClass', type: 'string', default: "''", description: 'Custom CSS class added on leave when once is false.' }
   ]
 }
 
-const styleClassCode = `<template>
-  <button v-style-class="{ selector: '@next', toggleClass: 'is-active' }">
+const styleClassCode = `<script setup lang="ts">
+import { vStyleClass } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
+  <button v-style-class="{ selector: '@next', toggleClass: 'is-active' }" type="button">
     Toggle Sibling
   </button>
   <div>Target sibling</div>
@@ -668,11 +1020,20 @@ const styleClassApi = {
 /* ---------- v-tooltip ---------- */
 const tooltipDisabled = ref(false)
 
-const vTooltipCode = `<template>
+const vTooltipCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, vTooltip } from '@mfs-atomic/ui'
+
+const tooltipDisabled = ref(false)
+<\/script>
+
+<template>
   <Button v-tooltip="'Top tooltip'">Top</Button>
   <Button v-tooltip.bottom="'Bottom tooltip'">Bottom</Button>
   <Button v-tooltip.left="'Left tooltip'">Left</Button>
-  <Button v-tooltip.right="{ value: 'Right tooltip', disabled: false }">Right</Button>
+  <Button v-tooltip.right="{ value: 'Right tooltip', disabled: tooltipDisabled }">
+    Right
+  </Button>
 </template>`
 
 const vTooltipApi = {
@@ -685,10 +1046,22 @@ const vTooltipApi = {
 /* ---------- Portal ---------- */
 const portalDisabled = ref(false)
 
-const portalCode = `<template>
+const portalCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Portal } from '@mfs-atomic/ui'
+
+const inline = ref(false)
+<\/script>
+
+<template>
+  <Button size="sm" @click="inline = !inline">
+    {{ inline ? 'Teleport to Target' : 'Render Inline' }}
+  </Button>
+
   <Portal append-to="#target" :disabled="inline">
     <span>Portaled content</span>
   </Portal>
+  <div id="target" />
 </template>`
 
 const portalApi = {
@@ -702,9 +1075,17 @@ const portalApi = {
 /* ---------- vBadge ---------- */
 const vBadgeCount = ref(4)
 
-const vBadgeCode = `<template>
-  <Button v-badge="4">Inbox</Button>
+const vBadgeCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, vBadge } from '@mfs-atomic/ui'
+
+const count = ref(4)
+<\/script>
+
+<template>
+  <Button v-badge="count" @click="count++">Inbox</Button>
   <Button v-badge="{ value: 'NEW', severity: 'success' }">Updates</Button>
+  <Button v-badge="{ value: '99+', severity: 'danger' }">Alerts</Button>
 </template>`
 
 const vBadgeApi = {
@@ -718,9 +1099,19 @@ const keyFilterInt = ref('2026')
 const keyFilterHex = ref('FF8800')
 const keyFilterSlug = ref('mfs-theme')
 
-const vKeyFilterCode = `<template>
-  <input v-keyfilter="'int'" />
-  <input v-keyfilter="/[a-z0-9-]/" />
+const vKeyFilterCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { vKeyFilter as vKeyfilter } from '@mfs-atomic/ui'
+
+const intVal = ref('2026')
+const hexVal = ref('FF8800')
+const slugVal = ref('mfs-theme')
+<\/script>
+
+<template>
+  <input v-model="intVal" v-keyfilter="'int'" placeholder="e.g. -42" />
+  <input v-model="hexVal" v-keyfilter="'hex'" placeholder="e.g. 1A2F" />
+  <input v-model="slugVal" v-keyfilter="/[a-z0-9-]/" placeholder="e.g. my-slug-1" />
 </template>`
 
 const vKeyFilterApi = {
@@ -741,23 +1132,19 @@ const vKeyFilterApi = {
 }
 
 .demo-aos-scroll {
-  height: 220px;
+  height: 380px;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.demo-aos-card {
-  transition: transform 0.35s ease, opacity 0.35s ease, border-color 0.35s ease;
+.demo-aos-scroll > * {
+  flex-shrink: 0;
 }
 
-.demo-aos-in {
-  opacity: 1;
-  transform: translateY(0);
-  border-color: var(--primary);
-}
-
-.demo-aos-out {
-  opacity: 0.35;
-  transform: translateY(10px);
+.demo-aos-stagger-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
 }
 
 .demo-style-target {

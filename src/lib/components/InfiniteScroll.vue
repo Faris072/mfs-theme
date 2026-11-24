@@ -16,25 +16,25 @@
 
     <div
       v-else-if="error"
-      class="infinite-scroll__error mfs-soft-danger mfs-rounded mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-p-3"
+      class="mfs-soft-danger mfs-rounded mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-p-3"
       role="alert"
     >
       <slot name="error" :error="error" :retry="triggerLoad">
-        <span class="infinite-scroll__error-text">{{ error }}</span>
+        <span class="mfs-text-sm mfs-font-medium">{{ error }}</span>
         <Button size="sm" variant="danger" @click="triggerLoad">Retry</Button>
       </slot>
     </div>
 
     <div
       v-else-if="!hasMore && !isEmpty"
-      class="infinite-scroll__finished mfs-text-muted mfs-text-center mfs-p-4"
+      class="mfs-text-sm mfs-text-muted mfs-text-center mfs-p-4"
     >
       <slot name="finished">
         <span>{{ finishedText }}</span>
       </slot>
     </div>
 
-    <div ref="sentinelRef" class="infinite-scroll__sentinel" aria-hidden="true" />
+    <div ref="sentinelRef" class="mfs-w-full mfs-h-px mfs-pointer-events-none" aria-hidden="true" />
   </div>
 </template>
 
@@ -115,20 +115,3 @@ onBeforeUnmount(() => {
   observer = null
 })
 </script>
-
-<style scoped>
-.infinite-scroll__finished {
-  font-size: 0.85rem;
-}
-
-.infinite-scroll__error-text {
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.infinite-scroll__sentinel {
-  width: 100%;
-  height: 1px;
-  pointer-events: none;
-}
-</style>

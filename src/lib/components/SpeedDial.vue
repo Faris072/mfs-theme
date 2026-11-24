@@ -1,8 +1,8 @@
 <template>
-  <div :class="['speed-dial', `speed-dial--${direction}`]">
+  <div :class="['speed-dial', `speed-dial--${direction}`, 'mfs-relative', 'mfs-inline-flex', 'mfs-items-center', 'mfs-justify-center']">
     <button
       type="button"
-      class="speed-dial__fab mfs-bg-primary mfs-pill mfs-shadow mfs-interactive mfs-focus-ring"
+      class="speed-dial__fab mfs-inline-flex mfs-items-center mfs-justify-center mfs-border-none mfs-bg-primary mfs-pill mfs-shadow mfs-interactive mfs-focus-ring"
       :aria-expanded="isOpen"
       aria-label="Toggle quick actions"
       @click="toggle"
@@ -19,7 +19,7 @@
       </svg>
     </button>
 
-    <ul v-if="isOpen" class="speed-dial__list" role="menu">
+    <ul v-if="isOpen" class="speed-dial__list mfs-absolute mfs-m-0 mfs-p-0 mfs-list-none mfs-flex mfs-gap-2-5" role="menu">
       <li
         v-for="(item, idx) in items"
         :key="idx"
@@ -30,14 +30,14 @@
         <button
           type="button"
           role="menuitem"
-          :class="['speed-dial__item', 'mfs-surface', 'mfs-pill', 'mfs-shadow', 'mfs-interactive', 'mfs-focus-ring', { 'mfs-disabled': item.disabled }]"
+          :class="['speed-dial__item', 'mfs-inline-flex', 'mfs-items-center', 'mfs-justify-center', 'mfs-text-xs', 'mfs-font-bold', 'mfs-surface', 'mfs-pill', 'mfs-shadow', 'mfs-interactive', 'mfs-focus-ring', { 'mfs-disabled': item.disabled }]"
           :title="item.label"
           :aria-label="item.label"
           :disabled="item.disabled"
           @click="onSelect(item)"
         >
           <slot name="item" :item="item" :index="idx">
-            <span class="speed-dial__icon">{{ item.icon || item.label.slice(0, 2) }}</span>
+            <span>{{ item.icon || item.label.slice(0, 2) }}</span>
           </slot>
         </button>
       </li>
@@ -120,20 +120,9 @@ const itemStyle = (idx: number) => {
 </script>
 
 <style scoped>
-.speed-dial {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .speed-dial__fab {
   width: 52px;
   height: 52px;
-  border: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   z-index: 3;
 }
 
@@ -146,12 +135,6 @@ const itemStyle = (idx: number) => {
 }
 
 .speed-dial__list {
-  position: absolute;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-  gap: 10px;
   z-index: 2;
 }
 
@@ -178,24 +161,5 @@ const itemStyle = (idx: number) => {
 .speed-dial__item {
   width: 42px;
   height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.speed-dial__item:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-[data-theme="glass"] .speed-dial__fab,
-[data-theme="glass"] .speed-dial__item {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-[data-theme="neo"] .speed-dial__item {
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.12), -4px -4px 10px rgba(255, 255, 255, 0.75);
 }
 </style>

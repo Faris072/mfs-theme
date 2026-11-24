@@ -120,20 +120,8 @@
             <p class="comp-desc mfs-text-muted mfs-flex-1">{{ comp.summary }}</p>
 
             <!-- Import snippet -->
-            <div class="snippet-box mfs-surface-subtle mfs-rounded-sm mfs-shadow-inset mfs-overflow-hidden mfs-mb-3">
-              <div class="snippet-header mfs-flex mfs-items-center mfs-justify-between mfs-border-none mfs-border-b mfs-font-semibold mfs-text-muted">
-                <span>Import</span>
-                <button
-                  type="button"
-                  class="btn-copy-snippet mfs-border-none mfs-bg-transparent mfs-cursor-pointer mfs-font-semibold mfs-text-primary mfs-flex mfs-items-center mfs-gap-1"
-                  @click.prevent.stop="copySnippet(getImportSnippet(comp), comp.slug)"
-                >
-                  <Copy v-if="copiedSnippetId !== comp.slug" :size="12" class="icon-inline" />
-                  <Check v-else :size="12" class="icon-inline" />
-                  <span>{{ copiedSnippetId === comp.slug ? 'Copied' : 'Copy' }}</span>
-                </button>
-              </div>
-              <pre class="snippet-code mfs-m-0 mfs-font-mono mfs-text"><code>{{ getImportSnippet(comp) }}</code></pre>
+            <div class="mfs-mb-3">
+              <CodeEditorBlock :code="getImportSnippet(comp)" filename="main.ts" />
             </div>
 
             <div class="mfs-flex mfs-items-center mfs-justify-end">
@@ -236,6 +224,7 @@ import {
   isDarkTheme
 } from '../data/themesData'
 import { COMPONENT_NAV, type ComponentNavItem } from '../data/componentDocs'
+import CodeEditorBlock from './CodeEditorBlock.vue'
 
 const props = defineProps<{
   themeId: ThemeType

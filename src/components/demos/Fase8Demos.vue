@@ -460,10 +460,17 @@ const panelApi: ApiSpec = {
 const fieldsetCollapsed = ref(false)
 
 const fieldsetCode = `<template>
-  <Fieldset legend="Theme Preferences" toggleable>
-    <p>Fieldset body content</p>
+  <Fieldset v-model:collapsed="collapsed" legend="Theme Preferences" toggleable>
+    <p>Toggleable fieldset content collapses smoothly using CSS grid row transitions.</p>
   </Fieldset>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Fieldset } from '@mfs-atomic/ui'
+
+const collapsed = ref(false)
+<\/script>`
 
 const fieldsetApi: ApiSpec = {
   props: [
@@ -486,11 +493,27 @@ const splitLayout = ref<'horizontal' | 'vertical'>('horizontal')
 const splitSize = ref(45)
 
 const splitterCode = `<template>
-  <Splitter layout="horizontal" :initial-size="45" :min-size="20">
-    <template #first>Pane 1</template>
-    <template #second>Pane 2</template>
+  <Splitter
+    layout="horizontal"
+    :initial-size="45"
+    :min-size="20"
+    @resize="(s) => (size = Math.round(s))"
+  >
+    <template #first>
+      <div>Pane 1 ({{ size }}%)</div>
+    </template>
+    <template #second>
+      <div>Pane 2 ({{ 100 - size }}%)</div>
+    </template>
   </Splitter>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Splitter } from '@mfs-atomic/ui'
+
+const size = ref(45)
+<\/script>`
 
 const splitterApi: ApiSpec = {
   props: [
@@ -510,11 +533,25 @@ const toolbarAction = ref('Ready')
 
 const toolbarCode = `<template>
   <Toolbar>
-    <template #start><Button size="sm">New</Button></template>
-    <template #center><Badge>Workspace</Badge></template>
-    <template #end><Button size="sm" variant="danger">Delete</Button></template>
+    <template #start>
+      <Button size="sm" variant="primary" @click="lastAction = 'New File'">New</Button>
+      <Button size="sm" variant="surface" @click="lastAction = 'Saved'">Save</Button>
+    </template>
+    <template #center>
+      <Badge variant="primary">{{ lastAction }}</Badge>
+    </template>
+    <template #end>
+      <Button size="sm" variant="danger" @click="lastAction = 'Deleted'">Delete</Button>
+    </template>
   </Toolbar>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Badge, Button, Toolbar } from '@mfs-atomic/ui'
+
+const lastAction = ref('Workspace')
+<\/script>`
 
 const toolbarApi: ApiSpec = {
   slots: [
@@ -528,9 +565,15 @@ const toolbarApi: ApiSpec = {
 // ── ScrollPanel ────────────────────────────────────────────────────────
 const scrollPanelCode = `<template>
   <ScrollPanel max-height="190px" width="100%">
-    <p>Scrollable content...</p>
+    <div v-for="n in items" :key="n">Entry #{{ n }}</div>
   </ScrollPanel>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ScrollPanel } from '@mfs-atomic/ui'
+
+const items = Array.from({ length: 12 }, (_, i) => i + 1)
+<\/script>`
 
 const scrollPanelApi: ApiSpec = {
   props: [
@@ -545,10 +588,18 @@ const fluidPadded = ref(true)
 const fluidText = ref('')
 
 const fluidCode = `<template>
-  <Fluid tag="section" padded>
-    <Input label="Full-Width Input" />
+  <Fluid tag="section" :padded="padded">
+    <Input v-model="text" label="Full-Width Input" placeholder="Stretches to 100% of container" />
   </Fluid>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Fluid, Input } from '@mfs-atomic/ui'
+
+const padded = ref(true)
+const text = ref('')
+<\/script>`
 
 const fluidApi: ApiSpec = {
   props: [
@@ -570,10 +621,20 @@ const resetDeferred = () => {
 
 const deferredCode = `<template>
   <Deferred root-margin="0px" :threshold="0.1" @load="onLoad">
-    <template #placeholder>Loading...</template>
-    <div>Mounted when visible</div>
+    <template #placeholder>Waiting for intersection...</template>
+    <div>Mounted when visible ({{ loads }} loads)</div>
   </Deferred>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Deferred } from '@mfs-atomic/ui'
+
+const loads = ref(0)
+const onLoad = () => {
+  loads.value++
+}
+<\/script>`
 
 const deferredApi: ApiSpec = {
   props: [

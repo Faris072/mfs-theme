@@ -290,7 +290,7 @@
             <p class="mfs-text-sm mfs-text-muted mfs-m-0">
               Call <code class="mfs-font-mono mfs-text-xs mfs-text-primary">setTheme()</code> from <code class="mfs-font-mono mfs-text-xs mfs-text-primary">useTheme()</code> to toggle between <code class="mfs-font-mono mfs-text-xs">clay</code>, <code class="mfs-font-mono mfs-text-xs">glass</code>, <code class="mfs-font-mono mfs-text-xs">neo</code>, and other built-in themes.
             </p>
-            <pre class="theming-code mfs-m-0 mfs-p-4 mfs-rounded-sm mfs-surface mfs-border mfs-font-mono mfs-text-xs mfs-text mfs-overflow-x-auto"><code>{{ themeSwitchSnippet }}</code></pre>
+            <CodeEditorBlock :code="themeSwitchSnippet" filename="theme.ts" />
           </div>
 
           <!-- Semantic CSS Tokens Table -->
@@ -325,7 +325,7 @@
           <!-- CSS Override Snippet -->
           <div class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-3">
             <h3 class="mfs-title mfs-text-base mfs-m-0">Custom CSS Override</h3>
-            <pre class="theming-code mfs-m-0 mfs-p-4 mfs-rounded-sm mfs-surface mfs-border mfs-font-mono mfs-text-xs mfs-text mfs-overflow-x-auto"><code>{{ themeOverrideSnippet }}</code></pre>
+            <CodeEditorBlock :code="themeOverrideSnippet" filename="theme.css" />
           </div>
 
           <!-- Core .mfs-* Utilities Quick Reference -->
@@ -397,6 +397,7 @@ import {
   type ComponentNavItem
 } from '../data/componentDocs'
 import type { ComponentApiSpec, DocsContext } from './ComponentPreview.vue'
+import CodeEditorBlock from './CodeEditorBlock.vue'
 
 const props = defineProps<{
   activeSlug: string

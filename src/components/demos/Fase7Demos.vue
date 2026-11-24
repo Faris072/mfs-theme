@@ -6,6 +6,7 @@
         title="Basic & Loading State"
         description="Type to filter suggestions with keyboard navigation and loading indicator."
         :code="autoCompleteCode"
+        :code-tabs="autoCompleteCodeTabs"
         :api="autoCompleteApi"
       >
         <div class="mfs-grid mfs-w-full">
@@ -36,6 +37,7 @@
         title="Hierarchical Cascader"
         description="Multi-column cascading menu for nested location or category paths."
         :code="cascaderCode"
+        :code-tabs="cascaderCodeTabs"
         :api="cascaderApi"
       >
         <div class="mfs-grid mfs-w-full">
@@ -64,6 +66,7 @@
         title="Single & Multiple TreeSelect"
         description="Expandable hierarchical tree dropdown supporting single or multi-select."
         :code="treeSelectCode"
+        :code-tabs="treeSelectCodeTabs"
         :api="treeSelectApi"
       >
         <div class="mfs-grid mfs-w-full">
@@ -316,6 +319,32 @@
       </ComponentPreview>
     </template>
 
+    <!-- CODE EDITOR -->
+    <template v-else-if="activeSlug === 'code-editor'">
+      <ComponentPreview
+        title="Editable & Readonly CodeEditor"
+        description="XSS-safe VSCode-style code editor and readonly viewer with zero v-html syntax highlighting, Tab indentation, and copy action."
+        :code="codeEditorCode"
+        :api="codeEditorApi"
+      >
+        <div class="mfs-stack mfs-w-full">
+          <CodeEditor
+            v-model="codeEditorSource"
+            language="vue"
+            filename="XssSafeDemo.vue"
+            min-height="190px"
+          />
+          <CodeEditor
+            :model-value="codeEditorReadonlySource"
+            language="ts"
+            filename="readonly-config.ts"
+            readonly
+            min-height="130px"
+          />
+        </div>
+      </ComponentPreview>
+    </template>
+
     <!-- ICON FIELD -->
     <template v-else-if="activeSlug === 'icon-field'">
       <ComponentPreview
@@ -402,6 +431,7 @@ import Listbox from '../../lib/components/Listbox.vue'
 import FloatLabel from '../../lib/components/FloatLabel.vue'
 import IftaLabel from '../../lib/components/IftaLabel.vue'
 import Editor from '../../lib/components/Editor.vue'
+import CodeEditor from '../../lib/components/CodeEditor.vue'
 import IconField from '../../lib/components/IconField.vue'
 
 defineProps<{ activeSlug: string }>()
@@ -509,24 +539,90 @@ const iftaEnv = ref('production')
 // Editor
 const editorHtml = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</p>')
 
+// CodeEditor
+const codeEditorSource = ref(`<template>
+  <!-- Harmless XSS test payload: rendered safely via Vue text interpolation -->
+  <div class="card" data-test="<img src=x onerror=alert('xss')>">
+    {{ message }}
+  </div>
+</template>
+
+<script setup lang="ts">
+const message = '<script>alert("never-executed")<\\/script>'
+<\/script>`)
+
+const codeEditorReadonlySource = `export interface ThemeConfig {
+  name: 'clay' | 'glass' | 'neo'
+  tabSize: number
+  safeMode: boolean
+}
+
+export const defaultConfig: ThemeConfig = {
+  name: 'clay',
+  tabSize: 2,
+  safeMode: true
+}`
+
 // Code Snippets
 const autoCompleteCode = `<template>
   <AutoComplete
     v-model="framework"
     label="Framework"
     :suggestions="suggestions"
+    :loading="loading"
+    @complete="onComplete"
     @select="(item) => (selected = item.label)"
   />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete } from '@/lib'
+import { AutoComplete, type AutoCompleteItem } from '@mfs-atomic/ui'
+import { defaultSuggestions } from './data'
+import { searchSuggestions } from './fetchApi'
 
 const framework = ref('')
 const selected = ref('')
-const suggestions = ['Vue 3', 'Vite', 'TypeScript', 'Pinia']
+const loading = ref(false)
+const suggestions = ref<AutoCompleteItem[]>(defaultSuggestions)
+
+const onComplete = async ({ query }: { query: string }) => {
+  loading.value = true
+  try {
+    suggestions.value = await searchSuggestions(query)
+  } finally {
+    loading.value = false
+  }
+}
 <\/script>`
+
+const autoCompleteCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: autoCompleteCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { AutoCompleteItem } from '@mfs-atomic/ui'
+
+export const defaultSuggestions: AutoCompleteItem[] = [
+  { label: 'Vue 3', value: 'vue' },
+  { label: 'Vite', value: 'vite' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Pinia', value: 'pinia' }
+]`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { AutoCompleteItem } from '@mfs-atomic/ui'
+
+export async function searchSuggestions(query: string): Promise<AutoCompleteItem[]> {
+  const params = new URLSearchParams({ q: query })
+  const res = await fetch(\`/api/frameworks/search?\${params.toString()}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
+]
 
 const cascaderCode = `<template>
   <Cascader v-model="location" label="Region & City" :options="options" />
@@ -534,13 +630,40 @@ const cascaderCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Cascader } from '@/lib'
+import { Cascader } from '@mfs-atomic/ui'
+import { options } from './data'
 
-const location = ref(['id', 'jkt'])
-const options = [
-  { label: 'Indonesia', value: 'id', children: [{ label: 'Jakarta', value: 'jkt' }] }
-]
+const location = ref<string[]>(['id', 'jkt'])
 <\/script>`
+
+const cascaderCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: cascaderCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { CascaderOption } from '@mfs-atomic/ui'
+
+export const options: CascaderOption[] = [
+  {
+    label: 'Indonesia',
+    value: 'id',
+    children: [
+      { label: 'Jakarta', value: 'jkt' },
+      { label: 'Bandung', value: 'bdg' },
+      { label: 'Surabaya', value: 'sby' }
+    ]
+  },
+  {
+    label: 'Japan',
+    value: 'jp',
+    children: [
+      { label: 'Tokyo', value: 'tyo' },
+      { label: 'Osaka', value: 'osa' }
+    ]
+  }
+]`
+  }
+]
 
 const treeSelectCode = `<template>
   <TreeSelect v-model="single" label="Single Node" :options="options" />
@@ -549,14 +672,41 @@ const treeSelectCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { TreeSelect } from '@/lib'
+import { TreeSelect } from '@mfs-atomic/ui'
+import { options } from './data'
 
-const single = ref('tokens')
-const multi = ref(['clay', 'glass'])
-const options = [
-  { label: 'Themes', value: 'themes', children: [{ label: 'Clay', value: 'clay' }] }
-]
+const single = ref<string | null>('tokens')
+const multi = ref<string[]>(['clay', 'glass'])
 <\/script>`
+
+const treeSelectCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: treeSelectCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { TreeSelectNode } from '@mfs-atomic/ui'
+
+export const options: TreeSelectNode[] = [
+  {
+    label: 'Themes',
+    value: 'themes',
+    children: [
+      { label: 'Claymorphism', value: 'clay' },
+      { label: 'Glassmorphism', value: 'glass' },
+      { label: 'Neumorphism', value: 'neo' }
+    ]
+  },
+  {
+    label: 'Design Tokens',
+    value: 'tokens',
+    children: [
+      { label: 'Colors', value: 'colors' },
+      { label: 'Shadows', value: 'shadows' }
+    ]
+  }
+]`
+  }
+]
 
 const knobCode = `<template>
   <Knob v-model="volume" label="Volume" value-template="{value}%" />
@@ -565,7 +715,7 @@ const knobCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Knob } from '@/lib'
+import { Knob } from '@mfs-atomic/ui'
 
 const volume = ref(65)
 const temp = ref(22)
@@ -578,7 +728,7 @@ const selectButtonCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { SelectButton } from '@/lib'
+import { SelectButton } from '@mfs-atomic/ui'
 
 const view = ref('Grid')
 const styles = ref(['bold'])
@@ -593,7 +743,7 @@ const toggleButtonCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ToggleButton } from '@/lib'
+import { ToggleButton } from '@mfs-atomic/ui'
 
 const enabled = ref(true)
 const pinned = ref(false)
@@ -606,7 +756,7 @@ const inputOtpCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputOtp } from '@/lib'
+import { InputOtp } from '@mfs-atomic/ui'
 
 const code = ref('')
 const pin = ref('')
@@ -620,7 +770,7 @@ const inputMaskCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { InputMask } from '@/lib'
+import { InputMask } from '@mfs-atomic/ui'
 
 const phone = ref('')
 const date = ref('')
@@ -642,7 +792,7 @@ const inputGroupCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, InputGroup } from '@/lib'
+import { Button, InputGroup } from '@mfs-atomic/ui'
 
 const domain = ref('mfs-theme')
 const amount = ref('49.00')
@@ -655,7 +805,7 @@ const listboxCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Listbox } from '@/lib'
+import { Listbox } from '@mfs-atomic/ui'
 
 const city = ref('Tokyo')
 const cities = ['Jakarta', 'Tokyo', 'Singapore', 'Seoul']
@@ -671,7 +821,7 @@ const floatLabelCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { FloatLabel } from '@/lib'
+import { FloatLabel } from '@mfs-atomic/ui'
 
 const username = ref('')
 <\/script>`
@@ -684,7 +834,7 @@ const iftaLabelCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { IftaLabel } from '@/lib'
+import { IftaLabel } from '@mfs-atomic/ui'
 
 const project = ref('mfs-theme')
 <\/script>`
@@ -695,9 +845,32 @@ const editorCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Editor } from '@/lib'
+import { Editor } from '@mfs-atomic/ui'
 
 const html = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</p>')
+<\/script>`
+
+const codeEditorCode = `<template>
+  <CodeEditor
+    v-model="source"
+    language="vue"
+    filename="Example.vue"
+    min-height="190px"
+  />
+  <CodeEditor
+    :model-value="readonlySnippet"
+    language="ts"
+    filename="config.ts"
+    readonly
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { CodeEditor } from '@mfs-atomic/ui'
+
+const source = ref('<template>\\n  <div>Hello MFS UI</div>\\n</template>')
+const readonlySnippet = 'export const tabSize = 2'
 <\/script>`
 
 // Verified API Tables
@@ -865,6 +1038,31 @@ const editorApi: { props: ApiRow[]; events: ApiRow[] } = {
   events: [{ name: 'update:modelValue', type: 'string', description: 'Emitted with updated HTML.' }]
 }
 
+const codeEditorApi: { props: ApiRow[]; events: ApiRow[] } = {
+  props: [
+    { name: 'modelValue', type: 'string', default: "''", description: 'Bound source code string.' },
+    { name: 'language', type: "'vue' | 'ts' | 'js' | 'html' | 'css' | 'json' | 'bash' | 'sql' | 'text'", default: "'vue'", description: 'Syntax highlighting language.' },
+    { name: 'filename', type: 'string', description: 'Optional filename shown in the header bar.' },
+    { name: 'readonly', type: 'boolean', default: 'false', description: 'Renders as a readonly VSCode-style code viewer.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables editing and interaction.' },
+    { name: 'lineNumbers', type: 'boolean', default: 'true', description: 'Toggles the line-number gutter.' },
+    { name: 'copyable', type: 'boolean', default: 'true', description: 'Toggles the header Copy button.' },
+    { name: 'placeholder', type: 'string', default: "'Write code here...'", description: 'Placeholder shown when empty.' },
+    { name: 'minHeight', type: 'string', default: "'180px'", description: 'Minimum height of the editor body.' },
+    { name: 'maxHeight', type: 'string', default: "'420px'", description: 'Maximum height before scrolling.' },
+    { name: 'maxLength', type: 'number', description: 'Optional maximum character limit.' },
+    { name: 'tabSize', type: 'number', default: '2', description: 'Spaces inserted on Tab key.' },
+    { name: 'invalid', type: 'boolean', default: 'false', description: 'Applies invalid error border styling.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: 'string', description: 'Emitted when source code changes.' },
+    { name: 'change', type: 'string', description: 'Emitted on user input or Tab indentation.' },
+    { name: 'focus', type: 'FocusEvent', description: 'Emitted when the editor gains focus.' },
+    { name: 'blur', type: 'FocusEvent', description: 'Emitted when the editor loses focus.' },
+    { name: 'copy', type: 'string', description: 'Emitted with copied text when Copy succeeds.' }
+  ]
+}
+
 // IconField
 const iconFieldSearch = ref('')
 const iconFieldEmail = ref('')
@@ -884,7 +1082,7 @@ const iconFieldCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Mail, Search } from 'lucide-vue-next'
-import { IconField } from '@/lib'
+import { IconField } from '@mfs-atomic/ui'
 
 const search = ref('')
 const email = ref('')
@@ -902,12 +1100,20 @@ const iconFieldApi: { props: ApiRow[]; slots: ApiRow[] } = {
 }
 
 const inputIconCode = `<template>
-  <Input v-model="query" label="Search">
+  <Input v-model="query" label="Search" placeholder="Search...">
     <template #prepend>
       <InputIcon><Search :size="16" /></InputIcon>
     </template>
   </Input>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Search } from 'lucide-vue-next'
+import { Input, InputIcon } from '@mfs-atomic/ui'
+
+const query = ref('')
+<\/script>`
 
 const inputIconApi: { slots: ApiRow[] } = {
   slots: [{ name: 'default', description: 'Icon element (e.g. Lucide icon) wrapped with aria-hidden="true".' }]
@@ -919,7 +1125,14 @@ const inputGroupAddonCode = `<template>
     <Input v-model="domain" placeholder="example" />
     <InputGroupAddon>.com</InputGroupAddon>
   </InputGroup>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Input, InputGroup, InputGroupAddon } from '@mfs-atomic/ui'
+
+const domain = ref('mfs-theme')
+<\/script>`
 
 const inputGroupAddonApi: { slots: ApiRow[] } = {
   slots: [{ name: 'default', description: 'Static text, unit, or symbol addon rendered inside InputGroup.' }]

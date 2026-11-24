@@ -68,6 +68,7 @@
     title="Breadcrumb"
     description="Hierarchical path trail with chevron or slash separators and clickable ancestors."
     :code="breadcrumbCode"
+    :code-tabs="breadcrumbCodeTabs"
     :api="breadcrumbApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -93,6 +94,7 @@
     title="Pagination"
     description="Page navigation with boundary controls, page-size selector, and optional jump input."
     :code="paginationCode"
+    :code-tabs="paginationCodeTabs"
     :api="paginationApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -115,6 +117,7 @@
     title="Steps"
     description="Multi-step progress indicator for wizards and sequential workflows."
     :code="stepsCode"
+    :code-tabs="stepsCodeTabs"
     :api="stepsApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -208,9 +211,21 @@
     title="CommandPalette"
     description="Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and optional remote search."
     :code="commandPaletteCode"
+    :code-tabs="commandPaletteCodeTabs"
     :api="commandPaletteApi"
   >
     <div class="mfs-stack mfs-w-full">
+      <Alert severity="info" title="Local Filter vs Remote Search">
+        <div class="mfs-stack mfs-gap-1 mfs-text-xs">
+          <span>
+            <strong>Local Filter (default):</strong> Pass all <code>:items</code> once and let <code>CommandPalette</code> filter by label, group, and description client-side — best for static navigation and small command lists.
+          </span>
+          <span>
+            <strong>Remote Search (<code>:remote="true"</code>):</strong> Disables local filtering so you can debounce <code>@search</code>, toggle <code>:loading</code>, and stream results from a server or API.
+          </span>
+        </div>
+      </Alert>
+
       <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-3">
         <div class="mfs-inline-flex mfs-items-center mfs-gap-2">
           <Button variant="primary" size="sm" @click="cmdOpen = true">
@@ -250,6 +265,7 @@
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import {
+  Alert,
   Breadcrumb,
   Button,
   ContextMenu,
@@ -388,14 +404,26 @@ const breadcrumbCode = `<template>
 
 <script setup lang="ts">
 import { Breadcrumb } from '@mfs-atomic/ui'
+import { items } from './data'
 
-const items = [
-  { label: 'Home' },
-  { label: 'Components' },
-  { label: 'Breadcrumb' }
-]
 const onNavigate = (item: { label: string }) => console.log(item.label)
 <\/script>`
+
+const breadcrumbCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: breadcrumbCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { BreadcrumbItem } from '@mfs-atomic/ui'
+
+export const items: BreadcrumbItem[] = [
+  { label: 'Home', to: '/' },
+  { label: 'Components', to: '/components' },
+  { label: 'Navigation', to: '/components/navigation' },
+  { label: 'Breadcrumb' }
+]`
+  }
+]
 
 const breadcrumbApi = {
   props: [
@@ -420,19 +448,64 @@ const paginationCode = `<template>
   <Pagination
     v-model="page"
     v-model:per-page="perPage"
-    :total="240"
+    :total="total"
     :per-page-options="[10, 20, 50]"
     show-jump-to
+    @change="loadPage"
   />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Pagination } from '@mfs-atomic/ui'
+import { fetchUsersPage } from './fetchApi'
 
 const page = ref(1)
 const perPage = ref(10)
+const total = ref(240)
+
+const loadPage = async (payload: { page: number; perPage: number }) => {
+  const res = await fetchUsersPage(payload.page, payload.perPage)
+  total.value = res.total
+}
 <\/script>`
+
+const paginationCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: paginationCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `export interface PaginationParams {
+  page: number
+  perPage: number
+}
+
+export interface PaginatedResponse<T> {
+  items: T[]
+  total: number
+  page: number
+  perPage: number
+}`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { PaginatedResponse } from './data'
+
+export async function fetchUsersPage<T = Record<string, unknown>>(
+  page: number,
+  perPage: number
+): Promise<PaginatedResponse<T>> {
+  const params = new URLSearchParams({
+    page: String(page),
+    per_page: String(perPage)
+  })
+  const res = await fetch(\`/api/users?\${params.toString()}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
+]
 
 const paginationApi = {
   props: [
@@ -466,14 +539,26 @@ const stepsCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Steps } from '@mfs-atomic/ui'
+import { stepItems } from './data'
 
 const currentStep = ref(1)
-const stepItems = [
-  { label: 'Account', description: 'Create your credentials' },
-  { label: 'Profile', description: 'Add display name & theme' },
-  { label: 'Confirm', description: 'Review and finish' }
-]
 <\/script>`
+
+const stepsCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: stepsCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { StepItem } from '@mfs-atomic/ui'
+
+export const stepItems: StepItem[] = [
+  { label: 'Account', description: 'Create your credentials', status: 'finish' },
+  { label: 'Profile', description: 'Add display name & theme', status: 'process' },
+  { label: 'Preferences', description: 'Configure notifications' },
+  { label: 'Confirm', description: 'Review and finish' }
+]`
+  }
+]
 
 const stepsApi = {
   props: [
@@ -548,14 +633,21 @@ const scrollDemoDown = () => {
 }
 
 const scrollTopCode = `<template>
-  <div id="scroll-container" style="height: 220px; overflow-y: auto">
-    <!-- Long scrollable content -->
+  <div id="scroll-container" ref="scrollBoxRef" style="height: 220px; overflow-y: auto">
+    <button type="button" @click="scrollDown">Scroll Down</button>
+    <p v-for="n in 12" :key="n">Line {{ n }} — Scroll past 80px to reveal ScrollTop.</p>
   </div>
   <ScrollTop target="#scroll-container" :threshold="80" />
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { ScrollTop } from '@mfs-atomic/ui'
+
+const scrollBoxRef = ref<HTMLElement | null>(null)
+const scrollDown = () => {
+  scrollBoxRef.value?.scrollTo({ top: 180, behavior: 'smooth' })
+}
 <\/script>`
 
 const scrollTopApi = {
@@ -606,20 +698,67 @@ const onCmdSelect = (item: CommandItem) => {
 
 const commandPaletteCode = `<template>
   <Button @click="open = true">Open (⌘K)</Button>
-  <CommandPalette v-model="open" :items="items" @select="onSelect" />
+
+  <CommandPalette
+    v-model="open"
+    :items="items"
+    :loading="loading"
+    remote
+    @search="onSearch"
+    @select="onSelect"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, CommandPalette } from '@mfs-atomic/ui'
+import { Button, CommandPalette, type CommandItem } from '@mfs-atomic/ui'
+import { initialCommands } from './data'
+import { searchCommands } from './fetchApi'
 
 const open = ref(false)
-const items = [
-  { id: 'new', label: 'New Document', group: 'Actions', shortcut: '⌘N' },
-  { id: 'theme', label: 'Switch Theme', group: 'Actions', shortcut: '⌘T' }
-]
-const onSelect = (item: { id: string; label: string }) => console.log(item)
+const loading = ref(false)
+const items = ref<CommandItem[]>(initialCommands)
+let timer: ReturnType<typeof setTimeout> | undefined
+
+const onSearch = (query: string) => {
+  clearTimeout(timer)
+  loading.value = true
+  timer = setTimeout(async () => {
+    items.value = await searchCommands(query)
+    loading.value = false
+  }, 250)
+}
+
+const onSelect = (item: CommandItem) => console.log(item)
 <\/script>`
+
+const commandPaletteCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: commandPaletteCode },
+  {
+    label: 'data.ts',
+    language: 'ts',
+    code: `import type { CommandItem } from '@mfs-atomic/ui'
+
+export const initialCommands: CommandItem[] = [
+  { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank page', shortcut: '⌘N' },
+  { id: 'toggle-theme', label: 'Switch Theme', group: 'Actions', description: 'Cycle Clay, Glass, and Neo', shortcut: '⌘T' },
+  { id: 'go-users', label: 'Team Directory', group: 'Navigation', description: 'Jump to DataTable' },
+  { id: 'go-settings', label: 'Workspace Settings', group: 'Navigation', disabled: true }
+]`
+  },
+  {
+    label: 'fetchApi.ts',
+    language: 'ts',
+    code: `import type { CommandItem } from '@mfs-atomic/ui'
+
+export async function searchCommands(query: string): Promise<CommandItem[]> {
+  const params = new URLSearchParams({ q: query })
+  const res = await fetch(\`/api/commands?\${params.toString()}\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return res.json()
+}`
+  }
+]
 
 const commandPaletteApi = {
   props: [

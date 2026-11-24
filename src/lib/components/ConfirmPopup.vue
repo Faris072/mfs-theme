@@ -4,34 +4,34 @@
       <div
         v-if="isOpen"
         ref="popupRef"
-        class="mfs-confirm-popup mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+        class="mfs-confirm-popup mfs-fixed mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
         :style="positionStyle"
         role="alertdialog"
         aria-modal="false"
       >
-        <div class="mfs-confirm-popup__body">
-          <span class="mfs-confirm-popup__icon" :class="[`mfs-confirm-popup__icon--${activeVariant}`]" aria-hidden="true">
+        <div class="mfs-flex mfs-items-start mfs-gap-2-5 mfs-mb-3">
+          <span class="mfs-confirm-popup__icon mfs-shrink-0" :class="[`mfs-text-${activeVariant}`]" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 8v4" />
               <path d="M12 16h.01" />
             </svg>
           </span>
-          <p class="mfs-confirm-popup__message mfs-text">{{ activeMessage }}</p>
+          <p class="mfs-confirm-popup__message mfs-text mfs-m-0">{{ activeMessage }}</p>
         </div>
 
-        <div class="mfs-confirm-popup__actions">
+        <div class="mfs-flex mfs-justify-end mfs-gap-2">
           <button
             type="button"
-            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--reject mfs-surface-subtle mfs-pill mfs-focus-ring"
+            class="mfs-confirm-popup__btn mfs-surface-subtle mfs-pill mfs-focus-ring mfs-cursor-pointer mfs-font-semibold"
             @click="onReject"
           >
             {{ activeRejectLabel }}
           </button>
           <button
             type="button"
-            class="mfs-confirm-popup__btn mfs-confirm-popup__btn--accept mfs-pill mfs-shadow mfs-focus-ring"
-            :class="[`mfs-confirm-popup__btn--${activeVariant}`]"
+            class="mfs-confirm-popup__btn mfs-pill mfs-shadow mfs-focus-ring mfs-cursor-pointer mfs-font-semibold"
+            :class="[`mfs-bg-${activeVariant}`]"
             @click="onAccept"
           >
             {{ activeAcceptLabel }}
@@ -181,21 +181,12 @@ defineExpose({ show, hide })
 
 <style scoped>
 .mfs-confirm-popup {
-  position: fixed;
   z-index: 10030;
   width: min(290px, calc(100vw - 24px));
   padding: 14px 16px;
 }
 
-.mfs-confirm-popup__body {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
 .mfs-confirm-popup__icon {
-  flex-shrink: 0;
   width: 20px;
   height: 20px;
   margin-top: 1px;
@@ -206,53 +197,21 @@ defineExpose({ show, hide })
   height: 100%;
 }
 
-.mfs-confirm-popup__icon--primary { color: var(--primary); }
-.mfs-confirm-popup__icon--success { color: var(--success); }
-.mfs-confirm-popup__icon--warning { color: var(--warning); }
-.mfs-confirm-popup__icon--danger { color: var(--danger); }
-
 .mfs-confirm-popup__message {
-  margin: 0;
   font-size: 0.875rem;
   line-height: 1.45;
 }
 
-.mfs-confirm-popup__actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
 .mfs-confirm-popup__btn {
   padding: 6px 14px;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border);
   font-family: inherit;
   font-size: 0.82rem;
-  font-weight: 600;
-  cursor: pointer;
   transition: transform 0.15s ease;
 }
 
 .mfs-confirm-popup__btn:hover {
   transform: translateY(-1px);
-}
-
-.mfs-confirm-popup__btn--accept {
-  color: var(--primary-text, #ffffff);
-}
-
-.mfs-confirm-popup__btn--primary { background-color: var(--primary); }
-.mfs-confirm-popup__btn--success { background-color: var(--success); }
-.mfs-confirm-popup__btn--warning { background-color: var(--warning); color: var(--warning-text, #1e293b); }
-.mfs-confirm-popup__btn--danger { background-color: var(--danger); color: var(--danger-text, #ffffff); }
-
-[data-theme="glass"] .mfs-confirm-popup {
-  background-color: rgba(15, 23, 42, 0.9);
-  border-color: rgba(255, 255, 255, 0.18);
-}
-
-[data-theme="neo"] .mfs-confirm-popup {
-  border: none;
 }
 
 .mfs-confirm-popup-enter-active,

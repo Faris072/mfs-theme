@@ -46,7 +46,7 @@ import Steps from './components/Steps.vue'
 import ContextMenu from './components/ContextMenu.vue'
 import ScrollTop from './components/ScrollTop.vue'
 // Fase 6
-import DataTable from './components/DataTable.vue'
+import DataTable, { type DataTableColumn, type DataTableSortMeta, type SortOrder } from './components/DataTable.vue'
 import Column from './components/Column.vue'
 import DataView from './components/DataView.vue'
 import Tree from './components/Tree.vue'
@@ -67,6 +67,7 @@ import Listbox from './components/Listbox.vue'
 import FloatLabel from './components/FloatLabel.vue'
 import IftaLabel from './components/IftaLabel.vue'
 import Editor from './components/Editor.vue'
+import CodeEditor, { type CodeLanguage, type CodeToken, type TokenType } from './components/CodeEditor.vue'
 // Fase 8
 import SplitButton from './components/SplitButton.vue'
 import SpeedDial from './components/SpeedDial.vue'
@@ -190,6 +191,9 @@ export {
   ContextMenu,
   ScrollTop,
   DataTable,
+  type DataTableColumn,
+  type DataTableSortMeta,
+  type SortOrder,
   Column,
   DataView,
   Tree,
@@ -210,6 +214,10 @@ export {
   FloatLabel,
   IftaLabel,
   Editor,
+  CodeEditor,
+  type CodeLanguage,
+  type CodeToken,
+  type TokenType,
   SplitButton,
   SpeedDial,
   Panel,
@@ -359,6 +367,7 @@ const components: Record<string, Component> = {
   FloatLabel,
   IftaLabel,
   Editor,
+  CodeEditor,
   SplitButton,
   SpeedDial,
   Panel,

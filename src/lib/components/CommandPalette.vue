@@ -74,9 +74,9 @@
                   :aria-selected="activeIndex === entry.flatIndex"
                   :aria-disabled="entry.item.disabled || undefined"
                   :disabled="entry.item.disabled"
-                  class="cmd-item mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-rounded-sm mfs-w-full mfs-border-none mfs-text mfs-transition"
+                  class="cmd-item mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-rounded-sm mfs-w-full mfs-text mfs-transition"
                   :class="{
-                    'cmd-item--active mfs-surface-subtle': activeIndex === entry.flatIndex,
+                    'cmd-item--active': activeIndex === entry.flatIndex,
                     'mfs-disabled': entry.item.disabled,
                     'mfs-cursor-pointer': !entry.item.disabled
                   }"
@@ -310,10 +310,14 @@ onBeforeUnmount(() => {
 .cmd-dialog {
   max-width: 580px;
   max-height: 70vh;
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
 }
 
 .cmd-header {
   padding: 12px 16px;
+  border-bottom-color: var(--border);
 }
 
 .cmd-search-icon {
@@ -325,6 +329,7 @@ onBeforeUnmount(() => {
   font-size: 0.95rem;
   line-height: 1.5;
   padding: 2px 0;
+  color: var(--text);
 }
 
 .cmd-input::placeholder {
@@ -338,6 +343,9 @@ onBeforeUnmount(() => {
   padding: 2px 6px;
   line-height: 1.3;
   flex-shrink: 0;
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+  border: 1px solid color-mix(in srgb, var(--border, rgba(148, 163, 184, 0.3)) 70%, transparent);
 }
 
 .cmd-list {
@@ -348,6 +356,8 @@ onBeforeUnmount(() => {
 
 .cmd-group + .cmd-group {
   margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid color-mix(in srgb, var(--border, rgba(148, 163, 184, 0.35)) 85%, transparent);
 }
 
 .cmd-group-label {
@@ -356,13 +366,27 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 4px 10px;
+  color: var(--text-muted);
 }
 
 .cmd-item {
   background: transparent;
+  border: 0;
   padding: 8px 10px;
   text-align: left;
   font-family: inherit;
+  color: var(--text);
+}
+
+.cmd-item + .cmd-item {
+  border-top: 1px solid color-mix(in srgb, var(--border, rgba(148, 163, 184, 0.25)) 60%, transparent);
+}
+
+.cmd-item--active,
+.cmd-item:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-subtle));
+  color: var(--text);
+  box-shadow: inset 2px 0 0 var(--primary);
 }
 
 .cmd-item-main {

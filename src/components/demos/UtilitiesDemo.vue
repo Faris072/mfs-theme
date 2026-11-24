@@ -178,50 +178,135 @@
     </ComponentPreview>
 
     <section class="mfs-surface mfs-rounded-lg mfs-shadow mfs-overflow-hidden">
-      <header class="mfs-px-5 mfs-py-4 mfs-border-b">
-        <h3 class="mfs-title mfs-text-base mfs-m-0">Utility Class Cheat Sheet</h3>
-        <p class="mfs-caption mfs-mt-1 mfs-mb-0">All {{ utilityRows.length }} `.mfs-*` classes included in `@mfs-atomic/ui`.</p>
+      <header class="mfs-px-5 mfs-py-4 mfs-border-b mfs-stack mfs-gap-3">
+        <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
+          <div>
+            <h3 class="mfs-title mfs-text-base mfs-m-0">Utility Class Cheat Sheet</h3>
+            <p class="mfs-caption mfs-mt-1 mfs-mb-0">
+              Showing {{ filteredUtilityRows.length }} of {{ utilityRows.length }} `.mfs-*` classes included in `@mfs-atomic/ui`.
+            </p>
+          </div>
+          <Button
+            v-if="hasActiveFilters"
+            variant="surface"
+            size="sm"
+            @click="resetFilters"
+          >
+            <template #prepend>
+              <RotateCcw :size="14" />
+            </template>
+            Reset
+          </Button>
+        </div>
+
+        <div class="mfs-grid mfs-gap-3">
+          <Input
+            v-model="searchQuery"
+            placeholder="Search class name or purpose..."
+            aria-label="Search utility classes"
+          >
+            <template #prepend>
+              <Search :size="15" />
+            </template>
+            <template v-if="searchQuery" #append>
+              <button
+                type="button"
+                class="mfs-inline-flex mfs-items-center mfs-justify-center mfs-bg-transparent mfs-border-none mfs-text-muted mfs-cursor-pointer mfs-p-0"
+                aria-label="Clear search"
+                @click="searchQuery = ''"
+              >
+                <X :size="14" />
+              </button>
+            </template>
+          </Input>
+
+          <Select
+            v-model="selectedCategory"
+            :options="categorySelectOptions"
+            placeholder="All Categories"
+            aria-label="Filter by category"
+          />
+        </div>
+
+        <div class="mfs-row mfs-gap-1-5" role="group" aria-label="Quick category filter">
+          <button
+            v-for="cat in quickCategoryOptions"
+            :key="cat.value"
+            type="button"
+            class="mfs-pill mfs-px-3 mfs-py-1 mfs-text-xs mfs-font-semibold mfs-border-none mfs-cursor-pointer mfs-transition"
+            :class="
+              selectedCategory === cat.value
+                ? 'mfs-bg-primary mfs-shadow'
+                : 'mfs-surface-subtle mfs-text-muted'
+            "
+            :aria-pressed="selectedCategory === cat.value"
+            @click="selectedCategory = cat.value"
+          >
+            {{ cat.label }} ({{ cat.count }})
+          </button>
+        </div>
       </header>
 
-      <div class="mfs-overflow-x-auto">
-        <table class="cheatsheet-table mfs-w-full mfs-text-sm mfs-text-left">
-          <thead>
-            <tr>
-              <th>Class</th>
-              <th>Category</th>
-              <th>Purpose</th>
-              <th>Copy</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in utilityRows" :key="row.name">
-              <td><code class="mfs-font-mono mfs-text-xs mfs-font-semibold mfs-text-primary">.{{ row.name }}</code></td>
-              <td><span class="mfs-pill mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-text-muted mfs-px-2 mfs-py-1">{{ row.category }}</span></td>
-              <td class="mfs-text-muted">{{ row.purpose }}</td>
-              <td>
-                <button
-                  type="button"
-                  class="mini-copy-btn mfs-inline-flex mfs-items-center mfs-gap-1 mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive"
-                  :class="{ 'is-copied': copiedClass === row.name }"
-                  :aria-label="`Copy ${row.name}`"
-                  @click="copyClass(row.name)"
-                >
-                  <Check v-if="copiedClass === row.name" :size="13" />
-                  <Copy v-else :size="13" />
-                  <span>{{ copiedClass === row.name ? 'Copied' : 'Copy' }}</span>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        v-model:page="currentPage"
+        :value="filteredUtilityRows"
+        :columns="utilityColumns"
+        row-key="name"
+        paginator
+        :rows="15"
+        :rows-per-page-options="[10, 15, 25, 50]"
+      >
+        <template #cell-name="{ row }">
+          <code class="mfs-font-mono mfs-text-xs mfs-font-semibold mfs-text-primary mfs-soft-primary mfs-px-2 mfs-py-1 mfs-rounded-sm">
+            .{{ row.name }}
+          </code>
+        </template>
+
+        <template #cell-category="{ row }">
+          <span class="mfs-pill mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-text-muted mfs-px-2 mfs-py-1">
+            {{ row.category }}
+          </span>
+        </template>
+
+        <template #cell-purpose="{ row }">
+          <span class="mfs-text-muted mfs-text-sm">{{ row.purpose }}</span>
+        </template>
+
+        <template #cell-copy="{ row }">
+          <button
+            type="button"
+            class="mini-copy-btn mfs-inline-flex mfs-items-center mfs-gap-1 mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive"
+            :class="{ 'is-copied': copiedClass === row.name }"
+            :aria-label="`Copy ${row.name}`"
+            @click="copyClass(row.name)"
+          >
+            <Check v-if="copiedClass === row.name" :size="13" />
+            <Copy v-else :size="13" />
+            <span>{{ copiedClass === row.name ? 'Copied' : 'Copy' }}</span>
+          </button>
+        </template>
+
+        <template #empty>
+          <div class="mfs-empty-state mfs-py-6 mfs-gap-3">
+            <p class="mfs-text-sm mfs-text-muted mfs-m-0">
+              No utility classes match "{{ searchQuery }}"
+              <span v-if="selectedCategory !== 'all'"> in {{ selectedCategory }}</span>.
+            </p>
+            <Button variant="surface" size="sm" @click="resetFilters">
+              Reset Filters
+            </Button>
+          </div>
+        </template>
+      </DataTable>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue'
-import { Check, Copy } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { Check, Copy, RotateCcw, Search, X } from 'lucide-vue-next'
+import { Button, DataTable, Input, Select } from '@/lib'
+import type { DataTableColumn } from '@/lib/components/DataTable.vue'
 import ComponentPreview from '../ComponentPreview.vue'
 
 defineProps<{
@@ -336,6 +421,7 @@ const utilityRows = [
   { name: 'mfs-bg', category: 'Surface', purpose: 'Theme page background gradient and base text color' },
   { name: 'mfs-surface', category: 'Surface', purpose: 'Primary surface background, border, and backdrop blur' },
   { name: 'mfs-surface-subtle', category: 'Surface', purpose: 'Subtle secondary surface with theme border' },
+  { name: 'mfs-overlay', category: 'Surface', purpose: 'Floating overlay surface background, border, and backdrop blur' },
   { name: 'mfs-card', category: 'Surface', purpose: 'Full card surface with radius, card shadow, and padding' },
   { name: 'mfs-inset', category: 'Surface', purpose: 'Recessed input/well surface with inset shadow' },
   { name: 'mfs-shadow', category: 'Shadow', purpose: 'Standard theme elevation shadow (--clay-shadow)' },
@@ -348,6 +434,7 @@ const utilityRows = [
   { name: 'mfs-cursor-pointer', category: 'Interaction', purpose: 'Pointer cursor for interactive elements' },
   { name: 'mfs-cursor-not-allowed', category: 'Interaction', purpose: 'Not-allowed cursor for disabled/blocked elements' },
   { name: 'mfs-select-none', category: 'Interaction', purpose: 'Disable text selection (user-select: none)' },
+  { name: 'mfs-pointer-events-none', category: 'Interaction', purpose: 'Ignore pointer events (pointer-events: none)' },
   { name: 'mfs-rounded', category: 'Radius', purpose: 'Theme default border radius (--radius)' },
   { name: 'mfs-rounded-sm', category: 'Radius', purpose: 'Small border radius (--radius-sm)' },
   { name: 'mfs-rounded-md', category: 'Radius', purpose: 'Medium border radius (--radius-md)' },
@@ -388,6 +475,9 @@ const utilityRows = [
   { name: 'mfs-absolute', category: 'Position', purpose: 'Absolute positioning (position: absolute)' },
   { name: 'mfs-fixed', category: 'Position', purpose: 'Viewport-fixed positioning (position: fixed)' },
   { name: 'mfs-inset-0', category: 'Position', purpose: 'Pin all four edges to zero (inset: 0)' },
+  { name: 'mfs-top-0', category: 'Position', purpose: 'Pin top edge to zero (top: 0)' },
+  { name: 'mfs-right-0', category: 'Position', purpose: 'Pin right edge to zero (right: 0)' },
+  { name: 'mfs-z-1', category: 'Position', purpose: 'Set stacking order above siblings (z-index: 1)' },
   { name: 'mfs-container', category: 'Layout', purpose: 'Centered max-width container with inline padding' },
   { name: 'mfs-stack', category: 'Layout', purpose: 'Vertical flex column with 16px gap' },
   { name: 'mfs-row', category: 'Layout', purpose: 'Horizontal wrapping flex row with 12px gap' },
@@ -408,6 +498,8 @@ const utilityRows = [
   { name: 'mfs-min-w-0', category: 'Layout', purpose: 'Allow flex/grid item to shrink below content width' },
   { name: 'mfs-w-full', category: 'Layout', purpose: 'Full width (width: 100%)' },
   { name: 'mfs-h-full', category: 'Layout', purpose: 'Full height (height: 100%)' },
+  { name: 'mfs-h-px', category: 'Layout', purpose: 'Hairline 1px height (height: 1px)' },
+  { name: 'mfs-list-none', category: 'Layout', purpose: 'Remove list bullet/number markers (list-style: none)' },
   { name: 'mfs-grid', category: 'Layout', purpose: 'Responsive auto-fit CSS grid (min 220px)' },
   { name: 'mfs-grid-cols-2', category: 'Layout', purpose: 'Fixed 2-column CSS grid template' },
   { name: 'mfs-grid-cols-3', category: 'Layout', purpose: 'Fixed 3-column CSS grid template' },
@@ -441,37 +533,74 @@ const utilityRows = [
   { name: 'mfs-overflow-auto', category: 'State', purpose: 'Scrollable overflow in both axes (overflow: auto)' },
   { name: 'mfs-overflow-x-auto', category: 'State', purpose: 'Horizontal scroll on overflow (overflow-x: auto)' },
   { name: 'mfs-overflow-y-auto', category: 'State', purpose: 'Vertical scroll on overflow (overflow-y: auto)' },
+  { name: 'mfs-loading-overlay', category: 'State', purpose: 'Centered absolute loading overlay covering parent container' },
+  { name: 'mfs-spinner', category: 'State', purpose: 'Animated circular loading spinner (24px)' },
+  { name: 'mfs-spinner--sm', category: 'State', purpose: 'Compact circular loading spinner (16px)' },
+  { name: 'mfs-empty-state', category: 'State', purpose: 'Centered vertical empty-state layout container' },
   { name: 'mfs-sr-only', category: 'State', purpose: 'Visually hidden screen-reader-only utility' },
   ...spacingRows
 ]
+
+const searchQuery = ref('')
+const selectedCategory = ref<string>('all')
+const currentPage = ref(1)
+
+const utilityColumns: DataTableColumn[] = [
+  { key: 'name', label: 'Class', sortable: true },
+  { key: 'category', label: 'Category', sortable: true },
+  { key: 'purpose', label: 'Purpose' },
+  { key: 'copy', label: 'Copy', align: 'right', width: '110px' }
+]
+
+const categoryCounts = computed(() => {
+  const counts = new Map<string, number>()
+  for (const row of utilityRows) {
+    counts.set(row.category, (counts.get(row.category) ?? 0) + 1)
+  }
+  return Array.from(counts.entries()).map(([category, count]) => ({ category, count }))
+})
+
+const categorySelectOptions = computed(() => [
+  { label: `All Categories (${utilityRows.length})`, value: 'all' },
+  ...categoryCounts.value.map(({ category, count }) => ({
+    label: `${category} (${count})`,
+    value: category
+  }))
+])
+
+const quickCategoryOptions = computed(() => [
+  { label: 'All', value: 'all', count: utilityRows.length },
+  ...categoryCounts.value.map(({ category, count }) => ({
+    label: category,
+    value: category,
+    count
+  }))
+])
+
+const filteredUtilityRows = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase()
+  return utilityRows.filter((row) => {
+    const matchesCategory = selectedCategory.value === 'all' || row.category === selectedCategory.value
+    if (!matchesCategory) return false
+    if (!query) return true
+    return row.name.toLowerCase().includes(query) || row.purpose.toLowerCase().includes(query)
+  })
+})
+
+const hasActiveFilters = computed(() => searchQuery.value.trim().length > 0 || selectedCategory.value !== 'all')
+
+const resetFilters = () => {
+  searchQuery.value = ''
+  selectedCategory.value = 'all'
+  currentPage.value = 1
+}
+
+watch([searchQuery, selectedCategory], () => {
+  currentPage.value = 1
+})
 </script>
 
 <style scoped>
-.cheatsheet-table {
-  border-collapse: collapse;
-}
-
-.cheatsheet-table th,
-.cheatsheet-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  color: var(--text);
-  vertical-align: middle;
-}
-
-.cheatsheet-table th {
-  font-size: 0.74rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--text-muted);
-  background: var(--surface-subtle);
-}
-
-.cheatsheet-table tbody tr:last-child td {
-  border-bottom: none;
-}
-
 .mini-copy-btn:hover,
 .mini-copy-btn.is-copied {
   border-color: var(--primary);

@@ -5,7 +5,7 @@
       v-if="hasValue"
       :variant="variant"
       :size="size"
-      class="mfs-overlay-badge__badge mfs-absolute mfs-shadow"
+      class="mfs-overlay-badge__badge mfs-absolute mfs-top-0 mfs-right-0 mfs-z-1 mfs-pointer-events-none mfs-shadow"
     >
       {{ value }}
     </Badge>
@@ -33,10 +33,6 @@ const hasValue = computed(() => props.value !== undefined && props.value !== '')
 
 <style scoped>
 .mfs-overlay-badge__badge {
-  top: 0;
-  right: 0;
   transform: translate(40%, -40%);
-  z-index: 1;
-  pointer-events: none;
 }
 </style>

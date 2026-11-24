@@ -48,23 +48,30 @@
                 v-if="col.sortable"
                 type="button"
                 class="data-table__sort-btn mfs-focus-ring mfs-inline-flex mfs-items-center mfs-bg-transparent mfs-border-none mfs-cursor-pointer mfs-p-0"
+                :class="{ 'data-table__sort-btn--active': getColumnSortOrder(col.key) !== null }"
                 @click="toggleSort(col.key)"
               >
                 <span>{{ col.label }}</span>
                 <svg class="data-table__sort-icon mfs-shrink-0" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path
                     d="M8 3L11 6.5H5L8 3Z"
-                    :fill="sortKey === col.key && sortOrder === 'asc' ? 'currentColor' : 'none'"
+                    :fill="getColumnSortOrder(col.key) === 'asc' ? 'currentColor' : 'none'"
                     stroke="currentColor"
                     stroke-width="1.2"
                   />
                   <path
                     d="M8 13L5 9.5H11L8 13Z"
-                    :fill="sortKey === col.key && sortOrder === 'desc' ? 'currentColor' : 'none'"
+                    :fill="getColumnSortOrder(col.key) === 'desc' ? 'currentColor' : 'none'"
                     stroke="currentColor"
                     stroke-width="1.2"
                   />
                 </svg>
+                <span
+                  v-if="sortMode === 'multiple' && getColumnSortPriority(col.key) !== null"
+                  class="data-table__sort-badge"
+                >
+                  {{ getColumnSortPriority(col.key) }}
+                </span>
               </button>
               <span v-else>{{ col.label }}</span>
             </th>
@@ -197,6 +204,11 @@ export interface DataTableColumn {
 
 export type SortOrder = 'asc' | 'desc' | null
 
+export interface DataTableSortMeta {
+  key: string
+  order: 'asc' | 'desc'
+}
+
 const props = withDefaults(
   defineProps<{
     columns: DataTableColumn[]
@@ -217,6 +229,8 @@ const props = withDefaults(
     rowsPerPageOptions?: number[]
     page?: number
     first?: number
+    sortMode?: 'single' | 'multiple'
+    multiSortMeta?: DataTableSortMeta[]
   }>(),
   {
     rowKey: 'id',
@@ -230,7 +244,8 @@ const props = withDefaults(
     lazy: false,
     paginator: false,
     rowsPerPageOptions: () => [5, 10, 20, 50],
-    first: 0
+    first: 0,
+    sortMode: 'single'
   }
 )
 
@@ -241,8 +256,9 @@ const emit = defineEmits<{
   'update:rows': [rows: number]
   'update:rowsPerPage': [rowsPerPage: number]
   'update:first': [first: number]
+  'update:multiSortMeta': [meta: DataTableSortMeta[]]
   page: [payload: { page: number; first: number; rows: number; pageCount: number; rowsPerPage?: number }]
-  sort: [payload: { key: string; order: SortOrder }]
+  sort: [payload: { key: string; order: SortOrder; multiSortMeta?: DataTableSortMeta[] }]
   filter: [query: string]
   'row-click': [row: Record<string, unknown>]
 }>()
@@ -251,6 +267,21 @@ const radioGroupName = `dt-radio-${useId()}`
 const localQuery = ref(props.searchQuery)
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<SortOrder>(null)
+const internalMultiSort = ref<DataTableSortMeta[]>(
+  props.multiSortMeta ? props.multiSortMeta.map((item) => ({ ...item })) : []
+)
+
+watch(
+  () => props.multiSortMeta,
+  (val) => {
+    internalMultiSort.value = val ? val.map((item) => ({ ...item })) : []
+  },
+  { deep: true }
+)
+
+const activeMultiSort = computed<DataTableSortMeta[]>(() =>
+  props.multiSortMeta ?? internalMultiSort.value
+)
 
 const sourceRows = computed<Record<string, any>[]>(() =>
   props.value ?? (Array.isArray(props.rows) ? props.rows : [])
@@ -345,7 +376,43 @@ function onSearchInput(e: Event) {
   emit('filter', value)
 }
 
+function getColumnSortOrder(key: string): SortOrder {
+  if (props.sortMode === 'multiple') {
+    const entry = activeMultiSort.value.find((item) => item.key === key)
+    return entry ? entry.order : null
+  }
+  return sortKey.value === key ? sortOrder.value : null
+}
+
+function getColumnSortPriority(key: string): number | null {
+  if (props.sortMode !== 'multiple' || activeMultiSort.value.length === 0) return null
+  const idx = activeMultiSort.value.findIndex((item) => item.key === key)
+  return idx >= 0 ? idx + 1 : null
+}
+
 function toggleSort(key: string) {
+  if (props.sortMode === 'multiple') {
+    const nextMeta = activeMultiSort.value.map((item) => ({ ...item }))
+    const existingIdx = nextMeta.findIndex((item) => item.key === key)
+    let nextOrder: SortOrder = 'asc'
+
+    if (existingIdx === -1) {
+      nextMeta.push({ key, order: 'asc' })
+      nextOrder = 'asc'
+    } else if (nextMeta[existingIdx].order === 'asc') {
+      nextMeta[existingIdx].order = 'desc'
+      nextOrder = 'desc'
+    } else {
+      nextMeta.splice(existingIdx, 1)
+      nextOrder = null
+    }
+
+    internalMultiSort.value = nextMeta
+    emit('update:multiSortMeta', nextMeta)
+    emit('sort', { key, order: nextOrder, multiSortMeta: nextMeta })
+    return
+  }
+
   if (sortKey.value !== key) {
     sortKey.value = key
     sortOrder.value = 'asc'
@@ -360,8 +427,17 @@ function toggleSort(key: string) {
 
 function getAriaSort(col: DataTableColumn): 'ascending' | 'descending' | 'none' | undefined {
   if (!col.sortable) return undefined
-  if (sortKey.value !== col.key || !sortOrder.value) return 'none'
-  return sortOrder.value === 'asc' ? 'ascending' : 'descending'
+  const order = getColumnSortOrder(col.key)
+  if (!order) return 'none'
+  return order === 'asc' ? 'ascending' : 'descending'
+}
+
+function compareValues(av: unknown, bv: unknown, dir: 1 | -1): number {
+  if (av == null && bv == null) return 0
+  if (av == null) return -1 * dir
+  if (bv == null) return 1 * dir
+  if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir
+  return String(av).localeCompare(String(bv)) * dir
 }
 
 const filteredAndSortedRows = computed(() => {
@@ -379,18 +455,22 @@ const filteredAndSortedRows = computed(() => {
     )
   }
 
-  if (sortKey.value && sortOrder.value) {
+  if (props.sortMode === 'multiple') {
+    if (activeMultiSort.value.length > 0) {
+      const metas = activeMultiSort.value
+      result = [...result].sort((a, b) => {
+        for (const meta of metas) {
+          const dir: 1 | -1 = meta.order === 'asc' ? 1 : -1
+          const cmp = compareValues(a[meta.key], b[meta.key], dir)
+          if (cmp !== 0) return cmp
+        }
+        return 0
+      })
+    }
+  } else if (sortKey.value && sortOrder.value) {
     const key = sortKey.value
-    const dir = sortOrder.value === 'asc' ? 1 : -1
-    result = [...result].sort((a, b) => {
-      const av = a[key]
-      const bv = b[key]
-      if (av == null && bv == null) return 0
-      if (av == null) return -1 * dir
-      if (bv == null) return 1 * dir
-      if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * dir
-      return String(av).localeCompare(String(bv)) * dir
-    })
+    const dir: 1 | -1 = sortOrder.value === 'asc' ? 1 : -1
+    result = [...result].sort((a, b) => compareValues(a[key], b[key], dir))
   }
 
   return result
@@ -567,13 +647,29 @@ function onRowClick(row: Record<string, unknown>, index: number) {
   letter-spacing: inherit;
 }
 
-.data-table__sort-btn:hover {
+.data-table__sort-btn:hover,
+.data-table__sort-btn--active {
   color: var(--primary);
 }
 
 .data-table__sort-icon {
   width: 14px;
   height: 14px;
+}
+
+.data-table__sort-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 9999px;
+  background: var(--primary);
+  color: var(--primary-contrast, #fff);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .data-table__td {

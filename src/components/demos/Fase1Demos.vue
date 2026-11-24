@@ -442,7 +442,7 @@ const buttonVariantsCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/lib'
+import { Button } from '@mfs-atomic/ui'
 <\/script>`
 
 const buttonSizesCode = `<template>
@@ -453,7 +453,7 @@ const buttonSizesCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Button } from '@/lib'
+import { Button } from '@mfs-atomic/ui'
 <\/script>`
 
 const buttonStatesCode = `<template>
@@ -472,7 +472,7 @@ const buttonStatesCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { ArrowRight, Sparkles } from 'lucide-vue-next'
-import { Button } from '@/lib'
+import { Button } from '@mfs-atomic/ui'
 
 const loading = ref(false)
 const handleLoad = () => {
@@ -498,7 +498,7 @@ const inputBasicCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Mail } from 'lucide-vue-next'
-import { Input } from '@/lib'
+import { Input } from '@mfs-atomic/ui'
 
 const name = ref('')
 const email = ref('')
@@ -524,7 +524,7 @@ const inputStatesCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Search } from 'lucide-vue-next'
-import { Badge, Input } from '@/lib'
+import { Badge, Input } from '@mfs-atomic/ui'
 
 const search = ref('clay')
 const username = ref('ab')
@@ -551,7 +551,7 @@ const cardBasicCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Badge, Button, Card } from '@/lib'
+import { Badge, Button, Card } from '@mfs-atomic/ui'
 <\/script>`
 
 const cardInteractiveCode = `<template>
@@ -566,7 +566,7 @@ const cardInteractiveCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge, Card, Switch } from '@/lib'
+import { Badge, Card, Switch } from '@mfs-atomic/ui'
 
 const notify = ref(true)
 const compact = ref(false)
@@ -584,7 +584,7 @@ const badgeVariantsCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Badge } from '@/lib'
+import { Badge } from '@mfs-atomic/ui'
 <\/script>`
 
 const badgeSlotsCode = `<template>
@@ -603,7 +603,7 @@ const badgeSlotsCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CheckCircle2 } from 'lucide-vue-next'
-import { Badge, Button } from '@/lib'
+import { Badge, Button } from '@mfs-atomic/ui'
 
 const count = ref(4)
 <\/script>`
@@ -616,7 +616,7 @@ const switchBasicCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Switch } from '@/lib'
+import { Switch } from '@mfs-atomic/ui'
 
 const autoSave = ref(true)
 const analytics = ref(false)
@@ -633,7 +633,7 @@ const switchSlotCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge, Switch } from '@/lib'
+import { Badge, Switch } from '@mfs-atomic/ui'
 
 const beta = ref(false)
 const onChange = (val: boolean) => console.log('Changed:', val)
@@ -653,7 +653,7 @@ const modalBasicCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Modal } from '@/lib'
+import { Button, Modal } from '@mfs-atomic/ui'
 
 const open = ref(false)
 <\/script>`
@@ -769,11 +769,24 @@ const modalApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
 
 const buttonGroupCode = `<template>
   <ButtonGroup>
-    <Button variant="primary">Left</Button>
-    <Button variant="surface">Center</Button>
-    <Button variant="surface">Right</Button>
+    <Button
+      v-for="opt in ['Left', 'Center', 'Right']"
+      :key="opt"
+      size="sm"
+      :variant="align === opt ? 'primary' : 'surface'"
+      @click="align = opt"
+    >
+      {{ opt }}
+    </Button>
   </ButtonGroup>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, ButtonGroup } from '@mfs-atomic/ui'
+
+const align = ref('Left')
+<\/script>`
 
 const buttonGroupApi: { slots: ApiRow[] } = {
   slots: [{ name: 'default', description: 'Adjacent Button elements rendered with role="group".' }]
@@ -784,9 +797,20 @@ const overlayBadgeCount = ref(5)
 
 const overlayBadgeCode = `<template>
   <OverlayBadge :value="count" variant="danger">
-    <Button variant="surface">Notifications</Button>
+    <Button variant="surface" size="sm" @click="count++">
+      <template #prepend><Bell :size="16" /></template>
+      Notifications
+    </Button>
   </OverlayBadge>
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Bell } from 'lucide-vue-next'
+import { Button, OverlayBadge } from '@mfs-atomic/ui'
+
+const count = ref(5)
+<\/script>`
 
 const overlayBadgeApi: { props: ApiRow[]; slots: ApiRow[] } = {
   props: [

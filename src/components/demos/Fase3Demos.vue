@@ -108,6 +108,7 @@
       title="Accordion"
       description="Collapsible content panels with single or multiple expansion, keyboard accessibility, and disabled items."
       :code="accordionCode"
+      :code-tabs="accordionCodeTabs"
       :api="accordionApi"
     >
       <div class="mfs-stack">
@@ -138,6 +139,7 @@
       title="Timeline"
       description="Chronological event list with semantic status dots, timestamps, icons, and responsive vertical or horizontal layout."
       :code="timelineCode"
+      :code-tabs="timelineCodeTabs"
       :api="timelineApi"
     >
       <div class="mfs-stack">
@@ -170,6 +172,7 @@
       title="Carousel"
       description="Touch-swipeable slide deck with arrow controls, indicator dots, loop, and optional autoplay."
       :code="carouselCode"
+      :code-tabs="carouselCodeTabs"
       :api="carouselApi"
     >
       <div class="mfs-stack">
@@ -255,6 +258,7 @@
       title="AvatarGroup"
       description="Overlapping avatar stack with configurable max count and +N overflow pill."
       :code="avatarGroupCode"
+      :code-tabs="avatarGroupCodeTabs"
       :api="avatarGroupApi"
     >
       <div class="mfs-stack mfs-w-full">
@@ -450,73 +454,261 @@ const carouselSlides = [
 ]
 
 // Code snippets
-const avatarCode = `<template>
-  <Avatar src="/avatar.png" alt="Alex Rivera" size="md" status="online" />
+const avatarCode = `<script setup lang="ts">
+import { Avatar } from '@mfs-atomic/ui'
+
+const avatarUrl = 'https://i.pravatar.cc/120?img=12'
+<\/script>
+
+<template>
+  <Avatar :src="avatarUrl" alt="Alex Rivera" size="md" status="online" />
   <Avatar label="Maya Lin" size="lg" status="busy" />
   <Avatar label="Kai Sato" size="xl" shape="rounded" status="offline" />
 </template>`
 
-const chipCode = `<template>
+const chipCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Chip } from '@mfs-atomic/ui'
+
+const selected = ref('Design')
+const tags = ref(['Vue 3', 'TypeScript', 'Clay'])
+
+const onRemove = (label: string) => {
+  tags.value = tags.value.filter((item) => item !== label)
+}
+<\/script>
+
+<template>
   <Chip
     label="Design"
     clickable
     :active="selected === 'Design'"
     @click="selected = 'Design'"
   />
-  <Chip label="Vue 3" variant="primary" removable @remove="onRemove">
+  <Chip
+    v-for="tag in tags"
+    :key="tag"
+    :label="tag"
+    variant="primary"
+    removable
+    @remove="onRemove(tag)"
+  >
     <template #prepend>•</template>
   </Chip>
 </template>`
 
-const dividerCode = `<template>
+const dividerCode = `<script setup lang="ts">
+import { Divider } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
+  <p>Default horizontal divider</p>
   <Divider />
+
+  <p>Left-aligned &amp; dashed label</p>
   <Divider align="left" dashed>Section A</Divider>
+
   <div class="inline-bar">
     <span>Overview</span>
     <Divider orientation="vertical" />
+    <span>Analytics</span>
+    <Divider orientation="vertical" dashed />
     <span>Settings</span>
   </div>
 </template>`
 
-const accordionCode = `<template>
-  <Accordion v-model="openKey" :items="items" :multiple="false" />
-</template>
-
-<script setup lang="ts">
+const accordionCode = `<script setup lang="ts">
 import { ref } from 'vue'
-const openKey = ref('tokens')
-const items = [
-  { key: 'tokens', title: 'How do theme tokens work?', content: 'CSS custom properties.' },
-  { key: 'a11y', title: 'Keyboard navigation?', content: 'Native button triggers.' }
+import { Accordion, type AccordionItem } from '@mfs-atomic/ui'
+
+const openKey = ref<string | number | null>('tokens')
+const items: AccordionItem[] = [
+  { key: 'tokens', title: 'How do theme tokens work?', content: 'CSS custom properties update every surface automatically.' },
+  { key: 'a11y', title: 'Is keyboard navigation supported?', content: 'Native button triggers with aria-expanded and aria-controls.' },
+  { key: 'locked', title: 'Disabled section', content: 'Cannot be toggled.', disabled: true }
 ]
-<\/script>`
+<\/script>
 
-const timelineCode = `<template>
-  <Timeline :items="items" layout="vertical" />
-</template>
+<template>
+  <Accordion v-model="openKey" :items="items" :multiple="false" />
+</template>`
 
-<script setup lang="ts">
-const items = [
-  { title: 'Design Tokens', timestamp: '09:00', status: 'success', icon: '✓' },
-  { title: 'Component Build', timestamp: '13:30', status: 'primary', icon: '2' }
+const accordionCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: accordionCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `import type { AccordionItem } from '@mfs-atomic/ui'
+
+export const accordionItems: AccordionItem[] = [
+  {
+    key: 'tokens',
+    title: 'How do theme tokens work?',
+    content: 'All components read CSS custom properties (--surface, --primary).'
+  },
+  {
+    key: 'a11y',
+    title: 'Is keyboard navigation supported?',
+    content: 'Triggers use native buttons with aria-expanded.'
+  },
+  {
+    key: 'locked',
+    title: 'Disabled section',
+    content: 'This panel cannot be toggled.',
+    disabled: true
+  }
+]`
+  }
 ]
-<\/script>`
 
-const carouselCode = `<template>
+const timelineCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Timeline, type TimelineItem } from '@mfs-atomic/ui'
+
+const layout = ref<'vertical' | 'horizontal'>('vertical')
+const items = ref<TimelineItem[]>([
+  { title: 'Design Tokens', timestamp: '09:00', description: 'Defined clay, glass, and neo CSS variables.', status: 'success', icon: '✓' },
+  { title: 'Component Build', timestamp: '13:30', description: 'Implemented accessible Vue 3 primitives.', status: 'primary', icon: '2' },
+  { title: 'QA Review', timestamp: '16:45', description: 'Verifying mobile touch targets and contrast.', status: 'warning', icon: '!' }
+])
+<\/script>
+
+<template>
+  <Button size="sm" @click="layout = layout === 'vertical' ? 'horizontal' : 'vertical'">
+    Layout: {{ layout }}
+  </Button>
+  <Timeline :items="items" :layout="layout" />
+</template>`
+
+const timelineCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: timelineCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `import type { TimelineItem } from '@mfs-atomic/ui'
+
+export const timelineEvents: TimelineItem[] = [
+  {
+    title: 'Order Placed',
+    timestamp: '09:00',
+    description: 'Customer completed checkout (#ORD-4821).',
+    status: 'success',
+    icon: '✓'
+  },
+  {
+    title: 'Packed & Labeled',
+    timestamp: '13:30',
+    description: 'Warehouse prepared parcel for courier pickup.',
+    status: 'primary',
+    icon: '2'
+  },
+  {
+    title: 'Out for Delivery',
+    timestamp: '16:45',
+    description: 'Courier en route to destination.',
+    status: 'warning',
+    icon: '!'
+  }
+]`
+  },
+  {
+    label: 'Fetch API',
+    filename: 'api.ts',
+    code: `import type { TimelineItem } from '@mfs-atomic/ui'
+
+export async function fetchTimelineEvents(orderId: string): Promise<TimelineItem[]> {
+  const res = await fetch(\`/api/orders/\${encodeURIComponent(orderId)}/timeline\`)
+  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
+  return (await res.json()) as TimelineItem[]
+}`
+  }
+]
+
+const carouselCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Carousel } from '@mfs-atomic/ui'
+
+interface CarouselSlide {
+  badge: string
+  title: string
+  description: string
+}
+
+const slide = ref(0)
+const slides: CarouselSlide[] = [
+  { badge: 'Claymorphism', title: 'Soft Tactile Depth', description: 'Layered highlights and pillowy shadows.' },
+  { badge: 'Glassmorphism', title: 'Frosted Translucency', description: 'Backdrop blur with crisp hairline borders.' },
+  { badge: 'Neumorphism', title: 'Extruded Surfaces', description: 'Dual directional shadows carved from base.' }
+]
+<\/script>
+
+<template>
   <Carousel v-model="slide" :items="slides" autoplay loop>
     <template #default="{ item }">
-      <div class="slide">{{ item.title }}</div>
+      <div class="slide">
+        <span>{{ item.badge }}</span>
+        <h4>{{ item.title }}</h4>
+        <p>{{ item.description }}</p>
+      </div>
     </template>
   </Carousel>
 </template>`
 
-const imageCode = `<template>
+const carouselCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: carouselCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `export interface CarouselSlide {
+  badge: string
+  title: string
+  description: string
+  bg?: string
+}
+
+export const carouselSlides: CarouselSlide[] = [
+  {
+    badge: 'Claymorphism',
+    title: 'Soft Tactile Depth',
+    description: 'Layered highlights and pillowy shadows that respond to touch.',
+    bg: 'linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(236, 72, 153, 0.18))'
+  },
+  {
+    badge: 'Glassmorphism',
+    title: 'Frosted Translucency',
+    description: 'Backdrop blur with crisp hairline borders over vibrant canvases.'
+  }
+]`
+  }
+]
+
+const imageCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Image } from '@mfs-atomic/ui'
+
+const imageUrl = ref('/landscape.png')
+const fit = ref<'cover' | 'contain'>('cover')
+<\/script>
+
+<template>
   <Image
-    src="/landscape.png"
+    :src="imageUrl"
     alt="Geometric landscape"
     width="100%"
     :height="180"
-    fit="cover"
+    :fit="fit"
     preview
   />
 </template>`
@@ -634,9 +826,44 @@ const avatarGroupItems = [
   { label: 'ER' }
 ]
 
-const avatarGroupCode = `<template>
-  <AvatarGroup :items="members" :max="3" size="md" />
+const avatarGroupCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { AvatarGroup, type AvatarGroupItem } from '@mfs-atomic/ui'
+
+const maxVisible = ref(3)
+const members: AvatarGroupItem[] = [
+  { label: 'AL', src: '/avatars/alex.png' },
+  { label: 'BK' },
+  { label: 'CM' },
+  { label: 'DN' },
+  { label: 'ER' }
+]
+<\/script>
+
+<template>
+  <AvatarGroup :items="members" :max="maxVisible" size="md" />
 </template>`
+
+const avatarGroupCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: avatarGroupCode
+  },
+  {
+    label: 'Data Format',
+    filename: 'data.ts',
+    code: `import type { AvatarGroupItem } from '@mfs-atomic/ui'
+
+export const teamMembers: AvatarGroupItem[] = [
+  { label: 'Alex Rivera', src: '/avatars/alex.png' },
+  { label: 'Bella Kim' },
+  { label: 'Carlos Mendez' },
+  { label: 'Dana Ng' },
+  { label: 'Elena Rostova' }
+]`
+  }
+]
 
 const avatarGroupApi: { props: ApiRow[]; slots: ApiRow[] } = {
   props: [
