@@ -1,56 +1,30 @@
-# MFS Theme 🎨
+# MFS Theme
 
-> Dynamic Multi-Theme Vue 3 UI Library (Claymorphism, Glassmorphism, Neumorphism) with interactive documentation.
+Adaptive multi-theme Vue 3 UI component library with runtime theme switching, 20 built-in visual themes, 91+ components, and zero runtime dependencies.
 
-## ✨ Fitur Utama
+## Features
 
-- 🍭 **Multi-Theme Engine**: Claymorphism (3D inflated), Glassmorphism (Frosted glass blur), & Neumorphism (Soft UI).
-- 🧩 **Vue 3 Components**: Button, Card, Input, Badge, Switch, Modal.
-- 📱 **Fully Responsive**: Siap digunakan di desktop, tablet, maupun mobile.
-- 📦 **NPM Ready**: Dikonfigurasi dengan Vite Library Mode & TypeScript declaration bundle (`dist/`).
-- 📖 **Interactive Docs**: Demo website terintegrasi dengan pemilih tema langsung.
+- **20 Built-in Themes**: Switch between 20 distinct design systems at runtime (`clay`, `glass`, `neo`, `cyberpunk`, `liquid-glass`, and more).
+- **91+ Vue 3 Components**: Comprehensive component suite covering forms, data display, overlays, navigation, menus, feedback, and charts—plus directives (`v-ripple`, `v-tooltip`, `v-focustrap`, `v-animateonscroll`, `v-styleclass`) and composables (`useTheme`, `useToast`, `useConfirm`).
+- **206 `.mfs-*` Utility Classes**: Theme-aware CSS utility classes for layout, surfaces, elevation, typography, and spacing.
+- **TypeScript Ready**: Full TypeScript declarations (`dist/index.d.ts`) bundled out of the box.
+- **Zero Runtime Dependencies**: Lightweight package requiring only `vue` (`^3.4.0`) as a peer dependency.
 
-## 🚀 Instalasi & Setup Lokal
-
-```bash
-cd mfs-theme
-npm install
-npm run dev
-```
-
-Buka browser di URL lokal yang muncul (default: `http://localhost:5173`).
-
----
-
-## 📦 Build untuk NPM
-
-Untuk membangun bundle library yang siap didaftarkan ke npm:
+## Installation
 
 ```bash
-npm run build:lib
+npm install @mfs-atomic/theme
 ```
 
-Hasil build akan berada di folder `dist/`:
-- `dist/mfs-theme.js` (ES Module)
-- `dist/mfs-theme.umd.cjs` (UMD)
-- `dist/index.d.ts` (TypeScript types)
-- `@mfs-atomic/theme/style.css` (CSS library, `dist/mfs-theme.css`)
+Or with Bun:
 
-### Cara Publikasi ke NPM:
-1. Pastikan sudah login di npm:
-   ```bash
-   npm login
-   ```
-2. Jalankan publikasi:
-   ```bash
-   npm publish --access public
-   ```
+```bash
+bun add @mfs-atomic/theme
+```
 
----
+## Quick Start
 
-## 🛠 Penggunaan di Project Lain
-
-Setelah terinstall dari npm:
+### 1. Register the Plugin & Import Styles
 
 ```ts
 // main.ts
@@ -64,43 +38,76 @@ app.use(ThemePlugin, { defaultTheme: 'clay' })
 app.mount('#app')
 ```
 
-### Di Template Vue:
+### 2. Use Components & Switch Themes with `useTheme()`
 
 ```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useTheme } from '@mfs-atomic/theme'
+
+const { currentTheme, themeOptions, setTheme } = useTheme()
+const name = ref('')
+</script>
+
 <template>
-  <Card title="Halo Dunia" subtitle="Contoh kartu Claymorphism">
-    <Input v-model="name" label="Nama" placeholder="Ketik nama..." />
-    <Button variant="primary" @click="greet">Klik Saya</Button>
+  <Card title="Welcome" :subtitle="`Active theme: ${currentTheme}`">
+    <Input v-model="name" label="Name" placeholder="Enter your name..." />
+
+    <div class="mfs-flex mfs-gap-2 mfs-mt-4">
+      <Button
+        v-for="theme in themeOptions.slice(0, 3)"
+        :key="theme.id"
+        :variant="currentTheme === theme.id ? 'primary' : 'secondary'"
+        @click="setTheme(theme.id)"
+      >
+        {{ theme.name }}
+      </Button>
+    </div>
   </Card>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-const name = ref('')
-const greet = () => alert(`Halo ${name.value}!`)
-</script>
 ```
 
----
+> Components can also be imported individually (e.g., `import { Button, Card, Input } from '@mfs-atomic/theme'`).
 
-## 🎨 Struktur Folder
+## Built-in Themes
 
+All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
+
+| Theme ID | Description |
+| --- | --- |
+| `clay` | Claymorphism — 3D inflated soft surfaces and tactile curves |
+| `glass` | Glassmorphism — Frosted translucent glass and backdrop blurs |
+| `neo` | Neumorphism — Minimalist soft UI with extruded elevations |
+| `minimalism` | Minimalism — Ultra-clean monochrome surfaces and hairline borders |
+| `brutalism` | Neubrutalism — High-contrast bold borders and hard offset shadows |
+| `bento` | Bento Grid — Modular rounded tiles with crisp spacing |
+| `cyberpunk` | Cyberpunk — Neon-lit dark HUD surfaces and electric glows |
+| `retro` | Retro — Nostalgic warm palettes and classic UI proportions |
+| `swiss` | Swiss — Grid-driven modernist typography and sharp geometry |
+| `skeuomorphism` | Skeuomorphism — Realistic textures, bevels, and tactile depth |
+| `liquid-glass` | Liquid Glass — Fluid specular highlights and refractive depth |
+| `material-you` | Material You — Adaptive tonal surfaces and expressive pills |
+| `terminal` | Terminal — Monospace CLI aesthetics with phosphor accents |
+| `hand-drawn` | Hand-Drawn — Sketchy organic borders and paper-like surfaces |
+| `y2k-chrome` | Y2K Chrome — Metallic gradients, glossy pills, and early-2000s flair |
+| `bauhaus` | Bauhaus — Primary geometric forms and bold color blocks |
+| `pixel-art` | Pixel Art — Crisp stepped borders and 8-bit arcade styling |
+| `aurora-gradient` | Aurora Gradient — Luminous ambient meshes and soft glows |
+| `vaporwave` | Vaporwave — Pastel synth gradients and retro-futuristic contrast |
+| `manga` | Manga — High-contrast ink panels with halftone depth |
+
+## Local Development
+
+```bash
+bun install
+bun run dev
 ```
-mfs-theme/
-├── src/
-│   ├── lib/                  # SOURCE LIBRARY UI (yang dipublish ke NPM)
-│   │   ├── components/       # Button, Card, Input, dll
-│   │   ├── composables/      # useTheme.ts
-│   │   ├── themes/           # clay.css, glass.css, neo.css, index.css
-│   │   └── index.ts          # Entry point plugin Vue
-│   ├── App.vue               # Dokumentasi interaktif & theme selector
-│   └── main.ts               # Entry point website dokumentasi
-├── vite.config.ts            # Config untuk dev & website dokumentasi
-├── vite.lib.config.ts        # Config untuk build library NPM
-└── package.json
-```
 
----
+Build the library bundle (`dist/`):
+
+```bash
+bun run build:lib
+```
 
 ## License & Trademarks
 
