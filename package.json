@@ -1,5 +1,5 @@
 {
-  "name": "mfs-theme",
+  "name": "@mfs-atomic/theme",
   "version": "1.0.0",
   "description": "Adaptive multi-theme Vue 3 UI component library with Claymorphism, Glassmorphism, and Neumorphism styles",
   "type": "module",
@@ -31,6 +31,10 @@
   ],
   "author": "MFS",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Faris072/mfs-theme.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",

@@ -5,6 +5,7 @@ import { resolve } from 'path'
 
 // Vite Library mode build config for npm publishing
 export default defineConfig({
+  publicDir: false,
   plugins: [
     vue(),
     dts({
@@ -16,7 +17,8 @@ export default defineConfig({
     lib: {
       entry: resolve(__dirname, 'src/lib/index.ts'),
       name: 'MfsTheme',
-      fileName: (format) => `mfs-theme.${format === 'es' ? 'js' : 'umd.cjs'}`
+      fileName: (format) => `mfs-theme.${format === 'es' ? 'js' : 'umd.cjs'}`,
+      cssFileName: 'mfs-theme'
     },
     rollupOptions: {
       external: ['vue'],
