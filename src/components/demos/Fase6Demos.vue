@@ -289,7 +289,7 @@ const dataTableCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge, DataTable } from 'mfs-theme'
+import { Badge, DataTable } from '@mfs-atomic/theme'
 
 const query = ref('')
 const selected = ref([])
@@ -383,7 +383,7 @@ const dataViewCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DataView } from 'mfs-theme'
+import { DataView } from '@mfs-atomic/theme'
 
 const layout = ref<'grid' | 'list'>('grid')
 const items = [
@@ -479,7 +479,7 @@ const treeCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from 'mfs-theme'
+import { Tree } from '@mfs-atomic/theme'
 
 const expanded = ref(['src'])
 const selected = ref(['Tree.vue'])

@@ -180,7 +180,7 @@
     <section class="mfs-surface mfs-rounded-lg mfs-shadow mfs-overflow-hidden">
       <header class="mfs-px-5 mfs-py-4 mfs-border-b">
         <h3 class="mfs-title mfs-text-base mfs-m-0">Utility Class Cheat Sheet</h3>
-        <p class="mfs-caption mfs-mt-1 mfs-mb-0">All {{ utilityRows.length }} `.mfs-*` classes included in `mfs-theme`.</p>
+        <p class="mfs-caption mfs-mt-1 mfs-mb-0">All {{ utilityRows.length }} `.mfs-*` classes included in `@mfs-atomic/theme`.</p>
       </header>
 
       <div class="mfs-overflow-x-auto">

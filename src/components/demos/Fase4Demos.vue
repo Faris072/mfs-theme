@@ -427,7 +427,7 @@ const columnRows = [
 
 // Code snippets
 const toastCode = `<script setup lang="ts">
-import { Button, useToast } from 'mfs-theme'
+import { Button, useToast } from '@mfs-atomic/theme'
 
 const toast = useToast()
 const notify = () => {
@@ -468,7 +468,7 @@ const tooltipCode = `<template>
 
 const drawerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Drawer } from 'mfs-theme'
+import { Button, Drawer } from '@mfs-atomic/theme'
 
 const open = ref(false)
 <\/script>
@@ -514,7 +514,7 @@ const progressSpinnerCode = `<template>
 </template>`
 
 const confirmDialogCode = `<script setup lang="ts">
-import { Button, useConfirm } from 'mfs-theme'
+import { Button, useConfirm } from '@mfs-atomic/theme'
 
 const { confirm } = useConfirm()
 

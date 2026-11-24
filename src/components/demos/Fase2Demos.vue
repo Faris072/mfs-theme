@@ -420,7 +420,7 @@ const notes = ref('Too short')
 
 const textareaCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Textarea } from 'mfs-theme'
+import { Textarea } from '@mfs-atomic/theme'
 
 const bio = ref('')
 <\/script>
@@ -465,7 +465,7 @@ const budget = ref<number | null>(250)
 
 const inputNumberCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from 'mfs-theme'
+import { InputNumber } from '@mfs-atomic/theme'
 
 const budget = ref<number | null>(250)
 <\/script>
@@ -510,7 +510,7 @@ const secret = ref('MfsTheme#2026')
 
 const passwordCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Password } from 'mfs-theme'
+import { Password } from '@mfs-atomic/theme'
 
 const secret = ref('')
 <\/script>
@@ -559,7 +559,7 @@ const toggleAllThemes = (checked: boolean | any[]) => {
 
 const checkboxCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Checkbox } from 'mfs-theme'
+import { Checkbox } from '@mfs-atomic/theme'
 
 const agreed = ref(true)
 const selected = ref(['Clay', 'Glass'])
@@ -592,7 +592,7 @@ const plan = ref('pro')
 
 const radioCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { RadioButton } from 'mfs-theme'
+import { RadioButton } from '@mfs-atomic/theme'
 
 const plan = ref('pro')
 <\/script>
@@ -635,7 +635,7 @@ const roleOptions = ['Architect', 'Builder', 'Guardian', 'Assistant'].map((r) =>
 
 const selectCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from 'mfs-theme'
+import { Select } from '@mfs-atomic/theme'
 
 const framework = ref('vue')
 const options = [
@@ -687,7 +687,7 @@ const tagOptions = [
 
 const multiSelectCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { MultiSelect } from 'mfs-theme'
+import { MultiSelect } from '@mfs-atomic/theme'
 
 const tags = ref(['responsive', 'a11y'])
 const options = [
@@ -732,7 +732,7 @@ const priceRange = ref<[number, number]>([120, 360])
 
 const sliderCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from 'mfs-theme'
+import { Slider } from '@mfs-atomic/theme'
 
 const volume = ref(65)
 const priceRange = ref<[number, number]>([120, 360])
@@ -765,7 +765,7 @@ const score = ref(3.5)
 
 const ratingCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Rating } from 'mfs-theme'
+import { Rating } from '@mfs-atomic/theme'
 
 const score = ref(3.5)
 <\/script>
@@ -795,7 +795,7 @@ const brandColor = ref('#0ea5e9')
 
 const colorPickerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker } from 'mfs-theme'
+import { ColorPicker } from '@mfs-atomic/theme'
 
 const accentColor = ref('#8b5cf6')
 <\/script>
@@ -842,7 +842,7 @@ const formatRangeVal = (val: Date | [Date, Date] | null) => {
 
 const datePickerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { DatePicker } from 'mfs-theme'
+import { DatePicker } from '@mfs-atomic/theme'
 
 const selectedDate = ref<Date | null>(new Date())
 const dateRange = ref<[Date, Date] | null>(null)

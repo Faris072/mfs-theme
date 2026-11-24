@@ -313,7 +313,7 @@ const confirmPopupCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, ConfirmPopup } from 'mfs-theme'
+import { Button, ConfirmPopup } from '@mfs-atomic/theme'
 
 const popupRef = ref<InstanceType<typeof ConfirmPopup> | null>(null)
 const ask = (e: MouseEvent) => {

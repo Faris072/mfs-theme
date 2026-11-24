@@ -534,7 +534,7 @@ const apiRowCount = computed(() =>
   apiSections.value.reduce((total, section) => total + section.rows.length, 0)
 )
 
-const themeSwitchSnippet = `import { useTheme } from 'mfs-theme'
+const themeSwitchSnippet = `import { useTheme } from '@mfs-atomic/theme'
 
 const { currentTheme, setTheme } = useTheme()
 setTheme('glass') // 'clay' | 'glass' | 'neo' | ...`
@@ -577,13 +577,13 @@ const toDirectiveSymbol = (name: string) =>
 const importStatement = computed(() => {
   const item = activeItem.value
   if (item.importSymbol) {
-    return `import { ${item.importSymbol} } from 'mfs-theme'`
+    return `import { ${item.importSymbol} } from '@mfs-atomic/theme'`
   }
   if (item.phase === 0) {
-    return `import 'mfs-theme/style.css'`
+    return `import '@mfs-atomic/theme/style.css'`
   }
   const symbol = item.name.startsWith('v-') ? toDirectiveSymbol(item.name) : item.name
-  return `import { ${symbol} } from 'mfs-theme'`
+  return `import { ${symbol} } from '@mfs-atomic/theme'`
 })
 
 const copiedImport = ref(false)

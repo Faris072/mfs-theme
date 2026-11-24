@@ -34,7 +34,7 @@ Hasil build akan berada di folder `dist/`:
 - `dist/mfs-theme.js` (ES Module)
 - `dist/mfs-theme.umd.cjs` (UMD)
 - `dist/index.d.ts` (TypeScript types)
-- `mfs-theme/style.css` (CSS library, `dist/mfs-theme.css`)
+- `@mfs-atomic/theme/style.css` (CSS library, `dist/mfs-theme.css`)
 
 ### Cara Publikasi ke NPM:
 1. Pastikan sudah login di npm:
@@ -56,8 +56,8 @@ Setelah terinstall dari npm:
 // main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
-import ThemePlugin from 'mfs-theme'
-import 'mfs-theme/style.css'
+import ThemePlugin from '@mfs-atomic/theme'
+import '@mfs-atomic/theme/style.css'
 
 const app = createApp(App)
 app.use(ThemePlugin, { defaultTheme: 'clay' })

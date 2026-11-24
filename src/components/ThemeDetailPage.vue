@@ -322,7 +322,7 @@ const filteredComponents = computed(() => {
 })
 
 const getImportSnippet = (comp: ComponentNavItem) => {
-  return `import { ${comp.importSymbol ?? comp.name} } from 'mfs-theme'`
+  return `import { ${comp.importSymbol ?? comp.name} } from '@mfs-atomic/theme'`
 }
 
 const activateTheme = () => {
@@ -330,7 +330,7 @@ const activateTheme = () => {
 }
 
 const copyThemeImport = async () => {
-  const code = `import MfsTheme from 'mfs-theme'\nimport 'mfs-theme/style.css'\n\napp.use(MfsTheme, { defaultTheme: '${props.themeId}' })`
+  const code = `import MfsTheme from '@mfs-atomic/theme'\nimport '@mfs-atomic/theme/style.css'\n\napp.use(MfsTheme, { defaultTheme: '${props.themeId}' })`
   try {
     await navigator.clipboard.writeText(code)
     copiedImport.value = true

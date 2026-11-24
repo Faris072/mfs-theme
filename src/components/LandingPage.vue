@@ -144,8 +144,8 @@
           <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <span class="code-step-label mfs-font-semibold mfs-text">1. Terminal</span>
             <div class="code-box mfs-relative mfs-overflow-x-auto mfs-surface-subtle mfs-rounded-md mfs-shadow-inset mfs-p-4 mfs-font-mono mfs-text">
-              <code>npm install mfs-theme</code>
-              <button class="btn-copy-code mfs-absolute mfs-cursor-pointer mfs-transition mfs-surface mfs-pill mfs-text-muted mfs-py-1 mfs-px-2 mfs-flex mfs-items-center mfs-justify-center mfs-shadow" @click="copyCode('npm install mfs-theme')">
+              <code>npm install @mfs-atomic/theme</code>
+              <button class="btn-copy-code mfs-absolute mfs-cursor-pointer mfs-transition mfs-surface mfs-pill mfs-text-muted mfs-py-1 mfs-px-2 mfs-flex mfs-items-center mfs-justify-center mfs-shadow" @click="copyCode('npm install @mfs-atomic/theme')">
                 <Copy v-if="!copied" :size="14" />
                 <Check v-else :size="14" />
               </button>
@@ -157,8 +157,8 @@
             <div class="code-box mfs-relative mfs-overflow-x-auto mfs-surface-subtle mfs-rounded-md mfs-shadow-inset mfs-p-4 mfs-font-mono mfs-text">
               <pre class="mfs-m-0"><code>import { createApp } from 'vue'
 import App from './App.vue'
-import MfsTheme from 'mfs-theme'
-import 'mfs-theme/style.css'
+import MfsTheme from '@mfs-atomic/theme'
+import '@mfs-atomic/theme/style.css'
 
 const app = createApp(App)
 app.use(MfsTheme, { defaultTheme: 'clay' })

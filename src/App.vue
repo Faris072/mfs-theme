@@ -60,7 +60,7 @@
           </template>
 
           <a
-            href="https://www.npmjs.com/package/mfs-theme"
+            href="https://www.npmjs.com/package/@mfs-atomic/theme"
             target="_blank"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >

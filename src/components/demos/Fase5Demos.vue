@@ -250,7 +250,7 @@ const navbarCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Navbar, Button } from 'mfs-theme'
+import { Navbar, Button } from '@mfs-atomic/theme'
 
 const active = ref('Home')
 const navItems = [
@@ -298,7 +298,7 @@ const tabsCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from 'mfs-theme'
+import { Tabs } from '@mfs-atomic/theme'
 
 const activeTab = ref('overview')
 const tabItems = [
@@ -343,7 +343,7 @@ const breadcrumbCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from 'mfs-theme'
+import { Breadcrumb } from '@mfs-atomic/theme'
 
 const items = [
   { label: 'Home' },
@@ -384,7 +384,7 @@ const paginationCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination } from 'mfs-theme'
+import { Pagination } from '@mfs-atomic/theme'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -421,7 +421,7 @@ const stepsCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Steps } from 'mfs-theme'
+import { Steps } from '@mfs-atomic/theme'
 
 const currentStep = ref(1)
 const stepItems = [
@@ -470,7 +470,7 @@ const contextMenuCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ContextMenu } from 'mfs-theme'
+import { ContextMenu } from '@mfs-atomic/theme'
 
 const items = [
   { label: 'Edit Item' },
@@ -511,7 +511,7 @@ const scrollTopCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ScrollTop } from 'mfs-theme'
+import { ScrollTop } from '@mfs-atomic/theme'
 <\/script>`
 
 const scrollTopApi = {

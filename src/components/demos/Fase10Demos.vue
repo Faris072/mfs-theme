@@ -274,7 +274,7 @@ const projectTitle = ref('MFS Design System')
 // Code snippets
 const orderListCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import OrderList from 'mfs-theme/components/OrderList.vue'
+import { OrderList } from '@mfs-atomic/theme'
 
 const items = ref([
   { id: 1, name: 'Theme Tokens' },
