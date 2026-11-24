@@ -29,6 +29,7 @@
         <li
           v-for="(item, idx) in items"
           :key="idx"
+          :ref="(el) => setRootItemRef(idx, el as HTMLElement | null)"
           class="mega-menu__root mfs-relative"
           role="none"
           @mouseenter="onHover(idx)"
@@ -84,59 +85,65 @@
             <span v-if="item.icon" aria-hidden="true">{{ item.icon }}</span>
             <span>{{ item.label }}</span>
           </component>
-
-          <Transition name="mega-fade">
-            <div
-              v-if="item.columns?.length && activeIndex === idx"
-              class="mega-menu__panel mfs-card mfs-overlay mfs-blur mfs-p-4"
-              role="menu"
-            >
-              <div class="mega-menu__columns">
-                <div v-for="(col, cIdx) in item.columns" :key="cIdx" class="mega-menu__col">
-                  <div v-if="col.title" class="mega-menu__col-title mfs-text-muted mfs-font-bold mfs-mb-2 mfs-px-2">{{ col.title }}</div>
-                  <ul class="mega-menu__col-list mfs-flex mfs-flex-col mfs-gap-1">
-                    <li v-for="(link, lIdx) in col.items" :key="lIdx" role="none">
-                      <button
-                        v-if="!link.to && !link.href"
-                        type="button"
-                        role="menuitem"
-                        class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
-                        @click="onLinkClick(link)"
-                      >
-                        <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
-                        <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
-                          {{ link.description }}
-                        </span>
-                      </button>
-
-                      <component
-                        :is="link.to ? 'router-link' : 'a'"
-                        v-else
-                        :to="link.to"
-                        :href="link.href"
-                        role="menuitem"
-                        class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
-                        @click="onLinkClick(link)"
-                      >
-                        <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
-                        <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
-                          {{ link.description }}
-                        </span>
-                      </component>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </Transition>
         </li>
       </ul>
     </div>
+
+    <Teleport to="body">
+      <Transition name="mega-fade">
+        <div
+          v-if="activeItem?.columns?.length"
+          ref="panelRef"
+          class="mega-menu__panel mfs-card mfs-overlay mfs-blur mfs-p-4"
+          :style="panelStyle"
+          role="menu"
+          @mouseenter="cancelClose"
+          @mouseleave="onLeave"
+        >
+          <div class="mega-menu__columns">
+            <div v-for="(col, cIdx) in activeItem.columns" :key="cIdx" class="mega-menu__col">
+              <div v-if="col.title" class="mega-menu__col-title mfs-text-muted mfs-font-bold mfs-mb-2 mfs-px-2">{{ col.title }}</div>
+              <ul class="mega-menu__col-list mfs-flex mfs-flex-col mfs-gap-1">
+                <li v-for="(link, lIdx) in col.items" :key="lIdx" role="none">
+                  <button
+                    v-if="!link.to && !link.href"
+                    type="button"
+                    role="menuitem"
+                    class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
+                    @click="onLinkClick(link)"
+                  >
+                    <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
+                    <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
+                      {{ link.description }}
+                    </span>
+                  </button>
+
+                  <component
+                    :is="link.to ? 'router-link' : 'a'"
+                    v-else
+                    :to="link.to"
+                    :href="link.href"
+                    role="menuitem"
+                    class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
+                    @click="onLinkClick(link)"
+                  >
+                    <span class="mega-menu__link-label mfs-font-semibold">{{ link.label }}</span>
+                    <span v-if="link.description" class="mega-menu__link-desc mfs-text-muted">
+                      {{ link.description }}
+                    </span>
+                  </component>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
   </nav>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch, type CSSProperties } from 'vue'
 
 export interface MegaMenuLink {
   label: string
@@ -161,7 +168,7 @@ export interface MegaMenuItem {
   columns?: MegaMenuColumn[]
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     items: MegaMenuItem[]
     orientation?: 'horizontal' | 'vertical'
@@ -176,22 +183,102 @@ const emit = defineEmits<{
 }>()
 
 const rootRef = ref<HTMLElement | null>(null)
+const panelRef = ref<HTMLElement | null>(null)
+const rootItemRefs = ref<Record<number, HTMLElement | null>>({})
 const activeIndex = ref<number | null>(null)
 const mobileOpen = ref(false)
+const panelTop = ref(0)
+const panelLeft = ref(0)
+let closeTimer: ReturnType<typeof setTimeout> | null = null
+
+const setRootItemRef = (idx: number, el: HTMLElement | null) => {
+  rootItemRefs.value[idx] = el
+}
+
+const activeItem = computed(() =>
+  activeIndex.value !== null ? props.items[activeIndex.value] ?? null : null
+)
 
 const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 768
 
+const cancelClose = () => {
+  if (closeTimer) {
+    clearTimeout(closeTimer)
+    closeTimer = null
+  }
+}
+
+const updatePanelPosition = () => {
+  if (typeof window === 'undefined' || activeIndex.value === null) return
+  const anchorEl = rootItemRefs.value[activeIndex.value] ?? rootRef.value
+  if (!anchorEl) return
+
+  const anchorRect = anchorEl.getBoundingClientRect()
+  const panelRect = panelRef.value?.getBoundingClientRect()
+  const panelWidth = panelRect?.width || Math.min(480, window.innerWidth - 16)
+  const panelHeight = panelRect?.height || 0
+  const pad = 8
+  const gap = 6
+
+  let nextLeft = anchorRect.left
+  let nextTop = anchorRect.bottom + gap
+
+  if (props.orientation === 'vertical' && !isMobile()) {
+    nextLeft = anchorRect.right + gap
+    nextTop = anchorRect.top
+    if (nextLeft + panelWidth > window.innerWidth - pad) {
+      nextLeft = anchorRect.left - panelWidth - gap
+    }
+  }
+
+  const maxLeft = Math.max(pad, window.innerWidth - panelWidth - pad)
+  nextLeft = Math.min(Math.max(pad, nextLeft), maxLeft)
+
+  if (panelHeight > 0 && nextTop + panelHeight > window.innerHeight - pad) {
+    if (props.orientation === 'horizontal' || isMobile()) {
+      const spaceAbove = anchorRect.top - pad - gap
+      const spaceBelow = window.innerHeight - anchorRect.bottom - pad - gap
+      if (spaceAbove > spaceBelow) {
+        nextTop = Math.max(pad, anchorRect.top - panelHeight - gap)
+      } else {
+        nextTop = Math.max(pad, window.innerHeight - panelHeight - pad)
+      }
+    } else {
+      nextTop = Math.max(pad, window.innerHeight - panelHeight - pad)
+    }
+  }
+
+  panelTop.value = nextTop
+  panelLeft.value = nextLeft
+}
+
+const panelStyle = computed<CSSProperties>(() => ({
+  position: 'fixed',
+  top: `${panelTop.value}px`,
+  left: `${panelLeft.value}px`,
+  zIndex: 9999
+}))
+
 const onHover = (idx: number) => {
-  if (!isMobile()) activeIndex.value = idx
+  if (!isMobile()) {
+    cancelClose()
+    activeIndex.value = idx
+  }
 }
 
 const onLeave = () => {
-  if (!isMobile()) activeIndex.value = null
+  if (!isMobile()) {
+    cancelClose()
+    closeTimer = setTimeout(() => {
+      activeIndex.value = null
+    }, 120)
+  }
 }
 
 const onTriggerClick = (item: MegaMenuItem, idx: number) => {
   if (item.disabled) return
   if (item.columns?.length) {
+    cancelClose()
     activeIndex.value = activeIndex.value === idx ? null : idx
     return
   }
@@ -209,9 +296,12 @@ const onLinkClick = (link: MegaMenuLink) => {
 }
 
 const onPointerDown = (e: PointerEvent) => {
-  if (rootRef.value && !rootRef.value.contains(e.target as Node)) {
-    activeIndex.value = null
+  const target = e.target as Node | null
+  if (!target) return
+  if (rootRef.value?.contains(target) || panelRef.value?.contains(target)) {
+    return
   }
+  activeIndex.value = null
 }
 
 const onKeyDown = (e: KeyboardEvent) => {
@@ -221,14 +311,38 @@ const onKeyDown = (e: KeyboardEvent) => {
   }
 }
 
+const onViewportChange = () => {
+  if (activeIndex.value !== null) {
+    updatePanelPosition()
+  }
+}
+
+watch(activeIndex, (idx) => {
+  if (idx !== null) {
+    updatePanelPosition()
+    nextTick(updatePanelPosition)
+  }
+})
+
+watch(panelRef, (el) => {
+  if (el && activeIndex.value !== null) {
+    updatePanelPosition()
+  }
+})
+
 onMounted(() => {
   window.addEventListener('pointerdown', onPointerDown)
   window.addEventListener('keydown', onKeyDown)
+  window.addEventListener('scroll', onViewportChange, true)
+  window.addEventListener('resize', onViewportChange)
 })
 
 onUnmounted(() => {
+  cancelClose()
   window.removeEventListener('pointerdown', onPointerDown)
   window.removeEventListener('keydown', onKeyDown)
+  window.removeEventListener('scroll', onViewportChange, true)
+  window.removeEventListener('resize', onViewportChange)
 })
 </script>
 
@@ -274,8 +388,10 @@ onUnmounted(() => {
 }
 
 .mega-menu__panel {
-  margin-top: 6px;
-  z-index: 200;
+  min-width: min(480px, calc(100vw - 16px));
+  max-width: min(760px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
 }
 
 .mega-menu__columns {
@@ -339,14 +455,6 @@ onUnmounted(() => {
   .mega-menu--vertical .mega-menu__list {
     display: flex;
     flex-direction: column;
-  }
-
-  .mega-menu--horizontal .mega-menu__panel {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    min-width: 480px;
-    max-width: min(760px, 90vw);
   }
 }
 

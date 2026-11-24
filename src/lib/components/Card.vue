@@ -46,10 +46,16 @@ withDefaults(
 <style scoped>
 .card {
   padding: 0;
-  overflow: hidden;
+  overflow: visible;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   flex-direction: column;
+}
+
+.card__media {
+  overflow: hidden;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
 }
 
 .card--hoverable:hover {
@@ -82,6 +88,8 @@ withDefaults(
   padding: 14px 24px;
   border-top: 1px solid var(--border, rgba(0, 0, 0, 0.05));
   background-color: var(--surface-subtle);
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
   display: flex;
   align-items: center;
   justify-content: flex-end;
