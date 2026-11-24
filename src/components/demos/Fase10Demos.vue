@@ -281,6 +281,64 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- 9. ImageCompare -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'image-compare'"
+    title="ImageCompare"
+    description="Before/after image comparison slider with pointer drag and keyboard range support."
+    :code="imageCompareCode"
+    :api="imageCompareApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <ImageCompare
+        v-model="comparePosition"
+        :left-src="compareBeforeSvg"
+        :right-src="compareAfterSvg"
+        left-alt="Wireframe state"
+        right-alt="Rendered state"
+      />
+      <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-2">
+        <span class="mfs-text-sm mfs-text-muted">
+          Split position: <strong class="mfs-text">{{ comparePosition }}%</strong>
+        </span>
+        <Button size="sm" variant="surface" @click="comparePosition = 50">Reset 50%</Button>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- 10. SignaturePad -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'signature-pad'"
+    title="SignaturePad"
+    description="Pointer-driven canvas signature pad with Clear/Save controls and live exported PNG preview."
+    :code="signaturePadCode"
+    :api="signaturePadApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <SignaturePad
+        v-model="signatureDataUrl"
+        :height="160"
+        file-name="approval-signature.png"
+        @change="onSignatureChange"
+      />
+
+      <div v-if="signatureDataUrl" class="mfs-stack mfs-gap-2 mfs-p-3 mfs-rounded-sm mfs-surface-subtle">
+        <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-2">
+          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Exported PNG Preview</span>
+          <Badge variant="success" size="sm">{{ signatureMeta }}</Badge>
+        </div>
+        <img
+          :src="signatureDataUrl"
+          alt="Exported signature preview"
+          class="mfs-rounded-sm mfs-surface sig-preview-img"
+        />
+      </div>
+      <p v-else class="mfs-m-0 mfs-text-xs mfs-text-muted">
+        Draw a signature above and click <strong>Save</strong> to preview the exported PNG.
+      </p>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
@@ -299,6 +357,8 @@ import VirtualScroller from '../../lib/components/VirtualScroller.vue'
 import MeterGroup, { type MeterItem } from '../../lib/components/MeterGroup.vue'
 import Inplace from '../../lib/components/Inplace.vue'
 import FileUpload from '../../lib/components/FileUpload.vue'
+import ImageCompare from '../../lib/components/ImageCompare.vue'
+import SignaturePad, { type SignatureExportPayload } from '../../lib/components/SignaturePad.vue'
 
 defineProps<{
   activeSlug: string
@@ -471,7 +531,7 @@ const formatFileSize = (bytes: number) => {
 // Code snippets
 const orderListCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { OrderList } from '@mfs-atomic/theme'
+import { OrderList } from '@mfs-atomic/ui'
 
 const items = ref([
   { id: 1, name: 'Theme Tokens' },
@@ -547,7 +607,7 @@ const inplaceCode = `<template>
 
 const imageCropperCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { ImageCropper, type ImageCropResult } from '@mfs-atomic/theme'
+import { ImageCropper, type ImageCropResult } from '@mfs-atomic/ui'
 
 const cropped = ref<ImageCropResult | null>(null)
 <\/script>
@@ -694,5 +754,88 @@ const imageCropperApi: { props: ApiRow[]; events: ApiRow[]; exposed: ApiRow[] } 
     { name: 'reset', type: '() => void', description: 'Resets pan, zoom, and rotation back to defaults.' }
   ]
 }
+
+// 9. ImageCompare
+const comparePosition = ref(50)
+const compareBeforeSvg =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><rect width="640" height="300" fill="#1e293b"/><circle cx="220" cy="150" r="80" fill="none" stroke="#94a3b8" stroke-width="6" stroke-dasharray="10 8"/><text x="320" y="160" fill="#cbd5e1" font-family="sans-serif" font-size="28" font-weight="bold">BEFORE (WIRE)</text></svg>`
+  )
+const compareAfterSvg =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><rect width="640" height="300" fill="url(#g)"/><circle cx="220" cy="150" r="80" fill="#ffffff" fill-opacity="0.25"/><text x="320" y="160" fill="#ffffff" font-family="sans-serif" font-size="28" font-weight="bold">AFTER (THEME)</text></svg>`
+  )
+
+const imageCompareCode = `<template>
+  <ImageCompare v-model="split" left-src="/before.png" right-src="/after.png" />
+</template>`
+
+const imageCompareApi: { props: ApiRow[]; events: ApiRow[] } = {
+  props: [
+    { name: 'leftSrc', type: 'string', description: 'Image URL shown on the left (before) side.' },
+    { name: 'rightSrc', type: 'string', description: 'Image URL shown on the right (after) side.' },
+    { name: 'leftAlt', type: 'string', default: "'Before image'", description: 'Alt text for the left image.' },
+    { name: 'rightAlt', type: 'string', default: "'After image'", description: 'Alt text for the right image.' },
+    { name: 'modelValue', type: 'number', default: '50', description: 'Split percentage (0–100).' }
+  ],
+  events: [{ name: 'update:modelValue', type: 'number', description: 'Emitted as the handle is dragged or adjusted.' }]
+}
+
+// 10. SignaturePad
+const signatureDataUrl = ref<string | null>(null)
+const signatureMeta = ref('')
+
+const onSignatureChange = (payload: SignatureExportPayload) => {
+  if (!payload.file) {
+    signatureMeta.value = ''
+    return
+  }
+  const kb = (payload.file.size / 1024).toFixed(1)
+  signatureMeta.value = `${payload.file.name} (${kb} KB)`
+}
+
+const signaturePadCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SignaturePad } from '@mfs-atomic/ui'
+
+const signature = ref<string | null>(null)
+<\/script>
+
+<template>
+  <SignaturePad v-model="signature" :height="160" file-name="approval.png" />
+  <img v-if="signature" :src="signature" alt="Signature preview" />
+</template>`
+
+const signaturePadApi: { props: ApiRow[]; events: ApiRow[]; exposed: ApiRow[] } = {
+  props: [
+    { name: 'modelValue', type: 'string | null', default: 'null', description: 'Exported data URL of the saved signature.' },
+    { name: 'width', type: 'number', default: '480', description: 'Internal canvas width in pixels.' },
+    { name: 'height', type: 'number', default: '180', description: 'Internal canvas height in pixels.' },
+    { name: 'penColor', type: 'string', default: "'currentColor'", description: 'Stroke color (CSS color or currentColor).' },
+    { name: 'lineWidth', type: 'number', default: '2.5', description: 'Stroke width in pixels.' },
+    { name: 'outputType', type: "'image/png' | 'image/jpeg'", default: "'image/png'", description: 'Exported image MIME type.' },
+    { name: 'fileName', type: 'string', default: "'signature.png'", description: 'Filename for the exported File object.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables drawing and action buttons.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: '(value: string | null) => void', description: 'Emitted on Save or Clear.' },
+    { name: 'change', type: '(payload: SignatureExportPayload) => void', description: 'Emitted with { blob, dataUrl, file }.' }
+  ],
+  exposed: [
+    { name: 'clear', type: '() => void', description: 'Clears the canvas and resets modelValue.' },
+    { name: 'exportSignature', type: '() => Promise<SignatureExportPayload>', description: 'Programmatically exports the signature.' }
+  ]
+}
 </script>
+
+<style scoped>
+.sig-preview-img {
+  max-height: 120px;
+  width: auto;
+  object-fit: contain;
+  align-self: flex-start;
+}
+</style>
 

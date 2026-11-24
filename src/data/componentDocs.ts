@@ -87,6 +87,14 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     summary: 'Compact status indicator and counter pill in semantic theme colors.'
   },
   {
+    slug: 'overlay-badge',
+    name: 'OverlayBadge',
+    category: 'Display',
+    phase: 1,
+    status: 'Ready',
+    summary: 'Positions a status or counter Badge on the top-right corner of any wrapped element.'
+  },
+  {
     slug: 'switch',
     name: 'Switch',
     category: 'Form',
@@ -143,11 +151,35 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     }
   },
   {
+    slug: 'checkbox-group',
+    name: 'CheckboxGroup',
+    category: 'Form',
+    phase: 2,
+    status: 'Ready',
+    summary: 'Accessible group container managing shared array v-model, direction, and invalid/disabled states for Checkboxes.'
+  },
+  {
     slug: 'radio-button',
     name: 'RadioButton',
     category: 'Form',
     phase: 2,
     summary: 'Mutually exclusive radio option with accessible group semantics.'
+  },
+  {
+    slug: 'radio-button-group',
+    name: 'RadioButtonGroup',
+    category: 'Form',
+    phase: 2,
+    status: 'Ready',
+    summary: 'Accessible radiogroup container coordinating shared name, single-value v-model, and layout direction.'
+  },
+  {
+    slug: 'chips',
+    name: 'Chips',
+    category: 'Form',
+    phase: 2,
+    status: 'Ready',
+    summary: 'Multi-tag text input creating removable Chip pills via Enter or separator keys.'
   },
   {
     slug: 'select',
@@ -195,6 +227,23 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 2,
     summary: 'Calendar popover date selector with min/max constraints and formatted output.'
   },
+  {
+    slug: 'form',
+    name: 'Form & FormField',
+    category: 'Form',
+    phase: 2,
+    status: 'Ready',
+    importSymbol: 'Form',
+    summary: 'Schema/resolver form container with FormField context, submit handling, and server 422 error mapping.'
+  },
+  {
+    slug: 'mentions',
+    name: 'Mentions',
+    category: 'Form',
+    phase: 2,
+    status: 'Ready',
+    summary: 'Textarea with @ trigger detection, floating suggestion list, and async remote search support.'
+  },
 
   // Phase 3 (7)
   {
@@ -203,6 +252,14 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Display',
     phase: 3,
     summary: 'User or entity representation supporting images, initials, shapes, and sizes.'
+  },
+  {
+    slug: 'avatar-group',
+    name: 'AvatarGroup',
+    category: 'Display',
+    phase: 3,
+    status: 'Ready',
+    summary: 'Overlapping avatar stack with configurable max limit and +N overflow indicator.'
   },
   {
     slug: 'chip',
@@ -323,6 +380,14 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 4,
     summary: 'Promise-based confirmation modal triggered via the useConfirm() composable.'
   },
+  {
+    slug: 'dynamic-dialog',
+    name: 'DynamicDialog',
+    category: 'Overlay',
+    phase: 4,
+    status: 'Ready',
+    summary: 'Programmatic modal host rendering arbitrary Vue components via useDialog().open().'
+  },
 
   // Phase 5 (7)
   {
@@ -378,6 +443,14 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 5,
     summary: 'Floating button that appears after scrolling to smoothly return to top.'
   },
+  {
+    slug: 'command-palette',
+    name: 'CommandPalette',
+    category: 'Navigation',
+    phase: 5,
+    status: 'Ready',
+    summary: 'Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and remote search.'
+  },
 
   // Phase 6 (3)
   {
@@ -411,6 +484,14 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     category: 'Data',
     phase: 6,
     summary: 'Hierarchical expandable tree view with node selection and custom icons.'
+  },
+  {
+    slug: 'infinite-scroll',
+    name: 'InfiniteScroll',
+    category: 'Data',
+    phase: 6,
+    status: 'Ready',
+    summary: 'IntersectionObserver sentinel container for incremental batch loading with retryable error and finished states.'
   },
 
   // Phase 7 (13)
@@ -740,6 +821,22 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     summary: 'Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload.'
   },
   {
+    slug: 'image-compare',
+    name: 'ImageCompare',
+    category: 'Media',
+    phase: 10,
+    status: 'Ready',
+    summary: 'Before/after image comparison slider with pointer drag and keyboard range support.'
+  },
+  {
+    slug: 'signature-pad',
+    name: 'SignaturePad',
+    category: 'Media',
+    phase: 10,
+    status: 'Ready',
+    summary: 'Pointer-driven canvas signature pad exporting PNG/JPEG data URLs, Blobs, and File objects.'
+  },
+  {
     slug: 'terminal',
     name: 'Terminal',
     category: 'Overlays, Media & Directives',
@@ -789,6 +886,32 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 11,
     importSymbol: 'vTooltip',
     summary: 'Directive attaching hover/focus floating tooltips with top, right, bottom, or left modifiers.'
+  },
+  {
+    slug: 'portal',
+    name: 'Portal',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    status: 'Ready',
+    summary: 'Declarative Teleport wrapper rendering slot content into a target DOM container.'
+  },
+  {
+    slug: 'v-badge',
+    name: 'vBadge',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    status: 'Ready',
+    importSymbol: 'vBadge',
+    summary: 'Directive attaching a compact themed corner badge directly onto any element.'
+  },
+  {
+    slug: 'v-keyfilter',
+    name: 'vKeyFilter',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    status: 'Ready',
+    importSymbol: 'vKeyFilter',
+    summary: 'Directive restricting keyboard and paste input to preset character classes or custom RegExp.'
   }
 ]
 

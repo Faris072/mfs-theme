@@ -248,6 +248,34 @@
         </div>
       </div>
     </ComponentPreview>
+
+    <!-- AVATAR GROUP -->
+    <ComponentPreview
+      v-else-if="activeSlug === 'avatar-group'"
+      title="AvatarGroup"
+      description="Overlapping avatar stack with configurable max count and +N overflow pill."
+      :code="avatarGroupCode"
+      :api="avatarGroupApi"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <div class="mfs-row mfs-items-center mfs-gap-4">
+          <AvatarGroup :items="avatarGroupItems" :max="avatarGroupMax" size="md" />
+          <AvatarGroup :items="avatarGroupItems" :max="avatarGroupMax" size="sm" />
+        </div>
+        <div class="mfs-row mfs-items-center mfs-gap-2">
+          <button
+            v-for="limit in [2, 3, 5]"
+            :key="limit"
+            type="button"
+            class="mfs-px-3 mfs-py-1 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
+            :class="{ 'is-active': avatarGroupMax === limit }"
+            @click="avatarGroupMax = limit"
+          >
+            max: {{ limit }}
+          </button>
+        </div>
+      </div>
+    </ComponentPreview>
   </div>
 </template>
 
@@ -255,6 +283,7 @@
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import { Avatar, Chip, Divider, Accordion, Timeline, Carousel, Image } from '../../lib'
+import AvatarGroup from '../../lib/components/AvatarGroup.vue'
 import type { ApiRow } from '../../data/componentDocs'
 
 defineProps<{
@@ -594,6 +623,28 @@ const imageApi: { props: ApiRow[] } = {
     { name: 'preview', type: 'boolean', default: 'false', description: 'Enables click-to-zoom fullscreen modal preview.' },
     { name: 'fit', type: "'cover' | 'contain' | 'fill' | 'none'", default: "'cover'", description: 'CSS object-fit mode.' }
   ]
+}
+
+const avatarGroupMax = ref(3)
+const avatarGroupItems = [
+  { label: 'AL', src: avatarSvg },
+  { label: 'BK' },
+  { label: 'CM' },
+  { label: 'DN' },
+  { label: 'ER' }
+]
+
+const avatarGroupCode = `<template>
+  <AvatarGroup :items="members" :max="3" size="md" />
+</template>`
+
+const avatarGroupApi: { props: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'items', type: 'AvatarGroupItem[]', description: 'Array of { label?, src? } rendered as Avatars.' },
+    { name: 'max', type: 'number', description: 'Maximum visible avatars before showing +N overflow.' },
+    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size applied to grouped Avatars.' }
+  ],
+  slots: [{ name: 'default', description: 'Manual Avatar children when items prop is omitted.' }]
 }
 </script>
 

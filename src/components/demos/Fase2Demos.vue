@@ -386,6 +386,164 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- 12. CHIPS -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'chips'"
+    title="Chips"
+    description="Multi-tag text input creating removable Chip pills via Enter, comma separator, or Backspace."
+    :code="chipsCode"
+    :api="chipsApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <Chips
+        v-model="chipTags"
+        label="Project Tags"
+        placeholder="Add tag and press Enter..."
+        :max="6"
+        hint="Up to 6 tags. Press comma or Enter to add."
+      />
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+        <span class="mfs-text-muted mfs-font-semibold">tags:</span>
+        <code>{{ JSON.stringify(chipTags) }}</code>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- 13. CHECKBOX GROUP -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'checkbox-group'"
+    title="CheckboxGroup"
+    description="Accessible group container coordinating array v-model, direction, and disabled/invalid states."
+    :code="checkboxGroupCode"
+    :api="checkboxGroupApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <CheckboxGroup
+        v-model="selectedChannels"
+        name="channels"
+        direction="row"
+        :options="channelOptions"
+      />
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+        <span class="mfs-text-muted mfs-font-semibold">selectedChannels:</span>
+        <code>{{ JSON.stringify(selectedChannels) }}</code>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- 14. RADIO BUTTON GROUP -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'radio-button-group'"
+    title="RadioButtonGroup"
+    description="Accessible radiogroup container coordinating shared name, single-value v-model, and layout direction."
+    :code="radioButtonGroupCode"
+    :api="radioButtonGroupApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <RadioButtonGroup
+        v-model="selectedPlan"
+        name="billing-plan"
+        direction="column"
+        :options="planOptions"
+      />
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+        <span class="mfs-text-muted mfs-font-semibold">selectedPlan:</span>
+        <code>{{ selectedPlan }}</code>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- 15. FORM & FORMFIELD -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'form'"
+    title="Form & FormField"
+    description="Form state container with resolver validation, FormField context injection, and 422 server error mapping."
+    :code="formCode"
+    :api="formApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-2">
+        <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">
+          Submit with empty fields for client resolver, or trigger a simulated Laravel 422 response.
+        </span>
+        <Button size="sm" variant="surface" @click="simulate422">
+          Simulate 422 Error
+        </Button>
+      </div>
+
+      <Form
+        :initial-values="{ name: 'Alya Putri', email: 'alya@example.com' }"
+        :errors="formServerErrors"
+        :resolver="formResolver"
+        :submitting="formSubmitting"
+        @submit="onFormSubmit"
+        @reset="onFormReset"
+      >
+        <template #default="{ values, reset }">
+          <FormField name="name" label="Full Name" hint="Public display name." required>
+            <template #default="{ value, error, setValue }">
+              <Input
+                id="name"
+                :model-value="String(value ?? '')"
+                :error="error"
+                placeholder="Enter full name"
+                @update:model-value="setValue($event)"
+              />
+            </template>
+          </FormField>
+
+          <FormField name="email" label="Work Email" required>
+            <template #default="{ value, error, setValue }">
+              <Input
+                id="email"
+                :model-value="String(value ?? '')"
+                :error="error"
+                placeholder="name@company.com"
+                @update:model-value="setValue($event)"
+              />
+            </template>
+          </FormField>
+
+          <div class="mfs-row mfs-items-center mfs-justify-end mfs-gap-2">
+            <Button type="button" size="sm" variant="surface" @click="reset">Reset</Button>
+            <Button type="submit" size="sm" variant="primary" :loading="formSubmitting">Submit</Button>
+          </div>
+
+          <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+            <span class="mfs-text-muted mfs-font-semibold">status:</span>
+            <code>{{ formStatus }} · values={{ JSON.stringify(values) }}</code>
+          </div>
+        </template>
+      </Form>
+    </div>
+  </ComponentPreview>
+
+  <!-- 16. MENTIONS -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'mentions'"
+    title="Mentions"
+    description="Textarea with @ trigger detection and async remote user search."
+    :code="mentionsCode"
+    :api="mentionsApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <Mentions
+        v-model="mentionText"
+        :options="mentionOptions"
+        :loading="mentionLoading"
+        remote
+        placeholder="Type @ followed by a name (e.g. @alya or @bima)..."
+        :rows="3"
+        @search="onMentionSearch"
+        @select="onMentionSelect"
+      />
+      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs demo-readout">
+        <span class="mfs-text-muted mfs-font-semibold">lastSelected:</span>
+        <code>{{ lastMentioned || 'None' }}</code>
+      </div>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
@@ -393,6 +551,8 @@ import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import {
+  Button,
+  Input,
   Textarea,
   InputNumber,
   Password,
@@ -405,6 +565,12 @@ import {
   ColorPicker,
   DatePicker
 } from '../../lib'
+import Chips from '../../lib/components/Chips.vue'
+import Form, { type MfsFormSubmitPayload } from '../../lib/components/Form.vue'
+import FormField from '../../lib/components/FormField.vue'
+import Mentions, { type MentionOption } from '../../lib/components/Mentions.vue'
+import CheckboxGroup from '../../lib/components/CheckboxGroup.vue'
+import RadioButtonGroup from '../../lib/components/RadioButtonGroup.vue'
 
 defineProps<{ activeSlug: string }>()
 
@@ -420,7 +586,7 @@ const notes = ref('Too short')
 
 const textareaCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Textarea } from '@mfs-atomic/theme'
+import { Textarea } from '@mfs-atomic/ui'
 
 const bio = ref('')
 <\/script>
@@ -465,7 +631,7 @@ const budget = ref<number | null>(250)
 
 const inputNumberCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { InputNumber } from '@mfs-atomic/theme'
+import { InputNumber } from '@mfs-atomic/ui'
 
 const budget = ref<number | null>(250)
 <\/script>
@@ -510,7 +676,7 @@ const secret = ref('MfsTheme#2026')
 
 const passwordCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Password } from '@mfs-atomic/theme'
+import { Password } from '@mfs-atomic/ui'
 
 const secret = ref('')
 <\/script>
@@ -559,7 +725,7 @@ const toggleAllThemes = (checked: boolean | any[]) => {
 
 const checkboxCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Checkbox } from '@mfs-atomic/theme'
+import { Checkbox } from '@mfs-atomic/ui'
 
 const agreed = ref(true)
 const selected = ref(['Clay', 'Glass'])
@@ -592,7 +758,7 @@ const plan = ref('pro')
 
 const radioCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { RadioButton } from '@mfs-atomic/theme'
+import { RadioButton } from '@mfs-atomic/ui'
 
 const plan = ref('pro')
 <\/script>
@@ -635,7 +801,7 @@ const roleOptions = ['Architect', 'Builder', 'Guardian', 'Assistant'].map((r) =>
 
 const selectCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Select } from '@mfs-atomic/theme'
+import { Select } from '@mfs-atomic/ui'
 
 const framework = ref('vue')
 const options = [
@@ -687,7 +853,7 @@ const tagOptions = [
 
 const multiSelectCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { MultiSelect } from '@mfs-atomic/theme'
+import { MultiSelect } from '@mfs-atomic/ui'
 
 const tags = ref(['responsive', 'a11y'])
 const options = [
@@ -732,7 +898,7 @@ const priceRange = ref<[number, number]>([120, 360])
 
 const sliderCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Slider } from '@mfs-atomic/theme'
+import { Slider } from '@mfs-atomic/ui'
 
 const volume = ref(65)
 const priceRange = ref<[number, number]>([120, 360])
@@ -765,7 +931,7 @@ const score = ref(3.5)
 
 const ratingCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Rating } from '@mfs-atomic/theme'
+import { Rating } from '@mfs-atomic/ui'
 
 const score = ref(3.5)
 <\/script>
@@ -795,7 +961,7 @@ const brandColor = ref('#0ea5e9')
 
 const colorPickerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { ColorPicker } from '@mfs-atomic/theme'
+import { ColorPicker } from '@mfs-atomic/ui'
 
 const accentColor = ref('#8b5cf6')
 <\/script>
@@ -842,7 +1008,7 @@ const formatRangeVal = (val: Date | [Date, Date] | null) => {
 
 const datePickerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { DatePicker } from '@mfs-atomic/theme'
+import { DatePicker } from '@mfs-atomic/ui'
 
 const selectedDate = ref<Date | null>(new Date())
 const dateRange = ref<[Date, Date] | null>(null)
@@ -869,6 +1035,235 @@ const datePickerApi: ApiSpec = {
   events: [
     { name: 'update:modelValue', type: '(value: Date | [Date, Date] | null)', description: 'Emitted when date or range is picked.' },
     { name: 'change', type: '(value: Date | [Date, Date] | null)', description: 'Emitted on selection.' }
+  ]
+}
+
+// ── Chips state & docs ─────────────────────────────────────────────────
+const chipTags = ref(['vue3', 'mfs-theme', 'clay'])
+
+const chipsCode = `<template>
+  <Chips v-model="tags" label="Project Tags" :max="6" placeholder="Add tag..." />
+</template>`
+
+const chipsApi: ApiSpec = {
+  props: [
+    { name: 'modelValue', type: 'string[]', default: '[]', description: 'Array of tag strings.' },
+    { name: 'placeholder', type: 'string', default: "''", description: 'Input placeholder when below max.' },
+    { name: 'separator', type: 'string', default: "','", description: 'Character splitting pasted or typed tags.' },
+    { name: 'max', type: 'number', description: 'Maximum number of allowed tags.' },
+    { name: 'allowDuplicate', type: 'boolean', default: 'false', description: 'Permits duplicate tag values.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables adding and removing tags.' },
+    { name: 'invalid', type: 'boolean', default: 'false', description: 'Applies invalid visual state.' },
+    { name: 'label', type: 'string', description: 'Field label.' },
+    { name: 'hint', type: 'string', description: 'Helper text.' },
+    { name: 'error', type: 'string', description: 'Validation error message.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: 'string[]', description: 'Emitted when tags are added or removed.' },
+    { name: 'add', type: 'string', description: 'Emitted with each newly added tag.' },
+    { name: 'remove', type: 'string', description: 'Emitted with the removed tag.' }
+  ]
+}
+
+// ── CheckboxGroup state & docs ─────────────────────────────────────────
+const selectedChannels = ref<string[]>(['email', 'push'])
+const channelOptions = [
+  { label: 'Email', value: 'email' },
+  { label: 'Push', value: 'push' },
+  { label: 'SMS', value: 'sms' },
+  { label: 'Webhook (Locked)', value: 'webhook', disabled: true }
+]
+
+const checkboxGroupCode = `<template>
+  <CheckboxGroup v-model="selected" direction="row" :options="options" />
+</template>`
+
+const checkboxGroupApi: ApiSpec = {
+  props: [
+    { name: 'modelValue', type: 'unknown[]', default: '[]', description: 'Array of selected option values.' },
+    { name: 'options', type: 'CheckboxGroupOption[]', default: '[]', description: 'Array of { label, value, disabled? }.' },
+    { name: 'direction', type: "'row' | 'column'", default: "'row'", description: 'Layout direction of checkboxes.' },
+    { name: 'name', type: 'string', description: 'Optional shared group name.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables all checkboxes in the group.' },
+    { name: 'invalid', type: 'boolean', default: 'false', description: 'Applies invalid group state.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: 'unknown[]', description: 'Emitted when selection changes.' },
+    { name: 'change', type: 'unknown[]', description: 'Emitted on toggle.' }
+  ],
+  slots: [{ name: 'default', description: 'Custom Checkbox children consuming injected group context.' }]
+}
+
+// ── RadioButtonGroup state & docs ──────────────────────────────────────
+const selectedPlan = ref('pro')
+const planOptions = [
+  { label: 'Starter — Free', value: 'starter' },
+  { label: 'Pro — $19/mo', value: 'pro' },
+  { label: 'Enterprise (Contact Sales)', value: 'enterprise', disabled: true }
+]
+
+const radioButtonGroupCode = `<template>
+  <RadioButtonGroup v-model="plan" direction="column" :options="options" />
+</template>`
+
+const radioButtonGroupApi: ApiSpec = {
+  props: [
+    { name: 'modelValue', type: 'unknown', description: 'Selected option value.' },
+    { name: 'options', type: 'RadioGroupOption[]', default: '[]', description: 'Array of { label, value, disabled? }.' },
+    { name: 'direction', type: "'row' | 'column'", default: "'row'", description: 'Layout direction of radios.' },
+    { name: 'name', type: 'string', description: 'Shared HTML radio group name.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables all radio buttons.' },
+    { name: 'invalid', type: 'boolean', default: 'false', description: 'Applies invalid group outline.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: 'unknown', description: 'Emitted when active radio changes.' },
+    { name: 'change', type: 'unknown', description: 'Emitted on selection.' }
+  ],
+  slots: [{ name: 'default', description: 'Custom RadioButton children consuming injected group context.' }]
+}
+
+// ── Form & FormField state & docs ──────────────────────────────────────
+const formServerErrors = ref<Record<string, string | string[]>>({})
+const formSubmitting = ref(false)
+const formStatus = ref('Idle')
+
+const formResolver = (values: Record<string, unknown>) => {
+  const errs: Record<string, string | undefined> = {}
+  if (!String(values.name ?? '').trim()) {
+    errs.name = 'Full name is required.'
+  }
+  const email = String(values.email ?? '').trim()
+  if (!email || !email.includes('@')) {
+    errs.email = 'Valid work email is required.'
+  }
+  return errs
+}
+
+const simulate422 = () => {
+  formServerErrors.value = {
+    email: ['The email has already been taken. (422)']
+  }
+  formStatus.value = '422 Unprocessable Entity'
+}
+
+const onFormSubmit = (payload: MfsFormSubmitPayload) => {
+  if (!payload.valid) {
+    formStatus.value = 'Client validation failed'
+    return
+  }
+  formSubmitting.value = true
+  formServerErrors.value = {}
+  formStatus.value = 'Submitting...'
+  setTimeout(() => {
+    formSubmitting.value = false
+    formStatus.value = 'Submitted (200 OK)'
+  }, 400)
+}
+
+const onFormReset = () => {
+  formServerErrors.value = {}
+  formStatus.value = 'Reset'
+}
+
+const formCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Form, FormField, Input } from '@mfs-atomic/ui'
+
+const serverErrors = ref<Record<string, string | string[]>>({})
+const onSubmit = ({ valid, values }: { valid: boolean; values: Record<string, unknown> }) => {
+  if (valid) console.log(values)
+}
+<\/script>
+
+<template>
+  <Form :initial-values="{ name: '', email: '' }" :errors="serverErrors" @submit="onSubmit">
+    <FormField name="name" label="Full Name" required>
+      <template #default="{ value, error, setValue }">
+        <Input id="name" :model-value="String(value ?? '')" :error="error" @update:model-value="setValue($event)" />
+      </template>
+    </FormField>
+    <Button type="submit" variant="primary">Submit</Button>
+  </Form>
+</template>`
+
+const formApi: ApiSpec = {
+  props: [
+    { name: 'initialValues', type: 'Record<string, unknown>', description: 'Initial field values map.' },
+    { name: 'errors', type: 'Record<string, string | string[]>', description: 'External/422 server error map keyed by field name.' },
+    { name: 'resolver', type: '(values) => Record<string, string | undefined>', description: 'Client-side validation resolver.' },
+    { name: 'submitting', type: 'boolean', default: 'false', description: 'Exposes submitting state to slot.' },
+    { name: 'validateOnSubmit', type: 'boolean', default: 'true', description: 'Runs resolver before emitting submit.' }
+  ],
+  events: [
+    { name: 'submit', type: '(payload: MfsFormSubmitPayload)', description: 'Emitted on submit with { values, valid, errors }.' },
+    { name: 'reset', type: '()', description: 'Emitted when form is reset.' }
+  ],
+  slots: [
+    { name: 'default', description: 'Form body receiving { values, errors, submitting, reset, validate }.' }
+  ]
+}
+
+// ── Mentions state & docs ──────────────────────────────────────────────
+const mentionDirectory: MentionOption[] = [
+  { label: 'Alya Putri', value: 'alya', description: 'Design Lead' },
+  { label: 'Bima Pratama', value: 'bima', description: 'Frontend Engineer' },
+  { label: 'Citra Lestari', value: 'citra', description: 'QA Specialist' },
+  { label: 'Dimas Wijaya', value: 'dimas', description: 'Backend Engineer' },
+  { label: 'Eka Saputra', value: 'eka', description: 'Product Manager' }
+]
+const mentionText = ref('Assigning review to ')
+const mentionOptions = ref<MentionOption[]>(mentionDirectory)
+const mentionLoading = ref(false)
+const lastMentioned = ref('')
+let mentionTimer: ReturnType<typeof setTimeout> | null = null
+
+const onMentionSearch = ({ query }: { trigger: string; query: string }) => {
+  if (mentionTimer) clearTimeout(mentionTimer)
+  mentionLoading.value = true
+  const q = query.trim().toLowerCase()
+  mentionTimer = setTimeout(() => {
+    mentionOptions.value = q
+      ? mentionDirectory.filter(
+          (u) => u.label.toLowerCase().includes(q) || u.value.toLowerCase().includes(q)
+        )
+      : mentionDirectory
+    mentionLoading.value = false
+  }, 220)
+}
+
+const onMentionSelect = (option: MentionOption) => {
+  lastMentioned.value = `@${option.value} (${option.label})`
+}
+
+const mentionsCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Mentions } from '@mfs-atomic/ui'
+
+const text = ref('')
+const options = ref([{ label: 'Alya Putri', value: 'alya', description: 'Design Lead' }])
+const loading = ref(false)
+const onSearch = ({ query }: { trigger: string; query: string }) => {
+  // Fetch remote users matching query
+}
+<\/script>
+
+<template>
+  <Mentions v-model="text" :options="options" :loading="loading" remote @search="onSearch" />
+</template>`
+
+const mentionsApi: ApiSpec = {
+  props: [
+    { name: 'modelValue', type: 'string', default: "''", description: 'Bound textarea text.' },
+    { name: 'options', type: 'MentionOption[]', default: '[]', description: 'Suggestion items ({ label, value, description? }).' },
+    { name: 'triggers', type: 'string[]', default: "['@']", description: 'Trigger characters opening the popup.' },
+    { name: 'remote', type: 'boolean', default: 'false', description: 'Disables local filtering so parent controls options.' },
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Shows loading spinner inside dropdown.' },
+    { name: 'emptyText', type: 'string', default: "'No matches found'", description: 'Fallback text when no options match.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: '(value: string)', description: 'Emitted when text changes or mention is inserted.' },
+    { name: 'search', type: '(payload: { trigger: string; query: string })', description: 'Emitted as user types after a trigger.' },
+    { name: 'select', type: '(option: MentionOption)', description: 'Emitted when a suggestion is selected.' }
   ]
 }
 </script>

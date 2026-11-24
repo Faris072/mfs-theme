@@ -243,6 +243,55 @@
       </DataTable>
     </div>
   </ComponentPreview>
+
+  <!-- InfiniteScroll -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'infinite-scroll'"
+    title="InfiniteScroll"
+    description="IntersectionObserver sentinel container loading incremental batches with retryable error and finished states."
+    :code="infiniteScrollCode"
+    :api="infiniteScrollApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-2 demo-controls">
+        <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">
+          Loaded {{ infItems.length }} / {{ INF_MAX_ITEMS }} items
+        </span>
+        <div class="mfs-inline-flex mfs-items-center mfs-gap-2">
+          <Button
+            size="sm"
+            variant="surface"
+            @click="infFailNext = !infFailNext"
+          >
+            {{ infFailNext ? 'Next Load: Error' : 'Next Load: OK' }}
+          </Button>
+          <Button size="sm" variant="surface" @click="resetInfinite">
+            Reset
+          </Button>
+        </div>
+      </div>
+
+      <div class="mfs-surface-subtle mfs-rounded mfs-p-3 inf-scroll-box">
+        <InfiniteScroll
+          :loading="infLoading"
+          :has-more="infItems.length < INF_MAX_ITEMS"
+          :error="infError"
+          @load="loadMoreInfinite"
+        >
+          <div class="mfs-stack mfs-gap-2">
+            <div
+              v-for="item in infItems"
+              :key="item.id"
+              class="mfs-row mfs-items-center mfs-justify-between mfs-p-3 mfs-rounded-sm mfs-surface"
+            >
+              <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.title }}</span>
+              <Badge variant="surface" size="sm">Batch {{ item.batch }}</Badge>
+            </div>
+          </div>
+        </InfiniteScroll>
+      </div>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
@@ -253,6 +302,7 @@ import { Badge, Button, Column, DataTable, DataView, Tree } from '../../lib'
 import type { DataTableColumn, SortOrder } from '../../lib/components/DataTable.vue'
 import type { DataViewLayout } from '../../lib/components/DataView.vue'
 import type { TreeNode } from '../../lib/components/Tree.vue'
+import InfiniteScroll from '../../lib/components/InfiniteScroll.vue'
 
 defineProps<{
   activeSlug: string
@@ -334,7 +384,7 @@ const dataTableCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Badge, DataTable } from '@mfs-atomic/theme'
+import { Badge, DataTable } from '@mfs-atomic/ui'
 
 const query = ref('')
 const page = ref(1)
@@ -444,7 +494,7 @@ const dataViewCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DataView } from '@mfs-atomic/theme'
+import { DataView } from '@mfs-atomic/ui'
 
 const layout = ref<'grid' | 'list'>('grid')
 const items = [
@@ -540,7 +590,7 @@ const treeCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from '@mfs-atomic/theme'
+import { Tree } from '@mfs-atomic/ui'
 
 const expanded = ref(['src'])
 const selected = ref(['Tree.vue'])
@@ -619,6 +669,91 @@ const columnApi: { props: ApiRow[]; slots: ApiRow[] } = {
     { name: 'footer', description: 'Custom column footer template.' }
   ]
 }
+
+// ---------------------------------------------------------------------------
+// InfiniteScroll Demo State & Docs
+// ---------------------------------------------------------------------------
+const INF_MAX_ITEMS = 18
+const infItems = ref(
+  Array.from({ length: 6 }, (_, i) => ({
+    id: i + 1,
+    title: `Activity Event #${i + 1}`,
+    batch: 1
+  }))
+)
+const infLoading = ref(false)
+const infError = ref<string | undefined>(undefined)
+const infFailNext = ref(false)
+
+function loadMoreInfinite() {
+  if (infLoading.value || infItems.value.length >= INF_MAX_ITEMS) return
+  infLoading.value = true
+  infError.value = undefined
+  setTimeout(() => {
+    infLoading.value = false
+    if (infFailNext.value) {
+      infFailNext.value = false
+      infError.value = 'Network timeout while fetching batch. Click Retry.'
+      return
+    }
+    const nextBatch = Math.floor(infItems.value.length / 6) + 1
+    const start = infItems.value.length
+    const more = Array.from({ length: 6 }, (_, i) => ({
+      id: start + i + 1,
+      title: `Activity Event #${start + i + 1}`,
+      batch: nextBatch
+    }))
+    infItems.value = [...infItems.value, ...more]
+  }, 350)
+}
+
+function resetInfinite() {
+  infLoading.value = false
+  infError.value = undefined
+  infItems.value = Array.from({ length: 6 }, (_, i) => ({
+    id: i + 1,
+    title: `Activity Event #${i + 1}`,
+    batch: 1
+  }))
+}
+
+const infiniteScrollCode = `<template>
+  <InfiniteScroll :loading="loading" :has-more="hasMore" :error="error" @load="loadMore">
+    <div v-for="item in items" :key="item.id">{{ item.title }}</div>
+  </InfiniteScroll>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { InfiniteScroll } from '@mfs-atomic/ui'
+
+const items = ref([{ id: 1, title: 'Event #1' }])
+const loading = ref(false)
+const hasMore = ref(true)
+const error = ref<string | undefined>(undefined)
+const loadMore = () => {
+  // Fetch next batch and append to items
+}
+<\/script>`
+
+const infiniteScrollApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Shows loading spinner and pauses new @load triggers.' },
+    { name: 'hasMore', type: 'boolean', default: 'true', description: 'Whether more batches remain to be loaded.' },
+    { name: 'error', type: 'string', description: 'Error message displaying inline Retry button.' },
+    { name: 'isEmpty', type: 'boolean', default: 'false', description: 'Renders empty state slot when true.' },
+    { name: 'rootMargin', type: 'string', default: "'120px'", description: 'IntersectionObserver rootMargin for preloading.' }
+  ],
+  events: [
+    { name: 'load', type: '() => void', description: 'Emitted when sentinel intersects or Retry is clicked.' }
+  ],
+  slots: [
+    { name: 'default', description: 'Rendered list items.' },
+    { name: 'loading', description: 'Custom loading indicator.' },
+    { name: 'error', description: 'Custom error UI receiving { error, retry }.' },
+    { name: 'finished', description: 'Shown when hasMore is false.' }
+  ]
+}
 </script>
 
 <style scoped>
@@ -647,6 +782,11 @@ const columnApi: { props: ApiRow[]; slots: ApiRow[] } = {
 .dv-card__icon {
   font-size: 1.5rem;
   line-height: 1;
+}
+
+.inf-scroll-box {
+  max-height: 280px;
+  overflow-y: auto;
 }
 
 @media (max-width: 640px) {

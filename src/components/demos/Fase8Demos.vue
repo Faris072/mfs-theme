@@ -351,7 +351,7 @@ const exportItems: SplitButtonItem[] = [
 ]
 
 const splitButtonCode = `<script setup lang="ts">
-import { SplitButton } from '@mfs-atomic/theme'
+import { SplitButton } from '@mfs-atomic/ui'
 
 const items = [
   { label: 'Deploy to Staging', value: 'staging' },
@@ -392,7 +392,7 @@ const dialItems: SpeedDialItem[] = [
 
 const speedDialCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { SpeedDial } from '@mfs-atomic/theme'
+import { SpeedDial } from '@mfs-atomic/ui'
 
 const open = ref(false)
 const items = [
@@ -426,7 +426,7 @@ const panelCollapsed = ref(false)
 
 const panelCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Panel } from '@mfs-atomic/theme'
+import { Panel } from '@mfs-atomic/ui'
 
 const collapsed = ref(false)
 <\/script>

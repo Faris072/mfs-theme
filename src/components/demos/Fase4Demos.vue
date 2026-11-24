@@ -303,10 +303,31 @@
       </p>
     </div>
   </ComponentPreview>
+
+  <!-- 10. DynamicDialog -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'dynamic-dialog'"
+    title="DynamicDialog"
+    description="Programmatic modal host rendering arbitrary Vue components via useDialog().open()."
+    :code="dynamicDialogCode"
+    :api="dynamicDialogApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-gap-2">
+        <Button variant="primary" size="sm" @click="openDynamicNote">
+          Open Dynamic Dialog
+        </Button>
+      </div>
+      <p class="mfs-m-0 mfs-text-sm mfs-font-semibold mfs-text-muted">
+        Returned data: <strong>{{ dynamicDialogResult }}</strong>
+      </p>
+      <DynamicDialog />
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { defineComponent, h, inject, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import {
@@ -321,6 +342,8 @@ import {
   useConfirm,
   useToast
 } from '../../lib'
+import DynamicDialog from '../../lib/components/DynamicDialog.vue'
+import { useDialog, type DialogRef } from '../../lib/composables/useDialog'
 
 defineProps<{
   activeSlug: string
@@ -385,7 +408,7 @@ const askConfirm = async (variant: 'primary' | 'danger') => {
 
 // Code snippets
 const toastCode = `<script setup lang="ts">
-import { Button, useToast } from '@mfs-atomic/theme'
+import { Button, useToast } from '@mfs-atomic/ui'
 
 const toast = useToast()
 const notify = () => {
@@ -426,7 +449,7 @@ const tooltipCode = `<template>
 
 const drawerCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Drawer } from '@mfs-atomic/theme'
+import { Button, Drawer } from '@mfs-atomic/ui'
 
 const open = ref(false)
 <\/script>
@@ -472,7 +495,7 @@ const progressSpinnerCode = `<template>
 </template>`
 
 const confirmDialogCode = `<script setup lang="ts">
-import { Button, useConfirm } from '@mfs-atomic/theme'
+import { Button, useConfirm } from '@mfs-atomic/ui'
 
 const { confirm } = useConfirm()
 
@@ -776,6 +799,70 @@ const confirmDialogApi: { props: ApiRow[] } = {
       name: 'useConfirm().confirm(opts)',
       type: 'ConfirmOptions => Promise<boolean>',
       description: 'Opens dialog with { title, message, confirmLabel?, cancelLabel?, variant?, onAccept?, onReject? }.'
+    }
+  ]
+}
+
+// 10. DynamicDialog
+const dialog = useDialog()
+const dynamicDialogResult = ref('None yet')
+
+const DynamicNoteContent = defineComponent({
+  name: 'DynamicNoteContent',
+  props: {
+    message: { type: String, required: true }
+  },
+  setup(props) {
+    const dialogRef = inject<DialogRef>('dialogRef')
+    return () =>
+      h('div', { class: 'mfs-stack' }, [
+        h('p', { class: 'mfs-m-0 mfs-text-sm mfs-text' }, props.message),
+        h('div', { class: 'mfs-row mfs-gap-2 mfs-justify-end' }, [
+          h(
+            Button,
+            { size: 'sm', variant: 'surface', onClick: () => dialogRef?.close('Dismissed') },
+            () => 'Cancel'
+          ),
+          h(
+            Button,
+            { size: 'sm', variant: 'primary', onClick: () => dialogRef?.close('Confirmed!') },
+            () => 'Confirm'
+          )
+        ])
+      ])
+  }
+})
+
+const openDynamicNote = () => {
+  dialog.open(DynamicNoteContent, {
+    header: 'Programmatic Dialog',
+    width: '420px',
+    props: { message: 'Rendered dynamically via useDialog().open() with injected dialogRef.' },
+    onClose: (data) => {
+      dynamicDialogResult.value = String(data ?? 'Closed')
+    }
+  })
+}
+
+const dynamicDialogCode = `<script setup lang="ts">
+import { DynamicDialog, useDialog } from '@mfs-atomic/ui'
+import MyModalBody from './MyModalBody.vue'
+
+const dialog = useDialog()
+const open = () => dialog.open(MyModalBody, { header: 'Details', width: '420px' })
+<\/script>`
+
+const dynamicDialogApi: { props: ApiRow[] } = {
+  props: [
+    {
+      name: 'useDialog().open(component, options)',
+      type: '(Component, DialogOptions) => string',
+      description: 'Opens a Modal hosting component with { header?, width?, props?, onClose? }.'
+    },
+    {
+      name: 'useDialog().close(id, data?)',
+      type: '(string, unknown?) => void',
+      description: 'Closes dialog by id (or inject("dialogRef").close(data) from child).'
     }
   ]
 }

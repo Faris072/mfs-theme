@@ -336,6 +336,37 @@
         </div>
       </ComponentPreview>
     </template>
+
+    <!-- OVERLAY BADGE -->
+    <template v-else-if="activeSlug === 'overlay-badge'">
+      <ComponentPreview
+        title="OverlayBadge"
+        description="Positions a semantic Badge counter or label on the top-right corner of any wrapped element."
+        :code="overlayBadgeCode"
+        :api="overlayBadgeApi"
+      >
+        <div class="mfs-stack mfs-w-full">
+          <div class="mfs-row mfs-items-center mfs-gap-4">
+            <OverlayBadge :value="overlayBadgeCount" variant="danger">
+              <Button variant="surface" size="sm" @click="overlayBadgeCount++">
+                <template #prepend><Bell :size="16" /></template>
+                Notifications
+              </Button>
+            </OverlayBadge>
+            <OverlayBadge value="NEW" variant="primary">
+              <Button variant="surface" size="sm">Releases</Button>
+            </OverlayBadge>
+            <OverlayBadge value="3" variant="success" size="md">
+              <Button variant="surface" size="sm">Tasks</Button>
+            </OverlayBadge>
+          </div>
+          <div class="mfs-row mfs-items-center mfs-gap-2">
+            <Button size="sm" variant="primary" @click="overlayBadgeCount++">Increment</Button>
+            <Button size="sm" variant="surface" @click="overlayBadgeCount = 0">Clear</Button>
+          </div>
+        </div>
+      </ComponentPreview>
+    </template>
   </div>
 </template>
 
@@ -353,6 +384,7 @@ import {
   Modal,
   Switch
 } from '../../lib'
+import OverlayBadge from '../../lib/components/OverlayBadge.vue'
 
 defineProps<{ activeSlug: string }>()
 
@@ -745,6 +777,24 @@ const buttonGroupCode = `<template>
 
 const buttonGroupApi: { slots: ApiRow[] } = {
   slots: [{ name: 'default', description: 'Adjacent Button elements rendered with role="group".' }]
+}
+
+// OverlayBadge demo state
+const overlayBadgeCount = ref(5)
+
+const overlayBadgeCode = `<template>
+  <OverlayBadge :value="count" variant="danger">
+    <Button variant="surface">Notifications</Button>
+  </OverlayBadge>
+</template>`
+
+const overlayBadgeApi: { props: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'value', type: 'string | number', description: 'Badge content; hidden when undefined or empty string.' },
+    { name: 'variant', type: "'primary' | 'secondary' | 'success' | 'warning' | 'danger'", default: "'primary'", description: 'Semantic badge color.' },
+    { name: 'size', type: "'sm' | 'md'", default: "'sm'", description: 'Badge size preset.' }
+  ],
+  slots: [{ name: 'default', description: 'Target element that the badge overlays.' }]
 }
 </script>
 

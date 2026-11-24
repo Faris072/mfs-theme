@@ -201,6 +201,49 @@
       <ScrollTop target="#scroll-top-demo-box" :threshold="80" />
     </div>
   </ComponentPreview>
+
+  <!-- CommandPalette -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'command-palette'"
+    title="CommandPalette"
+    description="Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and optional remote search."
+    :code="commandPaletteCode"
+    :api="commandPaletteApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-3">
+        <div class="mfs-inline-flex mfs-items-center mfs-gap-2">
+          <Button variant="primary" size="sm" @click="cmdOpen = true">
+            Open Command Palette (⌘K)
+          </Button>
+          <Button
+            variant="surface"
+            size="sm"
+            @click="cmdRemoteMode = !cmdRemoteMode"
+          >
+            Mode: {{ cmdRemoteMode ? 'Remote Search' : 'Local Filter' }}
+          </Button>
+        </div>
+        <span class="mfs-text-xs mfs-text-muted">
+          Shortcut: <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">⌘K</kbd> / <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">Ctrl+K</kbd>
+        </span>
+      </div>
+
+      <CommandPalette
+        v-model="cmdOpen"
+        :items="cmdRemoteMode ? cmdRemoteItems : cmdAllItems"
+        :remote="cmdRemoteMode"
+        :loading="cmdLoading"
+        placeholder="Search commands, pages, or actions..."
+        @search="onCmdSearch"
+        @select="onCmdSelect"
+      />
+
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
+        Last executed: <strong>{{ lastCmdLabel }}</strong>
+      </p>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
@@ -221,6 +264,7 @@ import type { TabItem } from '../../lib/components/Tabs.vue'
 import type { BreadcrumbItem } from '../../lib/components/Breadcrumb.vue'
 import type { StepItem } from '../../lib/components/Steps.vue'
 import type { ContextMenuItem } from '../../lib/components/ContextMenu.vue'
+import CommandPalette, { type CommandItem } from '../../lib/components/CommandPalette.vue'
 
 defineProps<{ activeSlug: string }>()
 
@@ -250,7 +294,7 @@ const navbarCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Navbar, Button } from '@mfs-atomic/theme'
+import { Navbar, Button } from '@mfs-atomic/ui'
 
 const active = ref('Home')
 const navItems = [
@@ -298,7 +342,7 @@ const tabsCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tabs } from '@mfs-atomic/theme'
+import { Tabs } from '@mfs-atomic/ui'
 
 const activeTab = ref('overview')
 const tabItems = [
@@ -343,7 +387,7 @@ const breadcrumbCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Breadcrumb } from '@mfs-atomic/theme'
+import { Breadcrumb } from '@mfs-atomic/ui'
 
 const items = [
   { label: 'Home' },
@@ -384,7 +428,7 @@ const paginationCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Pagination } from '@mfs-atomic/theme'
+import { Pagination } from '@mfs-atomic/ui'
 
 const page = ref(1)
 const perPage = ref(10)
@@ -421,7 +465,7 @@ const stepsCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Steps } from '@mfs-atomic/theme'
+import { Steps } from '@mfs-atomic/ui'
 
 const currentStep = ref(1)
 const stepItems = [
@@ -470,7 +514,7 @@ const contextMenuCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ContextMenu } from '@mfs-atomic/theme'
+import { ContextMenu } from '@mfs-atomic/ui'
 
 const items = [
   { label: 'Edit Item' },
@@ -511,7 +555,7 @@ const scrollTopCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { ScrollTop } from '@mfs-atomic/theme'
+import { ScrollTop } from '@mfs-atomic/ui'
 <\/script>`
 
 const scrollTopApi = {
@@ -525,6 +569,74 @@ const scrollTopApi = {
   ],
   slots: [
     { name: 'default', description: 'Custom icon or label inside the floating button.' }
+  ]
+}
+
+/* ---------- CommandPalette ---------- */
+const cmdOpen = ref(false)
+const cmdRemoteMode = ref(false)
+const cmdLoading = ref(false)
+const lastCmdLabel = ref('None')
+
+const cmdAllItems: CommandItem[] = [
+  { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank workspace page', shortcut: '⌘N' },
+  { id: 'toggle-theme', label: 'Switch Theme', group: 'Actions', description: 'Cycle Clay, Glass, and Neo', shortcut: '⌘T' },
+  { id: 'go-users', label: 'Team Directory', group: 'Navigation', description: 'Jump to DataTable demo' },
+  { id: 'go-settings', label: 'Workspace Settings', group: 'Navigation', description: 'Configure API & billing', disabled: true }
+]
+const cmdRemoteItems = ref<CommandItem[]>(cmdAllItems)
+let cmdTimer: ReturnType<typeof setTimeout> | null = null
+
+const onCmdSearch = (q: string) => {
+  if (!cmdRemoteMode.value) return
+  if (cmdTimer) clearTimeout(cmdTimer)
+  cmdLoading.value = true
+  const query = q.trim().toLowerCase()
+  cmdTimer = setTimeout(() => {
+    cmdRemoteItems.value = query
+      ? cmdAllItems.filter((item) => item.label.toLowerCase().includes(query))
+      : cmdAllItems
+    cmdLoading.value = false
+  }, 240)
+}
+
+const onCmdSelect = (item: CommandItem) => {
+  lastCmdLabel.value = `${item.label} (${item.id})`
+}
+
+const commandPaletteCode = `<template>
+  <Button @click="open = true">Open (⌘K)</Button>
+  <CommandPalette v-model="open" :items="items" @select="onSelect" />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, CommandPalette } from '@mfs-atomic/ui'
+
+const open = ref(false)
+const items = [
+  { id: 'new', label: 'New Document', group: 'Actions', shortcut: '⌘N' },
+  { id: 'theme', label: 'Switch Theme', group: 'Actions', shortcut: '⌘T' }
+]
+const onSelect = (item: { id: string; label: string }) => console.log(item)
+<\/script>`
+
+const commandPaletteApi = {
+  props: [
+    { name: 'modelValue', type: 'boolean', default: 'false', description: 'Controls open/closed visibility.' },
+    { name: 'items', type: 'CommandItem[]', default: '[]', description: 'Command entries ({ id, label, group?, description?, shortcut?, disabled? }).' },
+    { name: 'remote', type: 'boolean', default: 'false', description: 'Delegates filtering to parent via @search.' },
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Displays spinner during async search.' },
+    { name: 'placeholder', type: 'string', default: "'Type a command or search...'", description: 'Search input placeholder.' },
+    { name: 'shortcut', type: 'boolean', default: 'true', description: 'Registers global ⌘K / Ctrl+K toggle.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: '(value: boolean) => void', description: 'Emitted when opened or closed.' },
+    { name: 'search', type: '(query: string) => void', description: 'Emitted on search input.' },
+    { name: 'select', type: '(item: CommandItem) => void', description: 'Emitted when a command is chosen.' }
+  ],
+  slots: [
+    { name: 'empty', description: 'Custom empty state when no items match.' }
   ]
 }
 </script>

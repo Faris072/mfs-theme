@@ -266,6 +266,103 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- Portal -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'portal'"
+    title="Portal"
+    description="Declarative Teleport wrapper rendering slot content into a target DOM selector or inline when disabled."
+    :code="portalCode"
+    :api="portalApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-items-center mfs-gap-2">
+        <Button size="sm" variant="primary" @click="portalDisabled = !portalDisabled">
+          {{ portalDisabled ? 'Teleport to Target' : 'Render Inline (disabled)' }}
+        </Button>
+      </div>
+      <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm">
+        <span class="mfs-text-muted">Source container:</span>
+        <Portal append-to="#mfs-portal-demo-target" :disabled="portalDisabled">
+          <span class="mfs-inline-flex mfs-px-3 mfs-py-1 mfs-rounded-full mfs-bg-primary mfs-text-xs mfs-font-semibold">
+            Portaled Badge ({{ portalDisabled ? 'Inline' : 'Teleported' }})
+          </span>
+        </Portal>
+      </div>
+      <div id="mfs-portal-demo-target" class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-text-sm mfs-flex mfs-items-center mfs-gap-2">
+        <span class="mfs-text-muted">Target container (#mfs-portal-demo-target):</span>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- vBadge -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'v-badge'"
+    title="vBadge"
+    description="Directive attaching a compact semantic badge directly onto any element without a wrapper component."
+    :code="vBadgeCode"
+    :api="vBadgeApi"
+  >
+    <div class="mfs-stack mfs-w-full">
+      <div class="mfs-row mfs-items-center mfs-gap-4">
+        <Button v-badge="vBadgeCount" size="sm" variant="surface" @click="vBadgeCount++">
+          Inbox
+        </Button>
+        <Button v-badge="{ value: 'NEW', severity: 'success' }" size="sm" variant="surface">
+          Updates
+        </Button>
+        <Button v-badge="{ value: '99+', severity: 'danger' }" size="sm" variant="surface">
+          Alerts
+        </Button>
+      </div>
+      <div class="mfs-row mfs-gap-2">
+        <Button size="sm" variant="primary" @click="vBadgeCount++">Increment</Button>
+        <Button size="sm" variant="surface" @click="vBadgeCount = 0">Set 0</Button>
+      </div>
+    </div>
+  </ComponentPreview>
+
+  <!-- vKeyFilter -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'v-keyfilter'"
+    title="vKeyFilter"
+    description="Directive restricting keyboard typing and clipboard paste to preset patterns (int, hex, alpha) or custom RegExp."
+    :code="vKeyFilterCode"
+    :api="vKeyFilterApi"
+  >
+    <div class="mfs-grid mfs-w-full">
+      <div class="mfs-stack mfs-gap-1">
+        <label class="mfs-text-xs mfs-font-semibold mfs-text">Integer only (int)</label>
+        <input
+          v-model="keyFilterInt"
+          v-keyfilter="'int'"
+          type="text"
+          placeholder="e.g. -42"
+          class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-inset mfs-text mfs-text-sm mfs-w-full"
+        />
+      </div>
+      <div class="mfs-stack mfs-gap-1">
+        <label class="mfs-text-xs mfs-font-semibold mfs-text">Hexadecimal (hex)</label>
+        <input
+          v-model="keyFilterHex"
+          v-keyfilter="'hex'"
+          type="text"
+          placeholder="e.g. 1A2F"
+          class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-inset mfs-text mfs-text-sm mfs-w-full"
+        />
+      </div>
+      <div class="mfs-stack mfs-gap-1">
+        <label class="mfs-text-xs mfs-font-semibold mfs-text">Slug RegExp (/[a-z0-9-]/)</label>
+        <input
+          v-model="keyFilterSlug"
+          v-keyfilter="/[a-z0-9-]/"
+          type="text"
+          placeholder="e.g. my-slug-1"
+          class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-inset mfs-text mfs-text-sm mfs-w-full"
+        />
+      </div>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
@@ -284,6 +381,9 @@ import vFocusTrap from '../../lib/directives/focusTrap'
 import vAnimateOnScroll from '../../lib/directives/animateOnScroll'
 import vStyleClass from '../../lib/directives/styleClass'
 import { vTooltip } from '../../lib/directives/tooltip'
+import Portal from '../../lib/components/Portal.vue'
+import { vBadge } from '../../lib/directives/badgeDirective'
+import { vKeyFilter as vKeyfilter } from '../../lib/directives/keyFilter'
 
 defineProps<{ activeSlug: string }>()
 
@@ -313,7 +413,7 @@ const confirmPopupCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, ConfirmPopup } from '@mfs-atomic/theme'
+import { Button, ConfirmPopup } from '@mfs-atomic/ui'
 
 const popupRef = ref<InstanceType<typeof ConfirmPopup> | null>(null)
 const ask = (e: MouseEvent) => {
@@ -579,6 +679,53 @@ const vTooltipApi = {
   props: [
     { name: 'v-tooltip', type: 'string | { value?: string; disabled?: boolean; class?: string }', default: '—', description: 'Tooltip text or options object.' },
     { name: '.top / .bottom / .left / .right', type: 'Directive modifier', default: '.top', description: 'Preferred placement relative to the host element.' }
+  ]
+}
+
+/* ---------- Portal ---------- */
+const portalDisabled = ref(false)
+
+const portalCode = `<template>
+  <Portal append-to="#target" :disabled="inline">
+    <span>Portaled content</span>
+  </Portal>
+</template>`
+
+const portalApi = {
+  props: [
+    { name: 'appendTo', type: 'string | HTMLElement', default: "'body'", description: 'Target CSS selector or element passed to Teleport.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Renders content inline in place when true.' }
+  ],
+  slots: [{ name: 'default', description: 'Content to teleport.' }]
+}
+
+/* ---------- vBadge ---------- */
+const vBadgeCount = ref(4)
+
+const vBadgeCode = `<template>
+  <Button v-badge="4">Inbox</Button>
+  <Button v-badge="{ value: 'NEW', severity: 'success' }">Updates</Button>
+</template>`
+
+const vBadgeApi = {
+  props: [
+    { name: 'v-badge', type: 'string | number | { value: string | number; severity?: BadgeSeverity }', default: '—', description: 'Badge text/number or options object with severity.' }
+  ]
+}
+
+/* ---------- vKeyFilter ---------- */
+const keyFilterInt = ref('2026')
+const keyFilterHex = ref('FF8800')
+const keyFilterSlug = ref('mfs-theme')
+
+const vKeyFilterCode = `<template>
+  <input v-keyfilter="'int'" />
+  <input v-keyfilter="/[a-z0-9-]/" />
+</template>`
+
+const vKeyFilterApi = {
+  props: [
+    { name: 'v-keyfilter', type: "'int' | 'pint' | 'num' | 'pnum' | 'money' | 'hex' | 'alpha' | 'alphanum' | RegExp", default: '—', description: 'Preset character class or RegExp enforced on keypress and paste.' }
   ]
 }
 </script>

@@ -102,15 +102,35 @@ import FileUpload from './components/FileUpload.vue'
 import Terminal from './components/Terminal.vue'
 import Chart from './components/Chart.vue'
 import ImageCropper, { type ImageCropResult } from './components/ImageCropper.vue'
+// Fase 12
+import AvatarGroup from './components/AvatarGroup.vue'
+import OverlayBadge from './components/OverlayBadge.vue'
+import ImageCompare from './components/ImageCompare.vue'
+import Portal from './components/Portal.vue'
+import Chips from './components/Chips.vue'
+import CheckboxGroup from './components/CheckboxGroup.vue'
+import RadioButtonGroup from './components/RadioButtonGroup.vue'
+import DynamicDialog from './components/DynamicDialog.vue'
+// Fase 13
+import CommandPalette, { type CommandItem } from './components/CommandPalette.vue'
+import InfiniteScroll from './components/InfiniteScroll.vue'
+import Mentions, { type MentionOption } from './components/Mentions.vue'
+import SignaturePad, { type SignatureExportPayload } from './components/SignaturePad.vue'
+import Form, { type MfsFormSubmitPayload, type MfsFormContext } from './components/Form.vue'
+import FormField from './components/FormField.vue'
 
 import { useTheme, type ThemeType, THEME_OPTIONS } from './composables/useTheme'
 import { useToast } from './composables/useToast'
 import { useConfirm } from './composables/useConfirm'
+import { useDialog } from './composables/useDialog'
+import { useStyle } from './composables/useStyle'
 import { vRipple } from './directives/ripple'
 import { vTooltip } from './directives/tooltip'
 import { vFocusTrap } from './directives/focusTrap'
 import { vAnimateOnScroll } from './directives/animateOnScroll'
 import { vStyleClass } from './directives/styleClass'
+import { vBadge, BadgeDirective } from './directives/badgeDirective'
+import { vKeyFilter, KeyFilter } from './directives/keyFilter'
 import './themes/index.css'
 
 export {
@@ -223,15 +243,41 @@ export {
   Chart,
   ImageCropper,
   type ImageCropResult,
+  AvatarGroup,
+  OverlayBadge,
+  ImageCompare,
+  Portal,
+  Chips,
+  Chips as InputChips,
+  CheckboxGroup,
+  RadioButtonGroup,
+  DynamicDialog,
+  CommandPalette,
+  type CommandItem,
+  InfiniteScroll,
+  Mentions,
+  type MentionOption,
+  SignaturePad,
+  type SignatureExportPayload,
+  Form,
+  type MfsFormSubmitPayload,
+  type MfsFormContext,
+  FormField,
   useTheme,
   useToast,
   useConfirm,
+  useDialog,
+  useStyle,
   vRipple,
   vTooltip,
   vTooltip as TooltipDirective,
   vFocusTrap,
   vAnimateOnScroll,
   vStyleClass,
+  vBadge,
+  BadgeDirective,
+  vKeyFilter,
+  KeyFilter,
   THEME_OPTIONS,
   type ThemeType
 }
@@ -344,7 +390,22 @@ const components: Record<string, Component> = {
   FileUpload,
   Terminal,
   Chart,
-  ImageCropper
+  ImageCropper,
+  AvatarGroup,
+  OverlayBadge,
+  ImageCompare,
+  Portal,
+  Chips,
+  InputChips: Chips,
+  CheckboxGroup,
+  RadioButtonGroup,
+  DynamicDialog,
+  CommandPalette,
+  InfiniteScroll,
+  Mentions,
+  SignaturePad,
+  Form,
+  FormField
 }
 
 const directives: Record<string, Directive> = {
@@ -352,7 +413,9 @@ const directives: Record<string, Directive> = {
   tooltip: vTooltip,
   focustrap: vFocusTrap,
   animateonscroll: vAnimateOnScroll,
-  styleclass: vStyleClass
+  styleclass: vStyleClass,
+  badge: vBadge,
+  keyfilter: vKeyFilter
 }
 
 export interface ThemePluginOptions {

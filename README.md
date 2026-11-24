@@ -13,13 +13,13 @@ Adaptive multi-theme Vue 3 UI component library with runtime theme switching, 20
 ## Installation
 
 ```bash
-npm install @mfs-atomic/theme
+npm install @mfs-atomic/ui
 ```
 
 Or with Bun:
 
 ```bash
-bun add @mfs-atomic/theme
+bun add @mfs-atomic/ui
 ```
 
 ## Quick Start
@@ -30,8 +30,8 @@ bun add @mfs-atomic/theme
 // main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
-import ThemePlugin from '@mfs-atomic/theme'
-import '@mfs-atomic/theme/style.css'
+import ThemePlugin from '@mfs-atomic/ui'
+import '@mfs-atomic/ui/style.css'
 
 const app = createApp(App)
 app.use(ThemePlugin, { defaultTheme: 'clay' })
@@ -43,7 +43,7 @@ app.mount('#app')
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useTheme } from '@mfs-atomic/theme'
+import { useTheme } from '@mfs-atomic/ui'
 
 const { currentTheme, themeOptions, setTheme } = useTheme()
 const name = ref('')
@@ -67,7 +67,7 @@ const name = ref('')
 </template>
 ```
 
-> Components can also be imported individually (e.g., `import { Button, Card, Input } from '@mfs-atomic/theme'`).
+> Components can also be imported individually (e.g., `import { Button, Card, Input } from '@mfs-atomic/ui'`).
 
 ## Built-in Themes
 

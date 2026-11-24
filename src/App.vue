@@ -60,11 +60,11 @@
           </template>
 
           <a
-            href="https://www.npmjs.com/package/@mfs-atomic/theme"
+            href="https://www.npmjs.com/package/@mfs-atomic/ui"
             target="_blank"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
-            <span>npm v1.0.5</span>
+            <span>npm v1.0.0</span>
           </a>
         </div>
 
