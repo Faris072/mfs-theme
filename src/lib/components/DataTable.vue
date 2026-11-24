@@ -141,6 +141,39 @@
       </table>
     </div>
 
+    <div
+      v-if="paginator"
+      class="data-table__paginator mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3 mfs-pt-3 mfs-border-t"
+    >
+      <label
+        v-if="rowsPerPageOptions.length"
+        class="data-table__per-page mfs-inline-flex mfs-items-center mfs-gap-2 mfs-text-sm mfs-text-muted"
+      >
+        <span>Show</span>
+        <select
+          class="data-table__per-page-select mfs-surface mfs-rounded-md mfs-shadow-inset mfs-text"
+          :value="effectiveRowsPerPage"
+          :disabled="loading"
+          aria-label="Rows per page"
+          @change="onRowsPerPageChange"
+        >
+          <option v-for="opt in rowsPerPageOptions" :key="opt" :value="opt">
+            {{ opt }}
+          </option>
+        </select>
+        <span>per page</span>
+      </label>
+
+      <Pagination
+        :model-value="currentPage"
+        :total="effectiveTotalRecords"
+        :per-page="effectiveRowsPerPage"
+        :per-page-options="[]"
+        :loading="loading"
+        @update:model-value="onPageChange"
+      />
+    </div>
+
     <div v-if="loading" class="mfs-loading-overlay" aria-busy="true">
       <slot name="loading">
         <span class="mfs-spinner" />
@@ -152,6 +185,7 @@
 <script setup lang="ts">
 import { computed, ref, useId, watch } from 'vue'
 import Checkbox from './Checkbox.vue'
+import Pagination from './Pagination.vue'
 
 export interface DataTableColumn {
   key: string
@@ -166,7 +200,8 @@ export type SortOrder = 'asc' | 'desc' | null
 const props = withDefaults(
   defineProps<{
     columns: DataTableColumn[]
-    rows: Record<string, any>[]
+    rows?: Record<string, any>[] | number
+    value?: Record<string, any>[]
     rowKey?: string
     searchable?: boolean
     searchQuery?: string
@@ -176,9 +211,12 @@ const props = withDefaults(
     emptyText?: string
     loading?: boolean
     lazy?: boolean
+    paginator?: boolean
     totalRecords?: number
     rowsPerPage?: number
+    rowsPerPageOptions?: number[]
     page?: number
+    first?: number
   }>(),
   {
     rowKey: 'id',
@@ -189,14 +227,21 @@ const props = withDefaults(
     responsiveMode: 'card',
     emptyText: 'No data available',
     loading: false,
-    lazy: false
+    lazy: false,
+    paginator: false,
+    rowsPerPageOptions: () => [5, 10, 20, 50],
+    first: 0
   }
 )
 
 const emit = defineEmits<{
   'update:selection': [value: Record<string, any> | Record<string, any>[] | null]
   'update:searchQuery': [value: string]
-  page: [payload: { page: number; rowsPerPage?: number }]
+  'update:page': [page: number]
+  'update:rows': [rows: number]
+  'update:rowsPerPage': [rowsPerPage: number]
+  'update:first': [first: number]
+  page: [payload: { page: number; first: number; rows: number; pageCount: number; rowsPerPage?: number }]
   sort: [payload: { key: string; order: SortOrder }]
   filter: [query: string]
   'row-click': [row: Record<string, any>]
@@ -206,6 +251,62 @@ const radioGroupName = `dt-radio-${useId()}`
 const localQuery = ref(props.searchQuery)
 const sortKey = ref<string | null>(null)
 const sortOrder = ref<SortOrder>(null)
+
+const sourceRows = computed<Record<string, any>[]>(() =>
+  props.value ?? (Array.isArray(props.rows) ? props.rows : [])
+)
+
+const localRowsPerPage = ref<number>(
+  typeof props.rows === 'number' ? props.rows : (props.rowsPerPage ?? 10)
+)
+
+watch(
+  () => props.rows,
+  (val) => {
+    if (typeof val === 'number') {
+      localRowsPerPage.value = val
+    }
+  }
+)
+
+watch(
+  () => props.rowsPerPage,
+  (val) => {
+    if (val !== undefined) {
+      localRowsPerPage.value = val
+    }
+  }
+)
+
+const effectiveRowsPerPage = computed<number>(() =>
+  Math.max(1, typeof props.rows === 'number' ? props.rows : (props.rowsPerPage ?? localRowsPerPage.value))
+)
+
+const localPage = ref<number>(
+  props.page !== undefined
+    ? Math.max(1, props.page)
+    : props.first > 0
+      ? Math.floor(props.first / effectiveRowsPerPage.value) + 1
+      : 1
+)
+
+watch(
+  () => props.page,
+  (val) => {
+    if (val !== undefined) {
+      localPage.value = Math.max(1, val)
+    }
+  }
+)
+
+watch(
+  () => props.first,
+  (val) => {
+    if (val !== undefined && props.page === undefined) {
+      localPage.value = Math.floor(Math.max(0, val) / effectiveRowsPerPage.value) + 1
+    }
+  }
+)
 
 watch(
   () => props.searchQuery,
@@ -217,6 +318,14 @@ watch(
 const activeQuery = computed(() =>
   props.searchQuery !== '' ? props.searchQuery : localQuery.value
 )
+
+watch(activeQuery, () => {
+  if (!props.lazy && props.paginator && currentPage.value !== 1) {
+    localPage.value = 1
+    emit('update:page', 1)
+    emit('update:first', 0)
+  }
+})
 
 const selectionType = computed<'single' | 'multiple' | null>(() => {
   if (props.selectable === true || props.selectable === 'multiple') return 'multiple'
@@ -255,13 +364,13 @@ function getAriaSort(col: DataTableColumn): 'ascending' | 'descending' | 'none' 
   return sortOrder.value === 'asc' ? 'ascending' : 'descending'
 }
 
-const processedRows = computed(() => {
+const filteredAndSortedRows = computed(() => {
   if (props.lazy) {
-    return props.rows
+    return sourceRows.value
   }
 
   const query = activeQuery.value.trim().toLowerCase()
-  let result = props.rows
+  let result = sourceRows.value
 
   if (query) {
     const keys = props.columns.map((c) => c.key)
@@ -286,6 +395,62 @@ const processedRows = computed(() => {
 
   return result
 })
+
+const effectiveTotalRecords = computed(() =>
+  props.lazy
+    ? (props.totalRecords ?? sourceRows.value.length)
+    : (props.totalRecords ?? filteredAndSortedRows.value.length)
+)
+
+const totalPages = computed(() =>
+  Math.max(1, Math.ceil(effectiveTotalRecords.value / effectiveRowsPerPage.value))
+)
+
+const currentPage = computed(() => {
+  const raw = props.page !== undefined ? props.page : localPage.value
+  return Math.min(Math.max(1, raw), totalPages.value)
+})
+
+const processedRows = computed(() => {
+  if (props.lazy || !props.paginator) {
+    return filteredAndSortedRows.value
+  }
+  const start = (currentPage.value - 1) * effectiveRowsPerPage.value
+  return filteredAndSortedRows.value.slice(start, start + effectiveRowsPerPage.value)
+})
+
+function onPageChange(nextPage: number) {
+  const rows = effectiveRowsPerPage.value
+  const pageCount = totalPages.value
+  const clamped = Math.min(Math.max(1, nextPage), pageCount)
+  const first = (clamped - 1) * rows
+  localPage.value = clamped
+  emit('update:page', clamped)
+  emit('update:first', first)
+  emit('page', { page: clamped, first, rows, pageCount, rowsPerPage: rows })
+}
+
+function onRowsPerPageChange(e: Event) {
+  if (props.loading) return
+  const nextRows = Number((e.target as HTMLSelectElement).value)
+  if (!Number.isFinite(nextRows) || nextRows <= 0) return
+  localRowsPerPage.value = nextRows
+  const nextPageCount = Math.max(1, Math.ceil(effectiveTotalRecords.value / nextRows))
+  const nextPage = Math.min(currentPage.value, nextPageCount)
+  const nextFirst = (nextPage - 1) * nextRows
+  localPage.value = nextPage
+  emit('update:rows', nextRows)
+  emit('update:rowsPerPage', nextRows)
+  emit('update:page', nextPage)
+  emit('update:first', nextFirst)
+  emit('page', {
+    page: nextPage,
+    first: nextFirst,
+    rows: nextRows,
+    pageCount: nextPageCount,
+    rowsPerPage: nextRows
+  })
+}
 
 function isRowSelected(row: Record<string, any>, index: number): boolean {
   if (!selectionType.value || !props.selection) return false
@@ -461,6 +626,25 @@ input.data-table__checkbox {
   width: 28px;
   height: 28px;
   opacity: 0.6;
+}
+
+.data-table__paginator {
+  padding: 12px 18px 14px;
+}
+
+.data-table__per-page-select {
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border, transparent);
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.data-table__per-page-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Theme overrides */

@@ -53,10 +53,14 @@
       <DataTable
         v-model:selection="tableSelection"
         v-model:search-query="tableQuery"
+        v-model:page="tablePage"
+        v-model:rows-per-page="tableRowsPerPage"
         :columns="tableColumns"
         :rows="tableRows"
+        :rows-per-page-options="[5, 10, 20]"
         :selectable="tableSelectionMode"
         :responsive-mode="tableResponsiveMode"
+        paginator
         searchable
         @sort="onTableSort"
       >
@@ -71,6 +75,9 @@
       <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
         <span>
           <strong>Selected:</strong> {{ selectedSummary }}
+        </span>
+        <span>
+          <strong>Page:</strong> {{ tablePage }} ({{ tableRowsPerPage }}/page)
         </span>
         <span v-if="lastSort">
           <strong>Sort:</strong> {{ lastSort }}
@@ -265,10 +272,16 @@ const tableRows = [
   { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
   { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 },
   { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 },
-  { id: 4, name: 'Dimas Wijaya', role: 'Backend Engineer', status: 'Offline', score: 82 }
+  { id: 4, name: 'Dimas Wijaya', role: 'Backend Engineer', status: 'Offline', score: 82 },
+  { id: 5, name: 'Eka Saputra', role: 'Product Manager', status: 'Active', score: 94 },
+  { id: 6, name: 'Fajar Nugroho', role: 'DevOps Engineer', status: 'Active', score: 89 },
+  { id: 7, name: 'Gita Permata', role: 'UX Researcher', status: 'Review', score: 85 },
+  { id: 8, name: 'Hadi Santoso', role: 'Mobile Engineer', status: 'Offline', score: 79 }
 ]
 
 const tableQuery = ref('')
+const tablePage = ref(1)
+const tableRowsPerPage = ref(5)
 const tableResponsiveMode = ref<'card' | 'scroll'>('card')
 const tableSelectionMode = ref<'single' | 'multiple'>('multiple')
 const tableSelection = ref<Record<string, any> | Record<string, any>[] | null>([tableRows[0]])
@@ -303,10 +316,14 @@ const dataTableCode = `<template>
   <DataTable
     v-model:selection="selected"
     v-model:search-query="query"
+    v-model:page="page"
+    v-model:rows-per-page="rowsPerPage"
     :columns="columns"
     :rows="rows"
+    :rows-per-page-options="[5, 10, 20]"
     selectable="multiple"
     responsive-mode="card"
+    paginator
     searchable
   >
     <template #cell-status="{ value }">
@@ -320,6 +337,8 @@ import { ref } from 'vue'
 import { Badge, DataTable } from '@mfs-atomic/theme'
 
 const query = ref('')
+const page = ref(1)
+const rowsPerPage = ref(5)
 const selected = ref([])
 const columns = [
   { key: 'name', label: 'Name', sortable: true },
@@ -336,18 +355,32 @@ const rows = [
 const dataTableApi = {
   props: [
     { name: 'columns', type: 'DataTableColumn[]', description: 'Column definitions ({ key, label, sortable?, width?, align? }).' },
-    { name: 'rows', type: 'Record<string, any>[]', description: 'Array of row data objects.' },
+    { name: 'rows', type: 'Record<string, any>[] | number', description: 'Array of row data objects, or rows-per-page count when using :value.' },
+    { name: 'value', type: 'Record<string, any>[]', description: 'OpenVue-compatible array of row data objects.' },
     { name: 'rowKey', type: 'string', default: "'id'", description: 'Unique property name used to key and track rows.' },
     { name: 'searchable', type: 'boolean', default: 'false', description: 'Shows a built-in search input in the toolbar.' },
     { name: 'searchQuery', type: 'string', default: "''", description: 'Controlled search query (supports v-model:search-query).' },
     { name: 'selectable', type: "boolean | 'single' | 'multiple'", default: 'false', description: 'Enables single-row radio or multi-row checkbox selection.' },
     { name: 'selection', type: 'Record<string, any> | Record<string, any>[] | null', default: 'null', description: 'Selected row or array of rows (supports v-model:selection).' },
     { name: 'responsiveMode', type: "'card' | 'scroll'", default: "'card'", description: 'Mobile layout mode: stacked cards or horizontal scroll.' },
-    { name: 'emptyText', type: 'string', default: "'No data available'", description: 'Fallback text when rows or search results are empty.' }
+    { name: 'emptyText', type: 'string', default: "'No data available'", description: 'Fallback text when rows or search results are empty.' },
+    { name: 'paginator', type: 'boolean', default: 'false', description: 'Renders integrated footer with rows-per-page selector and page controls.' },
+    { name: 'rowsPerPage', type: 'number', default: '10', description: 'Number of rows displayed per page (supports v-model:rows-per-page).' },
+    { name: 'rowsPerPageOptions', type: 'number[]', default: '[5, 10, 20, 50]', description: 'Selectable page size options in the paginator footer.' },
+    { name: 'page', type: 'number', default: '1', description: 'Active 1-based page number (supports v-model:page).' },
+    { name: 'first', type: 'number', default: '0', description: 'Zero-based index of the first row on the active page.' },
+    { name: 'totalRecords', type: 'number', description: 'Total number of records (required in lazy/server mode).' },
+    { name: 'lazy', type: 'boolean', default: 'false', description: 'Disables client-side slicing/filtering/sorting for server-driven pagination.' },
+    { name: 'loading', type: 'boolean', default: 'false', description: 'Displays loading overlay and disables pagination controls.' }
   ],
   events: [
     { name: 'update:selection', type: '(value: Record<string, any> | Record<string, any>[] | null) => void', description: 'Emitted when row selection changes.' },
     { name: 'update:searchQuery', type: '(value: string) => void', description: 'Emitted when the search input value changes.' },
+    { name: 'update:page', type: '(page: number) => void', description: 'Emitted when the active page changes.' },
+    { name: 'update:rows', type: '(rows: number) => void', description: 'Emitted when rows per page changes (OpenVue alias).' },
+    { name: 'update:rowsPerPage', type: '(rowsPerPage: number) => void', description: 'Emitted when rows per page changes.' },
+    { name: 'update:first', type: '(first: number) => void', description: 'Emitted with the new zero-based first row index.' },
+    { name: 'page', type: '(payload: { page: number; first: number; rows: number; pageCount: number }) => void', description: 'Emitted on page or page-size changes.' },
     { name: 'sort', type: "(payload: { key: string; order: 'asc' | 'desc' | null }) => void", description: 'Emitted when a sortable column header is clicked.' },
     { name: 'row-click', type: '(row: Record<string, any>) => void', description: 'Emitted when a table row is clicked.' }
   ],
