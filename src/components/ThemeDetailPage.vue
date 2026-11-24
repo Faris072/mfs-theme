@@ -121,7 +121,7 @@
 
             <!-- Import snippet -->
             <div class="mfs-mb-3">
-              <CodeEditorBlock :code="getImportSnippet(comp)" filename="main.ts" />
+              <CodeEditor readonly :model-value="getImportSnippet(comp)" filename="main.ts" language="ts" />
             </div>
 
             <div class="mfs-flex mfs-items-center mfs-justify-end">
@@ -224,7 +224,7 @@ import {
   isDarkTheme
 } from '../data/themesData'
 import { COMPONENT_NAV, type ComponentNavItem } from '../data/componentDocs'
-import CodeEditorBlock from './CodeEditorBlock.vue'
+import { CodeEditor } from '../lib'
 
 const props = defineProps<{
   themeId: ThemeType

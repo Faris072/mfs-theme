@@ -216,7 +216,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
-import type { CodeTab } from '../CodeEditorBlock.vue'
+import type { CodeTab } from '../ComponentPreview.vue'
 import Menu, { type MenuItem } from '../../lib/components/Menu.vue'
 import TieredMenu, { type TieredMenuItem } from '../../lib/components/TieredMenu.vue'
 import SlideMenu, { type SlideMenuItem } from '../../lib/components/SlideMenu.vue'

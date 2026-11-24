@@ -322,17 +322,23 @@
     <!-- CODE EDITOR -->
     <template v-else-if="activeSlug === 'code-editor'">
       <ComponentPreview
-        title="Editable & Readonly CodeEditor"
-        description="XSS-safe VSCode-style code editor and readonly viewer with zero v-html syntax highlighting, Tab indentation, and copy action."
+        title="Multi-Tab & Readonly CodeEditor"
+        description="XSS-safe VSCode-style code editor supporting multi-file tabs (v-model:tabs + v-model:activeTab), single-file v-model, readonly mode, Tab indentation, and copy action."
         :code="codeEditorCode"
+        :code-tabs="codeEditorCodeTabs"
         :api="codeEditorApi"
       >
         <div class="mfs-stack mfs-w-full">
           <CodeEditor
+            v-model:tabs="codeEditorTabs"
+            v-model:active-tab="codeEditorActiveTab"
+            min-height="200px"
+          />
+          <CodeEditor
             v-model="codeEditorSource"
             language="vue"
             filename="XssSafeDemo.vue"
-            min-height="190px"
+            min-height="170px"
           />
           <CodeEditor
             :model-value="codeEditorReadonlySource"
@@ -416,6 +422,7 @@
 import { ref } from 'vue'
 import { Mail, Search } from 'lucide-vue-next'
 import ComponentPreview from '../ComponentPreview.vue'
+import type { CodeTab } from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import { Button, Input, InputGroupAddon, InputIcon } from '../../lib'
 import AutoComplete from '../../lib/components/AutoComplete.vue'
@@ -431,7 +438,7 @@ import Listbox from '../../lib/components/Listbox.vue'
 import FloatLabel from '../../lib/components/FloatLabel.vue'
 import IftaLabel from '../../lib/components/IftaLabel.vue'
 import Editor from '../../lib/components/Editor.vue'
-import CodeEditor from '../../lib/components/CodeEditor.vue'
+import CodeEditor, { type CodeEditorTab } from '../../lib/components/CodeEditor.vue'
 import IconField from '../../lib/components/IconField.vue'
 
 defineProps<{ activeSlug: string }>()
@@ -540,6 +547,50 @@ const iftaEnv = ref('production')
 const editorHtml = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</p>')
 
 // CodeEditor
+const codeEditorActiveTab = ref(0)
+const codeEditorTabs = ref<CodeEditorTab[]>([
+  {
+    label: 'App.vue',
+    filename: 'App.vue',
+    language: 'vue',
+    code: `<template>
+  <main class="mfs-stack">
+    <h2>{{ title }}</h2>
+    <p>{{ greeting }}</p>
+  </main>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { initialGreeting } from './data'
+
+const title = ref('MFS Multi-Tab Editor')
+const greeting = ref(initialGreeting)
+<\/script>`
+  },
+  {
+    label: 'data.ts',
+    filename: 'data.ts',
+    language: 'ts',
+    code: `export const initialGreeting = 'Switch tabs and edit any file live!'
+
+export interface EditorStats {
+  files: number
+  xssSafe: boolean
+}`
+  },
+  {
+    label: 'api.ts',
+    filename: 'api.ts',
+    language: 'ts',
+    readonly: true,
+    code: `// Readonly tab example
+export async function fetchSnippet(id: string): Promise<string> {
+  return \`// Loaded snippet: \${id}\`
+}`
+  }
+])
+
 const codeEditorSource = ref(`<template>
   <!-- Harmless XSS test payload: rendered safely via Vue text interpolation -->
   <div class="card" data-test="<img src=x onerror=alert('xss')>">
@@ -852,10 +903,15 @@ const html = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</
 
 const codeEditorCode = `<template>
   <CodeEditor
+    v-model:tabs="tabs"
+    v-model:active-tab="activeTab"
+    min-height="200px"
+  />
+  <CodeEditor
     v-model="source"
     language="vue"
     filename="Example.vue"
-    min-height="190px"
+    min-height="170px"
   />
   <CodeEditor
     :model-value="readonlySnippet"
@@ -868,10 +924,51 @@ const codeEditorCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CodeEditor } from '@mfs-atomic/ui'
+import { initialTabs } from './data'
+import { fetchSnippet } from './api'
 
+const activeTab = ref(0)
+const tabs = ref(initialTabs)
 const source = ref('<template>\\n  <div>Hello MFS UI</div>\\n</template>')
-const readonlySnippet = 'export const tabSize = 2'
+const readonlySnippet = ref('export const tabSize = 2')
+void fetchSnippet
 <\/script>`
+
+const codeEditorCodeTabs: CodeTab[] = [
+  { label: 'App.vue', code: codeEditorCode },
+  {
+    label: 'data.ts',
+    code: `import type { CodeEditorTab } from '@mfs-atomic/ui'
+
+export const initialTabs: CodeEditorTab[] = [
+  {
+    label: 'App.vue',
+    filename: 'App.vue',
+    language: 'vue',
+    code: '<template>\\n  <div>Multi-tab demo</div>\\n</template>'
+  },
+  {
+    label: 'data.ts',
+    filename: 'data.ts',
+    language: 'ts',
+    code: "export const greeting = 'Hello MFS UI'"
+  },
+  {
+    label: 'api.ts',
+    filename: 'api.ts',
+    language: 'ts',
+    readonly: true,
+    code: '// Readonly tab\\nexport const version = 1'
+  }
+]`
+  },
+  {
+    label: 'api.ts',
+    code: `export async function fetchSnippet(id: string): Promise<string> {
+  return \`// Loaded snippet: \${id}\`
+}`
+  }
+]
 
 // Verified API Tables
 const autoCompleteApi: { props: ApiRow[]; events: ApiRow[] } = {
@@ -1040,8 +1137,10 @@ const editorApi: { props: ApiRow[]; events: ApiRow[] } = {
 
 const codeEditorApi: { props: ApiRow[]; events: ApiRow[] } = {
   props: [
-    { name: 'modelValue', type: 'string', default: "''", description: 'Bound source code string.' },
-    { name: 'language', type: "'vue' | 'ts' | 'js' | 'html' | 'css' | 'json' | 'bash' | 'sql' | 'text'", default: "'vue'", description: 'Syntax highlighting language.' },
+    { name: 'modelValue', type: 'string', default: "''", description: 'Bound source code string (single-file mode).' },
+    { name: 'tabs', type: 'CodeEditorTab[]', description: 'Optional list of file tabs enabling multi-tab mode.' },
+    { name: 'activeTab', type: 'number', default: '0', description: 'Active tab index when tabs are provided (supports v-model:activeTab).' },
+    { name: 'language', type: 'CodeEditorLanguage', default: "'vue'", description: 'Syntax highlighting language.' },
     { name: 'filename', type: 'string', description: 'Optional filename shown in the header bar.' },
     { name: 'readonly', type: 'boolean', default: 'false', description: 'Renders as a readonly VSCode-style code viewer.' },
     { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables editing and interaction.' },
@@ -1055,7 +1154,10 @@ const codeEditorApi: { props: ApiRow[]; events: ApiRow[] } = {
     { name: 'invalid', type: 'boolean', default: 'false', description: 'Applies invalid error border styling.' }
   ],
   events: [
-    { name: 'update:modelValue', type: 'string', description: 'Emitted when source code changes.' },
+    { name: 'update:modelValue', type: 'string', description: 'Emitted when source code changes in single-file mode.' },
+    { name: 'update:tabs', type: 'CodeEditorTab[]', description: 'Emitted with cloned tabs when the active tab code changes.' },
+    { name: 'update:activeTab', type: 'number', description: 'Emitted when the active tab index changes.' },
+    { name: 'tab-change', type: '{ index: number; tab: CodeEditorTab }', description: 'Emitted when user selects another tab.' },
     { name: 'change', type: 'string', description: 'Emitted on user input or Tab indentation.' },
     { name: 'focus', type: 'FocusEvent', description: 'Emitted when the editor gains focus.' },
     { name: 'blur', type: 'FocusEvent', description: 'Emitted when the editor loses focus.' },

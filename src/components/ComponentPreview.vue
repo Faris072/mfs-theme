@@ -49,12 +49,13 @@
     </div>
 
     <div v-if="tab === 'code'" class="preview-code mfs-border-none mfs-border-t">
-      <CodeEditorBlock
-        :code="code ?? ''"
-        :tabs="codeTabs"
-        :filename="`${title.replace(/[^a-zA-Z0-9_-]/g, '') || 'Example'}.vue`"
-        max-height="460px"
-        @tab-change="activeCodeTabIndex = $event"
+      <CodeEditor
+        readonly
+        :model-value="code ?? ''"
+        :tabs="codeTabs as CodeEditorTab[]"
+        :filename="resolvedFilename"
+        :max-height="'460px'"
+        @tab-change="onCodeTabChange"
       />
     </div>
 
@@ -110,8 +111,12 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeUnmount, ref, watch, type Ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
-import CodeEditorBlock, { type CodeTab } from './CodeEditorBlock.vue'
+import { CodeEditor, type CodeEditorLanguage, type CodeEditorTab } from '../lib'
 import type { ApiRow } from '../data/componentDocs'
+
+export type CodeTab = Omit<CodeEditorTab, 'language'> & {
+  language?: CodeEditorLanguage | (string & {})
+}
 
 export interface ComponentApiSpec {
   props?: ApiRow[]
@@ -148,6 +153,12 @@ const tab = ref<'preview' | 'code'>('preview')
 const activeCodeTabIndex = ref(0)
 const copied = ref(false)
 let copyTimer: ReturnType<typeof setTimeout> | null = null
+
+const resolvedFilename = computed(() => `${props.title.replace(/[^a-zA-Z0-9_-]/g, '') || 'Example'}.vue`)
+
+const onCodeTabChange = (payload: { index: number; tab: CodeEditorTab }) => {
+  activeCodeTabIndex.value = payload.index
+}
 
 watch(
   () => props.codeTabs,

@@ -2,7 +2,7 @@
   <div
     class="mfs-code-editor mfs-rounded mfs-shadow-card"
     :class="{
-      'mfs-code-editor--readonly': readonly,
+      'mfs-code-editor--readonly': isTabReadonly,
       'mfs-code-editor--disabled mfs-disabled': disabled,
       'mfs-code-editor--invalid': invalid,
       'mfs-code-editor--focused': isFocused
@@ -16,23 +16,50 @@
         <span class="mfs-code-editor__dot mfs-code-editor__dot--green" />
       </div>
 
-      <div class="mfs-code-editor__title">
-        <span v-if="filename" class="mfs-code-editor__filename mfs-font-mono">{{ filename }}</span>
-        <span class="mfs-code-editor__lang-pill mfs-font-mono">{{ language.toUpperCase() }}</span>
+      <div
+        v-if="hasTabs"
+        class="mfs-code-editor__tabs"
+        role="tablist"
+        aria-label="Code editor files"
+      >
+        <button
+          v-for="(tab, idx) in tabs"
+          :key="`${tab.filename || tab.label}-${idx}`"
+          type="button"
+          role="tab"
+          class="mfs-code-editor__tab mfs-font-mono"
+          :class="{ 'mfs-code-editor__tab--active': idx === activeIndex }"
+          :aria-selected="idx === activeIndex"
+          @click="selectTab(idx)"
+        >
+          {{ tab.filename || tab.label }}
+        </button>
       </div>
 
-      <button
-        v-if="copyable"
-        type="button"
-        class="mfs-code-editor__copy-btn"
-        :aria-label="copied ? 'Copied' : 'Copy code'"
-        :title="copied ? 'Copied!' : 'Copy code'"
-        @click="handleCopy"
-      >
-        <Check v-if="copied" :size="14" />
-        <Copy v-else :size="14" />
-        <span>{{ copied ? 'Copied' : 'Copy' }}</span>
-      </button>
+      <div v-else class="mfs-code-editor__tabs">
+        <span
+          v-if="currentFilename"
+          class="mfs-code-editor__tab mfs-code-editor__tab--active mfs-code-editor__tab--single mfs-font-mono"
+        >
+          {{ currentFilename }}
+        </span>
+      </div>
+
+      <div class="mfs-code-editor__actions">
+        <span class="mfs-code-editor__lang-pill mfs-font-mono">{{ currentLanguage.toUpperCase() }}</span>
+        <button
+          v-if="copyable"
+          type="button"
+          class="mfs-code-editor__copy-btn"
+          :aria-label="copied ? 'Copied' : 'Copy code'"
+          :title="copied ? 'Copied!' : 'Copy code'"
+          @click="handleCopy"
+        >
+          <Check v-if="copied" :size="14" />
+          <Copy v-else :size="14" />
+          <span>{{ copied ? 'Copied' : 'Copy' }}</span>
+        </button>
+      </div>
     </div>
 
     <!-- Editor Body -->
@@ -61,7 +88,7 @@
       <div class="mfs-code-editor__stage">
         <pre
           class="mfs-code-editor__highlight mfs-font-mono"
-          :aria-hidden="!readonly"
+          :aria-hidden="!isTabReadonly"
           :style="{ tabSize: String(tabSize) }"
         ><code class="mfs-code-editor__code"><span
           v-for="(lineTokens, lineIdx) in tokenizedLines"
@@ -74,7 +101,7 @@
           >{{ tok.text }}</span></template><template v-else>{{ '\u200b' }}</template>{{ '\n' }}</span></code></pre>
 
         <textarea
-          v-if="!readonly"
+          v-if="!isTabReadonly"
           ref="textareaRef"
           class="mfs-code-editor__textarea mfs-font-mono"
           :value="currentValue"
@@ -105,18 +132,27 @@
         </span>
       </div>
       <div class="mfs-code-editor__status-group">
-        <span>{{ language.toUpperCase() }}</span>
-        <span class="mfs-code-editor__mode-badge">{{ readonly ? 'Readonly' : 'Editable' }}</span>
+        <span>{{ currentLanguage.toUpperCase() }}</span>
+        <span class="mfs-code-editor__mode-badge">{{ isTabReadonly ? 'Readonly' : 'Editable' }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
 
 export type CodeLanguage = 'vue' | 'ts' | 'js' | 'html' | 'css' | 'json' | 'bash' | 'sql' | 'text'
+export type CodeEditorLanguage = CodeLanguage
+
+export interface CodeEditorTab {
+  label: string
+  filename?: string
+  language?: CodeEditorLanguage
+  code: string
+  readonly?: boolean
+}
 
 export type TokenType =
   | 'plain'
@@ -136,8 +172,10 @@ export interface CodeToken {
 const props = withDefaults(
   defineProps<{
     modelValue?: string
-    language?: CodeLanguage
+    language?: CodeEditorLanguage
     filename?: string
+    tabs?: CodeEditorTab[]
+    activeTab?: number
     readonly?: boolean
     disabled?: boolean
     lineNumbers?: boolean
@@ -152,6 +190,7 @@ const props = withDefaults(
   {
     modelValue: '',
     language: 'vue',
+    activeTab: 0,
     readonly: false,
     disabled: false,
     lineNumbers: true,
@@ -166,6 +205,9 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
+  (e: 'update:tabs', tabs: CodeEditorTab[]): void
+  (e: 'update:activeTab', index: number): void
+  (e: 'tab-change', payload: { index: number; tab: CodeEditorTab }): void
   (e: 'change', value: string): void
   (e: 'focus', event: FocusEvent): void
   (e: 'blur', event: FocusEvent): void
@@ -176,9 +218,32 @@ const bodyRef = ref<HTMLElement | null>(null)
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const isFocused = ref(false)
 const copied = ref(false)
+const internalActiveTab = ref(props.activeTab)
 let copyTimer: ReturnType<typeof setTimeout> | null = null
 
-const currentValue = computed(() => props.modelValue ?? '')
+watch(
+  () => props.activeTab,
+  (val) => {
+    internalActiveTab.value = val
+  }
+)
+
+const hasTabs = computed(() => Boolean(props.tabs && props.tabs.length > 0))
+const activeIndex = computed(() => {
+  if (!hasTabs.value || !props.tabs) return 0
+  return Math.min(Math.max(0, internalActiveTab.value), props.tabs.length - 1)
+})
+const activeTabItem = computed(() => (hasTabs.value && props.tabs ? props.tabs[activeIndex.value] : undefined))
+
+const currentValue = computed(() => (hasTabs.value ? (activeTabItem.value?.code ?? '') : (props.modelValue ?? '')))
+const currentLanguage = computed<CodeEditorLanguage>(() =>
+  hasTabs.value ? (activeTabItem.value?.language ?? props.language) : props.language
+)
+const currentFilename = computed(() =>
+  hasTabs.value ? (activeTabItem.value?.filename || activeTabItem.value?.label) : props.filename
+)
+const isTabReadonly = computed(() => (hasTabs.value ? (activeTabItem.value?.readonly ?? props.readonly) : props.readonly))
+
 const rawLines = computed(() => currentValue.value.split('\n'))
 const lineCount = computed(() => Math.max(1, rawLines.value.length))
 const charCount = computed(() => currentValue.value.length)
@@ -459,24 +524,43 @@ function tokenizeLine(
 
 const tokenizedLines = computed<CodeToken[][]>(() => {
   const state = { inBlockComment: false, inHtmlComment: false }
-  return rawLines.value.map((line) => tokenizeLine(line, props.language, state))
+  return rawLines.value.map((line) => tokenizeLine(line, currentLanguage.value, state))
 })
 
+const selectTab = (index: number) => {
+  if (!hasTabs.value || !props.tabs) return
+  const tab = props.tabs[index]
+  if (!tab) return
+  internalActiveTab.value = index
+  emit('update:activeTab', index)
+  emit('tab-change', { index, tab })
+}
+
+const emitCodeUpdate = (nextVal: string) => {
+  if (hasTabs.value && props.tabs) {
+    const nextTabs = props.tabs.map((tab, idx) =>
+      idx === activeIndex.value ? { ...tab, code: nextVal } : tab
+    )
+    emit('update:tabs', nextTabs)
+  } else {
+    emit('update:modelValue', nextVal)
+  }
+  emit('change', nextVal)
+}
+
 const focusTextarea = () => {
-  if (!props.readonly && !props.disabled) {
+  if (!isTabReadonly.value && !props.disabled) {
     textareaRef.value?.focus()
   }
 }
 
 const onInput = (event: Event) => {
   const target = event.target as HTMLTextAreaElement
-  const val = target.value
-  emit('update:modelValue', val)
-  emit('change', val)
+  emitCodeUpdate(target.value)
 }
 
 const onTab = async (event: KeyboardEvent) => {
-  if (props.readonly || props.disabled) return
+  if (isTabReadonly.value || props.disabled) return
   const el = event.target as HTMLTextAreaElement
   const start = el.selectionStart ?? 0
   const end = el.selectionEnd ?? 0
@@ -486,8 +570,7 @@ const onTab = async (event: KeyboardEvent) => {
 
   if (props.maxLength !== undefined && nextVal.length > props.maxLength) return
 
-  emit('update:modelValue', nextVal)
-  emit('change', nextVal)
+  emitCodeUpdate(nextVal)
 
   await nextTick()
   if (textareaRef.value) {
@@ -578,11 +661,12 @@ const handleCopy = async () => {
 
 .mfs-code-editor__header {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: 10px;
-  padding: 8px 12px;
-  background-color: #1e293b;
+  min-height: 40px;
+  padding: 0 12px 0 14px;
+  background-color: #181825;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16);
 }
 
@@ -591,6 +675,7 @@ const handleCopy = async () => {
   align-items: center;
   gap: 6px;
   flex-shrink: 0;
+  margin-right: 4px;
 }
 
 .mfs-code-editor__dot {
@@ -603,20 +688,61 @@ const handleCopy = async () => {
 .mfs-code-editor__dot--yellow { background-color: #ffbd2e; }
 .mfs-code-editor__dot--green { background-color: #27c93f; }
 
-.mfs-code-editor__title {
+.mfs-code-editor__tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-width: 0;
+  flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.mfs-code-editor__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.mfs-code-editor__tab {
+  display: inline-flex;
+  align-items: center;
+  appearance: none;
+  border: 0;
+  border-top: 2px solid transparent;
+  border-right: 1px solid rgba(148, 163, 184, 0.14);
+  background: transparent;
+  color: #94a3b8;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 0 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.mfs-code-editor__tab--single {
+  cursor: default;
+}
+
+.mfs-code-editor__tab:not(.mfs-code-editor__tab--single):hover {
+  color: #e2e8f0;
+  background-color: rgba(15, 23, 42, 0.45);
+}
+
+.mfs-code-editor__tab--active {
+  color: #f8fafc;
+  background-color: #0f172a;
+  border-top-color: var(--primary, #38bdf8);
+  margin-bottom: -1px;
+  padding-bottom: 1px;
+}
+
+.mfs-code-editor__actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  min-width: 0;
-  flex: 1;
-}
-
-.mfs-code-editor__filename {
-  font-size: 0.78rem;
-  color: #cbd5e1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 6px 0;
 }
 
 .mfs-code-editor__lang-pill {

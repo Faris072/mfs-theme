@@ -350,7 +350,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
-import type { CodeTab } from '../CodeEditorBlock.vue'
+import type { CodeTab } from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import { Badge, Button, Input, ImageCropper, type ImageCropResult } from '../../lib'
 import OrderList from '../../lib/components/OrderList.vue'

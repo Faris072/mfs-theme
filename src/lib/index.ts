@@ -67,7 +67,13 @@ import Listbox from './components/Listbox.vue'
 import FloatLabel from './components/FloatLabel.vue'
 import IftaLabel from './components/IftaLabel.vue'
 import Editor from './components/Editor.vue'
-import CodeEditor, { type CodeLanguage, type CodeToken, type TokenType } from './components/CodeEditor.vue'
+import CodeEditor, {
+  type CodeEditorLanguage,
+  type CodeEditorTab,
+  type CodeLanguage,
+  type CodeToken,
+  type TokenType
+} from './components/CodeEditor.vue'
 // Fase 8
 import SplitButton from './components/SplitButton.vue'
 import SpeedDial from './components/SpeedDial.vue'
@@ -215,6 +221,8 @@ export {
   IftaLabel,
   Editor,
   CodeEditor,
+  type CodeEditorLanguage,
+  type CodeEditorTab,
   type CodeLanguage,
   type CodeToken,
   type TokenType,
