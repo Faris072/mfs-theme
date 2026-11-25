@@ -198,13 +198,25 @@ app.mount('#app')</code></pre>
       <div class="mfs-container mfs-text-center mfs-flex mfs-flex-col mfs-items-center">
         <h2 class="closing-title mfs-text mfs-m-0 mfs-mb-2">Explore theme directory</h2>
         <p class="closing-desc mfs-text-muted mfs-m-0 mfs-mb-6">
-          Browse the full component directory, interactive props, and utility styling guides.
+          Browse the full component directory, interactive props, utility styling guides, or jump into ready-made layouts with
+          <a
+            href="https://preset-ui.mfstechnology.co.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="mfs-text-primary mfs-font-semibold"
+          >MFS Presets</a>.
         </p>
-        <div class="mfs-flex mfs-gap-3">
+        <div class="mfs-flex mfs-flex-wrap mfs-justify-center mfs-gap-3">
           <Button variant="primary" size="lg" @click="$emit('explore-catalog')">
             <span>Browse themes</span>
             <template #append>
               <ArrowRight class="icon-inline" :size="16" />
+            </template>
+          </Button>
+          <Button variant="surface" size="lg" @click="openPresets">
+            <span>Explore Presets</span>
+            <template #append>
+              <ExternalLink class="icon-inline" :size="16" />
             </template>
           </Button>
         </div>
@@ -239,10 +251,15 @@ import {
   Disc,
   BookOpen,
   ArrowRight,
+  ExternalLink,
   Copy,
   Check
 } from 'lucide-vue-next'
 import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
+
+const openPresets = () => {
+  window.open('https://preset-ui.mfstechnology.co.id', '_blank', 'noopener,noreferrer')
+}
 
 const props = defineProps<{
   currentTheme: ThemeType

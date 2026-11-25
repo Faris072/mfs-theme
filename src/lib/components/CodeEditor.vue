@@ -318,7 +318,7 @@ function tokenizeLine(
 
   while (i < len) {
     if (state.inHtmlComment) {
-      const endIdx = line.indexOf('-->', i)
+      const endIdx = line.indexOf('--' + '>', i)
       if (endIdx === -1) {
         pushToken(tokens, 'comment', line.slice(i))
         i = len
@@ -331,7 +331,7 @@ function tokenizeLine(
     }
 
     if (state.inBlockComment) {
-      const endIdx = line.indexOf('*/', i)
+      const endIdx = line.indexOf('*' + '/', i)
       if (endIdx === -1) {
         pushToken(tokens, 'comment', line.slice(i))
         i = len
@@ -356,8 +356,8 @@ function tokenizeLine(
     }
 
     // HTML / Vue comments
-    if ((lang === 'vue' || lang === 'html') && line.startsWith('<!--', i)) {
-      const endIdx = line.indexOf('-->', i + 4)
+    if ((lang === 'vue' || lang === 'html') && line.startsWith('<' + '!--', i)) {
+      const endIdx = line.indexOf('--' + '>', i + 4)
       if (endIdx === -1) {
         pushToken(tokens, 'comment', line.slice(i))
         state.inHtmlComment = true
@@ -369,9 +369,9 @@ function tokenizeLine(
       continue
     }
 
-    // Block comments /* ... */
+    // Block comments
     if ((lang === 'js' || lang === 'ts' || lang === 'vue' || lang === 'css' || lang === 'sql') && ch === '/' && next === '*') {
-      const endIdx = line.indexOf('*/', i + 2)
+      const endIdx = line.indexOf('*' + '/', i + 2)
       if (endIdx === -1) {
         pushToken(tokens, 'comment', line.slice(i))
         state.inBlockComment = true

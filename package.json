@@ -45,14 +45,14 @@
     "vue": "^3.4.0"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "@vitejs/plugin-vue": "^5.2.1",
+    "@types/node": "^22.20.5",
+    "@vitejs/plugin-vue": "^5.2.4",
     "lucide-vue-next": "^0.460.0",
     "typescript": "~5.6.3",
-    "vite": "^6.0.1",
-    "vite-plugin-dts": "^4.3.0",
-    "vue": "^3.5.13",
+    "vite": "^6.4.6",
+    "vite-plugin-dts": "^4.5.4",
+    "vue": "^3.5.46",
     "vue-router": "^4.6.5",
-    "vue-tsc": "^2.1.10"
+    "vue-tsc": "^2.2.12"
   }
 }

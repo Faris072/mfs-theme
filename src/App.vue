@@ -60,12 +60,22 @@
           </template>
 
           <a
+            href="https://preset-ui.mfstechnology.co.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="npm-link mfs-inline-flex mfs-items-center mfs-gap-1 mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
+          >
+            <span>Presets</span>
+            <ExternalLink :size="12" />
+          </a>
+
+          <a
             href="https://www.npmjs.com/package/@mfs-atomic/ui"
             target="_blank"
             rel="noopener noreferrer"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
-            <span>npm v1.1.2</span>
+            <span>npm v1.2.0</span>
           </a>
         </div>
 
@@ -143,6 +153,19 @@
             </Button>
           </div>
         </template>
+
+        <div class="mfs-mt-3 mfs-pt-3 mfs-border-none mfs-border-t">
+          <a
+            href="https://preset-ui.mfstechnology.co.id"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="npm-link mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-w-full mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
+            @click="mobileMenuOpen = false"
+          >
+            <span>Presets</span>
+            <ExternalLink :size="13" />
+          </a>
+        </div>
       </div>
     </header>
 
@@ -183,6 +206,7 @@ import {
   Grid,
   Box,
   ArrowRight,
+  ExternalLink,
   Droplets,
   Palette,
   Terminal,

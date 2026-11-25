@@ -170,6 +170,10 @@ import { vAnimateOnScroll } from '@mfs-atomic/ui'
 
 > When registered globally via `ThemePlugin`, the directive is available as `v-animateonscroll`.
 
+## Presets
+
+Looking for ready-made pages, dashboards, and UI blocks built with `@mfs-atomic/ui`? Explore **[MFS Presets](https://preset-ui.mfstechnology.co.id)** for copy-and-paste templates that adapt automatically to all 20 built-in themes.
+
 ## Built-in Themes
 
 All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
