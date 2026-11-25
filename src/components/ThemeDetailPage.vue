@@ -91,13 +91,13 @@
         </div>
 
         <!-- Filter Categories -->
-        <div class="filter-pills-row mfs-flex mfs-items-center mfs-gap-2 mfs-overflow-x-auto mfs-pb-3">
+        <div class="filter-pills-row mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-2 mfs-pb-3">
           <Button
             v-for="cat in categories"
             :key="cat"
             :variant="selectedCategory === cat ? 'primary' : 'surface'"
             size="sm"
-            class="mfs-whitespace-nowrap"
+            class="mfs-whitespace-nowrap mfs-shrink-0"
             @click="selectedCategory = cat"
           >
             {{ cat }}
@@ -128,7 +128,7 @@
               <p class="comp-desc mfs-text-muted mfs-flex-1">{{ comp.summary }}</p>
 
               <!-- Import snippet -->
-              <div class="mfs-mb-3">
+              <div class="mfs-mb-3 mfs-min-w-0">
                 <CodeEditor readonly :model-value="getImportSnippet(comp)" filename="main.ts" language="ts" />
               </div>
 
@@ -510,7 +510,9 @@ const copySnippet = async (snippet: string, id: string) => {
 }
 
 .search-box {
-  min-width: 280px;
+  min-width: 320px;
+  width: 100%;
+  max-width: 360px;
 }
 
 .search-input {
@@ -552,7 +554,14 @@ const copySnippet = async (snippet: string, id: string) => {
 }
 
 .comp-card {
+  display: block;
+  min-width: 0;
   text-decoration: none;
+}
+
+.comp-card :deep(.card),
+.comp-card :deep(.card__body) {
+  min-width: 0;
 }
 
 .comp-name {

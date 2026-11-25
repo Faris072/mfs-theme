@@ -200,7 +200,7 @@ app.mount('#app')</code></pre>
         <p class="closing-desc mfs-text-muted mfs-m-0 mfs-mb-6">
           Browse the full component directory, interactive props, utility styling guides, or jump into ready-made layouts with
           <a
-            href="https://preset-ui.mfstechnology.co.id"
+            :href="presetUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="mfs-text-primary mfs-font-semibold"
@@ -257,8 +257,10 @@ import {
 } from 'lucide-vue-next'
 import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
 
+const presetUrl = import.meta.env.VITE_PRESET_URL || 'https://preset-ui.mfstechnology.co.id'
+
 const openPresets = () => {
-  window.open('https://preset-ui.mfstechnology.co.id', '_blank', 'noopener,noreferrer')
+  window.open(presetUrl, '_blank', 'noopener,noreferrer')
 }
 
 const props = defineProps<{

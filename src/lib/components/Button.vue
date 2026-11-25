@@ -80,6 +80,7 @@ const handleClick = (e: MouseEvent) => {
   backdrop-filter: var(--backdrop-blur, none);
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 /* Sizes */

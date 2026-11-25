@@ -60,7 +60,7 @@
           </template>
 
           <a
-            href="https://preset-ui.mfstechnology.co.id"
+            :href="presetUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="npm-link mfs-inline-flex mfs-items-center mfs-gap-1 mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
@@ -156,7 +156,7 @@
 
         <div class="mfs-mt-3 mfs-pt-3 mfs-border-none mfs-border-t">
           <a
-            href="https://preset-ui.mfstechnology.co.id"
+            :href="presetUrl"
             target="_blank"
             rel="noopener noreferrer"
             class="npm-link mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-w-full mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
@@ -222,6 +222,7 @@ import { useTheme, Button, Select, Toast, ConfirmDialog, type ThemeType } from '
 
 const route = useRoute()
 const router = useRouter()
+const presetUrl = import.meta.env.VITE_PRESET_URL || 'https://preset-ui.mfstechnology.co.id'
 const { currentTheme, themeOptions, setTheme } = useTheme()
 
 const isLanding = computed(() => route.path === '/')
