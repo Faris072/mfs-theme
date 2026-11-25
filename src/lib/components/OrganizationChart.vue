@@ -222,7 +222,6 @@ function toggleExpand() {
   position: relative;
   display: flex;
   justify-content: center;
-  gap: 20px;
   padding-top: 24px;
 }
 
@@ -239,7 +238,7 @@ function toggleExpand() {
 
 .org-chart__branch {
   position: relative;
-  padding-top: 12px;
+  padding: 12px 10px 0;
 }
 
 .org-chart__branch::before {
