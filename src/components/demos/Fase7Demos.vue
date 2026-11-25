@@ -226,13 +226,13 @@
         <div class="mfs-stack mfs-w-full">
           <InputGroup>
             <span class="ig-addon">https://</span>
-            <input v-model="igDomain" type="text" class="mfs-flex-1 mfs-px-3 mfs-py-2 mfs-text-base mfs-text demo-raw-input" placeholder="yourdomain.com" />
+            <Input v-model="igDomain" placeholder="yourdomain.com" />
             <span class="ig-addon">.app</span>
           </InputGroup>
 
           <InputGroup>
             <span class="ig-addon">$</span>
-            <input v-model="igAmount" type="text" class="mfs-flex-1 mfs-px-3 mfs-py-2 mfs-text-base mfs-text demo-raw-input" placeholder="0.00" />
+            <Input v-model="igAmount" placeholder="0.00" />
             <Button size="sm">Pay</Button>
           </InputGroup>
         </div>
@@ -270,10 +270,10 @@
       >
         <div class="mfs-grid mfs-w-full">
           <FloatLabel label="Username" for-id="fl-user" :active="!!flUser">
-            <input id="fl-user" v-model="flUser" type="text" placeholder=" " class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
+            <Input id="fl-user" v-model="flUser" placeholder=" " />
           </FloatLabel>
           <FloatLabel label="Email Address" for-id="fl-email" :active="!!flEmail">
-            <input id="fl-email" v-model="flEmail" type="email" placeholder=" " class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
+            <Input id="fl-email" v-model="flEmail" type="email" placeholder=" " />
           </FloatLabel>
         </div>
       </ComponentPreview>
@@ -362,11 +362,11 @@
         <div class="mfs-grid mfs-w-full">
           <IconField icon-position="left" fluid>
             <template #icon><Search :size="16" /></template>
-            <input v-model="iconFieldSearch" type="text" placeholder="Search components..." class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
+            <Input v-model="iconFieldSearch" placeholder="Search components..." />
           </IconField>
           <IconField icon-position="right" fluid>
             <template #icon><Mail :size="16" /></template>
-            <input v-model="iconFieldEmail" type="email" placeholder="you@example.com" class="mfs-w-full mfs-rounded mfs-surface mfs-px-3 mfs-py-3 mfs-text-base mfs-shadow-inset demo-fl-input" />
+            <Input v-model="iconFieldEmail" type="email" placeholder="you@example.com" />
           </IconField>
         </div>
       </ComponentPreview>

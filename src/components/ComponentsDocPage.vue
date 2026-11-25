@@ -2,44 +2,29 @@
   <div class="docs-shell mfs-container">
     <!-- Mobile component switcher -->
     <div class="mobile-switcher mfs-mb-4 mfs-p-3 mfs-rounded-md mfs-surface mfs-shadow">
-      <label class="mobile-switcher-label mfs-font-bold mfs-text-muted mfs-mb-2" for="mobile-comp-select">Component</label>
-      <div>
-        <select
-          id="mobile-comp-select"
-          class="mobile-select mfs-w-full mfs-rounded-sm mfs-surface-subtle mfs-font-semibold"
-          :value="activeItem.slug"
-          @change="onMobileSelect"
-        >
-          <optgroup
-            v-for="group in allGroups"
-            :key="group.phase"
-            :label="group.title"
-          >
-            <option
-              v-for="item in group.items"
-              :key="item.slug"
-              :value="item.slug"
-            >
-              {{ item.name }} ({{ item.category }})
-            </option>
-          </optgroup>
-        </select>
-      </div>
+      <Select
+        :model-value="activeItem.slug"
+        :options="mobileSelectOptions"
+        label="Component"
+        :searchable="true"
+        @update:model-value="onMobileSelect"
+      />
     </div>
 
     <div class="docs-layout mfs-items-start">
       <!-- Desktop sticky sidebar -->
       <aside class="docs-sidebar mfs-flex mfs-flex-col mfs-gap-4 mfs-p-5 mfs-rounded-lg mfs-surface mfs-shadow" aria-label="Components navigation">
-        <div class="mfs-relative mfs-flex mfs-items-center">
-          <Search :size="15" class="sidebar-search-icon mfs-absolute mfs-text-muted" />
-          <input
+        <IconField fluid>
+          <InputIcon>
+            <Search :size="15" />
+          </InputIcon>
+          <Input
             v-model="searchQuery"
             type="search"
-            class="sidebar-search mfs-w-full mfs-rounded-sm mfs-surface-subtle mfs-shadow-inset"
             placeholder="Filter components..."
             aria-label="Filter components"
           />
-        </div>
+        </IconField>
 
         <nav class="sidebar-groups mfs-flex mfs-flex-col mfs-overflow-y-auto mfs-pr-2">
           <Accordion
@@ -51,15 +36,17 @@
             <template #item="{ item }">
               <ul class="sidebar-list mfs-flex mfs-flex-col mfs-p-0 mfs-m-0">
                 <li v-for="navItem in groupItemsByKey.get(item.key) ?? []" :key="navItem.slug">
-                  <button
-                    type="button"
-                    class="sidebar-link mfs-w-full mfs-flex mfs-items-center mfs-border-none mfs-rounded-sm mfs-font-medium mfs-bg-transparent mfs-text-left mfs-cursor-pointer mfs-transition"
-                    :class="{ 'is-active': navItem.slug === activeItem.slug }"
+                  <Button
+                    :variant="navItem.slug === activeItem.slug ? 'primary' : 'surface'"
+                    size="sm"
+                    :pill="false"
+                    block
+                    class="sidebar-link"
                     :aria-current="navItem.slug === activeItem.slug ? 'page' : undefined"
                     @click="emit('select', navItem.slug)"
                   >
                     <span class="mfs-truncate">{{ navItem.name }}</span>
-                  </button>
+                  </Button>
                 </li>
               </ul>
             </template>
@@ -73,11 +60,11 @@
 
       <!-- Main documentation content -->
       <div class="docs-main mfs-min-w-0 mfs-flex mfs-flex-col">
-        <header class="docs-header mfs-p-6 mfs-rounded-lg mfs-surface mfs-shadow">
+        <Card class="docs-header">
           <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-3">
             <h1 class="docs-title mfs-text mfs-m-0">{{ activeItem.name }}</h1>
-            <span class="docs-category-badge mfs-font-bold mfs-pill mfs-border mfs-surface-subtle mfs-text-primary">{{ activeItem.category }}</span>
-            <span class="mfs-font-bold mfs-pill mfs-soft-success mfs-text-xs mfs-px-3 mfs-py-1">Ready</span>
+            <Badge variant="surface" size="sm">{{ activeItem.category }}</Badge>
+            <Badge variant="success" size="sm">Ready</Badge>
           </div>
 
           <p class="docs-summary mfs-text-muted mfs-mt-3 mfs-mb-0">{{ activeItem.summary }}</p>
@@ -88,45 +75,43 @@
               <span class="docs-import-label mfs-text-xs mfs-font-bold mfs-text-muted mfs-surface mfs-border mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-shrink-0">Import</span>
               <code class="mfs-font-mono mfs-text-xs mfs-text mfs-truncate">{{ importStatement }}</code>
             </div>
-            <button
-              type="button"
-              class="import-copy-btn mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-px-3 mfs-py-1 mfs-rounded-sm mfs-surface mfs-text-xs mfs-font-semibold mfs-cursor-pointer mfs-transition mfs-shrink-0"
+            <Button
+              variant="surface"
+              size="sm"
+              :pill="false"
+              class="import-copy-btn mfs-shrink-0"
               :class="{ 'is-copied': copiedImport }"
               :aria-label="copiedImport ? 'Import copied' : 'Copy import statement'"
               @click="copyImport"
             >
-              <Check v-if="copiedImport" :size="13" />
-              <Copy v-else :size="13" />
-              <span>{{ copiedImport ? 'Copied!' : 'Copy' }}</span>
-            </button>
+              <template #prepend>
+                <Check v-if="copiedImport" :size="13" />
+                <Copy v-else :size="13" />
+              </template>
+              <span>{{ copiedImport ? 'Copied' : 'Copy' }}</span>
+            </Button>
           </div>
-        </header>
+        </Card>
 
         <!-- Top-level OpenVue-style Documentation Tabs -->
-        <nav
-          class="docs-tabs mfs-inline-flex mfs-items-center mfs-gap-1 mfs-p-1 mfs-rounded-md mfs-surface mfs-shadow"
-          role="tablist"
-          aria-label="Component documentation sections"
+        <Tabs
+          :model-value="activeTab"
+          :items="docTabs"
+          class="docs-tabs"
+          @update:model-value="activeTab = $event as DocTabKey"
         >
-          <button
-            v-for="tabItem in docTabs"
-            :key="tabItem.key"
-            type="button"
-            role="tab"
-            class="docs-tab-btn mfs-border-none mfs-bg-transparent mfs-rounded-sm mfs-font-semibold mfs-text-sm mfs-text-muted mfs-cursor-pointer mfs-transition mfs-inline-flex mfs-items-center mfs-gap-2"
-            :class="{ 'is-active': activeTab === tabItem.key }"
-            :aria-selected="activeTab === tabItem.key"
-            @click="activeTab = tabItem.key"
-          >
-            <span>{{ tabItem.label }}</span>
-            <span
-              v-if="tabItem.key === 'api' && apiRowCount > 0"
-              class="docs-tab-count mfs-pill mfs-text-xs mfs-font-bold mfs-px-2"
+          <template #tab="{ item }">
+            <span>{{ item.label }}</span>
+            <Badge
+              v-if="item.key === 'api' && apiRowCount > 0"
+              variant="surface"
+              size="sm"
+              class="mfs-ml-1"
             >
               {{ apiRowCount }}
-            </span>
-          </button>
-        </nav>
+            </Badge>
+          </template>
+        </Tabs>
 
         <!-- Features Tab -->
         <div v-show="activeTab === 'features'" class="docs-body mfs-flex mfs-flex-col">
@@ -134,12 +119,12 @@
         </div>
 
         <!-- Accessibility Card (Features tab) -->
-        <section
+        <Card
           v-if="activeTab === 'features' && activeItemA11y && (activeItemA11y.keyboard?.length || activeItemA11y.aria?.length)"
-          class="mfs-card mfs-stack mfs-gap-4"
           aria-labelledby="docs-a11y-heading"
         >
-          <h2 id="docs-a11y-heading" class="mfs-title mfs-text-base mfs-m-0">Accessibility</h2>
+          <div class="mfs-stack mfs-gap-4">
+            <h2 id="docs-a11y-heading" class="mfs-title mfs-text-base mfs-m-0">Accessibility</h2>
           <div class="mfs-grid mfs-gap-4">
             <div v-if="activeItemA11y.keyboard?.length" class="mfs-surface-subtle mfs-rounded-md mfs-p-4 mfs-stack mfs-gap-2">
               <h3 class="a11y-subhead mfs-font-bold mfs-text-muted mfs-m-0">Keyboard Support</h3>
@@ -167,14 +152,15 @@
               </ul>
             </div>
           </div>
-        </section>
+          </div>
+        </Card>
 
         <!-- API Tab -->
-        <section
+        <Card
           v-if="activeTab === 'api'"
-          class="mfs-card mfs-stack mfs-gap-6"
           aria-labelledby="docs-api-heading"
         >
+          <div class="mfs-stack mfs-gap-6">
           <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
             <div>
               <h2 id="docs-api-heading" class="mfs-title mfs-text-lg mfs-m-0">{{ activeItem.name }} API</h2>
@@ -192,9 +178,9 @@
             >
               <div class="mfs-flex mfs-items-center mfs-gap-2">
                 <h3 class="mfs-title mfs-text-base mfs-m-0">{{ section.label }}</h3>
-                <span class="mfs-pill mfs-soft-primary mfs-text-xs mfs-font-bold mfs-px-2 mfs-py-1">
+                <Badge variant="primary" size="sm">
                   {{ section.rows.length }}
-                </span>
+                </Badge>
               </div>
 
               <div class="mfs-rounded-md mfs-surface-subtle mfs-border mfs-overflow-x-auto">
@@ -269,14 +255,15 @@
               </div>
             </div>
           </div>
-        </section>
+          </div>
+        </Card>
 
         <!-- Theming Tab -->
-        <section
+        <Card
           v-if="activeTab === 'theming'"
-          class="mfs-card mfs-stack mfs-gap-6"
           aria-labelledby="docs-theming-heading"
         >
+          <div class="mfs-stack mfs-gap-6">
           <div class="mfs-stack mfs-gap-1">
             <h2 id="docs-theming-heading" class="mfs-title mfs-text-lg mfs-m-0">Theming &amp; Design Tokens</h2>
             <p class="mfs-text-sm mfs-text-muted mfs-m-0">
@@ -350,35 +337,44 @@
               </code>
             </div>
           </div>
-        </section>
+          </div>
+        </Card>
 
         <footer class="mfs-pt-2 mfs-flex mfs-justify-between mfs-gap-3" aria-label="Component pagination">
-          <button
+          <Button
             v-if="prevItem"
-            type="button"
-            class="pager-btn pager-prev mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-py-3 mfs-px-4 mfs-rounded-md mfs-surface mfs-shadow mfs-cursor-pointer mfs-transition"
+            variant="surface"
+            size="md"
+            :pill="false"
+            class="pager-btn pager-prev"
             @click="emit('select', prevItem.slug)"
           >
-            <ChevronLeft :size="16" />
+            <template #prepend>
+              <ChevronLeft :size="16" />
+            </template>
             <div class="pager-meta mfs-flex mfs-flex-col mfs-text-left">
               <span class="pager-dir mfs-text-muted">Previous</span>
               <strong class="pager-name mfs-font-bold mfs-text">{{ prevItem.name }}</strong>
             </div>
-          </button>
+          </Button>
           <span v-else />
 
-          <button
+          <Button
             v-if="nextItem"
-            type="button"
-            class="pager-btn pager-next mfs-inline-flex mfs-items-center mfs-gap-2-5 mfs-py-3 mfs-px-4 mfs-rounded-md mfs-surface mfs-shadow mfs-cursor-pointer mfs-transition"
+            variant="surface"
+            size="md"
+            :pill="false"
+            class="pager-btn pager-next"
             @click="emit('select', nextItem.slug)"
           >
             <div class="pager-meta mfs-flex mfs-flex-col mfs-text-right">
               <span class="pager-dir mfs-text-muted">Next</span>
               <strong class="pager-name mfs-font-bold mfs-text">{{ nextItem.name }}</strong>
             </div>
-            <ChevronRight :size="16" />
-          </button>
+            <template #append>
+              <ChevronRight :size="16" />
+            </template>
+          </Button>
         </footer>
       </div>
     </div>
@@ -397,7 +393,7 @@ import {
   type ComponentNavItem
 } from '../data/componentDocs'
 import type { ComponentApiSpec, DocsContext } from './ComponentPreview.vue'
-import { CodeEditor } from '../lib'
+import { Badge, Button, Card, CodeEditor, IconField, Input, InputIcon, Select, Tabs } from '../lib'
 
 const props = defineProps<{
   activeSlug: string
@@ -659,10 +655,16 @@ watch(
   }
 )
 
-const onMobileSelect = (e: Event) => {
-  const target = e.target as HTMLSelectElement
-  if (target.value) {
-    emit('select', target.value)
+const mobileSelectOptions = computed(() =>
+  COMPONENT_NAV.map((item) => ({
+    label: `${item.name} (${item.category})`,
+    value: item.slug
+  }))
+)
+
+const onMobileSelect = (val: string | number | null) => {
+  if (val) {
+    emit('select', String(val))
   }
 }
 </script>
@@ -675,18 +677,6 @@ const onMobileSelect = (e: Event) => {
 
 .mobile-switcher {
   display: none;
-}
-
-.mobile-switcher-label {
-  display: block;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.mobile-select {
-  padding: 9px 12px;
-  font-size: 0.9rem;
 }
 
 .docs-layout {
@@ -742,8 +732,6 @@ const onMobileSelect = (e: Event) => {
   padding: 8px 10px;
   gap: 8px;
   font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   color: var(--text-muted);
 }
 
@@ -777,20 +765,10 @@ const onMobileSelect = (e: Event) => {
 }
 
 .sidebar-link {
+  justify-content: flex-start;
   padding: 8px 12px;
-  color: var(--text);
   font-size: 0.86rem;
   line-height: 1.35;
-}
-
-.sidebar-link:hover {
-  background: var(--surface-subtle);
-}
-
-.sidebar-link.is-active {
-  background: var(--primary);
-  color: var(--primary-text, #ffffff);
-  font-weight: 600;
 }
 
 .sidebar-empty {
@@ -805,13 +783,8 @@ const onMobileSelect = (e: Event) => {
 
 .docs-title {
   font-size: 1.7rem;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.2;
-}
-
-.docs-category-badge {
-  font-size: 0.74rem;
-  padding: 3px 10px;
 }
 
 .docs-summary {
@@ -822,8 +795,6 @@ const onMobileSelect = (e: Event) => {
 .docs-import-label,
 .a11y-subhead {
   font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   line-height: 1.2;
 }
 
@@ -908,13 +879,10 @@ const onMobileSelect = (e: Event) => {
 
 .pager-btn:hover {
   border-color: var(--primary);
-  transform: translateY(-1px);
 }
 
 .pager-dir {
   font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   color: var(--text-muted);
 }
 

@@ -1153,7 +1153,6 @@ const vKeyFilterApi = {
 
 .demo-style-active {
   border-color: var(--primary);
-  transform: scale(1.02);
   box-shadow: var(--clay-shadow);
 }
 </style>

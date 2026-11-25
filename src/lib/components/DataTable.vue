@@ -1,27 +1,81 @@
 <template>
   <div class="data-table mfs-relative mfs-surface mfs-rounded mfs-shadow-card mfs-overflow-hidden" :class="`data-table--${responsiveMode}`">
-    <div v-if="searchable || $slots.header" class="data-table__toolbar mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-b">
+    <div
+      v-if="searchable || columnToggle || $slots.header"
+      class="data-table__toolbar mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-border-b"
+    >
       <slot name="header" />
-      <div v-if="searchable" class="data-table__search mfs-relative mfs-flex mfs-items-center">
-        <svg class="data-table__search-icon mfs-absolute mfs-text-muted" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" />
-          <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
-        </svg>
-        <input
-          type="search"
-          class="data-table__search-input mfs-inset mfs-rounded-sm mfs-w-full mfs-text-sm mfs-outline-none"
-          :value="activeQuery"
-          placeholder="Search..."
-          aria-label="Search table"
-          @input="onSearchInput"
-        />
+      <div
+        v-if="searchable || columnToggle"
+        class="data-table__toolbar-actions"
+      >
+        <div v-if="searchable" class="data-table__search mfs-relative mfs-flex mfs-items-center">
+          <svg class="data-table__search-icon mfs-absolute mfs-text-muted" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.8" />
+            <path d="M13.5 13.5L17 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+          </svg>
+          <input
+            type="search"
+            class="data-table__search-input mfs-inset mfs-rounded-sm mfs-w-full mfs-text-sm mfs-outline-none"
+            :value="activeQuery"
+            placeholder="Search..."
+            aria-label="Search table"
+            @input="onSearchInput"
+          />
+        </div>
+
+        <button
+          v-if="columnToggle"
+          ref="columnToggleBtnRef"
+          type="button"
+          class="data-table__col-btn mfs-focus-ring mfs-surface-subtle mfs-rounded-sm mfs-shadow-inset mfs-text-sm mfs-font-semibold mfs-cursor-pointer mfs-inline-flex mfs-items-center mfs-gap-2"
+          :aria-expanded="columnMenuOpen"
+          aria-haspopup="true"
+          @click="toggleColumnMenu"
+        >
+          <svg class="data-table__col-icon" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <rect x="2.5" y="3.5" width="3.5" height="11" rx="1" stroke="currentColor" stroke-width="1.5" />
+            <rect x="7.25" y="3.5" width="3.5" height="11" rx="1" stroke="currentColor" stroke-width="1.5" />
+            <rect x="12" y="3.5" width="3.5" height="11" rx="1" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span>Columns</span>
+        </button>
       </div>
     </div>
+
+    <Teleport to="body">
+      <div
+        v-if="columnToggle && columnMenuOpen"
+        ref="columnMenuRef"
+        class="data-table__col-menu mfs-surface mfs-rounded-md mfs-shadow-card"
+        :style="columnMenuStyle"
+        role="menu"
+        aria-label="Toggle columns"
+      >
+        <div class="data-table__col-menu-title mfs-text-xs mfs-font-bold mfs-text-muted">
+          Visible Columns
+        </div>
+        <label
+          v-for="col in columns"
+          :key="col.key"
+          class="data-table__col-item mfs-flex mfs-items-center mfs-gap-2 mfs-text-sm mfs-cursor-pointer"
+          :class="{ 'data-table__col-item--disabled': isColumnVisible(col.key) && activeVisibleKeys.length <= 1 }"
+        >
+          <Checkbox
+            :model-value="isColumnVisible(col.key)"
+            :disabled="isColumnVisible(col.key) && activeVisibleKeys.length <= 1"
+            @update:model-value="toggleColumnVisibility(col.key)"
+          />
+          <span>{{ col.label }}</span>
+        </label>
+      </div>
+    </Teleport>
 
     <div class="data-table__wrap mfs-w-full mfs-overflow-x-auto">
       <table class="data-table__table mfs-w-full mfs-text-left">
         <thead class="data-table__head">
           <tr>
+            <th v-if="expandable" class="data-table__th data-table__th--expand mfs-text-muted" aria-label="Expand row" />
             <th v-if="selectionType" class="data-table__th data-table__th--select mfs-text-muted mfs-whitespace-nowrap">
               <Checkbox
                 v-if="selectionType === 'multiple'"
@@ -34,7 +88,7 @@
               />
             </th>
             <th
-              v-for="col in columns"
+              v-for="col in displayedColumns"
               :key="col.key"
               class="data-table__th mfs-text-muted mfs-whitespace-nowrap"
               :class="[
@@ -80,7 +134,7 @@
 
         <tbody class="data-table__body">
           <tr v-if="processedRows.length === 0" class="data-table__empty-row">
-            <td :colspan="columns.length + (selectionType ? 1 : 0)" class="data-table__empty mfs-text-muted mfs-text-center">
+            <td :colspan="totalColCount" class="data-table__empty mfs-text-muted mfs-text-center">
               <slot name="empty">
                 <div class="data-table__empty-content mfs-inline-flex mfs-flex-col mfs-items-center mfs-gap-2">
                   <svg class="data-table__empty-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -93,57 +147,93 @@
             </td>
           </tr>
 
-          <tr
+          <template
             v-for="(row, rowIndex) in processedRows"
             v-else
             :key="getRowId(row, rowIndex)"
-            class="data-table__row"
-            :class="{ 'data-table__row--selected': isRowSelected(row, rowIndex) }"
-            :aria-selected="selectionType ? isRowSelected(row, rowIndex) : undefined"
-            @click="onRowClick(row, rowIndex)"
           >
-            <td
-              v-if="selectionType"
-              class="data-table__td data-table__td--select"
-              data-label="Select"
-              @click.stop
+            <tr
+              class="data-table__row"
+              :class="{
+                'data-table__row--selected': isRowSelected(row, rowIndex),
+                'data-table__row--expanded': expandable && isRowExpanded(row, rowIndex)
+              }"
+              :aria-selected="selectionType ? isRowSelected(row, rowIndex) : undefined"
+              @click="onRowClick(row, rowIndex)"
             >
-              <input
-                v-if="selectionType === 'single'"
-                type="radio"
-                class="data-table__checkbox mfs-cursor-pointer"
-                :name="radioGroupName"
-                :checked="isRowSelected(row, rowIndex)"
-                :aria-label="`Select row ${rowIndex + 1}`"
-                @change="toggleRowSelection(row, rowIndex)"
-              />
-              <Checkbox
-                v-else
-                class="data-table__checkbox"
-                :model-value="isRowSelected(row, rowIndex)"
-                :aria-label="`Select row ${rowIndex + 1}`"
+              <td
+                v-if="expandable"
+                class="data-table__td data-table__td--expand"
+                data-label="Details"
                 @click.stop
-                @update:model-value="toggleRowSelection(row, rowIndex)"
-              />
-            </td>
-            <td
-              v-for="col in columns"
-              :key="col.key"
-              class="data-table__td"
-              :class="col.align ? `data-table__cell--${col.align}` : ''"
-              :data-label="col.label"
-            >
-              <slot
-                :name="`cell-${col.key}`"
-                :row="row"
-                :value="row[col.key]"
-                :column="col"
-                :index="rowIndex"
               >
-                <span class="data-table__cell-value">{{ row[col.key] ?? '' }}</span>
-              </slot>
-            </td>
-          </tr>
+                <button
+                  type="button"
+                  class="data-table__expand-btn mfs-focus-ring mfs-inline-flex mfs-items-center mfs-justify-center mfs-bg-transparent mfs-border-none mfs-cursor-pointer"
+                  :aria-expanded="isRowExpanded(row, rowIndex)"
+                  :aria-label="isRowExpanded(row, rowIndex) ? `Collapse row ${rowIndex + 1}` : `Expand row ${rowIndex + 1}`"
+                  @click="toggleRowExpansion(row, rowIndex)"
+                >
+                  <svg
+                    class="data-table__expand-icon"
+                    :class="{ 'data-table__expand-icon--open': isRowExpanded(row, rowIndex) }"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+              </td>
+              <td
+                v-if="selectionType"
+                class="data-table__td data-table__td--select"
+                data-label="Select"
+                @click.stop
+              >
+                <input
+                  v-if="selectionType === 'single'"
+                  type="radio"
+                  class="data-table__checkbox mfs-cursor-pointer"
+                  :name="radioGroupName"
+                  :checked="isRowSelected(row, rowIndex)"
+                  :aria-label="`Select row ${rowIndex + 1}`"
+                  @change="toggleRowSelection(row, rowIndex)"
+                />
+                <Checkbox
+                  v-else
+                  class="data-table__checkbox"
+                  :model-value="isRowSelected(row, rowIndex)"
+                  :aria-label="`Select row ${rowIndex + 1}`"
+                  @click.stop
+                  @update:model-value="toggleRowSelection(row, rowIndex)"
+                />
+              </td>
+              <td
+                v-for="col in displayedColumns"
+                :key="col.key"
+                class="data-table__td"
+                :class="col.align ? `data-table__cell--${col.align}` : ''"
+                :data-label="col.label"
+              >
+                <slot
+                  :name="`cell-${col.key}`"
+                  :row="row"
+                  :value="row[col.key]"
+                  :column="col"
+                  :index="rowIndex"
+                >
+                  <span class="data-table__cell-value">{{ row[col.key] ?? '' }}</span>
+                </slot>
+              </td>
+            </tr>
+
+            <tr v-if="expandable && isRowExpanded(row, rowIndex)" class="data-table__expansion-row">
+              <td :colspan="totalColCount" class="data-table__expansion-cell">
+                <slot name="expansion" :row="row" :index="rowIndex" />
+              </td>
+            </tr>
+          </template>
         </tbody>
       </table>
     </div>
@@ -190,7 +280,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, useId, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import Checkbox from './Checkbox.vue'
 import Pagination from './Pagination.vue'
 
@@ -231,6 +321,10 @@ const props = withDefaults(
     first?: number
     sortMode?: 'single' | 'multiple'
     multiSortMeta?: DataTableSortMeta[]
+    expandable?: boolean
+    expandedRows?: Record<string, unknown>[]
+    columnToggle?: boolean
+    visibleColumns?: string[]
   }>(),
   {
     rowKey: 'id',
@@ -245,7 +339,9 @@ const props = withDefaults(
     paginator: false,
     rowsPerPageOptions: () => [5, 10, 20, 50],
     first: 0,
-    sortMode: 'single'
+    sortMode: 'single',
+    expandable: false,
+    columnToggle: false
   }
 )
 
@@ -257,10 +353,14 @@ const emit = defineEmits<{
   'update:rowsPerPage': [rowsPerPage: number]
   'update:first': [first: number]
   'update:multiSortMeta': [meta: DataTableSortMeta[]]
+  'update:expandedRows': [rows: Record<string, unknown>[]]
+  'update:visibleColumns': [keys: string[]]
   page: [payload: { page: number; first: number; rows: number; pageCount: number; rowsPerPage?: number }]
   sort: [payload: { key: string; order: SortOrder; multiSortMeta?: DataTableSortMeta[] }]
   filter: [query: string]
   'row-click': [row: Record<string, unknown>]
+  'row-expand': [row: Record<string, unknown>]
+  'row-collapse': [row: Record<string, unknown>]
 }>()
 
 const radioGroupName = `dt-radio-${useId()}`
@@ -588,6 +688,176 @@ function onRowClick(row: Record<string, unknown>, index: number) {
     toggleRowSelection(row, index)
   }
 }
+
+// ---------------------------------------------------------------------------
+// Row Expansion
+// ---------------------------------------------------------------------------
+const internalExpandedRows = ref<Record<string, unknown>[]>(
+  props.expandedRows ? [...props.expandedRows] : []
+)
+
+watch(
+  () => props.expandedRows,
+  (val) => {
+    internalExpandedRows.value = val ? [...val] : []
+  },
+  { deep: true }
+)
+
+const activeExpandedRows = computed<Record<string, unknown>[]>(() =>
+  props.expandedRows ?? internalExpandedRows.value
+)
+
+function isRowExpanded(row: Record<string, unknown>, index: number): boolean {
+  if (!props.expandable) return false
+  const id = getRowId(row, index)
+  return activeExpandedRows.value.some((item, i) => getRowId(item, i) === id)
+}
+
+function toggleRowExpansion(row: Record<string, unknown>, index: number) {
+  if (!props.expandable) return
+  const id = getRowId(row, index)
+  const next = [...activeExpandedRows.value]
+  const existingIdx = next.findIndex((item, i) => getRowId(item, i) === id)
+  if (existingIdx >= 0) {
+    next.splice(existingIdx, 1)
+    internalExpandedRows.value = next
+    emit('update:expandedRows', next)
+    emit('row-collapse', row)
+  } else {
+    next.push(row)
+    internalExpandedRows.value = next
+    emit('update:expandedRows', next)
+    emit('row-expand', row)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Column Visibility Toggle
+// ---------------------------------------------------------------------------
+const internalVisibleColumns = ref<string[]>(
+  props.visibleColumns ? [...props.visibleColumns] : props.columns.map((c) => c.key)
+)
+
+watch(
+  () => props.visibleColumns,
+  (val) => {
+    if (val !== undefined) {
+      internalVisibleColumns.value = [...val]
+    }
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.columns,
+  (cols) => {
+    if (props.visibleColumns === undefined) {
+      internalVisibleColumns.value = cols.map((c) => c.key)
+    }
+  }
+)
+
+const activeVisibleKeys = computed<string[]>(() =>
+  props.visibleColumns ?? internalVisibleColumns.value
+)
+
+const displayedColumns = computed<DataTableColumn[]>(() => {
+  if (!props.columnToggle) return props.columns
+  const visibleSet = new Set(activeVisibleKeys.value)
+  return props.columns.filter((col) => visibleSet.has(col.key))
+})
+
+const totalColCount = computed(() =>
+  displayedColumns.value.length + (selectionType.value ? 1 : 0) + (props.expandable ? 1 : 0)
+)
+
+function isColumnVisible(key: string): boolean {
+  return activeVisibleKeys.value.includes(key)
+}
+
+function toggleColumnVisibility(key: string) {
+  const current = [...activeVisibleKeys.value]
+  const idx = current.indexOf(key)
+  if (idx >= 0) {
+    if (current.length <= 1) return
+    current.splice(idx, 1)
+  } else {
+    const orderedKeys = props.columns.map((c) => c.key)
+    current.push(key)
+    current.sort((a, b) => orderedKeys.indexOf(a) - orderedKeys.indexOf(b))
+  }
+  internalVisibleColumns.value = current
+  emit('update:visibleColumns', current)
+}
+
+const columnMenuOpen = ref(false)
+const columnToggleBtnRef = ref<HTMLElement | null>(null)
+const columnMenuRef = ref<HTMLElement | null>(null)
+const columnMenuPos = ref({ top: 0, left: 0 })
+
+const columnMenuStyle = computed(() => ({
+  position: 'fixed' as const,
+  top: `${columnMenuPos.value.top}px`,
+  left: `${columnMenuPos.value.left}px`,
+  zIndex: 9999
+}))
+
+function updateColumnMenuPosition() {
+  const btn = columnToggleBtnRef.value
+  if (!btn) return
+  const rect = btn.getBoundingClientRect()
+  const menuWidth = columnMenuRef.value?.offsetWidth || 190
+  const left = Math.max(8, Math.min(rect.right - menuWidth, window.innerWidth - menuWidth - 8))
+  const top = rect.bottom + 6
+  columnMenuPos.value = { top, left }
+}
+
+function onDocumentClick(e: MouseEvent) {
+  const target = e.target as Node | null
+  if (!target) return
+  if (columnToggleBtnRef.value?.contains(target) || columnMenuRef.value?.contains(target)) {
+    return
+  }
+  closeColumnMenu()
+}
+
+function onDocumentKeydown(e: KeyboardEvent) {
+  if (e.key === 'Escape') {
+    closeColumnMenu()
+  }
+}
+
+function openColumnMenu() {
+  columnMenuOpen.value = true
+  nextTick(() => {
+    updateColumnMenuPosition()
+    document.addEventListener('mousedown', onDocumentClick)
+    document.addEventListener('keydown', onDocumentKeydown)
+    window.addEventListener('resize', updateColumnMenuPosition)
+    window.addEventListener('scroll', updateColumnMenuPosition, true)
+  })
+}
+
+function closeColumnMenu() {
+  columnMenuOpen.value = false
+  document.removeEventListener('mousedown', onDocumentClick)
+  document.removeEventListener('keydown', onDocumentKeydown)
+  window.removeEventListener('resize', updateColumnMenuPosition)
+  window.removeEventListener('scroll', updateColumnMenuPosition, true)
+}
+
+function toggleColumnMenu() {
+  if (columnMenuOpen.value) {
+    closeColumnMenu()
+  } else {
+    openColumnMenu()
+  }
+}
+
+onBeforeUnmount(() => {
+  closeColumnMenu()
+})
 </script>
 
 <style scoped>
@@ -595,11 +865,70 @@ function onRowClick(row: Record<string, unknown>, index: number) {
   padding: 14px 18px;
 }
 
-.data-table__search {
+.data-table__toolbar-actions {
   margin-left: auto;
-  min-width: 200px;
-  flex: 1 1 220px;
-  max-width: 320px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+}
+
+.data-table__search {
+  width: 220px;
+  flex: 0 0 auto;
+}
+
+.data-table__col-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border: 1px solid var(--border, transparent);
+  color: var(--text);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.data-table__col-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.data-table__col-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.data-table__col-menu {
+  min-width: 190px;
+  padding: 8px;
+  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  background: var(--surface);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.data-table__col-menu-title {
+  padding: 4px 8px 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
+  margin-bottom: 4px;
+}
+
+.data-table__col-item {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm, 8px);
+  transition: background-color 0.15s ease;
+}
+
+.data-table__col-item:hover {
+  background: var(--surface-subtle);
+}
+
+.data-table__col-item--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .data-table__search-icon {
@@ -630,6 +959,44 @@ function onRowClick(row: Record<string, unknown>, index: number) {
   text-transform: uppercase;
   letter-spacing: 0.04em;
   background: var(--surface-subtle);
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
+}
+
+.data-table__th--expand,
+.data-table__td--expand {
+  width: 44px;
+  text-align: center;
+}
+
+.data-table__expand-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text-muted);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.data-table__expand-btn:hover {
+  background: var(--surface-subtle);
+  color: var(--primary);
+}
+
+.data-table__expand-icon {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s ease;
+}
+
+.data-table__expand-icon--open {
+  transform: rotate(90deg);
+}
+
+.data-table__expansion-row {
+  background: var(--surface-subtle);
+}
+
+.data-table__expansion-cell {
+  padding: 14px 18px;
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
 }
 
@@ -758,6 +1125,17 @@ input.data-table__checkbox {
 
 /* Mobile Card Mode */
 @media (max-width: 640px) {
+  .data-table__toolbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .data-table__search {
+    width: auto;
+    min-width: 160px;
+    flex: 1 1 180px;
+  }
+
   .data-table--card .data-table__head {
     display: none;
   }
@@ -798,8 +1176,27 @@ input.data-table__checkbox {
     text-align: left;
   }
 
-  .data-table--card .data-table__td--select {
+  .data-table--card .data-table__td--select,
+  .data-table--card .data-table__td--expand {
     width: 100%;
+  }
+
+  .data-table--card .data-table__expansion-row {
+    display: block;
+    margin: -6px 12px 10px;
+    width: calc(100% - 24px);
+    border-radius: var(--radius-md, 12px);
+    background: var(--surface-subtle);
+    border: 1px solid var(--border, transparent);
+    overflow: hidden;
+  }
+
+  .data-table--card .data-table__expansion-cell {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: none;
   }
 }
 </style>

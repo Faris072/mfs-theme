@@ -80,8 +80,8 @@ export const vAnimateOnScroll: Directive<AosElement, AnimateOnScrollBinding> = {
     const distance = opts.distance ?? 24
     const threshold = opts.threshold ?? 0.1
     const once = opts.once ?? true
-    const enterClass = opts.enterClass ?? ''
-    const leaveClass = opts.leaveClass ?? ''
+    const enterClasses = (opts.enterClass ?? '').split(/\s+/).filter(Boolean)
+    const leaveClasses = (opts.leaveClass ?? '').split(/\s+/).filter(Boolean)
 
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
@@ -97,16 +97,16 @@ export const vAnimateOnScroll: Directive<AosElement, AnimateOnScrollBinding> = {
       (entries) => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            if (leaveClass) el.classList.remove(leaveClass)
-            if (enterClass) el.classList.add(enterClass)
+            if (leaveClasses.length) el.classList.remove(...leaveClasses)
+            if (enterClasses.length) el.classList.add(...enterClasses)
             if (usePreset) {
               el.style.opacity = '1'
               el.style.transform = getEnterTransform(animation)
             }
             if (once) observer.unobserve(el)
           } else if (!once) {
-            if (enterClass) el.classList.remove(enterClass)
-            if (leaveClass) el.classList.add(leaveClass)
+            if (enterClasses.length) el.classList.remove(...enterClasses)
+            if (leaveClasses.length) el.classList.add(...leaveClasses)
             if (usePreset && !prefersReducedMotion) {
               el.style.opacity = '0'
               el.style.transform = getInitialTransform(animation, distance)

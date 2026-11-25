@@ -20,7 +20,11 @@ function resolveTarget(el: HTMLElement, selector?: string): HTMLElement | null {
   if (selector === '@prev') return el.previousElementSibling as HTMLElement | null
   if (selector === '@parent') return el.parentElement
   if (selector === '@grandparent') return el.parentElement?.parentElement ?? null
-  return document.querySelector<HTMLElement>(selector)
+  try {
+    return document.querySelector<HTMLElement>(selector)
+  } catch {
+    return null
+  }
 }
 
 function normalize(value: StyleClassBinding): StyleClassOptions {

@@ -49,7 +49,7 @@
               :is="item.to ? 'router-link' : 'a'"
               v-else
               :to="item.to"
-              :href="item.href"
+              :href="sanitizeHref(item.href)"
               role="menuitem"
               class="slide-menu__item mfs-rounded-sm mfs-text"
               :class="{ 'slide-menu__item--disabled mfs-disabled': item.disabled }"
@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface SlideMenuItem {
   label: string

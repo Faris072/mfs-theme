@@ -11,13 +11,13 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
+          <Button
+            size="sm"
+            variant="surface"
             @click="popupMenuRef?.toggle($event)"
           >
             Toggle Popup Menu
-          </button>
+          </Button>
           <span class="mfs-caption">Selected: {{ menuSelected }}</span>
         </div>
 
@@ -83,15 +83,14 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': panelMultiple }"
+          <Button
+            size="sm"
+            :variant="panelMultiple ? 'primary' : 'surface'"
             :aria-pressed="panelMultiple"
             @click="togglePanelMultiple"
           >
             Multiple: {{ panelMultiple ? 'On' : 'Off' }}
-          </button>
+          </Button>
           <span class="mfs-caption">
             Expanded: {{ panelExpanded.length ? panelExpanded.join(', ') : 'None' }}
           </span>
@@ -120,22 +119,20 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': megaOrientation === 'horizontal' }"
+          <Button
+            size="sm"
+            :variant="megaOrientation === 'horizontal' ? 'primary' : 'surface'"
             @click="megaOrientation = 'horizontal'"
           >
             Horizontal
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': megaOrientation === 'vertical' }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="megaOrientation === 'vertical' ? 'primary' : 'surface'"
             @click="megaOrientation = 'vertical'"
           >
             Vertical
-          </button>
+          </Button>
           <span class="mfs-caption">Selected: {{ megaSelected }}</span>
         </div>
 
@@ -160,25 +157,23 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
+          <Button
             v-for="pos in dockPositions"
             :key="pos"
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': dockPosition === pos }"
+            size="sm"
+            :variant="dockPosition === pos ? 'primary' : 'surface'"
             @click="dockPosition = pos"
           >
             {{ pos }}
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': dockMagnify }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="dockMagnify ? 'primary' : 'surface'"
             :aria-pressed="dockMagnify"
             @click="dockMagnify = !dockMagnify"
           >
             Magnify: {{ dockMagnify ? 'On' : 'Off' }}
-          </button>
+          </Button>
         </div>
 
         <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage" :class="`demo-dock-stage--${dockPosition}`">
@@ -217,6 +212,7 @@
 import { ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { CodeTab } from '../ComponentPreview.vue'
+import { Button } from '../../lib'
 import Menu, { type MenuItem } from '../../lib/components/Menu.vue'
 import TieredMenu, { type TieredMenuItem } from '../../lib/components/TieredMenu.vue'
 import SlideMenu, { type SlideMenuItem } from '../../lib/components/SlideMenu.vue'

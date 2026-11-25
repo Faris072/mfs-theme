@@ -62,6 +62,7 @@
           <a
             href="https://www.npmjs.com/package/@mfs-atomic/ui"
             target="_blank"
+            rel="noopener noreferrer"
             class="npm-link mfs-inline-flex mfs-items-center mfs-pill mfs-surface-subtle mfs-shadow mfs-font-medium mfs-transition"
           >
             <span>npm v1.1.2</span>
@@ -69,14 +70,17 @@
         </div>
 
         <!-- Mobile Menu Button -->
-        <button
-          class="mobile-menu-btn mfs-surface-subtle mfs-rounded-sm mfs-cursor-pointer"
+        <Button
+          variant="surface"
+          size="sm"
+          :pill="false"
+          class="mobile-menu-btn"
           aria-label="Toggle navigation"
           @click="mobileMenuOpen = !mobileMenuOpen"
         >
           <Menu v-if="!mobileMenuOpen" :size="20" />
           <X v-else :size="20" />
-        </button>
+        </Button>
       </div>
 
       <!-- Mobile Dropdown Drawer -->
@@ -123,17 +127,20 @@
 
           <p class="mfs-text-xs mfs-font-semibold mfs-text-muted mfs-mb-2">Active theme</p>
           <div class="mfs-grid mfs-grid-cols-2 mfs-gap-2">
-            <button
+            <Button
               v-for="item in themeOptions"
               :key="item.id"
-              type="button"
-              class="mobile-theme-chip mfs-surface-subtle mfs-rounded-md mfs-flex mfs-items-center mfs-gap-2 mfs-font-semibold mfs-cursor-pointer mfs-text-left"
-              :class="{ 'is-active': currentTheme === item.id }"
+              :variant="currentTheme === item.id ? 'primary' : 'surface'"
+              size="sm"
+              :pill="false"
+              class="mobile-theme-chip"
               @click="handleSelectTheme(item.id); mobileMenuOpen = false"
             >
-              <component :is="getThemeIcon(item.id)" :size="15" class="theme-pill-icon" />
+              <template #prepend>
+                <component :is="getThemeIcon(item.id)" :size="15" class="theme-pill-icon" />
+              </template>
               <span>{{ item.name }}</span>
-            </button>
+            </Button>
           </div>
         </template>
       </div>
@@ -166,7 +173,7 @@ import {
   Menu,
   X,
   Layers,
-  Sparkles,
+  Gem,
   Circle,
   Minus,
   Square,
@@ -187,7 +194,7 @@ import {
   Sunset,
   BookOpen
 } from 'lucide-vue-next'
-import { useTheme, Select, Toast, ConfirmDialog, type ThemeType } from './lib'
+import { useTheme, Button, Select, Toast, ConfirmDialog, type ThemeType } from './lib'
 
 const route = useRoute()
 const router = useRouter()
@@ -198,7 +205,7 @@ const mobileMenuOpen = ref(false)
 
 const iconMap: Record<ThemeType, any> = {
   clay: Layers,
-  glass: Sparkles,
+  glass: Gem,
   neo: Circle,
   minimalism: Minus,
   brutalism: Square,
@@ -329,7 +336,6 @@ const onThemeSelect = (val: string | number | null) => {
 }
 
 .nav-cta-btn:hover {
-  transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
   opacity: 0.96;
 }
@@ -351,8 +357,6 @@ const onThemeSelect = (val: string | number | null) => {
 
 .theme-selector-label {
   font-size: 0.72rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin-right: 2px;
 }
 
@@ -375,14 +379,9 @@ const onThemeSelect = (val: string | number | null) => {
 }
 
 .mobile-theme-chip {
+  justify-content: flex-start;
   padding: 9px 11px;
   font-size: 0.8rem;
-}
-
-.mobile-theme-chip.is-active {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: var(--surface);
 }
 
 .theme-pill-icon {

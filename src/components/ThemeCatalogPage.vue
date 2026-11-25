@@ -5,9 +5,9 @@
       <div class="mfs-container">
         <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3 mfs-mb-2">
           <h1 class="catalog-title mfs-text mfs-m-0">Theme specifications</h1>
-          <span class="mfs-surface-subtle mfs-pill mfs-text-xs mfs-font-bold mfs-text-primary mfs-px-3 mfs-py-1">
+          <Badge variant="surface" size="sm">
             {{ allThemes.length }} Themes
-          </span>
+          </Badge>
         </div>
         <p class="catalog-caption mfs-text-muted">
           Select an aesthetic paradigm for your application. Each theme manages visual depth, shadows, borders, and interactive elevations.
@@ -16,27 +16,28 @@
         <!-- Search & Filter bar -->
         <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3">
           <div class="mfs-flex mfs-gap-2 mfs-flex-wrap mfs-min-w-0">
-            <button
+            <Button
               v-for="cat in filterOptions"
               :key="cat"
-              class="filter-pill mfs-surface-subtle mfs-pill mfs-font-medium mfs-shadow mfs-cursor-pointer mfs-whitespace-nowrap mfs-transition"
-              :class="{ 'is-active': activeFilter === cat }"
+              :variant="activeFilter === cat ? 'primary' : 'surface'"
+              size="sm"
               @click="activeFilter = cat"
             >
               {{ cat }}
-            </button>
+            </Button>
           </div>
 
-          <div class="catalog-search-box mfs-inset mfs-flex mfs-items-center mfs-gap-2 mfs-px-3 mfs-py-1-5">
-            <Search :size="14" class="mfs-text-muted mfs-shrink-0" />
-            <input
+          <IconField class="catalog-search-box">
+            <InputIcon>
+              <Search :size="14" />
+            </InputIcon>
+            <Input
               v-model="searchQuery"
               type="text"
               placeholder="Search themes..."
               aria-label="Search themes"
-              class="catalog-search-input mfs-w-full mfs-border-none mfs-bg-transparent mfs-text mfs-text-sm mfs-outline-none"
             />
-          </div>
+          </IconField>
         </div>
       </div>
     </section>
@@ -71,22 +72,26 @@
                 </div>
               </div>
 
-              <span
+              <Badge
                 v-if="activeThemeId === t.id"
-                class="card-active-label mfs-absolute mfs-bg-primary mfs-pill mfs-text-xs mfs-font-bold mfs-inline-flex mfs-items-center mfs-gap-1"
+                variant="primary"
+                size="sm"
+                class="card-active-label mfs-absolute"
               >
-                <Check :size="12" class="icon-inline" />
-                <span>Active</span>
-              </span>
+                <template #prepend>
+                  <Check :size="12" class="icon-inline" />
+                </template>
+                Active
+              </Badge>
             </div>
 
             <!-- Card Body -->
             <div class="mfs-p-6 mfs-flex mfs-flex-col mfs-flex-1">
               <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-mb-2">
                 <h2 class="card-theme-name mfs-text mfs-m-0 mfs-truncate">{{ t.name }}</h2>
-                <span class="card-category-badge mfs-text-xs mfs-font-bold mfs-text-primary mfs-surface-subtle mfs-pill mfs-border mfs-whitespace-nowrap">
+                <Badge variant="surface" size="sm" class="mfs-whitespace-nowrap">
                   {{ getThemeGroup(t.id) }}
-                </span>
+                </Badge>
               </div>
 
               <p class="card-tagline mfs-font-bold mfs-text-primary mfs-m-0">{{ t.tagline }}</p>
@@ -96,65 +101,71 @@
               <div class="use-cases-box">
                 <span class="use-case-title mfs-font-bold mfs-text-muted mfs-mb-2">Key characteristics</span>
                 <div class="mfs-flex mfs-flex-wrap mfs-gap-2">
-                  <span
+                  <Chip
                     v-for="(feature, idx) in t.keyFeatures.slice(0, 3)"
                     :key="idx"
-                    class="use-case-tag mfs-surface-subtle mfs-pill mfs-font-medium mfs-text mfs-shadow-inset"
-                  >
-                    {{ feature }}
-                  </span>
+                    :label="feature"
+                  />
                 </div>
               </div>
 
               <!-- Theme Activation Info -->
               <div class="mfs-inset mfs-py-3 mfs-px-4 mfs-mb-6 mfs-flex mfs-flex-col mfs-gap-2">
                 <div class="spec-token-row mfs-gap-2">
-                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">THEME ID</span>
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">Theme ID</span>
                   <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-min-w-0">
                     <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">'{{ t.id }}'</code>
-                    <button
-                      type="button"
-                      class="mfs-surface mfs-pill mfs-text-muted mfs-text-xs mfs-px-2 mfs-py-0 mfs-inline-flex mfs-items-center mfs-gap-1 mfs-interactive mfs-shrink-0"
+                    <Button
+                      variant="surface"
+                      size="sm"
+                      class="copy-id-btn mfs-shrink-0"
                       :aria-label="`Copy theme ID ${t.id}`"
                       @click.stop="copyThemeId(t.id)"
                     >
-                      <Check v-if="copiedThemeId === t.id" :size="11" class="mfs-text-primary" />
-                      <Copy v-else :size="11" />
+                      <template #prepend>
+                        <Check v-if="copiedThemeId === t.id" :size="11" class="mfs-text-primary" />
+                        <Copy v-else :size="11" />
+                      </template>
                       <span>{{ copiedThemeId === t.id ? 'Copied' : 'Copy' }}</span>
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div class="spec-token-row mfs-gap-2">
-                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">PLUGIN</span>
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">Plugin</span>
                   <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">defaultTheme: '{{ t.id }}'</code>
                 </div>
                 <div class="spec-token-row mfs-gap-2">
-                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">COMPOSABLE</span>
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">Composable</span>
                   <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">setTheme('{{ t.id }}')</code>
                 </div>
                 <div class="spec-token-row mfs-gap-2">
-                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">HTML ATTR</span>
+                  <span class="mfs-text-muted mfs-font-bold mfs-text-xs">HTML attr</span>
                   <code class="spec-token-value mfs-text mfs-font-semibold mfs-font-mono">data-theme="{{ t.id }}"</code>
                 </div>
               </div>
 
               <!-- Action buttons -->
               <div class="card-actions mfs-flex mfs-gap-2-5">
-                <button
-                  class="btn-apply-theme mfs-surface-subtle mfs-text mfs-pill mfs-font-bold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition"
-                  :class="{ 'btn-selected': activeThemeId === t.id }"
+                <Button
+                  :variant="activeThemeId === t.id ? 'primary' : 'surface'"
+                  size="sm"
                   @click="$emit('select-theme', t.id)"
                 >
-                  <Check v-if="activeThemeId === t.id" :size="14" class="icon-inline" />
+                  <template v-if="activeThemeId === t.id" #prepend>
+                    <Check :size="14" class="icon-inline" />
+                  </template>
                   <span>{{ activeThemeId === t.id ? 'Active Theme' : 'Apply Theme' }}</span>
-                </button>
-                <button
-                  class="btn-view-components mfs-surface mfs-text mfs-pill mfs-font-semibold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition"
+                </Button>
+                <Button
+                  variant="surface"
+                  size="sm"
                   @click="$emit('open-theme-detail', t.id)"
                 >
                   <span>Specs</span>
-                  <ArrowRight :size="14" class="icon-inline" />
-                </button>
+                  <template #append>
+                    <ArrowRight :size="14" class="icon-inline" />
+                  </template>
+                </Button>
               </div>
             </div>
           </div>
@@ -216,7 +227,7 @@
 import { ref, computed, type Component } from 'vue'
 import {
   Layers,
-  Sparkles,
+  Gem,
   Circle,
   Minus,
   Square,
@@ -240,6 +251,7 @@ import {
   Copy,
   Search
 } from 'lucide-vue-next'
+import { Badge, Button, Chip, IconField, Input, InputIcon } from '../lib'
 import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
 
 defineProps<{
@@ -301,7 +313,7 @@ const THEME_GROUP_MAP: Record<string, string> = {
 
 const ICON_BY_NAME: Record<string, Component> = {
   Layers,
-  Sparkles,
+  Gem,
   Circle,
   Minus,
   Square,
@@ -359,7 +371,7 @@ const filteredThemes = computed(() => {
 
 .catalog-title {
   font-size: 2.4rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
 }
 
@@ -370,30 +382,8 @@ const filteredThemes = computed(() => {
   line-height: 1.55;
 }
 
-.filter-pill {
-  padding: 7px 16px;
-  font-size: 0.85rem;
-}
-
-.filter-pill:hover {
-  border-color: var(--primary);
-  color: var(--text);
-  box-shadow: var(--clay-shadow-hover);
-}
-
-.filter-pill.is-active {
-  background: var(--primary);
-  color: var(--primary-text, #ffffff);
-  border-color: var(--primary);
-  box-shadow: var(--clay-shadow-active);
-}
-
 .catalog-search-box {
   min-width: 220px;
-}
-
-.catalog-search-input {
-  min-width: 0;
 }
 
 /* Grid */
@@ -419,10 +409,6 @@ const filteredThemes = computed(() => {
   max-width: 90%;
 }
 
-.specimen-pill:hover {
-  transform: translateY(-2px);
-}
-
 .specimen-icon {
   width: 36px;
   height: 36px;
@@ -439,18 +425,13 @@ const filteredThemes = computed(() => {
 .card-active-label {
   top: 12px;
   right: 12px;
-  padding: 4px 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card-theme-name {
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.01em;
-}
-
-.card-category-badge {
-  padding: 4px 10px;
 }
 
 .card-tagline {
@@ -471,13 +452,11 @@ const filteredThemes = computed(() => {
 .use-case-title {
   display: block;
   font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
-.use-case-tag {
-  padding: 4px 10px;
-  font-size: 0.78rem;
+.copy-id-btn {
+  padding: 2px 8px;
+  font-size: 0.75rem;
 }
 
 .spec-token-row {
@@ -510,7 +489,6 @@ const filteredThemes = computed(() => {
   background: var(--surface);
   border-color: var(--primary);
   color: var(--primary);
-  transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
 }
 
@@ -530,7 +508,6 @@ const filteredThemes = computed(() => {
 .btn-view-components:hover {
   background: var(--surface-subtle);
   border-color: var(--primary);
-  transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
 }
 
@@ -546,7 +523,7 @@ const filteredThemes = computed(() => {
 
 .comparison-heading {
   font-size: 1.85rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.01em;
 }
 

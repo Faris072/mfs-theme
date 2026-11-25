@@ -4,10 +4,12 @@
     <div class="detail-topbar mfs-surface mfs-border-none mfs-border-b">
       <div class="detail-topbar__inner mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3">
         <nav class="mfs-flex mfs-items-center mfs-gap-2-5" aria-label="Breadcrumb">
-          <button class="btn-back mfs-inline-flex mfs-items-center mfs-gap-2 mfs-surface-subtle mfs-pill mfs-text mfs-font-medium mfs-shadow mfs-cursor-pointer mfs-transition" @click="$emit('back')">
-            <ArrowLeft :size="15" class="icon-inline" />
+          <Button variant="surface" size="sm" @click="$emit('back')">
+            <template #prepend>
+              <ArrowLeft :size="15" class="icon-inline" />
+            </template>
             <span>Themes</span>
-          </button>
+          </Button>
           <span class="breadcrumb-separator mfs-text-muted">/</span>
           <span class="breadcrumb-current mfs-text mfs-font-semibold">{{ theme.name }}</span>
         </nav>
@@ -26,10 +28,10 @@
       <div class="detail-hero__content">
         <div class="mfs-flex mfs-items-center mfs-flex-wrap mfs-gap-2-5 mfs-mb-3">
           <component :is="currentIconComponent" :size="32" class="hero-icon mfs-text" />
-          <span class="hero-badge mfs-surface mfs-text-primary mfs-border mfs-pill mfs-font-semibold">{{ theme.badge }}</span>
-          <span v-if="isCurrentActive" class="active-tag mfs-bg-primary mfs-pill mfs-font-semibold">
+          <Badge variant="surface" size="sm" class="hero-badge">{{ theme.badge }}</Badge>
+          <Badge v-if="isCurrentActive" variant="primary" size="sm">
             Active
-          </span>
+          </Badge>
         </div>
 
         <h1 class="hero-heading mfs-text">{{ theme.name }}</h1>
@@ -38,26 +40,29 @@
 
         <!-- Actions -->
         <div class="mfs-flex mfs-items-center mfs-gap-3 mfs-flex-wrap mfs-mb-6">
-          <button class="btn-primary mfs-bg-primary mfs-border-none mfs-pill mfs-font-semibold mfs-shadow mfs-cursor-pointer mfs-transition" @click="activateTheme">
+          <Button variant="primary" size="md" @click="activateTheme">
             {{ isCurrentActive ? 'Active theme' : 'Apply this theme' }}
-          </button>
-          <button class="btn-outline mfs-surface mfs-text mfs-pill mfs-font-medium mfs-shadow mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="copyThemeImport">
-            <Copy v-if="!copiedImport" :size="14" class="icon-inline" />
-            <Check v-else :size="14" class="icon-inline" />
+          </Button>
+          <Button variant="surface" size="md" @click="copyThemeImport">
+            <template #prepend>
+              <Copy v-if="!copiedImport" :size="14" class="icon-inline" />
+              <Check v-else :size="14" class="icon-inline" />
+            </template>
             <span>{{ copiedImport ? 'Copied' : 'Copy setup code' }}</span>
-          </button>
+          </Button>
         </div>
 
         <!-- Key features list -->
         <div class="mfs-flex mfs-flex-wrap mfs-gap-2">
-          <div
+          <Chip
             v-for="(feature, idx) in theme.keyFeatures"
             :key="idx"
-            class="feature-chip mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-surface mfs-rounded-sm mfs-text"
+            :label="feature"
           >
-            <Check :size="14" class="mfs-text-primary" />
-            <span>{{ feature }}</span>
-          </div>
+            <template #prepend>
+              <Check :size="14" class="mfs-text-primary" />
+            </template>
+          </Chip>
         </div>
       </div>
     </section>
@@ -73,29 +78,31 @@
               Vue 3 components conforming to the {{ theme.name }} depth specification.
             </p>
           </div>
-          <div class="search-box mfs-flex mfs-items-center mfs-gap-2 mfs-surface mfs-pill mfs-py-2 mfs-px-4 mfs-shadow-inset">
-            <Search :size="16" class="mfs-text-muted" />
-            <input
+          <IconField class="search-box">
+            <InputIcon>
+              <Search :size="16" />
+            </InputIcon>
+            <Input
               v-model="searchQuery"
               type="text"
               placeholder="Filter components (e.g. Button, Input)..."
-              class="search-input mfs-border-none mfs-bg-transparent mfs-outline-none mfs-text mfs-w-full"
             />
-          </div>
+          </IconField>
         </div>
 
         <!-- Filter Categories -->
         <div class="filter-pills-row mfs-flex mfs-items-center mfs-gap-2 mfs-overflow-x-auto mfs-pb-3">
-          <button
+          <Button
             v-for="cat in categories"
             :key="cat"
-            class="cat-pill mfs-surface mfs-pill mfs-font-medium mfs-text-muted mfs-shadow mfs-cursor-pointer mfs-whitespace-nowrap mfs-transition"
-            :class="{ 'is-selected': selectedCategory === cat }"
+            :variant="selectedCategory === cat ? 'primary' : 'surface'"
+            size="sm"
+            class="mfs-whitespace-nowrap"
             @click="selectedCategory = cat"
           >
             {{ cat }}
             <span class="cat-count">({{ getCategoryCount(cat) }})</span>
-          </button>
+          </Button>
         </div>
 
         <!-- Component Cards Grid -->
@@ -104,37 +111,39 @@
             v-for="comp in filteredComponents"
             :key="comp.slug"
             :to="`/components/${comp.slug}`"
-            class="comp-card mfs-surface mfs-rounded-lg mfs-shadow-card mfs-p-5 mfs-flex mfs-flex-col mfs-interactive mfs-transition"
+            class="comp-card"
             @click="activateTheme"
           >
-            <div class="mfs-flex mfs-items-start mfs-justify-between mfs-gap-3 mfs-mb-2">
-              <div>
-                <h3 class="comp-name mfs-font-bold mfs-m-0 mfs-text">{{ comp.name }}</h3>
-                <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">{{ comp.category }}</span>
+            <Card hoverable class="mfs-h-full">
+              <div class="mfs-flex mfs-items-start mfs-justify-between mfs-gap-3 mfs-mb-2">
+                <div>
+                  <h3 class="comp-name mfs-font-bold mfs-m-0 mfs-text">{{ comp.name }}</h3>
+                  <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">{{ comp.category }}</span>
+                </div>
+                <Badge variant="surface" size="sm" class="status-ready">
+                  {{ comp.status ?? 'Ready' }}
+                </Badge>
               </div>
-              <span class="status-tag status-ready mfs-font-semibold mfs-pill mfs-soft-primary">
-                {{ comp.status ?? 'Ready' }}
-              </span>
-            </div>
 
-            <p class="comp-desc mfs-text-muted mfs-flex-1">{{ comp.summary }}</p>
+              <p class="comp-desc mfs-text-muted mfs-flex-1">{{ comp.summary }}</p>
 
-            <!-- Import snippet -->
-            <div class="mfs-mb-3">
-              <CodeEditor readonly :model-value="getImportSnippet(comp)" filename="main.ts" language="ts" />
-            </div>
+              <!-- Import snippet -->
+              <div class="mfs-mb-3">
+                <CodeEditor readonly :model-value="getImportSnippet(comp)" filename="main.ts" language="ts" />
+              </div>
 
-            <div class="mfs-flex mfs-items-center mfs-justify-end">
-              <span class="mfs-text-xs mfs-font-semibold mfs-text-primary">Live Preview &amp; API →</span>
-            </div>
+              <div class="mfs-flex mfs-items-center mfs-justify-end">
+                <span class="mfs-text-xs mfs-font-semibold mfs-text-primary">Live Preview &amp; API →</span>
+              </div>
+            </Card>
           </router-link>
         </div>
 
         <div v-else class="empty-state mfs-text-center mfs-surface mfs-rounded-md">
           <p>No components match the filter "<strong>{{ searchQuery }}</strong>"</p>
-          <button class="btn-outline mfs-surface mfs-text mfs-pill mfs-font-medium mfs-shadow mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="searchQuery = ''; selectedCategory = 'All'">
+          <Button variant="surface" size="sm" @click="searchQuery = ''; selectedCategory = 'All'">
             Reset filter
-          </button>
+          </Button>
         </div>
       </section>
 
@@ -146,10 +155,9 @@
         </p>
 
         <div class="tokens-grid">
-          <div
+          <Card
             v-for="token in theme.designTokens"
             :key="token.name"
-            class="mfs-surface mfs-rounded-md mfs-shadow-card mfs-p-4"
           >
             <div>
               <code class="token-name mfs-font-semibold mfs-text-primary mfs-font-mono">{{ token.name }}</code>
@@ -158,7 +166,7 @@
               <span>{{ token.value }}</span>
             </div>
             <p class="token-desc mfs-text-muted mfs-m-0">{{ token.description }}</p>
-          </div>
+          </Card>
         </div>
       </section>
 
@@ -193,7 +201,7 @@
 import { ref, computed } from 'vue'
 import {
   Layers,
-  Sparkles,
+  Gem,
   Circle,
   Minus,
   Square,
@@ -224,7 +232,7 @@ import {
   isDarkTheme
 } from '../data/themesData'
 import { COMPONENT_NAV, type ComponentNavItem } from '../data/componentDocs'
-import { CodeEditor } from '../lib'
+import { Badge, Button, Card, Chip, CodeEditor, IconField, Input, InputIcon } from '../lib'
 
 const props = defineProps<{
   themeId: ThemeType
@@ -252,7 +260,7 @@ const isCurrentActive = computed(() => {
 
 const iconMap: Record<ThemeType, any> = {
   clay: Layers,
-  glass: Sparkles,
+  glass: Gem,
   neo: Circle,
   minimalism: Minus,
   brutalism: Square,
@@ -391,10 +399,6 @@ const copySnippet = async (snippet: string, id: string) => {
   padding: 48px 24px;
 }
 
-.detail-hero--glass {
-  background: radial-gradient(circle at 20% 20%, #312e81 0%, #0f172a 65%, #020617 100%) !important;
-}
-
 .detail-hero--dark {
   color: #f8fafc;
 }
@@ -431,7 +435,7 @@ const copySnippet = async (snippet: string, id: string) => {
 
 .hero-heading {
   font-size: 2.6rem;
-  font-weight: 800;
+  font-weight: 600;
   margin: 0 0 8px;
   line-height: 1.15;
   letter-spacing: -0.02em;
@@ -455,7 +459,6 @@ const copySnippet = async (snippet: string, id: string) => {
 
 .btn-primary:hover {
   opacity: 0.92;
-  transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
 }
 
@@ -472,7 +475,6 @@ const copySnippet = async (snippet: string, id: string) => {
 .btn-outline:hover {
   background: var(--surface-subtle);
   border-color: var(--primary);
-  transform: translateY(-1px);
   box-shadow: var(--clay-shadow-hover);
 }
 

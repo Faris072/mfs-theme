@@ -72,7 +72,7 @@
             :is="item.to ? 'router-link' : 'a'"
             v-else
             :to="item.to"
-            :href="item.href"
+            :href="sanitizeHref(item.href)"
             role="menuitem"
             class="mega-menu__trigger mfs-rounded-sm mfs-text mfs-inline-flex mfs-items-center mfs-gap-2 mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-cursor-pointer"
             :class="{
@@ -122,7 +122,7 @@
                     :is="link.to ? 'router-link' : 'a'"
                     v-else
                     :to="link.to"
-                    :href="link.href"
+                    :href="sanitizeHref(link.href)"
                     role="menuitem"
                     class="mega-menu__link mfs-rounded-sm mfs-text mfs-w-full mfs-flex mfs-flex-col mfs-p-2 mfs-border-none mfs-bg-transparent mfs-text-left mfs-cursor-pointer"
                     @click="onLinkClick(link)"
@@ -144,6 +144,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch, type CSSProperties } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface MegaMenuLink {
   label: string

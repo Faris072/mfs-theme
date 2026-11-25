@@ -46,14 +46,14 @@
         <div class="mfs-flex mfs-flex-col mfs-gap-3">
           <div class="mfs-row mfs-gap-2">
             <span class="mfs-text-xs mfs-font-bold mfs-text-muted demo-label">Removable &amp; Semantic Variants</span>
-            <button
+            <Button
               v-if="tags.length < initialTags.length"
-              type="button"
-              class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
+              size="sm"
+              variant="surface"
               @click="tags = [...initialTags]"
             >
               Reset tags
-            </button>
+            </Button>
           </div>
           <div class="mfs-row">
             <Chip
@@ -113,15 +113,14 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': allowMultiple }"
+          <Button
+            size="sm"
+            :variant="allowMultiple ? 'primary' : 'surface'"
             :aria-pressed="allowMultiple"
             @click="toggleMultipleMode"
           >
             Multiple: {{ allowMultiple ? 'On' : 'Off' }}
-          </button>
+          </Button>
           <span class="mfs-caption">Open: {{ openLabel }}</span>
         </div>
 
@@ -144,22 +143,20 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': timelineLayout === 'vertical' }"
+          <Button
+            size="sm"
+            :variant="timelineLayout === 'vertical' ? 'primary' : 'surface'"
             @click="timelineLayout = 'vertical'"
           >
             Vertical
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': timelineLayout === 'horizontal' }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="timelineLayout === 'horizontal' ? 'primary' : 'surface'"
             @click="timelineLayout = 'horizontal'"
           >
             Horizontal
-          </button>
+          </Button>
         </div>
 
         <Timeline :items="timelineItems" :layout="timelineLayout" />
@@ -177,24 +174,22 @@
     >
       <div class="mfs-stack">
         <div class="mfs-row mfs-gap-2">
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': carouselAutoplay }"
+          <Button
+            size="sm"
+            :variant="carouselAutoplay ? 'primary' : 'surface'"
             :aria-pressed="carouselAutoplay"
             @click="carouselAutoplay = !carouselAutoplay"
           >
             Autoplay: {{ carouselAutoplay ? 'On' : 'Off' }}
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': carouselLoop }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="carouselLoop ? 'primary' : 'surface'"
             :aria-pressed="carouselLoop"
             @click="carouselLoop = !carouselLoop"
           >
             Loop: {{ carouselLoop ? 'On' : 'Off' }}
-          </button>
+          </Button>
           <span class="mfs-caption">Slide {{ carouselIndex + 1 }} / {{ carouselSlides.length }}</span>
         </div>
 
@@ -267,16 +262,15 @@
           <AvatarGroup :items="avatarGroupItems" :max="avatarGroupMax" size="sm" />
         </div>
         <div class="mfs-row mfs-items-center mfs-gap-2">
-          <button
+          <Button
             v-for="limit in [2, 3, 5]"
             :key="limit"
-            type="button"
-            class="mfs-px-3 mfs-py-1 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-font-semibold mfs-interactive demo-toggle-btn"
-            :class="{ 'is-active': avatarGroupMax === limit }"
+            size="sm"
+            :variant="avatarGroupMax === limit ? 'primary' : 'surface'"
             @click="avatarGroupMax = limit"
           >
             max: {{ limit }}
-          </button>
+          </Button>
         </div>
       </div>
     </ComponentPreview>
@@ -286,7 +280,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
-import { Avatar, Chip, Divider, Accordion, Timeline, Carousel, Image } from '../../lib'
+import { Avatar, Button, Chip, Divider, Accordion, Timeline, Carousel, Image } from '../../lib'
 import AvatarGroup from '../../lib/components/AvatarGroup.vue'
 import type { ApiRow } from '../../data/componentDocs'
 
@@ -437,19 +431,19 @@ const carouselSlides = [
     badge: 'Claymorphism',
     title: 'Soft Tactile Depth',
     description: 'Layered highlights and pillowy shadows that respond to touch.',
-    bg: 'linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(236, 72, 153, 0.18))'
+    bg: 'var(--mfs-surface-subtle)'
   },
   {
     badge: 'Glassmorphism',
     title: 'Frosted Translucency',
     description: 'Backdrop blur with crisp hairline borders over vibrant canvases.',
-    bg: 'linear-gradient(135deg, rgba(14, 165, 233, 0.22), rgba(16, 185, 129, 0.18))'
+    bg: 'var(--mfs-surface-elevated)'
   },
   {
     badge: 'Neumorphism',
     title: 'Extruded Surfaces',
     description: 'Dual directional shadows carved cleanly from the base surface.',
-    bg: 'linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(99, 102, 241, 0.16))'
+    bg: 'var(--mfs-surface-subtle)'
   }
 ]
 
@@ -683,7 +677,7 @@ export const carouselSlides: CarouselSlide[] = [
     badge: 'Claymorphism',
     title: 'Soft Tactile Depth',
     description: 'Layered highlights and pillowy shadows that respond to touch.',
-    bg: 'linear-gradient(135deg, rgba(99, 102, 241, 0.22), rgba(236, 72, 153, 0.18))'
+    bg: 'var(--mfs-surface-subtle)'
   },
   {
     badge: 'Glassmorphism',
@@ -878,7 +872,6 @@ const avatarGroupApi: { props: ApiRow[]; slots: ApiRow[] } = {
 <style scoped>
 .demo-label,
 .demo-slide__badge {
-  text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 

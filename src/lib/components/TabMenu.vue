@@ -33,7 +33,7 @@
           v-else
           :ref="(el: unknown) => setItemRef(idx, el)"
           :to="item.to"
-          :href="item.href"
+          :href="sanitizeHref(item.href)"
           role="tab"
           class="tab-menu__item mfs-rounded-sm mfs-text"
           :class="{
@@ -55,6 +55,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface TabMenuItem {
   key?: string

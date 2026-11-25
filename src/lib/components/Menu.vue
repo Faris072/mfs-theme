@@ -35,7 +35,7 @@
                     :is="sub.to ? 'router-link' : 'a'"
                     v-else
                     :to="sub.to"
-                    :href="sub.href"
+                    :href="sanitizeHref(sub.href)"
                     role="menuitem"
                     class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                     :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
@@ -70,7 +70,7 @@
                 :is="item.to ? 'router-link' : 'a'"
                 v-else
                 :to="item.to"
-                :href="item.href"
+                :href="sanitizeHref(item.href)"
                 role="menuitem"
                 class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                 :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
@@ -116,7 +116,7 @@
                 :is="sub.to ? 'router-link' : 'a'"
                 v-else
                 :to="sub.to"
-                :href="sub.href"
+                :href="sanitizeHref(sub.href)"
                 role="menuitem"
                 class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
                 :class="{ 'menu__item--disabled mfs-disabled': sub.disabled }"
@@ -151,7 +151,7 @@
             :is="item.to ? 'router-link' : 'a'"
             v-else
             :to="item.to"
-            :href="item.href"
+            :href="sanitizeHref(item.href)"
             role="menuitem"
             class="menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
             :class="{ 'menu__item--disabled mfs-disabled': item.disabled }"
@@ -171,6 +171,7 @@
 
 <script setup lang="ts">
 import { nextTick, onUnmounted, ref } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface MenuItem {
   label?: string

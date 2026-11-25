@@ -159,16 +159,15 @@
   >
     <div class="mfs-stack mfs-w-full">
       <div class="mfs-row">
-        <button
+        <Button
           v-for="pos in (['bottom', 'top', 'left', 'right'] as const)"
           :key="pos"
-          type="button"
-          class="mfs-pill mfs-px-3 mfs-py-1 mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-interactive demo-pill-btn"
-          :class="{ 'is-active': popoverPlacement === pos }"
+          size="sm"
+          :variant="popoverPlacement === pos ? 'primary' : 'surface'"
           @click="popoverPlacement = pos"
         >
           {{ pos }}
-        </button>
+        </Button>
       </div>
 
       <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6">

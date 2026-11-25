@@ -15,85 +15,87 @@
 
             <!-- CTA Actions -->
             <div class="landing-actions mfs-flex mfs-items-center mfs-flex-wrap">
-              <button class="action-primary mfs-bg-primary mfs-pill mfs-font-semibold mfs-inline-flex mfs-items-center mfs-gap-2 mfs-shadow mfs-cursor-pointer mfs-transition" @click="$emit('explore-catalog')">
-                <span>Next: Choose Theme</span>
-                <ArrowRight class="icon-inline" :size="16" />
-              </button>
-              <router-link to="/components" class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition">
-                <span>Browse components</span>
-              </router-link>
-              <button class="action-secondary mfs-surface mfs-text mfs-pill mfs-font-medium mfs-inline-flex mfs-items-center mfs-justify-center mfs-shadow mfs-cursor-pointer mfs-transition" @click="scrollToSection('install-guide')">
-                <span>Installation guide</span>
-              </button>
+              <Button variant="primary" size="md" @click="$emit('explore-catalog')">
+                <span>Explore themes</span>
+                <template #append>
+                  <ArrowRight class="icon-inline" :size="16" />
+                </template>
+              </Button>
+              <Button variant="surface" size="md" @click="router.push('/components')">
+                Browse components
+              </Button>
+              <Button variant="surface" size="md" @click="scrollToSection('install-guide')">
+                Installation guide
+              </Button>
             </div>
           </div>
 
           <!-- Live Component Morphing Test (Real UI, No fake OS chrome) -->
           <div class="mfs-w-full mfs-min-w-0">
-            <div class="mfs-surface mfs-rounded-lg mfs-shadow-card mfs-overflow-hidden">
-              <div class="surface-header mfs-surface-subtle mfs-border-none mfs-border-b mfs-flex mfs-flex-col mfs-gap-2">
-                <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
-                  <span class="surface-label mfs-font-semibold mfs-text-muted">Live component state</span>
-                  <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">{{ currentThemeName }}</span>
+            <Card bordered class="preview-card mfs-overflow-hidden">
+              <template #header>
+                <div class="mfs-flex mfs-flex-col mfs-gap-2">
+                  <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
+                    <span class="surface-label mfs-font-semibold mfs-text-muted">Live component state</span>
+                    <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">{{ currentThemeName }}</span>
+                  </div>
+                  <div class="theme-switch-group mfs-flex mfs-overflow-x-auto">
+                    <Chip
+                      v-for="t in allThemes"
+                      :key="t.id"
+                      clickable
+                      :active="currentTheme === t.id"
+                      :variant="currentTheme === t.id ? 'primary' : 'surface'"
+                      class="theme-chip mfs-whitespace-nowrap mfs-shrink-0"
+                      @click="$emit('select-theme', t.id)"
+                    >
+                      <template #prepend>
+                        <component :is="getThemeIcon(t)" :size="13" class="theme-toggle-icon" />
+                      </template>
+                      {{ t.name }}
+                    </Chip>
+                  </div>
                 </div>
-                <div class="theme-switch-group mfs-flex mfs-surface mfs-pill mfs-shadow-inset mfs-overflow-x-auto">
-                  <button
-                    v-for="t in allThemes"
-                    :key="t.id"
-                    class="theme-toggle-btn mfs-border-none mfs-pill mfs-font-semibold mfs-text-muted mfs-flex mfs-items-center mfs-bg-transparent mfs-cursor-pointer mfs-whitespace-nowrap mfs-shrink-0 mfs-transition"
-                    :class="{ 'is-active': currentTheme === t.id }"
-                    @click="$emit('select-theme', t.id)"
-                  >
-                    <component :is="getThemeIcon(t)" :size="13" class="theme-toggle-icon" />
-                    <span>{{ t.name }}</span>
-                  </button>
+              </template>
+
+              <div class="demo-card-inner mfs-flex mfs-flex-col">
+                <div class="demo-card-row mfs-flex mfs-items-center">
+                  <Avatar :label="inputName || 'A'" size="lg" shape="rounded" />
+                  <div class="mfs-flex mfs-flex-col mfs-min-w-0">
+                    <span class="demo-user-name mfs-text mfs-truncate">{{ inputName || 'Amina Chen' }}</span>
+                    <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">Theme: {{ currentThemeName }}</span>
+                  </div>
                 </div>
-              </div>
 
-              <div class="mfs-p-6">
-                <div class="demo-card-inner mfs-flex mfs-flex-col">
-                  <div class="demo-card-row mfs-flex mfs-items-center">
-                    <div class="demo-avatar mfs-rounded-md mfs-bg-primary mfs-flex mfs-items-center mfs-justify-center mfs-shadow mfs-shrink-0">
-                      {{ inputName ? inputName.charAt(0).toUpperCase() : 'U' }}
-                    </div>
-                    <div class="mfs-flex mfs-flex-col mfs-min-w-0">
-                      <span class="demo-user-name mfs-text mfs-truncate">{{ inputName || 'Developer' }}</span>
-                      <span class="demo-theme-indicator mfs-font-semibold mfs-text-primary">Theme: {{ currentThemeName }}</span>
-                    </div>
-                  </div>
+                <Input
+                  id="hero-user-input"
+                  v-model="inputName"
+                  label="User handle"
+                  placeholder="Type name here"
+                />
 
-                  <div class="mfs-flex mfs-flex-col mfs-gap-1-5">
-                    <label class="demo-label mfs-font-bold mfs-text-muted" for="hero-user-input">User handle</label>
-                    <div class="demo-input-box mfs-surface-subtle mfs-rounded-sm mfs-shadow-inset mfs-transition">
-                      <input
-                        id="hero-user-input"
-                        v-model="inputName"
-                        type="text"
-                        class="demo-input-element mfs-w-full mfs-border-none mfs-text mfs-font-semibold mfs-bg-transparent mfs-outline-none"
-                        placeholder="Type name here"
-                      />
-                    </div>
-                  </div>
-
-                  <div class="demo-action-row mfs-flex mfs-flex-wrap mfs-gap-3">
-                    <button class="demo-button-primary mfs-bg-primary mfs-pill mfs-font-bold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="handleAction">
-                      <Sparkles v-if="actionDone" :size="15" class="icon-inline" />
-                      <span>{{ actionDone ? 'Saved to state!' : 'Action button' }}</span>
-                    </button>
-                    <button class="demo-button-secondary mfs-surface mfs-text mfs-pill mfs-font-semibold mfs-shadow mfs-inline-flex mfs-items-center mfs-justify-center mfs-gap-1-5 mfs-cursor-pointer mfs-transition" @click="$emit('open-theme-detail', currentTheme)">
-                      <span>View specs</span>
-                    </button>
-                  </div>
+                <div class="demo-action-row mfs-flex mfs-flex-wrap mfs-gap-3">
+                  <Button variant="primary" size="md" @click="handleAction">
+                    <template v-if="actionDone" #prepend>
+                      <Check :size="15" class="icon-inline" />
+                    </template>
+                    <span>{{ actionDone ? 'Saved to state' : 'Action button' }}</span>
+                  </Button>
+                  <Button variant="surface" size="md" @click="$emit('open-theme-detail', currentTheme)">
+                    View specs
+                  </Button>
                 </div>
               </div>
-            </div>
+            </Card>
           </div>
         </div>
       </div>
     </section>
 
+    <Divider class="section-divider" />
+
     <!-- Theme Showcase Grid -->
-    <section class="pillars-section mfs-border-none mfs-border-t mfs-border-b mfs-surface-subtle">
+    <section class="pillars-section mfs-surface-subtle">
       <div class="mfs-container">
         <h2 class="section-title mfs-text">{{ allThemes.length }} distinct aesthetic paradigms</h2>
         <p class="section-caption mfs-text-muted">
@@ -101,40 +103,46 @@
         </p>
 
         <div class="pillars-grid mfs-gap-6">
-          <div
+          <Card
             v-for="t in allThemes"
             :key="t.id"
             :data-theme="t.id"
-            class="pillar-card mfs-card mfs-p-6 mfs-h-full mfs-flex mfs-flex-col mfs-cursor-pointer mfs-transition"
+            bordered
+            hoverable
+            class="pillar-card mfs-h-full mfs-cursor-pointer"
             :class="{ 'is-selected': currentTheme === t.id }"
             @click="$emit('select-theme', t.id)"
           >
-            <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-mb-4">
-              <div class="pillar-icon-box mfs-surface-subtle mfs-shadow-inset mfs-flex mfs-items-center mfs-justify-center mfs-text-primary">
-                <component :is="getThemeIcon(t)" :size="20" />
+            <div class="mfs-flex mfs-flex-col mfs-h-full">
+              <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-mb-4">
+                <div class="pillar-icon-box mfs-surface-subtle mfs-shadow-inset mfs-flex mfs-items-center mfs-justify-center mfs-text-primary">
+                  <component :is="getThemeIcon(t)" :size="20" />
+                </div>
+                <Badge variant="surface" size="sm">
+                  {{ t.badge }}
+                </Badge>
               </div>
-              <span class="pillar-badge mfs-surface-subtle mfs-text-primary mfs-font-bold mfs-pill mfs-border">
-                {{ t.badge }}
-              </span>
-            </div>
-            <h3 class="pillar-title mfs-text">{{ t.name }}</h3>
-            <p class="pillar-description mfs-text-muted mfs-flex-1">{{ t.tagline }}</p>
-            <div class="pillar-mini-specimen mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
-              <div class="mfs-bg-primary mfs-inline-flex mfs-items-center mfs-gap-2 mfs-pill mfs-font-bold mfs-px-3 mfs-py-1-5 mfs-text-xs mfs-shadow">
-                <span class="demo-dot mfs-rounded-full"></span>
-                <span>{{ currentTheme === t.id ? 'Active' : 'Preview' }}</span>
+              <h3 class="pillar-title mfs-text">{{ t.name }}</h3>
+              <p class="pillar-description mfs-text-muted mfs-flex-1">{{ t.tagline }}</p>
+              <div class="pillar-mini-specimen mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
+                <Badge :variant="currentTheme === t.id ? 'primary' : 'surface'" size="sm">
+                  {{ currentTheme === t.id ? 'Active' : 'Preview' }}
+                </Badge>
+                <Button
+                  variant="surface"
+                  size="sm"
+                  @click.stop="$emit('open-theme-detail', t.id)"
+                >
+                  Specs
+                </Button>
               </div>
-              <button
-                class="mfs-surface-subtle mfs-text mfs-pill mfs-text-xs mfs-font-semibold mfs-px-3 mfs-py-1-5 mfs-cursor-pointer mfs-transition"
-                @click.stop="$emit('open-theme-detail', t.id)"
-              >
-                Specs
-              </button>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </section>
+
+    <Divider class="section-divider" />
 
     <!-- Quick Start Installation -->
     <section id="install-guide" class="install-section">
@@ -147,19 +155,28 @@
         <div class="code-flow-grid mfs-gap-6">
           <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <span class="code-step-label mfs-font-semibold mfs-text">1. Terminal</span>
-            <div class="code-box mfs-relative mfs-overflow-x-auto mfs-surface-subtle mfs-rounded-md mfs-shadow-inset mfs-p-4 mfs-font-mono mfs-text">
-              <code>npm install @mfs-atomic/ui</code>
-              <button class="btn-copy-code mfs-absolute mfs-cursor-pointer mfs-transition mfs-surface mfs-pill mfs-text-muted mfs-py-1 mfs-px-2 mfs-flex mfs-items-center mfs-justify-center mfs-shadow" @click="copyCode('npm install @mfs-atomic/ui')">
-                <Copy v-if="!copied" :size="14" />
-                <Check v-else :size="14" />
-              </button>
-            </div>
+            <Card bordered class="code-card">
+              <div class="code-box mfs-relative mfs-overflow-x-auto mfs-font-mono mfs-text">
+                <code>npm install @mfs-atomic/ui</code>
+                <Button
+                  variant="surface"
+                  size="sm"
+                  class="btn-copy-code mfs-absolute"
+                  aria-label="Copy install command"
+                  @click="copyCode('npm install @mfs-atomic/ui')"
+                >
+                  <Copy v-if="!copied" :size="14" />
+                  <Check v-else :size="14" />
+                </Button>
+              </div>
+            </Card>
           </div>
 
           <div class="mfs-flex mfs-flex-col mfs-gap-2">
             <span class="code-step-label mfs-font-semibold mfs-text">2. Application setup (main.ts)</span>
-            <div class="code-box mfs-relative mfs-overflow-x-auto mfs-surface-subtle mfs-rounded-md mfs-shadow-inset mfs-p-4 mfs-font-mono mfs-text">
-              <pre class="mfs-m-0"><code>import { createApp } from 'vue'
+            <Card bordered class="code-card">
+              <div class="code-box mfs-relative mfs-overflow-x-auto mfs-font-mono mfs-text">
+                <pre class="mfs-m-0"><code>import { createApp } from 'vue'
 import App from './App.vue'
 import MfsTheme from '@mfs-atomic/ui'
 import '@mfs-atomic/ui/style.css'
@@ -167,24 +184,29 @@ import '@mfs-atomic/ui/style.css'
 const app = createApp(App)
 app.use(MfsTheme, { defaultTheme: 'clay' })
 app.mount('#app')</code></pre>
-            </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
     </section>
 
+    <Divider class="section-divider" />
+
     <!-- Footer Action -->
-    <section class="closing-action mfs-border-none mfs-border-t">
+    <section class="closing-action">
       <div class="mfs-container mfs-text-center mfs-flex mfs-flex-col mfs-items-center">
         <h2 class="closing-title mfs-text mfs-m-0 mfs-mb-2">Explore theme directory</h2>
         <p class="closing-desc mfs-text-muted mfs-m-0 mfs-mb-6">
           Browse the full component directory, interactive props, and utility styling guides.
         </p>
         <div class="mfs-flex mfs-gap-3">
-          <button class="action-primary mfs-bg-primary mfs-pill mfs-font-semibold mfs-inline-flex mfs-items-center mfs-gap-2 mfs-shadow mfs-cursor-pointer mfs-transition" @click="$emit('explore-catalog')">
+          <Button variant="primary" size="lg" @click="$emit('explore-catalog')">
             <span>Browse themes</span>
-            <ArrowRight class="icon-inline" :size="16" />
-          </button>
+            <template #append>
+              <ArrowRight class="icon-inline" :size="16" />
+            </template>
+          </Button>
         </div>
       </div>
     </section>
@@ -193,6 +215,8 @@ app.mount('#app')</code></pre>
 
 <script setup lang="ts">
 import { ref, computed, type Component } from 'vue'
+import { useRouter } from 'vue-router'
+import { Button, Card, Chip, Avatar, Input, Badge, Divider } from '../lib'
 import {
   Layers,
   Sparkles,
@@ -230,7 +254,8 @@ defineEmits<{
   (e: 'open-theme-detail', theme: ThemeType): void
 }>()
 
-const inputName = ref('Faris Developer')
+const router = useRouter()
+const inputName = ref('Amina Chen')
 const actionDone = ref(false)
 const copied = ref(false)
 
@@ -313,7 +338,7 @@ const scrollToSection = (id: string) => {
 
 .landing-title {
   font-size: 2.85rem;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1.15;
   margin-top: 0;
   letter-spacing: -0.02em;
@@ -327,24 +352,7 @@ const scrollToSection = (id: string) => {
 }
 
 .landing-actions {
-  gap: 14px;
-}
-
-.action-primary {
-  border: 1px solid transparent;
-  padding: 12px 22px;
-  font-size: 0.95rem;
-}
-
-.action-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--clay-shadow-hover);
-  opacity: 0.96;
-}
-
-.action-primary:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--clay-shadow-active);
+  gap: 12px;
 }
 
 .icon-inline {
@@ -352,49 +360,19 @@ const scrollToSection = (id: string) => {
   vertical-align: middle;
 }
 
-.action-secondary {
-  padding: 12px 20px;
-  font-size: 0.95rem;
-  text-decoration: none;
-}
-
-.action-secondary:hover {
-  background: var(--surface-subtle);
-  border-color: var(--primary);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--clay-shadow-hover);
-}
-
-.action-secondary:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--clay-shadow-active);
-}
-
 /* Surface Panel */
-.surface-header {
-  padding: 14px 18px;
-}
-
 .surface-label {
   font-size: 0.8rem;
 }
 
 .theme-switch-group {
   padding: 4px;
-  gap: 4px;
+  gap: 8px;
   max-width: 100%;
 }
 
-.theme-toggle-btn {
-  padding: 5px 10px;
+.theme-chip {
   font-size: 0.76rem;
-  gap: 5px;
-}
-
-.theme-toggle-btn.is-active {
-  background: var(--primary);
-  color: var(--primary-text, #ffffff);
-  box-shadow: var(--clay-shadow);
 }
 
 .theme-toggle-icon {
@@ -402,75 +380,38 @@ const scrollToSection = (id: string) => {
 }
 
 .demo-card-inner {
-  gap: 18px;
+  gap: 16px;
 }
 
 .demo-card-row {
-  gap: 14px;
-}
-
-.demo-avatar {
-  width: 46px;
-  height: 46px;
-  font-size: 1.25rem;
-  font-weight: 800;
+  gap: 12px;
 }
 
 .demo-user-name {
   font-size: 1.05rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .demo-theme-indicator {
   font-size: 0.78rem;
 }
 
-.demo-label {
-  font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.demo-input-box {
-  padding: 3px 6px;
-}
-
-.demo-input-box:focus-within {
-  border-color: var(--primary);
-}
-
-.demo-input-element {
-  padding: 8px 10px;
-  font-size: 0.92rem;
-}
-
 .demo-action-row > * {
   flex: 1;
 }
 
-.demo-button-primary,
-.demo-button-secondary {
-  padding: 11px 16px;
-  font-size: 0.88rem;
+/* Override button transform-based hover/active in scoped context */
+:deep(.btn) {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.demo-button-primary:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--clay-shadow-hover);
-  filter: brightness(1.05);
+:deep(.btn:hover),
+:deep(.btn:active) {
+  transform: none;
 }
 
-.demo-button-primary:active,
-.demo-button-secondary:active {
-  transform: translateY(1px) scale(0.98);
-  box-shadow: var(--clay-shadow-active);
-}
-
-.demo-button-secondary:hover {
-  background: var(--surface-subtle);
-  border-color: var(--primary);
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: var(--clay-shadow-hover);
+.section-divider {
+  margin: 0;
 }
 
 /* Pillars / Showcase Section */
@@ -480,8 +421,8 @@ const scrollToSection = (id: string) => {
 
 .section-title {
   font-size: 2.2rem;
-  font-weight: 800;
-  margin: 0 0 10px;
+  font-weight: 600;
+  margin: 0 0 12px;
   letter-spacing: -0.02em;
 }
 
@@ -497,11 +438,6 @@ const scrollToSection = (id: string) => {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
 }
 
-.pillar-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--clay-shadow-hover);
-}
-
 .pillar-card.is-selected {
   border-color: var(--primary);
 }
@@ -512,33 +448,21 @@ const scrollToSection = (id: string) => {
   border-radius: var(--radius-md, 12px);
 }
 
-.pillar-badge {
-  font-size: 0.72rem;
-  padding: 4px 10px;
-}
-
 .pillar-title {
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 600;
   margin: 0 0 8px;
-  letter-spacing: -0.01em;
 }
 
 .pillar-description {
   font-size: 0.86rem;
   line-height: 1.5;
-  margin: 0 0 18px;
+  margin: 0 0 16px;
 }
 
 .pillar-mini-specimen {
   margin-top: auto;
-  padding-top: 10px;
-}
-
-.demo-dot {
-  width: 7px;
-  height: 7px;
-  background: currentColor;
+  padding-top: 12px;
 }
 
 /* Install Section */
@@ -558,21 +482,14 @@ const scrollToSection = (id: string) => {
 .code-box {
   font-size: 0.85rem;
   padding-right: 48px;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
 }
 
 .btn-copy-code {
-  top: 10px;
-  right: 10px;
-}
-
-.btn-copy-code:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  box-shadow: var(--clay-shadow-hover);
-}
-
-.btn-copy-code:active {
-  box-shadow: var(--clay-shadow-active);
+  top: 0;
+  right: 0;
 }
 
 /* Closing Action */
@@ -582,7 +499,7 @@ const scrollToSection = (id: string) => {
 
 .closing-title {
   font-size: 1.85rem;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .closing-desc {

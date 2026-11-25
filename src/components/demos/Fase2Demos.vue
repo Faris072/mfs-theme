@@ -1500,7 +1500,6 @@ const mentionsApi: ApiSpec = {
 
 <style scoped>
 .demo-group-title {
-  text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 

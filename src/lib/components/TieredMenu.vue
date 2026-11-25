@@ -48,7 +48,7 @@
             :is="item.to ? 'router-link' : 'a'"
             v-else
             :to="item.to"
-            :href="item.href"
+            :href="sanitizeHref(item.href)"
             role="menuitem"
             class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
             :class="{
@@ -122,7 +122,7 @@
               :is="sub.to ? 'router-link' : 'a'"
               v-else
               :to="sub.to"
-              :href="sub.href"
+              :href="sanitizeHref(sub.href)"
               role="menuitem"
               class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
               :class="{
@@ -170,7 +170,7 @@
               :is="leaf.to ? 'router-link' : 'a'"
               v-else
               :to="leaf.to"
-              :href="leaf.href"
+              :href="sanitizeHref(leaf.href)"
               role="menuitem"
               class="tiered-menu__item mfs-rounded-sm mfs-text mfs-focus-ring"
               :class="{ 'tiered-menu__item--disabled mfs-disabled': leaf.disabled }"
@@ -189,6 +189,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch, type CSSProperties } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface TieredMenuItem {
   label?: string

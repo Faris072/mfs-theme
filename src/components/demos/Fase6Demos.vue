@@ -1,124 +1,223 @@
 <template>
   <!-- DataTable -->
-  <ComponentPreview
-    v-if="activeSlug === 'data-table'"
-    title="Interactive DataTable"
-    description="Sort columns, filter rows via live search, select single or multiple rows, and switch mobile responsive mode between stacked cards and horizontal scroll."
-    :code="dataTableCode"
-    :code-tabs="dataTableCodeTabs"
-    :api="dataTableApi"
-  >
-    <div class="mfs-stack">
-      <Alert severity="info" title="Client-Side vs Server-Side (Lazy)">
-        <div class="mfs-stack mfs-gap-1 mfs-text-xs">
-          <span>
-            <strong>Client-Side (default):</strong> Pass the full <code>:rows</code> array; <code>DataTable</code> handles <code>searchable</code>, <code>paginator</code>, and column sorting automatically.
-          </span>
-          <span>
-            <strong>Server-Side (<code>lazy</code>):</strong> Set <code>:lazy="true"</code> and <code>:total-records="total"</code>, then fetch new slices on <code>@page</code>, <code>@sort</code>, and debounced <code>@update:search-query</code> while binding <code>:loading</code>.
-          </span>
-        </div>
-      </Alert>
-
-      <div class="mfs-row mfs-justify-between demo-controls">
-        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Responsive mode">
-          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mobile Mode:</span>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableResponsiveMode === 'card' }"
-            @click="tableResponsiveMode = 'card'"
-          >
-            Card
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableResponsiveMode === 'scroll' }"
-            @click="tableResponsiveMode = 'scroll'"
-          >
-            Scroll
-          </button>
-        </div>
-
-        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Selection mode">
-          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Selection:</span>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableSelectionMode === 'multiple' }"
-            @click="setTableSelectionMode('multiple')"
-          >
-            Multiple
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableSelectionMode === 'single' }"
-            @click="setTableSelectionMode('single')"
-          >
-            Single
-          </button>
-        </div>
-
-        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Sort mode">
-          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Sort Mode:</span>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableSortMode === 'single' }"
-            @click="setTableSortMode('single')"
-          >
-            Single
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': tableSortMode === 'multiple' }"
-            @click="setTableSortMode('multiple')"
-          >
-            Multiple
-          </button>
-        </div>
-      </div>
-
-      <DataTable
-        v-model:selection="tableSelection"
-        v-model:search-query="tableQuery"
-        v-model:page="tablePage"
-        v-model:rows-per-page="tableRowsPerPage"
-        v-model:multi-sort-meta="tableMultiSortMeta"
-        :columns="tableColumns"
-        :rows="tableRows"
-        :rows-per-page-options="[5, 10, 20]"
-        :selectable="tableSelectionMode"
-        :responsive-mode="tableResponsiveMode"
-        :sort-mode="tableSortMode"
-        paginator
-        searchable
-        @sort="onTableSort"
-      >
-        <template #header>
-          <span class="mfs-text-base mfs-font-bold mfs-text">Team Directory ({{ tableRows.length }})</span>
-        </template>
+  <div v-if="activeSlug === 'data-table'" class="mfs-stack mfs-gap-6">
+    <!-- 1. Basic -->
+    <ComponentPreview
+      title="Basic"
+      description="Minimal DataTable displaying structured rows and columns with zero extra chrome."
+      :code="basicCode"
+      :code-tabs="basicCodeTabs"
+      :api="dataTableApi"
+    >
+      <DataTable :value="basicRows" :columns="basicCols">
         <template #cell-status="{ value }">
           <Badge :variant="statusVariant(value)">{{ value }}</Badge>
         </template>
       </DataTable>
+    </ComponentPreview>
 
-      <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
-        <span>
-          <strong>Selected:</strong> {{ selectedSummary }}
-        </span>
-        <span>
-          <strong>Page:</strong> {{ tablePage }} ({{ tableRowsPerPage }}/page)
-        </span>
-        <span v-if="lastSort">
-          <strong>Sort:</strong> {{ lastSort }}
-        </span>
+    <!-- 2. Search & Pagination -->
+    <ComponentPreview
+      title="Search & Pagination"
+      description="Enable built-in client-side filtering and page-size controls with searchable and paginator."
+      :code="searchPaginationCode"
+    >
+      <DataTable
+        :value="teamRows"
+        :columns="teamCols"
+        searchable
+        paginator
+        :rows="5"
+        :rows-per-page-options="[5, 10]"
+      >
+        <template #cell-status="{ value }">
+          <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+        </template>
+      </DataTable>
+    </ComponentPreview>
+
+    <!-- 3. Sorting (Single & Multiple) -->
+    <ComponentPreview
+      title="Sorting (Single & Multiple)"
+      description="Sort by a single column or stack multiple sort priorities with sort-mode='multiple'."
+      :code="multiSortCode"
+    >
+      <div class="mfs-stack mfs-gap-3">
+        <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
+          <div class="mfs-inline-flex mfs-items-center mfs-gap-2" role="group" aria-label="Sort mode">
+            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Sort Mode:</span>
+            <Button
+              size="sm"
+              :variant="tableSortMode === 'single' ? 'primary' : 'surface'"
+              @click="setTableSortMode('single')"
+            >
+              Single
+            </Button>
+            <Button
+              size="sm"
+              :variant="tableSortMode === 'multiple' ? 'primary' : 'surface'"
+              @click="setTableSortMode('multiple')"
+            >
+              Multiple
+            </Button>
+          </div>
+          <span v-if="lastSort" class="mfs-text-xs mfs-text-muted">
+            <strong>Active Sort:</strong> {{ lastSort }}
+          </span>
+        </div>
+
+        <DataTable
+          v-model:multi-sort-meta="tableMultiSortMeta"
+          :value="teamRows.slice(0, 5)"
+          :columns="sortableCols"
+          :sort-mode="tableSortMode"
+          @sort="onTableSort"
+        >
+          <template #cell-status="{ value }">
+            <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+          </template>
+        </DataTable>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+
+    <!-- 4. Row Selection -->
+    <ComponentPreview
+      title="Row Selection"
+      description="Bind v-model:selection with selectable='single' (radio) or selectable='multiple' (checkboxes)."
+      :code="selectionCode"
+    >
+      <div class="mfs-stack mfs-gap-3">
+        <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
+          <div class="mfs-inline-flex mfs-items-center mfs-gap-2" role="group" aria-label="Selection mode">
+            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mode:</span>
+            <Button
+              size="sm"
+              :variant="tableSelectionMode === 'multiple' ? 'primary' : 'surface'"
+              @click="setTableSelectionMode('multiple')"
+            >
+              Multiple
+            </Button>
+            <Button
+              size="sm"
+              :variant="tableSelectionMode === 'single' ? 'primary' : 'surface'"
+              @click="setTableSelectionMode('single')"
+            >
+              Single
+            </Button>
+          </div>
+          <span class="mfs-text-xs mfs-text-muted">
+            <strong>Selected:</strong> {{ selectedSummary }}
+          </span>
+        </div>
+
+        <DataTable
+          v-model:selection="tableSelection"
+          :value="teamRows.slice(0, 5)"
+          :columns="teamCols"
+          :selectable="tableSelectionMode"
+        >
+          <template #cell-status="{ value }">
+            <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+          </template>
+        </DataTable>
+      </div>
+    </ComponentPreview>
+
+    <!-- 5. Row Expansion -->
+    <ComponentPreview
+      title="Row Expansion"
+      description="Add expandable and a #expansion slot to reveal per-row detail panels."
+      :code="expansionCode"
+    >
+      <DataTable
+        v-model:expanded-rows="tableExpandedRows"
+        :value="teamRows.slice(0, 5)"
+        :columns="teamCols"
+        expandable
+      >
+        <template #cell-status="{ value }">
+          <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+        </template>
+        <template #expansion="{ row }">
+          <div class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3">
+            <div class="mfs-stack mfs-gap-1">
+              <div class="mfs-text-sm mfs-font-bold mfs-text">
+                {{ row.name }} — {{ row.role }}
+              </div>
+              <div class="mfs-text-xs mfs-text-muted">
+                Status: <strong>{{ row.status }}</strong> · Performance Score: <strong>{{ row.score }}/100</strong>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              @click="lastInspectedMember = `${row.name} (${row.role})`"
+            >
+              {{ lastInspectedMember === `${row.name} (${row.role})` ? 'Inspected' : 'Inspect Profile' }}
+            </Button>
+          </div>
+        </template>
+      </DataTable>
+    </ComponentPreview>
+
+    <!-- 6. Column Toggle -->
+    <ComponentPreview
+      title="Column Toggle"
+      description="Let users show or hide columns dynamically from the toolbar Columns dropdown."
+      :code="columnToggleCode"
+    >
+      <DataTable
+        v-model:visible-columns="tableVisibleColumns"
+        :value="teamRows.slice(0, 5)"
+        :columns="teamCols"
+        searchable
+        column-toggle
+      >
+        <template #cell-status="{ value }">
+          <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+        </template>
+      </DataTable>
+    </ComponentPreview>
+
+    <!-- 7. Server-Side (Lazy) -->
+    <ComponentPreview
+      title="Server-Side (Lazy)"
+      description="Delegate pagination, sorting, and filtering to your backend API with lazy and :total-records."
+      :code="lazyCodeTabs[0].code"
+      :code-tabs="lazyCodeTabs"
+    >
+      <div class="mfs-stack mfs-gap-3">
+        <Alert severity="info" title="Server-Side (Lazy) Mode">
+          <span class="mfs-text-xs">
+            Set <code>lazy</code> and <code>:total-records="total"</code>, then fetch slices on <code>@page</code>, <code>@sort</code>, and debounced <code>@update:search-query</code> while binding <code>:loading</code>.
+          </span>
+        </Alert>
+
+        <DataTable
+          v-model:page="lazyPage"
+          v-model:rows-per-page="lazyRowsPerPage"
+          v-model:search-query="lazyQuery"
+          v-model:multi-sort-meta="lazyMultiSortMeta"
+          :value="lazyRows"
+          :columns="sortableCols"
+          :total-records="lazyTotalRecords"
+          :rows-per-page-options="[5, 10]"
+          :loading="lazyLoading"
+          sort-mode="multiple"
+          lazy
+          paginator
+          searchable
+          @page="loadLazyDemo"
+          @sort="loadLazyDemo"
+          @update:search-query="loadLazyDemo"
+        >
+          <template #cell-status="{ value }">
+            <Badge :variant="statusVariant(value)">{{ value }}</Badge>
+          </template>
+        </DataTable>
+      </div>
+    </ComponentPreview>
+  </div>
 
   <!-- DataView -->
   <ComponentPreview
@@ -139,22 +238,20 @@
           <div class="mfs-row mfs-justify-between demo-controls">
             <span class="mfs-text-base mfs-font-bold mfs-text">Theme Presets ({{ filteredCatalog.length }})</span>
             <div v-if="viewLayout === 'grid'" class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Grid columns">
-              <button
-                type="button"
-                class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-                :class="{ 'is-active': viewColumns === 2 }"
+              <Button
+                size="sm"
+                :variant="viewColumns === 2 ? 'primary' : 'surface'"
                 @click="viewColumns = 2"
               >
                 2 Cols
-              </button>
-              <button
-                type="button"
-                class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-                :class="{ 'is-active': viewColumns === 3 }"
+              </Button>
+              <Button
+                size="sm"
+                :variant="viewColumns === 3 ? 'primary' : 'surface'"
                 @click="viewColumns = 3"
               >
                 3 Cols
-              </button>
+              </Button>
             </div>
           </div>
         </template>
@@ -198,36 +295,33 @@
     <div class="mfs-stack">
       <div class="mfs-row mfs-justify-between demo-controls">
         <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2">
-          <button type="button" class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill" @click="expandAllTree">Expand All</button>
-          <button type="button" class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill" @click="treeExpanded = []">Collapse All</button>
+          <Button size="sm" variant="surface" @click="expandAllTree">Expand All</Button>
+          <Button size="sm" variant="surface" @click="treeExpanded = []">Collapse All</Button>
         </div>
 
         <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Tree selection mode">
           <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mode:</span>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': treeSelectionMode === 'checkbox' }"
+          <Button
+            size="sm"
+            :variant="treeSelectionMode === 'checkbox' ? 'primary' : 'surface'"
             @click="setTreeMode('checkbox')"
           >
             Checkbox
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': treeSelectionMode === 'single' }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="treeSelectionMode === 'single' ? 'primary' : 'surface'"
             @click="setTreeMode('single')"
           >
             Single
-          </button>
-          <button
-            type="button"
-            class="mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-muted mfs-text-xs mfs-font-semibold mfs-shadow-inset mfs-interactive demo-pill"
-            :class="{ 'is-active': treeSelectionMode === 'none' }"
+          </Button>
+          <Button
+            size="sm"
+            :variant="treeSelectionMode === 'none' ? 'primary' : 'surface'"
             @click="setTreeMode('none')"
           >
             None
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -356,14 +450,23 @@ defineProps<{
 // ---------------------------------------------------------------------------
 // DataTable Demo State
 // ---------------------------------------------------------------------------
-const tableColumns: DataTableColumn[] = [
+const basicCols: DataTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'role', label: 'Role' },
+  { key: 'status', label: 'Status' },
+  { key: 'score', label: 'Score', align: 'right', width: '90px' }
+]
+
+const teamCols: DataTableColumn[] = [
   { key: 'name', label: 'Name', sortable: true },
   { key: 'role', label: 'Role', sortable: true },
   { key: 'status', label: 'Status', sortable: true },
   { key: 'score', label: 'Score', sortable: true, align: 'right', width: '90px' }
 ]
 
-const tableRows = [
+const sortableCols = teamCols
+
+const teamRows = [
   { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
   { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 },
   { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 },
@@ -374,18 +477,63 @@ const tableRows = [
   { id: 8, name: 'Hadi Santoso', role: 'Mobile Engineer', status: 'Offline', score: 79 }
 ]
 
-const tableQuery = ref('')
-const tablePage = ref(1)
-const tableRowsPerPage = ref(5)
-const tableResponsiveMode = ref<'card' | 'scroll'>('card')
+const basicRows = teamRows.slice(0, 4)
+
 const tableSelectionMode = ref<'single' | 'multiple'>('multiple')
+const tableSelection = ref<Record<string, any> | Record<string, any>[] | null>([teamRows[0]])
 const tableSortMode = ref<'single' | 'multiple'>('multiple')
 const tableMultiSortMeta = ref<DataTableSortMeta[]>([
   { key: 'status', order: 'asc' },
   { key: 'score', order: 'desc' }
 ])
-const tableSelection = ref<Record<string, any> | Record<string, any>[] | null>([tableRows[0]])
+const tableExpandedRows = ref<Record<string, unknown>[]>([])
+const tableVisibleColumns = ref<string[]>(teamCols.map((c) => c.key))
 const lastSort = ref('1. status (asc), 2. score (desc)')
+const lastInspectedMember = ref('')
+
+// Lazy demo state
+const lazyPage = ref(1)
+const lazyRowsPerPage = ref(5)
+const lazyQuery = ref('')
+const lazyLoading = ref(false)
+const lazyMultiSortMeta = ref<DataTableSortMeta[]>([])
+const lazyRows = ref(teamRows.slice(0, 5))
+const lazyTotalRecords = ref(teamRows.length)
+
+function loadLazyDemo() {
+  lazyLoading.value = true
+  setTimeout(() => {
+    const q = lazyQuery.value.trim().toLowerCase()
+    let filtered = q
+      ? teamRows.filter((r) =>
+          [r.name, r.role, r.status].some((v) => String(v).toLowerCase().includes(q))
+        )
+      : [...teamRows]
+
+    if (lazyMultiSortMeta.value.length > 0) {
+      const metas = lazyMultiSortMeta.value
+      filtered.sort((a, b) => {
+        for (const m of metas) {
+          const av = a[m.key as keyof typeof a]
+          const bv = b[m.key as keyof typeof b]
+          const dir = m.order === 'asc' ? 1 : -1
+          if (typeof av === 'number' && typeof bv === 'number') {
+            if (av !== bv) return (av - bv) * dir
+          } else {
+            const cmp = String(av).localeCompare(String(bv)) * dir
+            if (cmp !== 0) return cmp
+          }
+        }
+        return 0
+      })
+    }
+
+    lazyTotalRecords.value = filtered.length
+    const start = (lazyPage.value - 1) * lazyRowsPerPage.value
+    lazyRows.value = filtered.slice(start, start + lazyRowsPerPage.value)
+    lazyLoading.value = false
+  }, 180)
+}
 
 function setTableSelectionMode(mode: 'single' | 'multiple') {
   tableSelectionMode.value = mode
@@ -424,28 +572,8 @@ const selectedSummary = computed(() => {
   return tableSelection.value.name ?? 'None'
 })
 
-const dataTableCode = `<template>
-  <DataTable
-    v-model:selection="selected"
-    v-model:search-query="query"
-    v-model:page="page"
-    v-model:rows-per-page="rowsPerPage"
-    v-model:multi-sort-meta="multiSortMeta"
-    :columns="columns"
-    :rows="rows"
-    :total-records="totalRecords"
-    :rows-per-page-options="[5, 10, 20]"
-    :loading="loading"
-    selectable="multiple"
-    responsive-mode="card"
-    sort-mode="multiple"
-    lazy
-    paginator
-    searchable
-    @page="loadTable"
-    @sort="loadTable"
-    @update:search-query="loadTable"
-  >
+const basicCode = `<template>
+  <DataTable :value="rows" :columns="columns">
     <template #cell-status="{ value }">
       <Badge :variant="value === 'Active' ? 'success' : 'surface'">{{ value }}</Badge>
     </template>
@@ -453,44 +581,12 @@ const dataTableCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { Badge, DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
-import { columns, initialRows, type MemberRow } from './data'
-import { fetchMembers } from './fetchApi'
-
-const query = ref('')
-const page = ref(1)
-const rowsPerPage = ref(5)
-const totalRecords = ref(initialRows.length)
-const loading = ref(false)
-const selected = ref<MemberRow[]>([])
-const rows = ref<MemberRow[]>(initialRows)
-const multiSortMeta = ref<DataTableSortMeta[]>([
-  { key: 'status', order: 'asc' },
-  { key: 'score', order: 'desc' }
-])
-
-const loadTable = async () => {
-  loading.value = true
-  try {
-    const res = await fetchMembers({
-      page: page.value,
-      perPage: rowsPerPage.value,
-      search: query.value,
-      sort: multiSortMeta.value
-    })
-    rows.value = res.data
-    totalRecords.value = res.total
-  } finally {
-    loading.value = false
-  }
-}
-
-onMounted(loadTable)
+import { Badge, DataTable } from '@mfs-atomic/ui'
+import { columns, rows } from './data'
 <\/script>`
 
-const dataTableCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: dataTableCode },
+const basicCodeTabs = [
+  { label: 'Example.vue', language: 'vue', code: basicCode },
   {
     label: 'data.ts',
     language: 'ts',
@@ -505,40 +601,193 @@ export interface MemberRow {
 }
 
 export const columns: DataTableColumn[] = [
-  { key: 'name', label: 'Name', sortable: true },
-  { key: 'role', label: 'Role', sortable: true },
-  { key: 'status', label: 'Status', sortable: true },
-  { key: 'score', label: 'Score', sortable: true, align: 'right', width: '90px' }
+  { key: 'name', label: 'Name' },
+  { key: 'role', label: 'Role' },
+  { key: 'status', label: 'Status' },
+  { key: 'score', label: 'Score', align: 'right', width: '90px' }
 ]
 
-export const initialRows: MemberRow[] = [
+export const rows: MemberRow[] = [
   { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
-  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 }
+  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 },
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 },
+  { id: 4, name: 'Dimas Wijaya', role: 'Backend Engineer', status: 'Offline', score: 82 }
 ]`
+  }
+]
+
+const searchPaginationCode = `<template>
+  <DataTable
+    :value="rows"
+    :columns="columns"
+    searchable
+    paginator
+    :rows="5"
+    :rows-per-page-options="[5, 10]"
+  />
+</template>`
+
+const multiSortCode = `<template>
+  <DataTable
+    v-model:multi-sort-meta="multiSortMeta"
+    :value="rows"
+    :columns="columns"
+    sort-mode="multiple"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
+
+const multiSortMeta = ref<DataTableSortMeta[]>([
+  { key: 'status', order: 'asc' },
+  { key: 'score', order: 'desc' }
+])
+<\/script>`
+
+const selectionCode = `<template>
+  <DataTable
+    v-model:selection="selected"
+    :value="rows"
+    :columns="columns"
+    selectable="multiple"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DataTable } from '@mfs-atomic/ui'
+
+const selected = ref([])
+<\/script>`
+
+const expansionCode = `<template>
+  <DataTable
+    v-model:expanded-rows="expandedRows"
+    :value="rows"
+    :columns="columns"
+    expandable
+  >
+    <template #expansion="{ row }">
+      <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+        <span>{{ row.name }} — {{ row.role }} (Score: {{ row.score }})</span>
+        <Button size="sm" variant="secondary">Inspect Profile</Button>
+      </div>
+    </template>
+  </DataTable>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, DataTable } from '@mfs-atomic/ui'
+
+const expandedRows = ref([])
+<\/script>`
+
+const columnToggleCode = `<template>
+  <DataTable
+    v-model:visible-columns="visibleColumns"
+    :value="rows"
+    :columns="columns"
+    searchable
+    column-toggle
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DataTable } from '@mfs-atomic/ui'
+
+const visibleColumns = ref(['name', 'role', 'status', 'score'])
+<\/script>`
+
+const lazyCodeTabs = [
+  {
+    label: 'LazyTable.vue',
+    language: 'vue',
+    code: `<template>
+  <DataTable
+    v-model:page="page"
+    v-model:rows-per-page="rowsPerPage"
+    v-model:search-query="query"
+    v-model:multi-sort-meta="multiSortMeta"
+    :value="rows"
+    :columns="columns"
+    :total-records="totalRecords"
+    :loading="loading"
+    sort-mode="multiple"
+    lazy
+    paginator
+    searchable
+    @page="loadUsers"
+    @sort="loadUsers"
+    @update:search-query="loadUsers"
+  />
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import { DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
+import { fetchUsers, type UserRow } from './fetchUsers'
+
+const page = ref(1)
+const rowsPerPage = ref(5)
+const query = ref('')
+const totalRecords = ref(0)
+const loading = ref(false)
+const rows = ref<UserRow[]>([])
+const multiSortMeta = ref<DataTableSortMeta[]>([])
+
+const loadUsers = async () => {
+  loading.value = true
+  try {
+    const res = await fetchUsers({
+      page: page.value,
+      perPage: rowsPerPage.value,
+      search: query.value,
+      sort: multiSortMeta.value
+    })
+    rows.value = res.data
+    totalRecords.value = res.total
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(loadUsers)
+<\/script>`
   },
   {
-    label: 'fetchApi.ts',
+    label: 'fetchUsers.ts',
     language: 'ts',
     code: `import type { DataTableSortMeta } from '@mfs-atomic/ui'
-import type { MemberRow } from './data'
 
-export interface TableQuery {
+export interface UserRow {
+  id: number
+  name: string
+  role: string
+  status: 'Active' | 'Review' | 'Offline'
+  score: number
+}
+
+export interface UserQuery {
   page: number
   perPage: number
   search: string
   sort: DataTableSortMeta[]
 }
 
-export async function fetchMembers(
-  query: TableQuery
-): Promise<{ data: MemberRow[]; total: number }> {
+export async function fetchUsers(
+  query: UserQuery
+): Promise<{ data: UserRow[]; total: number }> {
   const params = new URLSearchParams({
     page: String(query.page),
     per_page: String(query.perPage),
     q: query.search,
     sort: query.sort.map((s) => \`\${s.key}:\${s.order}\`).join(',')
   })
-  const res = await fetch(\`/api/members?\${params.toString()}\`)
+  const res = await fetch(\`/api/users?\${params.toString()}\`)
   if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
   return res.json()
 }`
@@ -553,8 +802,12 @@ const dataTableApi = {
     { name: 'rowKey', type: 'string', default: "'id'", description: 'Unique property name used to key and track rows.' },
     { name: 'searchable', type: 'boolean', default: 'false', description: 'Shows a built-in search input in the toolbar.' },
     { name: 'searchQuery', type: 'string', default: "''", description: 'Controlled search query (supports v-model:search-query).' },
-    { name: 'selectable', type: "boolean | 'single' | 'multiple'", default: 'false', description: 'Enables single-row radio or multi-row checkbox selection.' },
+    { name: 'selectable', type: "false | 'single' | 'multiple'", default: 'false', description: 'Enables single-row radio or multi-row checkbox selection; false disables selection.' },
     { name: 'selection', type: 'Record<string, any> | Record<string, any>[] | null', default: 'null', description: 'Selected row or array of rows (supports v-model:selection).' },
+    { name: 'expandable', type: 'boolean', default: 'false', description: 'Renders an expand chevron column to toggle per-row #expansion detail panels.' },
+    { name: 'expandedRows', type: 'Record<string, unknown>[]', default: '[]', description: 'Controlled array of currently expanded row objects (supports v-model:expanded-rows).' },
+    { name: 'columnToggle', type: 'boolean', default: 'false', description: 'Shows a Columns dropdown button in the toolbar to toggle column visibility.' },
+    { name: 'visibleColumns', type: 'string[]', default: 'all column keys', description: 'Controlled array of visible column keys (supports v-model:visible-columns).' },
     { name: 'responsiveMode', type: "'card' | 'scroll'", default: "'card'", description: 'Mobile layout mode: stacked cards or horizontal scroll.' },
     { name: 'emptyText', type: 'string', default: "'No data available'", description: 'Fallback text when rows or search results are empty.' },
     { name: 'paginator', type: 'boolean', default: 'false', description: 'Renders integrated footer with rows-per-page selector and page controls.' },
@@ -570,6 +823,8 @@ const dataTableApi = {
   ],
   events: [
     { name: 'update:selection', type: '(value: Record<string, any> | Record<string, any>[] | null) => void', description: 'Emitted when row selection changes.' },
+    { name: 'update:expandedRows', type: '(rows: Record<string, unknown>[]) => void', description: 'Emitted when the list of expanded rows changes.' },
+    { name: 'update:visibleColumns', type: '(keys: string[]) => void', description: 'Emitted when toggled visible column keys change.' },
     { name: 'update:searchQuery', type: '(value: string) => void', description: 'Emitted when the search input value changes.' },
     { name: 'update:page', type: '(page: number) => void', description: 'Emitted when the active page changes.' },
     { name: 'update:rows', type: '(rows: number) => void', description: 'Emitted when rows per page changes (OpenVue alias).' },
@@ -578,11 +833,14 @@ const dataTableApi = {
     { name: 'update:multiSortMeta', type: '(meta: DataTableSortMeta[]) => void', description: 'Emitted when the active multi-column sort stack changes.' },
     { name: 'page', type: '(payload: { page: number; first: number; rows: number; pageCount: number }) => void', description: 'Emitted on page or page-size changes.' },
     { name: 'sort', type: "(payload: { key: string; order: 'asc' | 'desc' | null; multiSortMeta?: DataTableSortMeta[] }) => void", description: 'Emitted when a sortable column header is clicked.' },
-    { name: 'row-click', type: '(row: Record<string, any>) => void', description: 'Emitted when a table row is clicked.' }
+    { name: 'row-click', type: '(row: Record<string, any>) => void', description: 'Emitted when a table row is clicked.' },
+    { name: 'row-expand', type: '(row: Record<string, unknown>) => void', description: 'Emitted when a row is expanded.' },
+    { name: 'row-collapse', type: '(row: Record<string, unknown>) => void', description: 'Emitted when a row is collapsed.' }
   ],
   slots: [
     { name: 'header', description: 'Custom toolbar content placed before the search input.' },
     { name: 'cell-[key]', description: 'Custom cell template receiving { row, value, column, index }.' },
+    { name: 'expansion', description: 'Custom expanded row detail template receiving { row, index }.' },
     { name: 'empty', description: 'Custom empty state content when no rows are displayed.' }
   ]
 }

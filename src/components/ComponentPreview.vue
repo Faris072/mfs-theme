@@ -7,40 +7,26 @@
       </div>
 
       <div class="mfs-flex mfs-items-center mfs-gap-2">
-        <div class="preview-tabs mfs-inline-flex mfs-rounded-sm mfs-surface" role="tablist" aria-label="Preview mode">
-          <button
-            type="button"
-            role="tab"
-            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
-            :class="{ 'is-active': tab === 'preview' }"
-            :aria-selected="tab === 'preview'"
-            @click="tab = 'preview'"
-          >
-            Preview
-          </button>
-          <button
-            type="button"
-            role="tab"
-            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
-            :class="{ 'is-active': tab === 'code' }"
-            :aria-selected="tab === 'code'"
-            @click="tab = 'code'"
-          >
-            Code
-          </button>
-        </div>
+        <SelectButton
+          v-model="tab"
+          :options="previewModeOptions"
+          aria-label="Preview mode"
+        />
 
-        <button
-          type="button"
-          class="copy-btn mfs-inline-flex mfs-items-center mfs-gap-1-5 mfs-rounded-sm mfs-surface mfs-font-semibold mfs-cursor-pointer mfs-transition"
+        <Button
+          size="sm"
+          variant="surface"
+          class="copy-btn"
           :class="{ 'is-copied': copied }"
           :aria-label="copied ? 'Code copied' : 'Copy code'"
           @click="handleCopy"
         >
-          <Check v-if="copied" :size="14" />
-          <Copy v-else :size="14" />
-          <span>{{ copied ? 'Copied!' : 'Copy' }}</span>
-        </button>
+          <template #prepend>
+            <Check v-if="copied" :size="14" />
+            <Copy v-else :size="14" />
+          </template>
+          <span>{{ copied ? 'Copied' : 'Copy' }}</span>
+        </Button>
       </div>
     </header>
 
@@ -62,20 +48,11 @@
     <div v-if="hasApi && docContext?.activeTab.value !== 'features'" class="api-section mfs-py-5 mfs-px-6 mfs-flex mfs-flex-col mfs-gap-4 mfs-surface-subtle mfs-border-none mfs-border-t">
       <div class="mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-2">
         <span class="api-heading mfs-font-bold mfs-text-muted">API Reference</span>
-        <div class="preview-tabs mfs-inline-flex mfs-rounded-sm mfs-surface" role="tablist" aria-label="API reference sections">
-          <button
-            v-for="section in apiSections"
-            :key="section.key"
-            type="button"
-            role="tab"
-            class="preview-tab-btn mfs-border-none mfs-bg-transparent mfs-font-semibold mfs-text-muted mfs-cursor-pointer mfs-transition"
-            :class="{ 'is-active': currentApiSection?.key === section.key }"
-            :aria-selected="currentApiSection?.key === section.key"
-            @click="activeApiTab = section.key"
-          >
-            {{ section.label }} ({{ section.rows.length }})
-          </button>
-        </div>
+        <SelectButton
+          v-model="activeApiTab"
+          :options="apiTabOptions"
+          aria-label="API reference sections"
+        />
       </div>
 
       <div v-if="currentApiSection" class="mfs-rounded-sm mfs-surface mfs-overflow-x-auto">
@@ -111,7 +88,7 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeUnmount, ref, watch, type Ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
-import { CodeEditor, type CodeEditorLanguage, type CodeEditorTab } from '../lib'
+import { Button, CodeEditor, SelectButton, type CodeEditorLanguage, type CodeEditorTab } from '../lib'
 import type { ApiRow } from '../data/componentDocs'
 
 export type CodeTab = Omit<CodeEditorTab, 'language'> & {
@@ -149,6 +126,10 @@ watch(
   { immediate: true }
 )
 
+const previewModeOptions = [
+  { label: 'Preview', value: 'preview' },
+  { label: 'Code', value: 'code' }
+]
 const tab = ref<'preview' | 'code'>('preview')
 const activeCodeTabIndex = ref(0)
 const copied = ref(false)
@@ -213,6 +194,12 @@ const apiSections = computed(() => {
 
 const hasApi = computed(() => apiSections.value.length > 0)
 const activeApiTab = ref<ApiTabKey>('props')
+const apiTabOptions = computed(() =>
+  apiSections.value.map((section) => ({
+    label: `${section.label} (${section.rows.length})`,
+    value: section.key
+  }))
+)
 
 watch(
   apiSections,
@@ -291,8 +278,6 @@ const currentApiSection = computed(
 
 .api-heading {
   font-size: 0.78rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .api-table {

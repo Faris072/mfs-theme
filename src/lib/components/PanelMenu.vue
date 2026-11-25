@@ -38,7 +38,7 @@
         :is="item.to ? 'router-link' : 'a'"
         v-else
         :to="item.to"
-        :href="item.href"
+        :href="sanitizeHref(item.href)"
         class="panel-menu__header mfs-text"
         :class="{ 'panel-menu__header--disabled mfs-disabled': item.disabled }"
         :disabled="item.disabled"
@@ -67,7 +67,7 @@
               :is="sub.to ? 'router-link' : 'a'"
               v-else
               :to="sub.to"
-              :href="sub.href"
+              :href="sanitizeHref(sub.href)"
               class="panel-menu__subitem mfs-rounded-sm mfs-text"
               :class="{ 'panel-menu__subitem--disabled mfs-disabled': sub.disabled }"
               :disabled="sub.disabled"
@@ -85,6 +85,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface PanelMenuItem {
   key?: string

@@ -52,7 +52,7 @@
             :is="item.to ? 'router-link' : 'a'"
             v-else
             :to="item.to"
-            :href="item.href"
+            :href="sanitizeHref(item.href)"
             class="breadcrumb__link mfs-inline-flex mfs-items-center mfs-rounded-sm mfs-border-none mfs-font-medium mfs-text"
             @click="emit('navigate', item, $event)"
           >
@@ -65,6 +65,8 @@
 </template>
 
 <script setup lang="ts">
+import { sanitizeHref } from '../utils/sanitize'
+
 export interface BreadcrumbItem {
   label: string
   href?: string

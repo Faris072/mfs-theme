@@ -24,7 +24,7 @@
                 :is="item.to ? 'router-link' : 'a'"
                 v-else
                 :to="item.to"
-                :href="item.href"
+                :href="sanitizeHref(item.href)"
                 class="navbar__link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-pill"
                 :class="{ 'navbar__link--active': item.active }"
                 :aria-current="item.active ? 'page' : undefined"
@@ -108,7 +108,7 @@
                 :is="item.to ? 'router-link' : 'a'"
                 v-else
                 :to="item.to"
-                :href="item.href"
+                :href="sanitizeHref(item.href)"
                 class="navbar__mobile-link mfs-inline-flex mfs-items-center mfs-font-medium mfs-border-none mfs-w-full mfs-rounded-md"
                 :class="{ 'navbar__mobile-link--active': item.active }"
                 :aria-current="item.active ? 'page' : undefined"
@@ -126,6 +126,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface NavItem {
   label: string

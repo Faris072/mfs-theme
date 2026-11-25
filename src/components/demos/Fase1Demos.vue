@@ -39,7 +39,7 @@
         <div class="mfs-stack mfs-w-full">
           <div class="mfs-row mfs-w-full">
             <Button @click="triggerButtonLoad" :loading="buttonLoading">
-              <template #prepend><Sparkles :size="16" /></template>
+              <template #prepend><Star :size="16" /></template>
               {{ buttonLoading ? 'Saving...' : 'Click to Load' }}
             </Button>
             <Button variant="surface">
@@ -372,7 +372,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ArrowRight, Bell, CheckCircle2, Layers, Mail, Search, Sparkles } from 'lucide-vue-next'
+import { ArrowRight, Bell, CheckCircle2, Layers, Mail, Search, Star } from 'lucide-vue-next'
 import ComponentPreview from '../ComponentPreview.vue'
 import type { ApiRow } from '../../data/componentDocs'
 import {
@@ -458,7 +458,7 @@ import { Button } from '@mfs-atomic/ui'
 
 const buttonStatesCode = `<template>
   <Button :loading="loading" @click="handleLoad">
-    <template #prepend><Sparkles :size="16" /></template>
+    <template #prepend><Star :size="16" /></template>
     {{ loading ? 'Saving...' : 'Click to Load' }}
   </Button>
   <Button variant="surface">
@@ -471,7 +471,7 @@ const buttonStatesCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { ArrowRight, Sparkles } from 'lucide-vue-next'
+import { ArrowRight, Star } from 'lucide-vue-next'
 import { Button } from '@mfs-atomic/ui'
 
 const loading = ref(false)

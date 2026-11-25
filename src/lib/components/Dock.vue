@@ -37,7 +37,7 @@
           :is="item.to ? 'router-link' : 'a'"
           v-else
           :to="item.to"
-          :href="item.href"
+          :href="sanitizeHref(item.href)"
           role="menuitem"
           class="dock__item mfs-rounded-sm mfs-text"
           :class="{
@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { sanitizeHref } from '../utils/sanitize'
 
 export interface DockItem {
   label: string
