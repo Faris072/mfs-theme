@@ -24,7 +24,7 @@
         <path
           :d="valuePath"
           fill="none"
-          stroke="var(--primary, #8b5cf6)"
+          stroke="var(--primary)"
           :stroke-width="strokeWidth"
           stroke-linecap="round"
         />

@@ -278,7 +278,7 @@ const chartFilterVars = {
   '--mfs-clay-point-filter': `url(#${clayPointFilterId})`
 }
 
-const palette = ['#8b5cf6', '#06b6d4', '#10b981', '#f59e0b', '#f43f5e', '#38bdf8']
+const palette = ['var(--primary)', 'var(--secondary)', 'var(--success)', 'var(--warning)', 'var(--danger)', 'color-mix(in srgb, var(--primary) 65%, transparent)']
 const tip = ref<{ x: number; y: number; text: string } | null>(null)
 
 const maxVal = computed(() => {

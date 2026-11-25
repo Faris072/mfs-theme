@@ -94,13 +94,13 @@ onUnmounted(() => {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   background-color: var(--primary);
   color: var(--primary-text, #ffffff);
   box-shadow: var(--clay-shadow);
   backdrop-filter: var(--backdrop-blur, none);
   cursor: pointer;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .scroll-top:hover {
@@ -116,7 +116,7 @@ onUnmounted(() => {
 
 .scroll-top-pop-enter-active,
 .scroll-top-pop-leave-active {
-  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .scroll-top-pop-enter-from,

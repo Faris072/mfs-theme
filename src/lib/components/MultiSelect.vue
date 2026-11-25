@@ -249,13 +249,13 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 .ms-trigger {
   min-height: 44px;
   padding: 6px 12px;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .ms-trigger:focus-visible {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .ms-wrapper--error .ms-trigger {
@@ -321,7 +321,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 .ms-option:hover:not(:disabled) {
-  background-color: var(--surface-subtle, rgba(139, 92, 246, 0.12));
+  background-color: var(--surface-subtle, color-mix(in srgb, var(--primary) 12%, transparent));
 }
 
 .ms-option--all {
@@ -372,7 +372,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 }
 
 [data-theme="clay"] .ms-chip {
-  box-shadow: 2px 3px 6px rgba(124, 58, 237, 0.28);
+  box-shadow: 2px 3px 6px color-mix(in srgb, var(--primary) 28%, transparent);
 }
 
 [data-theme="glass"] .ms-trigger,

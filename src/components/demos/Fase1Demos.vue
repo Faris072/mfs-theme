@@ -267,47 +267,58 @@
 
     <!-- MODAL -->
     <template v-else-if="activeSlug === 'modal'">
-      <ComponentPreview
-        title="Sizes & Backdrop Behavior"
-        description="Teleported dialog with sm/md/lg sizes, body scroll lock, and footer slot."
-        :code="modalBasicCode"
-        :api="modalApi"
-      >
-        <div class="mfs-row mfs-w-full">
-          <Button size="sm" @click="openModal('sm')">Small Modal</Button>
-          <Button size="md" variant="secondary" @click="openModal('md')">Medium Modal</Button>
-          <Button size="md" variant="surface" @click="openModal('lg')">Large Modal</Button>
-          <Button size="md" variant="warning" @click="persistentModalOpen = true">
-            Persistent (No Backdrop Close)
-          </Button>
-        </div>
-
-        <Modal v-model="modalOpen" :size="modalSize" :title="`Modal (${modalSize.toUpperCase()})`">
-          <p class="mfs-m-0 mfs-text-sm mfs-text">
-            This dialog adapts to the active theme and locks background scrolling while open.
-          </p>
-          <template #footer>
-            <Button size="sm" variant="surface" @click="modalOpen = false">Cancel</Button>
-            <Button size="sm" @click="modalOpen = false">Confirm</Button>
-          </template>
-        </Modal>
-
-        <Modal
-          v-model="persistentModalOpen"
-          title="Confirm Action"
-          size="sm"
-          :close-on-backdrop="false"
+      <div class="mfs-stack mfs-gap-6">
+        <ComponentPreview
+          title="Sizes (sm / md / lg)"
+          description="Teleported dialog with sm, md, and lg width presets, body scroll lock, and footer slot."
+          :code="modalBasicCode"
+          :api="modalApi"
         >
-          <p class="mfs-m-0 mfs-text-sm mfs-text">
-            Clicking outside will not dismiss this modal. Use the close button or footer actions.
-          </p>
-          <template #footer>
-            <Button size="sm" variant="danger" @click="persistentModalOpen = false">
-              Acknowledge
+          <div class="mfs-row mfs-w-full">
+            <Button size="sm" @click="openModal('sm')">Small Modal</Button>
+            <Button size="md" variant="secondary" @click="openModal('md')">Medium Modal</Button>
+            <Button size="md" variant="surface" @click="openModal('lg')">Large Modal</Button>
+          </div>
+
+          <Modal v-model="modalOpen" :size="modalSize" :title="`Modal (${modalSize.toUpperCase()})`">
+            <p class="mfs-m-0 mfs-text-sm mfs-text">
+              This dialog adapts to the active theme and locks background scrolling while open.
+            </p>
+            <template #footer>
+              <Button size="sm" variant="surface" @click="modalOpen = false">Cancel</Button>
+              <Button size="sm" @click="modalOpen = false">Confirm</Button>
+            </template>
+          </Modal>
+        </ComponentPreview>
+
+        <ComponentPreview
+          title="Persistent Backdrop"
+          description="Disable backdrop dismissal with :close-on-backdrop='false' so users must confirm via explicit footer actions."
+          :code="modalPersistentCode"
+        >
+          <div class="mfs-row mfs-w-full">
+            <Button size="md" variant="warning" @click="persistentModalOpen = true">
+              Persistent (No Backdrop Close)
             </Button>
-          </template>
-        </Modal>
-      </ComponentPreview>
+          </div>
+
+          <Modal
+            v-model="persistentModalOpen"
+            title="Confirm Action"
+            size="sm"
+            :close-on-backdrop="false"
+          >
+            <p class="mfs-m-0 mfs-text-sm mfs-text">
+              Clicking outside will not dismiss this modal. Use the close button or footer actions.
+            </p>
+            <template #footer>
+              <Button size="sm" variant="danger" @click="persistentModalOpen = false">
+                Acknowledge
+              </Button>
+            </template>
+          </Modal>
+        </ComponentPreview>
+      </div>
     </template>
 
     <!-- BUTTON GROUP -->
@@ -640,13 +651,38 @@ const onChange = (val: boolean) => console.log('Changed:', val)
 <\/script>`
 
 const modalBasicCode = `<template>
-  <Button @click="open = true">Open Modal</Button>
+  <Button size="sm" @click="openModal('sm')">Small Modal</Button>
+  <Button size="md" variant="secondary" @click="openModal('md')">Medium Modal</Button>
+  <Button size="md" variant="surface" @click="openModal('lg')">Large Modal</Button>
 
-  <Modal v-model="open" size="md" title="Modal (MD)" :close-on-backdrop="true">
+  <Modal v-model="open" :size="size" :title="\`Modal (\${size.toUpperCase()})\`">
     <p>This dialog adapts to the active theme and locks background scrolling.</p>
     <template #footer>
       <Button size="sm" variant="surface" @click="open = false">Cancel</Button>
       <Button size="sm" @click="open = false">Confirm</Button>
+    </template>
+  </Modal>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, Modal } from '@mfs-atomic/ui'
+
+const open = ref(false)
+const size = ref<'sm' | 'md' | 'lg'>('md')
+const openModal = (next: 'sm' | 'md' | 'lg') => {
+  size.value = next
+  open.value = true
+}
+<\/script>`
+
+const modalPersistentCode = `<template>
+  <Button variant="warning" @click="open = true">Persistent (No Backdrop Close)</Button>
+
+  <Modal v-model="open" title="Confirm Action" size="sm" :close-on-backdrop="false">
+    <p>Clicking outside will not dismiss this modal. Use the close button or footer actions.</p>
+    <template #footer>
+      <Button size="sm" variant="danger" @click="open = false">Acknowledge</Button>
     </template>
   </Modal>
 </template>

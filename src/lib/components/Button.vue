@@ -71,10 +71,10 @@ const handleClick = (e: MouseEvent) => {
   gap: 8px;
   font-family: inherit;
   font-weight: 600;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   cursor: pointer;
   outline: none;
-  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s cubic-bezier(0.2, 0, 0, 1), transform 0.2s cubic-bezier(0.2, 0, 0, 1);
   user-select: none;
   text-decoration: none;
   backdrop-filter: var(--backdrop-blur, none);
@@ -127,21 +127,21 @@ const handleClick = (e: MouseEvent) => {
 
 [data-theme="clay"] .btn--primary {
   box-shadow:
-    0 5px 12px rgba(124, 58, 237, 0.22),
+    0 5px 12px color-mix(in srgb, var(--primary) 22%, transparent),
     inset -2px -2px 5px rgba(46, 16, 101, 0.22),
     inset 2px 2px 5px rgba(255, 255, 255, 0.48);
 }
 
 [data-theme="clay"] .btn--primary:hover:not(:disabled) {
   box-shadow:
-    0 8px 18px rgba(124, 58, 237, 0.28),
+    0 8px 18px color-mix(in srgb, var(--primary) 28%, transparent),
     inset -3px -3px 6px rgba(46, 16, 101, 0.26),
     inset 3px 3px 6px rgba(255, 255, 255, 0.58);
 }
 
 [data-theme="clay"] .btn--primary:active:not(:disabled) {
   box-shadow:
-    0 2px 6px rgba(124, 58, 237, 0.2),
+    0 2px 6px color-mix(in srgb, var(--primary) 20%, transparent),
     inset 2px 2px 5px rgba(46, 16, 101, 0.34),
     inset -2px -2px 5px rgba(255, 255, 255, 0.35);
 }
@@ -231,7 +231,7 @@ const handleClick = (e: MouseEvent) => {
 }
 
 [data-theme="glass"] .btn--primary {
-  box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--primary) 35%, transparent);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -241,7 +241,7 @@ const handleClick = (e: MouseEvent) => {
 
 /* Hover & Active tactile feedback */
 .btn:not(:disabled):hover {
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px);
   box-shadow: var(--clay-shadow-hover);
   filter: brightness(1.05);
 }

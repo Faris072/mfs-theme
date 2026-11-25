@@ -628,22 +628,30 @@ const autoCompleteCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { AutoComplete, type AutoCompleteItem } from '@mfs-atomic/ui'
-import { defaultSuggestions } from './data'
-import { searchSuggestions } from './fetchApi'
+import { AutoComplete } from '@mfs-atomic/ui'
+
+interface SuggestionItem {
+  label: string
+  value: string
+}
+
+const defaultSuggestions: SuggestionItem[] = [
+  { label: 'Vue 3', value: 'vue' },
+  { label: 'Vite', value: 'vite' },
+  { label: 'TypeScript', value: 'ts' },
+  { label: 'Pinia', value: 'pinia' }
+]
 
 const framework = ref('')
 const selected = ref('')
 const loading = ref(false)
-const suggestions = ref<AutoCompleteItem[]>(defaultSuggestions)
+const suggestions = ref<SuggestionItem[]>(defaultSuggestions)
 
-const onComplete = async ({ query }: { query: string }) => {
-  loading.value = true
-  try {
-    suggestions.value = await searchSuggestions(query)
-  } finally {
-    loading.value = false
-  }
+const onComplete = ({ query }: { query: string }) => {
+  const q = query.trim().toLowerCase()
+  suggestions.value = defaultSuggestions.filter((item) =>
+    item.label.toLowerCase().includes(q)
+  )
 }
 <\/script>`
 
@@ -682,7 +690,31 @@ const cascaderCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Cascader } from '@mfs-atomic/ui'
-import { options } from './data'
+
+interface CascaderOption {
+  label: string
+  value: string
+  children?: CascaderOption[]
+}
+
+const options: CascaderOption[] = [
+  {
+    label: 'Indonesia',
+    value: 'id',
+    children: [
+      { label: 'Jakarta', value: 'jkt' },
+      { label: 'Bandung', value: 'bdg' }
+    ]
+  },
+  {
+    label: 'Japan',
+    value: 'jp',
+    children: [
+      { label: 'Tokyo', value: 'tyo' },
+      { label: 'Osaka', value: 'osa' }
+    ]
+  }
+]
 
 const location = ref<string[]>(['id', 'jkt'])
 <\/script>`
@@ -724,7 +756,32 @@ const treeSelectCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { TreeSelect } from '@mfs-atomic/ui'
-import { options } from './data'
+
+interface TreeNode {
+  label: string
+  value: string
+  children?: TreeNode[]
+}
+
+const options: TreeNode[] = [
+  {
+    label: 'Themes',
+    value: 'themes',
+    children: [
+      { label: 'Claymorphism', value: 'clay' },
+      { label: 'Glassmorphism', value: 'glass' },
+      { label: 'Neumorphism', value: 'neo' }
+    ]
+  },
+  {
+    label: 'Design Tokens',
+    value: 'tokens',
+    children: [
+      { label: 'Colors', value: 'colors' },
+      { label: 'Shadows', value: 'shadows' }
+    ]
+  }
+]
 
 const single = ref<string | null>('tokens')
 const multi = ref<string[]>(['clay', 'glass'])
@@ -858,10 +915,18 @@ const listboxCode = `<template>
 import { ref } from 'vue'
 import { Listbox } from '@mfs-atomic/ui'
 
+interface TagOption {
+  label: string
+  value: string
+}
+
 const city = ref('Tokyo')
 const cities = ['Jakarta', 'Tokyo', 'Singapore', 'Seoul']
-const tags = ref(['vue'])
-const tagOptions = [{ label: 'Vue 3', value: 'vue' }, { label: 'TypeScript', value: 'ts' }]
+const tags = ref<string[]>(['vue'])
+const tagOptions: TagOption[] = [
+  { label: 'Vue 3', value: 'vue' },
+  { label: 'TypeScript', value: 'ts' }
+]
 <\/script>`
 
 const floatLabelCode = `<template>
@@ -924,14 +989,41 @@ const codeEditorCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { CodeEditor } from '@mfs-atomic/ui'
-import { initialTabs } from './data'
-import { fetchSnippet } from './api'
+
+interface EditorTab {
+  label: string
+  filename: string
+  language: string
+  code: string
+  readonly?: boolean
+}
+
+const initialTabs: EditorTab[] = [
+  {
+    label: 'App.vue',
+    filename: 'App.vue',
+    language: 'vue',
+    code: '<template>\\n  <div>Multi-tab demo</div>\\n</template>'
+  },
+  {
+    label: 'data.ts',
+    filename: 'data.ts',
+    language: 'ts',
+    code: "export const greeting = 'Hello MFS UI'"
+  },
+  {
+    label: 'api.ts',
+    filename: 'api.ts',
+    language: 'ts',
+    readonly: true,
+    code: '// Readonly tab\\nexport const version = 1'
+  }
+]
 
 const activeTab = ref(0)
-const tabs = ref(initialTabs)
+const tabs = ref<EditorTab[]>(initialTabs)
 const source = ref('<template>\\n  <div>Hello MFS UI</div>\\n</template>')
 const readonlySnippet = ref('export const tabSize = 2')
-void fetchSnippet
 <\/script>`
 
 const codeEditorCodeTabs: CodeTab[] = [

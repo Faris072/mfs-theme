@@ -69,8 +69,8 @@ const handleChange = (e: Event) => {
   width: 52px;
   height: 28px;
   background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: var(--border-width, 1px) solid var(--border, transparent);
+  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
   display: flex;
   align-items: center;
   padding: 2px;
@@ -83,7 +83,7 @@ const handleChange = (e: Event) => {
   height: 22px;
   background-color: #ffffff;
   border-radius: 50%;
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: left 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .switch__input:checked + .switch__track {
@@ -93,5 +93,14 @@ const handleChange = (e: Event) => {
 .switch__input:checked + .switch__track .switch__thumb {
   left: 27px;
   background-color: #ffffff;
+}
+
+[data-theme="clay"] .switch__input:checked + .switch__track {
+  box-shadow: inset 2px 2px 5px rgba(15, 23, 42, 0.22), inset -2px -2px 4px rgba(255, 255, 255, 0.3);
+}
+
+[data-theme="brutalism"] .switch__thumb {
+  border: 2px solid var(--border);
+  box-shadow: 1px 1px 0 var(--border);
 }
 </style>

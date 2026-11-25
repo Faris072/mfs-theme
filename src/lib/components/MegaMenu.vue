@@ -403,8 +403,6 @@ onUnmounted(() => {
 
 .mega-menu__col-title {
   font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .mega-menu__col-list {

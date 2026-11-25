@@ -127,7 +127,7 @@ const itemStyle = (idx: number) => {
 }
 
 .speed-dial__plus {
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.24s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .speed-dial__plus.is-open {

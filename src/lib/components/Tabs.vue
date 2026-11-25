@@ -173,7 +173,7 @@ onUnmounted(() => {
   gap: 4px;
   padding: 5px;
   background-color: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   border-radius: var(--radius-pill, 9999px);
   box-shadow: var(--input-shadow);
   backdrop-filter: var(--backdrop-blur, none);
@@ -198,7 +198,7 @@ onUnmounted(() => {
   border-radius: var(--radius-pill, 9999px);
   background-color: var(--primary);
   box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), width 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s ease;
   pointer-events: none;
   z-index: 0;
 }
@@ -241,5 +241,18 @@ onUnmounted(() => {
 
 [data-theme="neo"] .tabs__list {
   background-color: var(--surface);
+}
+
+[data-theme="clay"] .tabs__indicator {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset -3px -3px 6px rgba(15, 23, 42, 0.2), inset 3px 3px 6px rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="glass"] .tabs__indicator {
+  box-shadow: var(--glow);
+}
+
+[data-theme="brutalism"] .tabs__indicator {
+  border: 2px solid var(--border);
+  box-shadow: 2px 2px 0 var(--border);
 }
 </style>

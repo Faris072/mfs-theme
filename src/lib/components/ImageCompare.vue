@@ -154,7 +154,7 @@ const onRangeInput = (e: Event) => {
   transform: translate(-50%, -50%);
   width: 36px;
   height: 36px;
-  border: 2px solid var(--primary, #6366f1);
+  border: 2px solid var(--primary);
   color: var(--text);
   font-weight: 700;
   font-size: 0.9rem;
@@ -166,7 +166,7 @@ const onRangeInput = (e: Event) => {
 }
 
 .mfs-image-compare:has(.mfs-image-compare__range:focus-visible) .mfs-image-compare__handle {
-  outline: 2px solid var(--primary, #6366f1);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
 }
 </style>

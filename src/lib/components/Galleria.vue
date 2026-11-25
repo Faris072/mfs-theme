@@ -191,7 +191,7 @@ const next = () => setIndex(currentIndex.value + 1)
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   transition: transform 0.15s ease;
 }
 
@@ -203,13 +203,13 @@ const next = () => setIndex(currentIndex.value + 1)
 
 .mfs-galleria__nav:hover,
 .mfs-galleria__fs:hover {
-  transform: scale(1.08);
+  opacity: 0.9;
 }
 
 .mfs-galleria__nav--prev { left: 12px; top: 50%; transform: translateY(-50%); }
 .mfs-galleria__nav--next { right: 12px; top: 50%; transform: translateY(-50%); }
 .mfs-galleria__nav--prev:hover,
-.mfs-galleria__nav--next:hover { transform: translateY(-50%) scale(1.08); }
+.mfs-galleria__nav--next:hover { transform: translateY(-50%); }
 
 .mfs-galleria__fs { top: 12px; right: 12px; }
 

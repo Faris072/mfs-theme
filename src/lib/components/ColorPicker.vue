@@ -83,8 +83,8 @@ const props = withDefaults(
     disabled?: boolean
   }>(),
   {
-    modelValue: '#8b5cf6',
-    presets: () => ['#8b5cf6', '#38bdf8', '#10b981', '#f59e0b', '#f43f5e', '#ec4899', '#64748b', '#0f172a'],
+    modelValue: '#2563eb',
+    presets: () => ['#2563eb', '#38bdf8', '#10b981', '#f59e0b', '#f43f5e', '#14b8a6', '#64748b', '#0f172a'],
     disabled: false
   }
 )
@@ -100,7 +100,7 @@ const isOpen = ref(false)
 
 const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayRef, isOpen, { offset: 8 })
 
-const normalizedHex = computed(() => (/^#[0-9a-fA-F]{6}$/.test(props.modelValue) ? props.modelValue : '#8b5cf6'))
+const normalizedHex = computed(() => (/^#[0-9a-fA-F]{6}$/.test(props.modelValue) ? props.modelValue : '#2563eb'))
 
 const rgb = computed(() => {
   const hex = normalizedHex.value.slice(1)
@@ -204,11 +204,11 @@ onBeforeUnmount(() => {
 .cp-preset {
   height: 26px;
   border: 2px solid transparent;
-  transition: transform 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .cp-preset:hover {
-  transform: scale(1.1);
+  border-color: var(--border);
 }
 
 .cp-preset--active {

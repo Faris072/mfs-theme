@@ -285,7 +285,7 @@ onBeforeUnmount(() => {
 }
 
 .dp-day:hover:not(:disabled) {
-  background-color: var(--surface-subtle, rgba(139, 92, 246, 0.14));
+  background-color: var(--surface-subtle, color-mix(in srgb, var(--primary) 14%, transparent));
 }
 
 .dp-day--muted {
@@ -298,7 +298,7 @@ onBeforeUnmount(() => {
 }
 
 .dp-day--in-range {
-  background-color: rgba(139, 92, 246, 0.16);
+  background-color: color-mix(in srgb, var(--primary) 16%, transparent);
 }
 
 .dp-day--selected {
@@ -335,7 +335,7 @@ onBeforeUnmount(() => {
 }
 
 [data-theme="clay"] .dp-day--selected {
-  box-shadow: 2px 4px 8px rgba(124, 58, 237, 0.35);
+  box-shadow: 2px 4px 8px color-mix(in srgb, var(--primary) 35%, transparent);
 }
 
 [data-theme="glass"] .dp-trigger,

@@ -84,9 +84,9 @@ const handleChange = () => {
   align-items: center;
   justify-content: center;
   background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--clay-shadow);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .radio__input:focus-visible + .radio__circle {
@@ -100,7 +100,7 @@ const handleChange = () => {
   border-radius: 50%;
   background-color: var(--primary-text, #ffffff);
   transform: scale(0);
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .radio__circle--checked {
@@ -118,7 +118,7 @@ const handleChange = () => {
 }
 
 [data-theme="clay"] .radio__circle--checked {
-  box-shadow: 3px 5px 12px rgba(124, 58, 237, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.45);
+  box-shadow: 3px 5px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset 2px 2px 4px rgba(255, 255, 255, 0.45);
 }
 
 [data-theme="glass"] .radio__circle {

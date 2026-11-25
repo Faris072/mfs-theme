@@ -882,7 +882,7 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
   white-space: nowrap;
   padding: 8px 12px;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   color: var(--text);
   transition: border-color 0.2s ease, color 0.2s ease;
 }
@@ -900,7 +900,7 @@ onBeforeUnmount(() => {
 .data-table__col-menu {
   min-width: 190px;
   padding: 8px;
-  border: 1px solid var(--border, rgba(0, 0, 0, 0.08));
+  border: var(--border-width, 1px) solid var(--border, rgba(0, 0, 0, 0.08));
   background: var(--surface);
   color: var(--text);
   display: flex;
@@ -910,8 +910,6 @@ onBeforeUnmount(() => {
 
 .data-table__col-menu-title {
   padding: 4px 8px 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
   margin-bottom: 4px;
 }
@@ -956,8 +954,6 @@ onBeforeUnmount(() => {
   padding: 12px 16px;
   font-weight: 700;
   font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   background: var(--surface-subtle);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
 }
@@ -1098,7 +1094,7 @@ input.data-table__checkbox {
 .data-table__per-page-select {
   height: 36px;
   padding: 0 10px;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   font-family: inherit;
   font-size: 0.88rem;
   outline: none;
@@ -1154,7 +1150,7 @@ input.data-table__checkbox {
     border-radius: var(--radius-md, 12px);
     background: var(--surface-subtle);
     box-shadow: var(--clay-shadow);
-    border: 1px solid var(--border, transparent);
+    border: var(--border-width, 1px) solid var(--border, transparent);
     overflow: hidden;
   }
 
@@ -1171,7 +1167,6 @@ input.data-table__checkbox {
     content: attr(data-label);
     font-weight: 700;
     font-size: 0.78rem;
-    text-transform: uppercase;
     color: var(--text-muted);
     text-align: left;
   }
@@ -1187,7 +1182,7 @@ input.data-table__checkbox {
     width: calc(100% - 24px);
     border-radius: var(--radius-md, 12px);
     background: var(--surface-subtle);
-    border: 1px solid var(--border, transparent);
+    border: var(--border-width, 1px) solid var(--border, transparent);
     overflow: hidden;
   }
 

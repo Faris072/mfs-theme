@@ -201,12 +201,11 @@ onBeforeUnmount(stopDrag)
   border: 2px solid var(--primary);
   transform: translate(-50%, -50%);
   cursor: grab;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: box-shadow 0.15s ease;
 }
 
 .slider-thumb:hover,
 .slider-thumb--active {
-  transform: translate(-50%, -50%) scale(1.14);
   box-shadow: var(--clay-shadow-hover);
 }
 
@@ -224,5 +223,10 @@ onBeforeUnmount(stopDrag)
 .slider-thumb:hover .slider-tooltip,
 .slider-thumb--active .slider-tooltip {
   opacity: 1;
+}
+
+[data-theme="brutalism"] .slider-thumb {
+  border: var(--border-width, 3px) solid var(--border);
+  box-shadow: 2px 2px 0 var(--border);
 }
 </style>

@@ -205,13 +205,12 @@ const handleStepClick = (index: number) => {
   border-radius: 50%;
   font-size: 0.9rem;
   color: var(--text-muted);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.25s cubic-bezier(0.2, 0, 0, 1), color 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .steps__item--active .steps__circle {
   background-color: var(--primary);
   color: var(--primary-text, #ffffff);
-  transform: scale(1.06);
 }
 
 .steps__item--completed .steps__circle {
@@ -277,5 +276,17 @@ const handleStepClick = (index: number) => {
     min-width: 3px;
     margin-left: 22px;
   }
+}
+
+[data-theme="clay"] .steps__item--active .steps__circle {
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--primary) 30%, transparent), inset 2px 2px 4px rgba(255, 255, 255, 0.45), inset -2px -2px 4px rgba(15, 23, 42, 0.18);
+}
+
+[data-theme="glass"] .steps__item--active .steps__circle {
+  box-shadow: var(--glow);
+}
+
+[data-theme="brutalism"] .steps__circle {
+  box-shadow: 2px 2px 0 var(--border);
 }
 </style>

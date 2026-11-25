@@ -42,59 +42,72 @@
   </ComponentPreview>
 
   <!-- SpeedDial -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'speed-dial'"
-    title="SpeedDial"
-    description="Floating action button expanding into linear or radial quick actions."
-    :code="speedDialCode"
-    :api="speedDialApi"
-  >
-    <div class="mfs-stack">
-      <div class="mfs-row">
-        <Button
-          size="sm"
-          :variant="dialType === 'linear' ? 'primary' : 'surface'"
-          @click="dialType = 'linear'"
-        >
-          Linear
-        </Button>
-        <Button
-          size="sm"
-          :variant="dialType === 'radial' ? 'primary' : 'surface'"
-          @click="dialType = 'radial'"
-        >
-          Radial
-        </Button>
-        <Button
-          v-for="dir in (['up', 'right', 'down', 'left'] as const)"
-          :key="dir"
-          size="sm"
-          :variant="dialDir === dir ? 'secondary' : 'surface'"
-          @click="dialDir = dir"
-        >
-          {{ dir }}
-        </Button>
-      </div>
+  <div v-else-if="activeSlug === 'speed-dial'" class="mfs-stack mfs-gap-6">
+    <!-- 1. Linear SpeedDial -->
+    <ComponentPreview
+      title="Linear SpeedDial"
+      description="Floating action button expanding linearly along up, right, down, or left."
+      :code="speedDialLinearCode"
+      :api="speedDialApi"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-row">
+          <Button
+            v-for="dir in (['up', 'right', 'down', 'left'] as const)"
+            :key="dir"
+            size="sm"
+            :variant="dialDir === dir ? 'secondary' : 'surface'"
+            @click="dialDir = dir"
+          >
+            {{ dir }}
+          </Button>
+        </div>
 
-      <div class="mfs-flex mfs-items-center mfs-justify-center mfs-p-6 mfs-rounded-sm mfs-surface-subtle demo-dial-stage">
-        <SpeedDial
-          v-model="dialOpen"
-          :items="dialItems"
-          :type="dialType"
-          :direction="dialDir"
-          :radius="72"
-          @select="(item) => (lastDialAction = item.label)"
-        />
-      </div>
+        <div class="mfs-flex mfs-items-center mfs-justify-center mfs-p-6 mfs-rounded-sm mfs-surface-subtle demo-dial-stage">
+          <SpeedDial
+            v-model="dialLinearOpen"
+            :items="dialItems"
+            type="linear"
+            :direction="dialDir"
+            @select="(item) => (lastDialLinearAction = item.label)"
+          />
+        </div>
 
-      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
-        <span class="mfs-text-muted mfs-font-semibold">open:</span>
-        <code>{{ dialOpen }}</code>
-        <span class="mfs-text-muted mfs-font-semibold">· selected:</span>
-        <code>{{ lastDialAction }}</code>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+          <span class="mfs-text-muted mfs-font-semibold">open:</span>
+          <code>{{ dialLinearOpen }}</code>
+          <span class="mfs-text-muted mfs-font-semibold">· selected:</span>
+          <code>{{ lastDialLinearAction }}</code>
+        </div>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+
+    <!-- 2. Radial SpeedDial -->
+    <ComponentPreview
+      title="Radial SpeedDial"
+      description="Floating action button fanning items in a radial arc around the trigger."
+      :code="speedDialRadialCode"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-flex mfs-items-center mfs-justify-center mfs-p-6 mfs-rounded-sm mfs-surface-subtle demo-dial-stage">
+          <SpeedDial
+            v-model="dialRadialOpen"
+            :items="dialItems"
+            type="radial"
+            :radius="72"
+            @select="(item) => (lastDialRadialAction = item.label)"
+          />
+        </div>
+
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+          <span class="mfs-text-muted mfs-font-semibold">open:</span>
+          <code>{{ dialRadialOpen }}</code>
+          <span class="mfs-text-muted mfs-font-semibold">· selected:</span>
+          <code>{{ lastDialRadialAction }}</code>
+        </div>
+      </div>
+    </ComponentPreview>
+  </div>
 
   <!-- Panel -->
   <ComponentPreview
@@ -157,59 +170,78 @@
   </ComponentPreview>
 
   <!-- Splitter -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'splitter'"
-    title="Splitter"
-    description="Resizable two-pane container supporting pointer drag and arrow-key resizing."
-    :code="splitterCode"
-    :api="splitterApi"
-  >
-    <div class="mfs-stack">
-      <div class="mfs-row">
-        <Button
-          size="sm"
-          :variant="splitLayout === 'horizontal' ? 'primary' : 'surface'"
-          @click="splitLayout = 'horizontal'"
+  <div v-else-if="activeSlug === 'splitter'" class="mfs-stack mfs-gap-6">
+    <!-- 1. Horizontal Splitter -->
+    <ComponentPreview
+      title="Horizontal Splitter"
+      description="Side-by-side resizable panes supporting pointer drag and arrow-key resizing."
+      :code="splitterHorizontalCode"
+      :api="splitterApi"
+    >
+      <div class="mfs-stack">
+        <Splitter
+          layout="horizontal"
+          :initial-size="45"
+          :min-size="20"
+          class="demo-splitter"
+          @resize="(s) => (splitHorizontalSize = Math.round(s))"
         >
-          Horizontal
-        </Button>
-        <Button
-          size="sm"
-          :variant="splitLayout === 'vertical' ? 'primary' : 'surface'"
-          @click="splitLayout = 'vertical'"
+          <template #first>
+            <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
+              <strong>Pane 1</strong>
+              <span>Drag the divider or focus it and use Arrow keys.</span>
+            </div>
+          </template>
+          <template #second>
+            <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
+              <strong>Pane 2</strong>
+              <span>Side-by-side horizontal split layout.</span>
+            </div>
+          </template>
+        </Splitter>
+
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+          <span class="mfs-text-muted mfs-font-semibold">first pane:</span>
+          <code>{{ splitHorizontalSize }}%</code>
+        </div>
+      </div>
+    </ComponentPreview>
+
+    <!-- 2. Vertical Splitter -->
+    <ComponentPreview
+      title="Vertical Splitter"
+      description="Stacked top-and-bottom resizable panes using layout='vertical'."
+      :code="splitterVerticalCode"
+    >
+      <div class="mfs-stack">
+        <Splitter
+          layout="vertical"
+          :initial-size="45"
+          :min-size="20"
+          class="demo-splitter"
+          @resize="(s) => (splitVerticalSize = Math.round(s))"
         >
-          Vertical
-        </Button>
-      </div>
+          <template #first>
+            <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
+              <strong>Top Pane</strong>
+              <span>Drag the divider or focus it and use Arrow keys.</span>
+            </div>
+          </template>
+          <template #second>
+            <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
+              <strong>Bottom Pane</strong>
+              <span>Stacked vertical split layout.</span>
+            </div>
+          </template>
+        </Splitter>
 
-      <Splitter
-        :key="splitLayout"
-        :layout="splitLayout"
-        :initial-size="45"
-        :min-size="20"
-        class="demo-splitter"
-        @resize="(s) => (splitSize = Math.round(s))"
-      >
-        <template #first>
-          <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
-            <strong>Pane 1</strong>
-            <span>Drag the divider or focus it and use Arrow keys.</span>
-          </div>
-        </template>
-        <template #second>
-          <div class="mfs-p-4 mfs-flex mfs-flex-col mfs-gap-1 mfs-text-sm mfs-text demo-pane">
-            <strong>Pane 2</strong>
-            <span>Adapts to horizontal and vertical layouts.</span>
-          </div>
-        </template>
-      </Splitter>
-
-      <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
-        <span class="mfs-text-muted mfs-font-semibold">first pane:</span>
-        <code>{{ splitSize }}%</code>
+        <div class="mfs-row mfs-gap-2 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs">
+          <span class="mfs-text-muted mfs-font-semibold">first pane:</span>
+          <code>{{ splitVerticalSize }}%</code>
+        </div>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+  </div>
 
   <!-- Toolbar -->
   <ComponentPreview
@@ -353,7 +385,12 @@ const exportItems: SplitButtonItem[] = [
 const splitButtonCode = `<script setup lang="ts">
 import { SplitButton } from '@mfs-atomic/ui'
 
-const items = [
+interface MenuAction {
+  label: string
+  value: string
+}
+
+const items: MenuAction[] = [
   { label: 'Deploy to Staging', value: 'staging' },
   { label: 'Schedule Release', value: 'schedule' }
 ]
@@ -379,10 +416,11 @@ const splitButtonApi: ApiSpec = {
 }
 
 // ── SpeedDial ──────────────────────────────────────────────────────────
-const dialOpen = ref(false)
-const dialType = ref<'linear' | 'radial'>('linear')
+const dialLinearOpen = ref(false)
+const dialRadialOpen = ref(false)
 const dialDir = ref<'up' | 'down' | 'left' | 'right'>('right')
-const lastDialAction = ref('None')
+const lastDialLinearAction = ref('None')
+const lastDialRadialAction = ref('None')
 const dialItems: SpeedDialItem[] = [
   { label: 'Edit' },
   { label: 'Share' },
@@ -390,12 +428,16 @@ const dialItems: SpeedDialItem[] = [
   { label: 'Delete' }
 ]
 
-const speedDialCode = `<script setup lang="ts">
+const speedDialLinearCode = `<script setup lang="ts">
 import { ref } from 'vue'
 import { SpeedDial } from '@mfs-atomic/ui'
 
+interface SpeedDialItem {
+  label: string
+}
+
 const open = ref(false)
-const items = [
+const items: SpeedDialItem[] = [
   { label: 'Edit' },
   { label: 'Share' },
   { label: 'Star' }
@@ -404,6 +446,27 @@ const items = [
 
 <template>
   <SpeedDial v-model="open" :items="items" type="linear" direction="right" />
+</template>`
+
+const speedDialRadialCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SpeedDial } from '@mfs-atomic/ui'
+
+interface SpeedDialItem {
+  label: string
+}
+
+const open = ref(false)
+const items: SpeedDialItem[] = [
+  { label: 'Edit' },
+  { label: 'Share' },
+  { label: 'Star' },
+  { label: 'Delete' }
+]
+<\/script>
+
+<template>
+  <SpeedDial v-model="open" :items="items" type="radial" :radius="72" />
 </template>`
 
 const speedDialApi: ApiSpec = {
@@ -489,10 +552,10 @@ const fieldsetApi: ApiSpec = {
 }
 
 // ── Splitter ───────────────────────────────────────────────────────────
-const splitLayout = ref<'horizontal' | 'vertical'>('horizontal')
-const splitSize = ref(45)
+const splitHorizontalSize = ref(45)
+const splitVerticalSize = ref(45)
 
-const splitterCode = `<template>
+const splitterHorizontalCode = `<template>
   <Splitter
     layout="horizontal"
     :initial-size="45"
@@ -504,6 +567,29 @@ const splitterCode = `<template>
     </template>
     <template #second>
       <div>Pane 2 ({{ 100 - size }}%)</div>
+    </template>
+  </Splitter>
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Splitter } from '@mfs-atomic/ui'
+
+const size = ref(45)
+<\/script>`
+
+const splitterVerticalCode = `<template>
+  <Splitter
+    layout="vertical"
+    :initial-size="45"
+    :min-size="20"
+    @resize="(s) => (size = Math.round(s))"
+  >
+    <template #first>
+      <div>Top Pane ({{ size }}%)</div>
+    </template>
+    <template #second>
+      <div>Bottom Pane ({{ 100 - size }}%)</div>
     </template>
   </Splitter>
 </template>

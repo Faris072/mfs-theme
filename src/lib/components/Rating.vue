@@ -140,7 +140,7 @@ const starStroke = (idx: number) => {
   padding: 6px 10px;
   border-radius: var(--radius-pill, 9999px);
   background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--clay-shadow);
   backdrop-filter: var(--backdrop-blur, none);
 }
@@ -156,19 +156,11 @@ const starStroke = (idx: number) => {
   padding: 2px;
   cursor: pointer;
   display: inline-flex;
-  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.rating-star:hover:not(:disabled) {
-  transform: scale(1.18);
+  transition: color 0.18s cubic-bezier(0.2, 0, 0, 1), opacity 0.18s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .rating-wrapper--readonly .rating-star {
   cursor: default;
-}
-
-.rating-wrapper--readonly .rating-star:hover {
-  transform: none;
 }
 
 .rating-wrapper--disabled {

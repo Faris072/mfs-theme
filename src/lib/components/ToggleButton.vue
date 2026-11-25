@@ -45,7 +45,7 @@ const toggle = () => {
 .tb-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 .tb-btn--active { background-color: var(--primary); color: var(--primary-text, #ffffff); border-color: var(--primary); }
 
-[data-theme="clay"] .tb-btn--active { box-shadow: 4px 8px 18px rgba(124, 58, 237, 0.35), inset 2px 2px 5px rgba(255, 255, 255, 0.45); }
+[data-theme="clay"] .tb-btn--active { box-shadow: 4px 8px 18px color-mix(in srgb, var(--primary) 35%, transparent), inset 2px 2px 5px rgba(255, 255, 255, 0.45); }
 [data-theme="glass"] .tb-btn { border-color: rgba(255, 255, 255, 0.25); }
 [data-theme="neo"] .tb-btn { box-shadow: 4px 4px 8px rgba(163, 177, 198, 0.55), -4px -4px 8px rgba(255, 255, 255, 0.85); }
 [data-theme="neo"] .tb-btn--active { box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.2), 2px 2px 6px rgba(163, 177, 198, 0.4); }

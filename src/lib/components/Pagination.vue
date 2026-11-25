@@ -233,7 +233,7 @@ const handleJumpSubmit = () => {
   height: 38px;
   padding: 0 10px;
   border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   background-color: var(--surface);
   color: var(--text);
   font-family: inherit;
@@ -242,7 +242,7 @@ const handleJumpSubmit = () => {
   box-shadow: var(--clay-shadow);
   backdrop-filter: var(--backdrop-blur, none);
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
   user-select: none;
 }
 
@@ -304,7 +304,7 @@ const handleJumpSubmit = () => {
   height: 36px;
   padding: 0 10px;
   border-radius: var(--radius-md, 12px);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   background-color: var(--surface);
   color: var(--text);
   font-family: inherit;

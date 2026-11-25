@@ -101,12 +101,12 @@ onMounted(resize)
 
 .textarea-box {
   padding: 10px 14px;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .textarea-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .textarea-wrapper--error .textarea-box {
@@ -162,7 +162,7 @@ onMounted(resize)
 }
 
 [data-theme="clay"] .textarea-box:focus-within {
-  box-shadow: inset 3px 3px 6px rgba(46, 16, 101, 0.14), inset -2px -2px 5px rgba(255, 255, 255, 0.7), 0 0 0 3px rgba(139, 92, 246, 0.25);
+  box-shadow: inset 3px 3px 6px color-mix(in srgb, var(--primary) 14%, transparent), inset -2px -2px 5px rgba(255, 255, 255, 0.7), 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 [data-theme="glass"] .textarea-box {

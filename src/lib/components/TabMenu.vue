@@ -7,14 +7,14 @@
       role="tablist"
       @keydown="handleKeydown"
     >
-      <span class="tab-menu__indicator mfs-rounded-sm" :style="indicatorStyle" aria-hidden="true" />
+      <span class="tab-menu__indicator" :style="indicatorStyle" aria-hidden="true" />
       <template v-for="(item, idx) in items" :key="item.key ?? idx">
         <button
           v-if="!item.to && !item.href"
           :ref="(el: unknown) => setItemRef(idx, el)"
           type="button"
           role="tab"
-          class="tab-menu__item mfs-rounded-sm mfs-text"
+          class="tab-menu__item mfs-text"
           :class="{
             'tab-menu__item--active': idx === modelValue,
             'tab-menu__item--disabled mfs-disabled': item.disabled
@@ -35,7 +35,7 @@
           :to="item.to"
           :href="sanitizeHref(item.href)"
           role="tab"
-          class="tab-menu__item mfs-rounded-sm mfs-text"
+          class="tab-menu__item mfs-text"
           :class="{
             'tab-menu__item--active': idx === modelValue,
             'tab-menu__item--disabled mfs-disabled': item.disabled
@@ -203,8 +203,9 @@ onUnmounted(() => {
   top: 5px;
   bottom: 5px;
   left: 0;
+  border-radius: var(--radius-pill, 9999px);
   background-color: var(--primary);
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.15s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1), width 0.28s cubic-bezier(0.2, 0, 0, 1), opacity 0.15s ease;
   pointer-events: none;
   z-index: 0;
 }
@@ -219,7 +220,7 @@ onUnmounted(() => {
   padding: 8px 16px;
   min-height: 36px;
   border: none;
-  border-radius: var(--radius-sm, 8px);
+  border-radius: var(--radius-pill, 9999px);
   background: transparent;
   color: var(--text);
   font-family: inherit;
@@ -246,5 +247,27 @@ onUnmounted(() => {
 
 [data-theme="neo"] .tab-menu__list {
   background-color: var(--surface);
+}
+
+[data-theme="clay"] .tab-menu__indicator {
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset -3px -3px 6px rgba(15, 23, 42, 0.2), inset 3px 3px 6px rgba(255, 255, 255, 0.45);
+}
+
+[data-theme="neo"] .tab-menu__indicator {
+  box-shadow: var(--clay-shadow);
+}
+
+[data-theme="glass"] .tab-menu__indicator {
+  box-shadow: var(--glow);
+}
+
+[data-theme="brutalism"] .tab-menu__indicator {
+  border: 2px solid var(--border);
+  box-shadow: 2px 2px 0 var(--border);
+  border-radius: var(--radius, 4px);
+}
+
+[data-theme="brutalism"] .tab-menu__item {
+  border-radius: var(--radius, 4px);
 }
 </style>

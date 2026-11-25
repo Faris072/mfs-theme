@@ -133,35 +133,25 @@
     </ComponentPreview>
 
     <!-- Timeline -->
-    <ComponentPreview
-      v-else-if="activeSlug === 'timeline'"
-      title="Timeline"
-      description="Chronological event list with semantic status dots, timestamps, icons, and responsive vertical or horizontal layout."
-      :code="timelineCode"
-      :code-tabs="timelineCodeTabs"
-      :api="timelineApi"
-    >
-      <div class="mfs-stack">
-        <div class="mfs-row mfs-gap-2">
-          <Button
-            size="sm"
-            :variant="timelineLayout === 'vertical' ? 'primary' : 'surface'"
-            @click="timelineLayout = 'vertical'"
-          >
-            Vertical
-          </Button>
-          <Button
-            size="sm"
-            :variant="timelineLayout === 'horizontal' ? 'primary' : 'surface'"
-            @click="timelineLayout = 'horizontal'"
-          >
-            Horizontal
-          </Button>
-        </div>
+    <div v-else-if="activeSlug === 'timeline'" class="mfs-stack mfs-gap-6">
+      <ComponentPreview
+        title="Vertical Timeline"
+        description="Chronological event list with semantic status dots, timestamps, and icons stacked vertically."
+        :code="timelineVerticalCode"
+        :code-tabs="timelineCodeTabs"
+        :api="timelineApi"
+      >
+        <Timeline :items="timelineItems" layout="vertical" />
+      </ComponentPreview>
 
-        <Timeline :items="timelineItems" :layout="timelineLayout" />
-      </div>
-    </ComponentPreview>
+      <ComponentPreview
+        title="Horizontal Timeline"
+        description="Side-by-side milestone progression for compact horizontal workflows."
+        :code="timelineHorizontalCode"
+      >
+        <Timeline :items="timelineItems" layout="horizontal" />
+      </ComponentPreview>
+    </div>
 
     <!-- Carousel -->
     <ComponentPreview
@@ -397,7 +387,6 @@ const openLabel = computed(() => {
 })
 
 // Timeline state
-const timelineLayout = ref<'vertical' | 'horizontal'>('vertical')
 const timelineItems = [
   {
     title: 'Design Tokens',
@@ -559,11 +548,10 @@ export const accordionItems: AccordionItem[] = [
   }
 ]
 
-const timelineCode = `<script setup lang="ts">
+const timelineVerticalCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Button, Timeline, type TimelineItem } from '@mfs-atomic/ui'
+import { Timeline, type TimelineItem } from '@mfs-atomic/ui'
 
-const layout = ref<'vertical' | 'horizontal'>('vertical')
 const items = ref<TimelineItem[]>([
   { title: 'Design Tokens', timestamp: '09:00', description: 'Defined clay, glass, and neo CSS variables.', status: 'success', icon: '✓' },
   { title: 'Component Build', timestamp: '13:30', description: 'Implemented accessible Vue 3 primitives.', status: 'primary', icon: '2' },
@@ -572,17 +560,29 @@ const items = ref<TimelineItem[]>([
 <\/script>
 
 <template>
-  <Button size="sm" @click="layout = layout === 'vertical' ? 'horizontal' : 'vertical'">
-    Layout: {{ layout }}
-  </Button>
-  <Timeline :items="items" :layout="layout" />
+  <Timeline :items="items" layout="vertical" />
+</template>`
+
+const timelineHorizontalCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Timeline, type TimelineItem } from '@mfs-atomic/ui'
+
+const items = ref<TimelineItem[]>([
+  { title: 'Design Tokens', timestamp: '09:00', description: 'Defined clay, glass, and neo CSS variables.', status: 'success', icon: '✓' },
+  { title: 'Component Build', timestamp: '13:30', description: 'Implemented accessible Vue 3 primitives.', status: 'primary', icon: '2' },
+  { title: 'QA Review', timestamp: '16:45', description: 'Verifying mobile touch targets and contrast.', status: 'warning', icon: '!' }
+])
+<\/script>
+
+<template>
+  <Timeline :items="items" layout="horizontal" />
 </template>`
 
 const timelineCodeTabs = [
   {
     label: 'Example.vue',
     filename: 'Example.vue',
-    code: timelineCode
+    code: timelineVerticalCode
   },
   {
     label: 'Data Format',

@@ -109,83 +109,121 @@
     </ComponentPreview>
 
     <!-- MegaMenu -->
-    <ComponentPreview
-      v-else-if="activeSlug === 'mega-menu'"
-      title="MegaMenu"
-      description="Responsive multi-column dropdown navigation supporting horizontal and vertical orientations plus mobile drawer toggle."
-      :code="megaMenuCode"
-      :code-tabs="megaMenuCodeTabs"
-      :api="megaMenuApi"
-    >
-      <div class="mfs-stack">
-        <div class="mfs-row mfs-gap-2">
-          <Button
-            size="sm"
-            :variant="megaOrientation === 'horizontal' ? 'primary' : 'surface'"
-            @click="megaOrientation = 'horizontal'"
-          >
-            Horizontal
-          </Button>
-          <Button
-            size="sm"
-            :variant="megaOrientation === 'vertical' ? 'primary' : 'surface'"
-            @click="megaOrientation = 'vertical'"
-          >
-            Vertical
-          </Button>
+    <div v-else-if="activeSlug === 'mega-menu'" class="mfs-stack mfs-gap-6">
+      <ComponentPreview
+        title="Horizontal MegaMenu"
+        description="Responsive multi-column dropdown navigation in horizontal orientation with mobile drawer toggle."
+        :code="megaMenuHorizontalCode"
+        :code-tabs="megaMenuCodeTabs"
+        :api="megaMenuApi"
+      >
+        <div class="mfs-stack">
           <span class="mfs-caption">Selected: {{ megaSelected }}</span>
+          <div class="demo-mega-stage">
+            <MegaMenu
+              :items="megaItems"
+              orientation="horizontal"
+              @select="(item) => (megaSelected = item.label)"
+            />
+          </div>
         </div>
+      </ComponentPreview>
 
-        <div class="demo-mega-stage">
-          <MegaMenu
-            :items="megaItems"
-            :orientation="megaOrientation"
-            @select="(item) => (megaSelected = item.label)"
-          />
+      <ComponentPreview
+        title="Vertical MegaMenu"
+        description="Vertical sidebar MegaMenu expanding multi-column flyout panels to the side."
+        :code="megaMenuVerticalCode"
+      >
+        <div class="mfs-stack">
+          <span class="mfs-caption">Selected: {{ megaVerticalSelected }}</span>
+          <div class="demo-mega-stage">
+            <MegaMenu
+              :items="megaItems"
+              orientation="vertical"
+              @select="(item) => (megaVerticalSelected = item.label)"
+            />
+          </div>
         </div>
-      </div>
-    </ComponentPreview>
+      </ComponentPreview>
+    </div>
 
     <!-- Dock -->
-    <ComponentPreview
-      v-else-if="activeSlug === 'dock'"
-      title="Dock"
-      description="macOS-inspired floating icon dock with proximity magnification, active indicator dot, tooltips, and 4 edge positions."
-      :code="dockCode"
-      :code-tabs="dockCodeTabs"
-      :api="dockApi"
-    >
-      <div class="mfs-stack">
-        <div class="mfs-row mfs-gap-2">
-          <Button
-            v-for="pos in dockPositions"
-            :key="pos"
-            size="sm"
-            :variant="dockPosition === pos ? 'primary' : 'surface'"
-            @click="dockPosition = pos"
-          >
-            {{ pos }}
-          </Button>
-          <Button
-            size="sm"
-            :variant="dockMagnify ? 'primary' : 'surface'"
-            :aria-pressed="dockMagnify"
-            @click="dockMagnify = !dockMagnify"
-          >
-            Magnify: {{ dockMagnify ? 'On' : 'Off' }}
-          </Button>
-        </div>
+    <div v-else-if="activeSlug === 'dock'" class="mfs-stack mfs-gap-6">
+      <ComponentPreview
+        title="Bottom Dock"
+        description="macOS-inspired floating icon dock anchored to the bottom edge with proximity magnification and active indicator dot."
+        :code="dockBottomCode"
+        :code-tabs="dockCodeTabs"
+        :api="dockApi"
+      >
+        <div class="mfs-stack">
+          <div class="mfs-row mfs-gap-2">
+            <Button
+              size="sm"
+              :variant="dockMagnify ? 'primary' : 'surface'"
+              :aria-pressed="dockMagnify"
+              @click="dockMagnify = !dockMagnify"
+            >
+              Magnify: {{ dockMagnify ? 'On' : 'Off' }}
+            </Button>
+          </div>
 
-        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage" :class="`demo-dock-stage--${dockPosition}`">
+          <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage demo-dock-stage--bottom">
+            <Dock
+              :items="dockItems"
+              position="bottom"
+              :magnification="dockMagnify"
+              @select="onDockSelect"
+            />
+          </div>
+        </div>
+      </ComponentPreview>
+
+      <ComponentPreview
+        title="Top Dock"
+        description="Floating icon dock anchored to the top edge with downward magnification."
+        :code="dockTopCode"
+      >
+        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage demo-dock-stage--top">
           <Dock
             :items="dockItems"
-            :position="dockPosition"
+            position="top"
             :magnification="dockMagnify"
             @select="onDockSelect"
           />
         </div>
-      </div>
-    </ComponentPreview>
+      </ComponentPreview>
+
+      <ComponentPreview
+        title="Left Dock"
+        description="Vertical floating icon dock anchored to the left edge."
+        :code="dockLeftCode"
+      >
+        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage demo-dock-stage--left">
+          <Dock
+            :items="dockItems"
+            position="left"
+            :magnification="dockMagnify"
+            @select="onDockSelect"
+          />
+        </div>
+      </ComponentPreview>
+
+      <ComponentPreview
+        title="Right Dock"
+        description="Vertical floating icon dock anchored to the right edge."
+        :code="dockRightCode"
+      >
+        <div class="mfs-p-4 mfs-rounded mfs-surface-subtle mfs-flex demo-dock-stage demo-dock-stage--right">
+          <Dock
+            :items="dockItems"
+            position="right"
+            :magnification="dockMagnify"
+            @select="onDockSelect"
+          />
+        </div>
+      </ComponentPreview>
+    </div>
 
     <!-- TabMenu -->
     <ComponentPreview
@@ -342,8 +380,8 @@ const togglePanelMultiple = () => {
 }
 
 // MegaMenu state
-const megaOrientation = ref<'horizontal' | 'vertical'>('horizontal')
 const megaSelected = ref('None')
+const megaVerticalSelected = ref('None')
 const megaItems: MegaMenuItem[] = [
   {
     label: 'Products',
@@ -381,8 +419,6 @@ const megaItems: MegaMenuItem[] = [
 ]
 
 // Dock state
-const dockPositions = ['bottom', 'top', 'left', 'right'] as const
-const dockPosition = ref<'bottom' | 'top' | 'left' | 'right'>('bottom')
 const dockMagnify = ref(true)
 const dockActiveIndex = ref(0)
 const dockItems = ref<DockItem[]>([
@@ -712,7 +748,7 @@ export const panelItems: PanelMenuItem[] = [
   }
 ]
 
-const megaMenuCode = `<script setup lang="ts">
+const makeMegaMenuCode = (orientation: 'horizontal' | 'vertical') => `<script setup lang="ts">
 import { ref } from 'vue'
 import { MegaMenu, type MegaMenuItem, type MegaMenuLink } from '@mfs-atomic/ui'
 
@@ -744,11 +780,14 @@ const onSelect = (item: MegaMenuItem | MegaMenuLink) => {
 <\/script>
 
 <template>
-  <MegaMenu :items="items" orientation="horizontal" @select="onSelect" />
+  <MegaMenu :items="items" orientation="${orientation}" @select="onSelect" />
 </template>`
 
+const megaMenuHorizontalCode = makeMegaMenuCode('horizontal')
+const megaMenuVerticalCode = makeMegaMenuCode('vertical')
+
 const megaMenuCodeTabs: CodeTab[] = [
-  { label: 'Component.vue', filename: 'MegaMenuDemo.vue', language: 'vue', code: megaMenuCode },
+  { label: 'Component.vue', filename: 'MegaMenuDemo.vue', language: 'vue', code: megaMenuHorizontalCode },
   {
     label: 'Data Format',
     filename: 'data.ts',
@@ -794,7 +833,7 @@ export const megaItems: MegaMenuItem[] = [
   }
 ]
 
-const dockCode = `<script setup lang="ts">
+const makeDockCode = (position: 'bottom' | 'top' | 'left' | 'right') => `<script setup lang="ts">
 import { ref } from 'vue'
 import { Dock, type DockItem } from '@mfs-atomic/ui'
 
@@ -811,11 +850,16 @@ const onSelect = (_item: DockItem, index: number) => {
 <\/script>
 
 <template>
-  <Dock :items="items" position="bottom" magnification @select="onSelect" />
+  <Dock :items="items" position="${position}" magnification @select="onSelect" />
 </template>`
 
+const dockBottomCode = makeDockCode('bottom')
+const dockTopCode = makeDockCode('top')
+const dockLeftCode = makeDockCode('left')
+const dockRightCode = makeDockCode('right')
+
 const dockCodeTabs: CodeTab[] = [
-  { label: 'Component.vue', filename: 'DockDemo.vue', language: 'vue', code: dockCode },
+  { label: 'Component.vue', filename: 'DockDemo.vue', language: 'vue', code: dockBottomCode },
   {
     label: 'Data Format',
     filename: 'data.ts',

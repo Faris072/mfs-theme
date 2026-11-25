@@ -38,7 +38,7 @@
       <CodeEditor
         readonly
         :model-value="code ?? ''"
-        :tabs="codeTabs as CodeEditorTab[]"
+        :tabs="resolvedCodeTabs as CodeEditorTab[]"
         :filename="resolvedFilename"
         :max-height="'460px'"
         @tab-change="onCodeTabChange"
@@ -110,6 +110,7 @@ const props = defineProps<{
   title: string
   description?: string
   code?: string
+  dataCode?: string
   codeTabs?: CodeTab[]
   api?: ComponentApiSpec
 }>()
@@ -137,12 +138,46 @@ let copyTimer: ReturnType<typeof setTimeout> | null = null
 
 const resolvedFilename = computed(() => `${props.title.replace(/[^a-zA-Z0-9_-]/g, '') || 'Example'}.vue`)
 
+const stripScriptWrapper = (raw: string) =>
+  raw
+    .replace(/^<script\b[^>]*>\s*/i, '')
+    .replace(new RegExp('\\s*<\\/script>\\s*$', 'i'), '')
+    .trim()
+
+const resolvedCodeTabs = computed<CodeTab[] | undefined>(() => {
+  if (props.codeTabs?.length) return props.codeTabs
+
+  const rawCode = props.code?.trim()
+  if (!rawCode) return undefined
+
+  const templateMatch = rawCode.match(/<template(?:\s[^>]*)?>[\s\S]*<\/template>/)
+  const scriptMatch = rawCode.match(new RegExp('<script\\b[^>]*>([\\s\\S]*?)<\\/script>'))
+  const rawDataCode = props.dataCode?.trim()
+
+  const scriptBody = rawDataCode
+    ? stripScriptWrapper(rawDataCode)
+    : scriptMatch?.[1]?.trim() ?? ''
+
+  if (!scriptBody || (!templateMatch && !rawDataCode)) return undefined
+
+  const templatePart = templateMatch ? templateMatch[0].trim() : rawCode
+  const fullSfcCode = scriptMatch
+    ? rawCode
+    : `${templatePart}\n\n<script setup lang="ts">\n${scriptBody}\n${'</' + 'script>'}`
+
+  return [
+    { label: 'Component', language: 'vue', code: templatePart },
+    { label: 'Data / TS', language: 'ts', code: scriptBody },
+    { label: 'Full Code', language: 'vue', code: fullSfcCode }
+  ]
+})
+
 const onCodeTabChange = (payload: { index: number; tab: CodeEditorTab }) => {
   activeCodeTabIndex.value = payload.index
 }
 
 watch(
-  () => props.codeTabs,
+  resolvedCodeTabs,
   () => {
     activeCodeTabIndex.value = 0
   }
@@ -150,9 +185,10 @@ watch(
 
 const handleCopy = async () => {
   try {
+    const tabs = resolvedCodeTabs.value
     const textToCopy =
-      props.codeTabs?.[activeCodeTabIndex.value]?.code ??
-      props.codeTabs?.[0]?.code ??
+      tabs?.[activeCodeTabIndex.value]?.code ??
+      tabs?.[0]?.code ??
       props.code ??
       ''
     await navigator.clipboard.writeText(textToCopy)

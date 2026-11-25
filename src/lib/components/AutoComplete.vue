@@ -162,7 +162,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
 .ac-label { font-size: 0.875rem; font-weight: 600; }
 .ac-container { position: relative; }
 .ac-box { display: flex; align-items: center; padding: 2px 14px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.ac-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow); }
+.ac-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow); }
 .ac-input { flex: 1; width: 100%; background: transparent; border: none; outline: none; font-family: inherit; font-size: 0.95rem; padding: 10px 0; }
 .ac-input::placeholder { color: var(--text-muted); opacity: 0.7; }
 .ac-spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: ac-spin 0.6s linear infinite; }

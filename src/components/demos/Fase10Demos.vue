@@ -160,15 +160,14 @@
   </ComponentPreview>
 
   <!-- 8. ImageCropper -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'image-cropper'"
-    title="ImageCropper"
-    description="Interactive client-side image cropper with pan, zoom, rotation, and circle/rect output before upload."
-    :code="imageCropperCode"
-    :api="imageCropperApi"
-  >
-    <div class="mfs-stack mfs-w-full">
-      <div class="mfs-row mfs-justify-between">
+  <div v-else-if="activeSlug === 'image-cropper'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Rectangle Cropper (16:9)"
+      description="Interactive client-side image cropper with pan, zoom, rotation, and 16:9 rectangular output before upload."
+      :code="rectCropperCode"
+      :api="imageCropperApi"
+    >
+      <div class="mfs-stack mfs-w-full">
         <div class="mfs-row">
           <input
             ref="cropperFileInputRef"
@@ -190,103 +189,110 @@
           </Button>
         </div>
 
-        <div class="mfs-row">
-          <div class="mfs-flex mfs-items-center mfs-gap-2">
-            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Shape:</span>
-            <Button
-              :variant="cropShape === 'rect' ? 'primary' : 'surface'"
-              size="sm"
-              @click="cropShape = 'rect'"
-            >
-              Rect
-            </Button>
-            <Button
-              :variant="cropShape === 'circle' ? 'primary' : 'surface'"
-              size="sm"
-              @click="cropShape = 'circle'"
-            >
-              Circle
-            </Button>
-          </div>
-
-          <div class="mfs-flex mfs-items-center mfs-gap-2">
-            <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Ratio:</span>
-            <Button
-              :variant="cropAspectRatio === 1 ? 'primary' : 'surface'"
-              size="sm"
-              @click="cropAspectRatio = 1"
-            >
-              1:1
-            </Button>
-            <Button
-              :variant="cropAspectRatio === 16 / 9 ? 'primary' : 'surface'"
-              size="sm"
-              @click="cropAspectRatio = 16 / 9"
-            >
-              16:9
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      <ImageCropper
-        :src="cropperSrc"
-        v-model:shape="cropShape"
-        :aspect-ratio="cropAspectRatio"
-        file-name="avatar-crop.png"
-        @crop="onCropComplete"
-        @cancel="croppedOutput = null"
-      />
-
-      <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
-        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
-          <span class="mfs-text-sm mfs-font-semibold mfs-text">Pick Image → Instant Crop (Square / Circle)</span>
-          <Badge variant="primary" size="sm">FileUpload crop</Badge>
-        </div>
-        <FileUpload
-          crop
-          :crop-shape="cropShape"
-          :crop-aspect-ratio="cropAspectRatio"
-          accept="image/*"
-          @select="onCroppedUploadSelect"
-          @clear="croppedUploadStatus = 'No cropped image yet'"
+        <ImageCropper
+          :src="cropperSrc"
+          shape="rect"
+          :aspect-ratio="16 / 9"
+          file-name="cover-crop.png"
+          @crop="(result) => (croppedRectOutput = result)"
+          @cancel="croppedRectOutput = null"
         />
-        <p class="mfs-m-0 mfs-text-xs mfs-text-muted">
-          {{ croppedUploadStatus }}
-        </p>
-      </div>
 
-      <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
-        <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
-          <span class="mfs-text-sm mfs-font-semibold mfs-text">Cropped Output Preview</span>
-          <Badge v-if="croppedOutput" variant="success" size="sm">Ready to Upload</Badge>
-          <Badge v-else variant="surface" size="sm">Waiting</Badge>
-        </div>
-
-        <div v-if="croppedOutput" class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-4">
-          <img
-            :src="croppedOutput.dataUrl"
-            alt="Cropped output preview"
-            class="mfs-border mfs-surface"
-            :class="cropShape === 'circle' ? 'mfs-rounded-full' : 'mfs-rounded-md'"
-            style="width: 96px; height: 96px; object-fit: cover;"
-          />
-          <div class="mfs-flex mfs-flex-col mfs-gap-1">
-            <span class="mfs-text-sm mfs-font-semibold mfs-font-mono mfs-text">
-              {{ croppedOutput.file.name }}
-            </span>
-            <span class="mfs-text-xs mfs-text-muted">
-              Size: {{ formatFileSize(croppedOutput.file.size) }} · Type: {{ croppedOutput.file.type }}
-            </span>
+        <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Pick Image → Instant Crop (16:9)</span>
+            <Badge variant="primary" size="sm">FileUpload crop</Badge>
           </div>
+          <FileUpload
+            crop
+            crop-shape="rect"
+            :crop-aspect-ratio="16 / 9"
+            accept="image/*"
+            @select="onCroppedUploadSelect"
+            @clear="croppedUploadStatus = 'No cropped image yet'"
+          />
+          <p class="mfs-m-0 mfs-text-xs mfs-text-muted">
+            {{ croppedUploadStatus }}
+          </p>
         </div>
 
-        <p v-else class="mfs-m-0 mfs-text-sm mfs-text-muted">
-          Pan, zoom, or rotate the image above, then click Apply Crop to inspect the resulting File.
-        </p>
+        <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Cropped Output Preview</span>
+            <Badge v-if="croppedRectOutput" variant="success" size="sm">Ready to Upload</Badge>
+            <Badge v-else variant="surface" size="sm">Waiting</Badge>
+          </div>
+
+          <div v-if="croppedRectOutput" class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-4">
+            <img
+              :src="croppedRectOutput.dataUrl"
+              alt="Cropped rectangle output preview"
+              class="mfs-border mfs-surface mfs-rounded-md"
+              style="width: 128px; height: 72px; object-fit: cover;"
+            />
+            <div class="mfs-flex mfs-flex-col mfs-gap-1">
+              <span class="mfs-text-sm mfs-font-semibold mfs-font-mono mfs-text">
+                {{ croppedRectOutput.file.name }}
+              </span>
+              <span class="mfs-text-xs mfs-text-muted">
+                Size: {{ formatFileSize(croppedRectOutput.file.size) }} · Type: {{ croppedRectOutput.file.type }}
+              </span>
+            </div>
+          </div>
+
+          <p v-else class="mfs-m-0 mfs-text-sm mfs-text-muted">
+            Pan, zoom, or rotate the image above, then click Apply Crop to inspect the resulting File.
+          </p>
+        </div>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Circle Avatar Cropper (1:1)"
+      description="1:1 circular avatar cropper outputting masked avatar images ready for profile upload."
+      :code="circleCropperCode"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <ImageCropper
+          :src="cropperSrc"
+          shape="circle"
+          :aspect-ratio="1"
+          file-name="avatar-crop.png"
+          @crop="(result) => (croppedCircleOutput = result)"
+          @cancel="croppedCircleOutput = null"
+        />
+
+        <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-4 mfs-stack">
+          <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
+            <span class="mfs-text-sm mfs-font-semibold mfs-text">Avatar Output Preview</span>
+            <Badge v-if="croppedCircleOutput" variant="success" size="sm">Ready to Upload</Badge>
+            <Badge v-else variant="surface" size="sm">Waiting</Badge>
+          </div>
+
+          <div v-if="croppedCircleOutput" class="mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-4">
+            <img
+              :src="croppedCircleOutput.dataUrl"
+              alt="Cropped circle avatar preview"
+              class="mfs-border mfs-surface mfs-rounded-full"
+              style="width: 96px; height: 96px; object-fit: cover;"
+            />
+            <div class="mfs-flex mfs-flex-col mfs-gap-1">
+              <span class="mfs-text-sm mfs-font-semibold mfs-font-mono mfs-text">
+                {{ croppedCircleOutput.file.name }}
+              </span>
+              <span class="mfs-text-xs mfs-text-muted">
+                Size: {{ formatFileSize(croppedCircleOutput.file.size) }} · Type: {{ croppedCircleOutput.file.type }}
+              </span>
+            </div>
+          </div>
+
+          <p v-else class="mfs-m-0 mfs-text-sm mfs-text-muted">
+            Pan, zoom, or rotate the image above, then click Apply Crop to inspect the circular avatar File.
+          </p>
+        </div>
+      </div>
+    </ComponentPreview>
+  </div>
 
   <!-- 9. ImageCompare -->
   <ComponentPreview
@@ -345,6 +351,133 @@
       </p>
     </div>
   </ComponentPreview>
+
+  <!-- 11. SortableList -->
+  <div v-else-if="activeSlug === 'sortable-list'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Basic Sortable List"
+      description="Vertical drag-and-drop list with keyboard Space + Arrow or Alt+Arrow reordering."
+      :code="sortableBasicCode"
+      :api="sortableListApi"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <SortableList v-model="sortableTasks" item-key="id">
+          <template #item="{ item, index }">
+            <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+              <span class="mfs-text-sm mfs-font-semibold mfs-text">
+                {{ index + 1 }}. {{ item.title }}
+              </span>
+              <Badge variant="surface" size="sm">{{ item.tag }}</Badge>
+            </div>
+          </template>
+        </SortableList>
+        <p class="mfs-m-0 mfs-text-xs mfs-text-muted">
+          Order: {{ sortableTasks.map((t) => t.title).join(' → ') }} · Focus any item and press
+          <strong>Alt+ArrowUp/Down</strong> to reorder via keyboard.
+        </p>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Drag Handle"
+      description="Restrict dragging to a dedicated grip handle selector (handle='.drag-handle')."
+      :code="sortableHandleCode"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <SortableList v-model="handleItems" item-key="id" handle=".drag-handle">
+          <template #item="{ item }">
+            <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-3 mfs-w-full">
+              <div class="mfs-flex mfs-items-center mfs-gap-2">
+                <span
+                  class="drag-handle mfs-text-muted"
+                  aria-label="Drag handle"
+                  style="cursor: grab; user-select: none; touch-action: none; padding: 0 4px;"
+                >
+                  ⋮⋮
+                </span>
+                <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.name }}</span>
+              </div>
+              <Badge variant="primary" size="sm">{{ item.role }}</Badge>
+            </div>
+          </template>
+        </SortableList>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Cross-List Kanban"
+      description="Share group='kanban' across multiple lists to drag and transfer items between columns."
+      :code="sortableKanbanCode"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <div class="kanban-grid">
+          <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-3 mfs-stack mfs-gap-2">
+            <div class="mfs-flex mfs-items-center mfs-justify-between">
+              <span class="mfs-text-sm mfs-font-semibold mfs-text">Backlog</span>
+              <Badge variant="surface" size="sm">{{ kanbanBacklog.length }}</Badge>
+            </div>
+            <SortableList
+              v-model="kanbanBacklog"
+              item-key="id"
+              group="kanban"
+              empty-text="Drop tasks here"
+              @transfer="onKanbanTransfer('Backlog', $event)"
+            >
+              <template #item="{ item }">
+                <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-w-full">
+                  <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.title }}</span>
+                  <Badge variant="surface" size="sm">{{ item.points }}pt</Badge>
+                </div>
+              </template>
+            </SortableList>
+          </div>
+
+          <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-3 mfs-stack mfs-gap-2">
+            <div class="mfs-flex mfs-items-center mfs-justify-between">
+              <span class="mfs-text-sm mfs-font-semibold mfs-text">In Progress</span>
+              <Badge variant="primary" size="sm">{{ kanbanInProgress.length }}</Badge>
+            </div>
+            <SortableList
+              v-model="kanbanInProgress"
+              item-key="id"
+              group="kanban"
+              empty-text="Drop tasks here"
+              @transfer="onKanbanTransfer('In Progress', $event)"
+            >
+              <template #item="{ item }">
+                <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-w-full">
+                  <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.title }}</span>
+                  <Badge variant="primary" size="sm">{{ item.points }}pt</Badge>
+                </div>
+              </template>
+            </SortableList>
+          </div>
+
+          <div class="mfs-surface-subtle mfs-border mfs-rounded-md mfs-p-3 mfs-stack mfs-gap-2">
+            <div class="mfs-flex mfs-items-center mfs-justify-between">
+              <span class="mfs-text-sm mfs-font-semibold mfs-text">Done</span>
+              <Badge variant="success" size="sm">{{ kanbanDone.length }}</Badge>
+            </div>
+            <SortableList
+              v-model="kanbanDone"
+              item-key="id"
+              group="kanban"
+              empty-text="Drop tasks here"
+              @transfer="onKanbanTransfer('Done', $event)"
+            >
+              <template #item="{ item }">
+                <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-w-full">
+                  <span class="mfs-text-sm mfs-font-semibold mfs-text">{{ item.title }}</span>
+                  <Badge variant="success" size="sm">{{ item.points }}pt</Badge>
+                </div>
+              </template>
+            </SortableList>
+          </div>
+        </div>
+        <p class="mfs-m-0 mfs-text-xs mfs-text-muted">{{ lastKanbanTransfer }}</p>
+      </div>
+    </ComponentPreview>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -366,6 +499,7 @@ import Inplace from '../../lib/components/Inplace.vue'
 import FileUpload from '../../lib/components/FileUpload.vue'
 import ImageCompare from '../../lib/components/ImageCompare.vue'
 import SignaturePad, { type SignatureExportPayload } from '../../lib/components/SignaturePad.vue'
+import SortableList from '../../lib/components/SortableList.vue'
 
 defineProps<{
   activeSlug: string
@@ -500,9 +634,8 @@ const sampleCropperImage =
 
 const cropperFileInputRef = ref<HTMLInputElement | null>(null)
 const cropperSrc = ref<string>(sampleCropperImage)
-const cropShape = ref<'rect' | 'circle'>('rect')
-const cropAspectRatio = ref<number>(1)
-const croppedOutput = ref<ImageCropResult | null>(null)
+const croppedRectOutput = ref<ImageCropResult | null>(null)
+const croppedCircleOutput = ref<ImageCropResult | null>(null)
 
 const onCropperFileSelect = (event: Event) => {
   const input = event.target as HTMLInputElement
@@ -512,7 +645,8 @@ const onCropperFileSelect = (event: Event) => {
   reader.onload = () => {
     if (typeof reader.result === 'string') {
       cropperSrc.value = reader.result
-      croppedOutput.value = null
+      croppedRectOutput.value = null
+      croppedCircleOutput.value = null
     }
   }
   reader.readAsDataURL(file)
@@ -520,14 +654,11 @@ const onCropperFileSelect = (event: Event) => {
 
 const resetSampleImage = () => {
   cropperSrc.value = sampleCropperImage
-  croppedOutput.value = null
+  croppedRectOutput.value = null
+  croppedCircleOutput.value = null
   if (cropperFileInputRef.value) {
     cropperFileInputRef.value.value = ''
   }
-}
-
-const onCropComplete = (result: ImageCropResult) => {
-  croppedOutput.value = result
 }
 
 const formatFileSize = (bytes: number) => {
@@ -1042,19 +1173,27 @@ export const meterValues: MeterItem[] = [
   }
 ]
 
-const inplaceCode = `<template>
-  <Inplace v-model:active="editing">
+const inplaceCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { Inplace, Input, Button } from '@mfs-atomic/ui'
+
+const active = ref(false)
+const note = ref('Click to edit inline note')
+<\/script>
+
+<template>
+  <Inplace v-model:active="active">
     <template #display>
-      <span>{{ title }} (click to edit)</span>
+      <span>{{ note }} (click to edit)</span>
     </template>
     <template #content>
-      <Input v-model="title" />
-      <Button size="sm" @click="editing = false">Save</Button>
+      <Input v-model="note" />
+      <Button size="sm" @click="active = false">Save</Button>
     </template>
   </Inplace>
 </template>`
 
-const imageCropperCode = `<script setup lang="ts">
+const makeCropperCode = (shape: 'rect' | 'circle', aspectRatio: string, fileName: string) => `<script setup lang="ts">
 import { ref } from 'vue'
 import { ImageCropper, type ImageCropResult } from '@mfs-atomic/ui'
 
@@ -1064,12 +1203,15 @@ const cropped = ref<ImageCropResult | null>(null)
 <template>
   <ImageCropper
     :src="imageSrc"
-    shape="circle"
-    :aspect-ratio="1"
-    file-name="avatar.png"
+    shape="${shape}"
+    :aspect-ratio="${aspectRatio}"
+    file-name="${fileName}"
     @crop="(result) => (cropped = result)"
   />
 </template>`
+
+const rectCropperCode = makeCropperCode('rect', '16 / 9', 'cover-crop.png')
+const circleCropperCode = makeCropperCode('circle', '1', 'avatar-crop.png')
 
 // API tables
 const orderListApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
@@ -1217,8 +1359,15 @@ const compareAfterSvg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#4f46e5"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient></defs><rect width="640" height="300" fill="url(#g)"/><circle cx="220" cy="150" r="80" fill="#ffffff" fill-opacity="0.25"/><text x="320" y="160" fill="#ffffff" font-family="sans-serif" font-size="28" font-weight="bold">AFTER (THEME)</text></svg>`
   )
 
-const imageCompareCode = `<template>
-  <ImageCompare v-model="split" left-src="/before.png" right-src="/after.png" />
+const imageCompareCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { ImageCompare } from '@mfs-atomic/ui'
+
+const position = ref(50)
+<\/script>
+
+<template>
+  <ImageCompare v-model="position" left-src="/before.png" right-src="/after.png" />
 </template>`
 
 const imageCompareApi: { props: ApiRow[]; events: ApiRow[] } = {
@@ -1277,6 +1426,139 @@ const signaturePadApi: { props: ApiRow[]; events: ApiRow[]; exposed: ApiRow[] } 
     { name: 'exportSignature', type: '() => Promise<SignatureExportPayload>', description: 'Programmatically exports the signature.' }
   ]
 }
+
+// 11. SortableList
+const sortableTasks = ref([
+  { id: 1, title: 'Audit design tokens', tag: 'Design' },
+  { id: 2, title: 'Build drag-and-drop list', tag: 'Core' },
+  { id: 3, title: 'Verify keyboard Alt+Arrow', tag: 'A11y' },
+  { id: 4, title: 'Publish release notes', tag: 'Docs' }
+])
+
+const handleItems = ref([
+  { id: 'u1', name: 'Alya Putri', role: 'Lead' },
+  { id: 'u2', name: 'Bima Pratama', role: 'Frontend' },
+  { id: 'u3', name: 'Citra Dewi', role: 'QA' },
+  { id: 'u4', name: 'Dian Kusuma', role: 'Design' }
+])
+
+const kanbanBacklog = ref([
+  { id: 'k1', title: 'Write unit tests', points: 3 },
+  { id: 'k2', title: 'Update theme docs', points: 2 }
+])
+const kanbanInProgress = ref([
+  { id: 'k3', title: 'Kanban board demo', points: 5 }
+])
+const kanbanDone = ref([
+  { id: 'k4', title: 'Setup DnD composable', points: 3 }
+])
+const lastKanbanTransfer = ref('Drag a card across columns to trigger @transfer.')
+
+const onKanbanTransfer = (
+  targetColumn: string,
+  payload: { item: { title?: string }; fromIndex: number; toIndex: number; fromGroup: string }
+) => {
+  lastKanbanTransfer.value = `Transferred "${payload.item.title ?? 'Item'}" to ${targetColumn} (index ${payload.toIndex}).`
+}
+
+const sortableBasicCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SortableList } from '@mfs-atomic/ui'
+
+const tasks = ref([
+  { id: 1, title: 'Audit design tokens' },
+  { id: 2, title: 'Build drag-and-drop list' }
+])
+<\/script>
+
+<template>
+  <SortableList v-model="tasks" item-key="id">
+    <template #item="{ item, index }">
+      <span>{{ index + 1 }}. {{ item.title }}</span>
+    </template>
+  </SortableList>
+</template>`
+
+const sortableHandleCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SortableList } from '@mfs-atomic/ui'
+
+interface Member {
+  id: number
+  name: string
+  role: string
+}
+
+const items = ref<Member[]>([
+  { id: 1, name: 'Alya Pratama', role: 'Design Lead' },
+  { id: 2, name: 'Bima Wijaya', role: 'Frontend Engineer' },
+  { id: 3, name: 'Citra Lestari', role: 'QA Engineer' }
+])
+<\/script>
+
+<template>
+  <SortableList v-model="items" item-key="id" handle=".drag-handle">
+    <template #item="{ item }">
+      <div class="mfs-flex mfs-items-center mfs-gap-2">
+        <span class="drag-handle" aria-label="Drag handle">⋮⋮</span>
+        <span>{{ item.name }}</span>
+      </div>
+    </template>
+  </SortableList>
+</template>`
+
+const sortableKanbanCode = `<script setup lang="ts">
+import { ref } from 'vue'
+import { SortableList } from '@mfs-atomic/ui'
+
+interface KanbanCard {
+  id: string
+  title: string
+}
+
+const backlog = ref<KanbanCard[]>([
+  { id: 'k-1', title: 'Audit color contrast' },
+  { id: 'k-2', title: 'Add keyboard shortcuts' }
+])
+
+const inProgress = ref<KanbanCard[]>([
+  { id: 'k-3', title: 'Build SortableList docs' }
+])
+
+const onTransfer = ({ item, fromGroup }: { item: KanbanCard; fromGroup: string }) => {
+  console.log('Moved', item.title, 'from', fromGroup)
+}
+<\/script>
+
+<template>
+  <SortableList v-model="backlog" group="kanban" @transfer="onTransfer">
+    <template #item="{ item }">{{ item.title }}</template>
+  </SortableList>
+  <SortableList v-model="inProgress" group="kanban" @transfer="onTransfer">
+    <template #item="{ item }">{{ item.title }}</template>
+  </SortableList>
+</template>`
+
+const sortableListApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
+  props: [
+    { name: 'modelValue', type: 'any[]', description: 'Array of sortable items (v-model).' },
+    { name: 'itemKey', type: 'string', default: "'id'", description: 'Unique key property for object items.' },
+    { name: 'group', type: 'string', default: "''", description: 'Shared group name enabling cross-list drag transfer.' },
+    { name: 'handle', type: 'string', default: "''", description: 'CSS selector restricting drag start to a handle element.' },
+    { name: 'disabled', type: 'boolean', default: 'false', description: 'Disables drag-and-drop and keyboard reordering.' },
+    { name: 'orientation', type: "'vertical' | 'horizontal'", default: "'vertical'", description: 'Layout axis and drop indicator direction.' },
+    { name: 'emptyText', type: 'string', default: "'Drop items here'", description: 'Placeholder text shown when the list is empty.' }
+  ],
+  events: [
+    { name: 'update:modelValue', type: '(value: any[]) => void', description: 'Emitted when items are reordered or transferred.' },
+    { name: 'reorder', type: '(payload: { value: any[]; fromIndex: number; toIndex: number }) => void', description: 'Emitted after an intra-list reorder.' },
+    { name: 'transfer', type: '(payload: { item: any; fromIndex: number; toIndex: number; fromGroup: string }) => void', description: 'Emitted on the target list after a cross-list drop.' }
+  ],
+  slots: [
+    { name: 'item', description: 'Item template receiving { item, index, dragging, grabbed }.' },
+    { name: 'empty', description: 'Custom empty-state content when modelValue is empty.' }
+  ]
+}
 </script>
 
 <style scoped>
@@ -1285,6 +1567,12 @@ const signaturePadApi: { props: ApiRow[]; events: ApiRow[]; exposed: ApiRow[] } 
   width: auto;
   object-fit: contain;
   align-self: flex-start;
+}
+
+.kanban-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
 }
 </style>
 

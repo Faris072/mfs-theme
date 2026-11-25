@@ -271,7 +271,6 @@ const removeFile = (idx: number) => {
 
 .mfs-upload__dropzone--dragging {
   border-color: var(--primary);
-  transform: scale(1.01);
 }
 
 .mfs-upload__dropzone--disabled {

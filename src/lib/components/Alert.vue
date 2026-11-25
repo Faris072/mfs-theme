@@ -78,7 +78,7 @@ const emit = defineEmits<{
   border-radius: var(--radius, 16px);
   background-color: var(--surface);
   color: var(--text);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   border-left: 4px solid var(--alert-accent);
   box-shadow: var(--clay-shadow);
   backdrop-filter: var(--backdrop-blur, none);
@@ -142,7 +142,6 @@ const emit = defineEmits<{
 
 .mfs-alert__close:hover {
   color: var(--text);
-  transform: scale(1.08);
 }
 
 /* Theme Overrides */

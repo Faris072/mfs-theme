@@ -127,29 +127,41 @@
   </ComponentPreview>
 
   <!-- Chart -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'chart'"
-    title="Chart"
-    description="Zero-dependency SVG chart supporting bar, line, pie, and doughnut visualizations with hover tooltips."
-    :code="chartCode"
-    :code-tabs="chartCodeTabs"
-    :api="chartApi"
-  >
-    <div class="mfs-stack mfs-w-full">
-      <div class="mfs-row mfs-gap-2">
-        <Button
-          v-for="kind in chartKinds"
-          :key="kind"
-          size="sm"
-          :variant="chartType === kind ? 'primary' : 'secondary'"
-          @click="chartType = kind"
-        >
-          {{ kind }}
-        </Button>
-      </div>
-      <Chart :type="chartType" :data="activeChartData" :height="220" />
-    </div>
-  </ComponentPreview>
+  <div v-else-if="activeSlug === 'chart'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Bar Chart"
+      description="Zero-dependency SVG bar chart comparing multi-series metrics with hover tooltips."
+      :code="barChartCode"
+      :code-tabs="chartCodeTabs"
+      :api="chartApi"
+    >
+      <Chart type="bar" :data="barLineChartData" :height="220" />
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Line Chart"
+      description="Multi-series SVG line chart for tracking trends over time with interactive point tooltips."
+      :code="lineChartCode"
+    >
+      <Chart type="line" :data="barLineChartData" :height="220" />
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Pie Chart"
+      description="Proportional SVG pie chart with interactive slice hover tooltips."
+      :code="pieChartCode"
+    >
+      <Chart type="pie" :data="pieDoughnutChartData" :height="220" />
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Doughnut Chart"
+      description="Ring-style SVG doughnut chart highlighting category distribution."
+      :code="doughnutChartCode"
+    >
+      <Chart type="doughnut" :data="pieDoughnutChartData" :height="220" />
+    </ComponentPreview>
+  </div>
 
   <!-- v-ripple -->
   <ComponentPreview
@@ -824,30 +836,22 @@ const terminalApi = {
 }
 
 /* ---------- Chart ---------- */
-const chartKinds = ['bar', 'line', 'pie', 'doughnut'] as const
-const chartType = ref<'bar' | 'line' | 'pie' | 'doughnut'>('bar')
+const barLineChartData: ChartData = {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  datasets: [
+    { label: 'Components', data: [18, 28, 36, 44, 52] },
+    { label: 'Adoption', data: [12, 20, 29, 38, 46] }
+  ]
+}
 
-const activeChartData = computed<ChartData>(() => {
-  if (chartType.value === 'pie' || chartType.value === 'doughnut') {
-    return {
-      labels: ['Clay', 'Glass', 'Neo'],
-      datasets: [{ label: 'Themes', data: [48, 32, 20] }]
-    }
-  }
-  return {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-    datasets: [
-      { label: 'Components', data: [18, 28, 36, 44, 52] },
-      { label: 'Adoption', data: [12, 20, 29, 38, 46] }
-    ]
-  }
-})
+const pieDoughnutChartData: ChartData = {
+  labels: ['Clay', 'Glass', 'Neo'],
+  datasets: [{ label: 'Themes', data: [48, 32, 20] }]
+}
 
-const chartCode = `<script setup lang="ts">
-import { ref } from 'vue'
-import { Button, Chart, type ChartData } from '@mfs-atomic/ui'
+const makeSeriesChartCode = (type: 'bar' | 'line') => `<script setup lang="ts">
+import { Chart, type ChartData } from '@mfs-atomic/ui'
 
-const chartType = ref<'bar' | 'line' | 'pie' | 'doughnut'>('bar')
 const chartData: ChartData = {
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
   datasets: [
@@ -858,16 +862,32 @@ const chartData: ChartData = {
 <\/script>
 
 <template>
-  <Button size="sm" @click="chartType = 'bar'">Bar</Button>
-  <Button size="sm" @click="chartType = 'line'">Line</Button>
-  <Chart :type="chartType" :data="chartData" :height="220" />
+  <Chart type="${type}" :data="chartData" :height="220" />
 </template>`
+
+const makePartChartCode = (type: 'pie' | 'doughnut') => `<script setup lang="ts">
+import { Chart, type ChartData } from '@mfs-atomic/ui'
+
+const chartData: ChartData = {
+  labels: ['Clay', 'Glass', 'Neo'],
+  datasets: [{ label: 'Themes', data: [48, 32, 20] }]
+}
+<\/script>
+
+<template>
+  <Chart type="${type}" :data="chartData" :height="220" />
+</template>`
+
+const barChartCode = makeSeriesChartCode('bar')
+const lineChartCode = makeSeriesChartCode('line')
+const pieChartCode = makePartChartCode('pie')
+const doughnutChartCode = makePartChartCode('doughnut')
 
 const chartCodeTabs = [
   {
     label: 'Example.vue',
     filename: 'Example.vue',
-    code: chartCode
+    code: barChartCode
   },
   {
     label: 'Data Format',

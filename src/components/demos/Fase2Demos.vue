@@ -188,7 +188,6 @@
     title="Select"
     description="Single-select dropdown with search filter, clearable button, keyboard navigation, and custom option slot."
     :code="selectCode"
-    :code-tabs="selectCodeTabs"
     :api="selectApi"
   >
     <div class="mfs-grid mfs-items-start">
@@ -236,7 +235,6 @@
     title="MultiSelect"
     description="Multi-value selector rendering chosen items as removable chips with search and Select All."
     :code="multiSelectCode"
-    :code-tabs="multiSelectCodeTabs"
     :api="multiSelectApi"
   >
     <div class="mfs-grid mfs-items-start">
@@ -462,7 +460,6 @@
     title="Form & FormField"
     description="Form state container with resolver validation, FormField context injection, and 422 server error mapping."
     :code="formCode"
-    :code-tabs="formCodeTabs"
     :api="formApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -528,7 +525,6 @@
     title="Mentions"
     description="Textarea with @ trigger detection and async remote user search."
     :code="mentionsCode"
-    :code-tabs="mentionsCodeTabs"
     :api="mentionsApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -816,17 +812,22 @@ const roleOptions = ['Architect', 'Builder', 'Guardian', 'Assistant'].map((r) =>
 }))
 
 const selectCode = `<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { Select, type SelectOption } from '@mfs-atomic/ui'
-import { frameworkOptions } from './data'
-import { fetchFrameworks } from './fetchApi'
+import { ref } from 'vue'
+import { Select } from '@mfs-atomic/ui'
+
+interface SelectOption {
+  label: string
+  value: string
+  disabled?: boolean
+}
 
 const framework = ref<string | null>('vue')
-const options = ref<SelectOption[]>(frameworkOptions)
-
-onMounted(async () => {
-  options.value = await fetchFrameworks('')
-})
+const options = ref<SelectOption[]>([
+  { label: 'Vue 3', value: 'vue' },
+  { label: 'Nuxt 3', value: 'nuxt' },
+  { label: 'Vite', value: 'vite' },
+  { label: 'Astro (Disabled)', value: 'astro', disabled: true }
+])
 <\/script>
 
 <template>
@@ -838,34 +839,6 @@ onMounted(async () => {
     clearable
   />
 </template>`
-
-const selectCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: selectCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { SelectOption } from '@mfs-atomic/ui'
-
-export const frameworkOptions: SelectOption[] = [
-  { label: 'Vue 3', value: 'vue' },
-  { label: 'Nuxt 3', value: 'nuxt' },
-  { label: 'Vite', value: 'vite' },
-  { label: 'Astro (Disabled)', value: 'astro', disabled: true }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { SelectOption } from '@mfs-atomic/ui'
-
-export async function fetchFrameworks(query: string): Promise<SelectOption[]> {
-  const params = new URLSearchParams({ q: query })
-  const res = await fetch(\`/api/frameworks?\${params.toString()}\`)
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
 
 const selectApi: ApiSpec = {
   props: [
@@ -898,17 +871,22 @@ const tagOptions = [
 ]
 
 const multiSelectCode = `<script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { MultiSelect, type SelectOption } from '@mfs-atomic/ui'
-import { capabilityOptions } from './data'
-import { fetchCapabilities } from './fetchApi'
+import { ref } from 'vue'
+import { MultiSelect } from '@mfs-atomic/ui'
+
+interface CapabilityOption {
+  label: string
+  value: string
+  disabled?: boolean
+}
 
 const tags = ref<string[]>(['responsive', 'a11y'])
-const options = ref<SelectOption[]>(capabilityOptions)
-
-onMounted(async () => {
-  options.value = await fetchCapabilities()
-})
+const options = ref<CapabilityOption[]>([
+  { label: 'Responsive', value: 'responsive' },
+  { label: 'Accessible (a11y)', value: 'a11y' },
+  { label: 'Claymorphism', value: 'clay' },
+  { label: 'Glassmorphism', value: 'glass' }
+])
 <\/script>
 
 <template>
@@ -920,33 +898,6 @@ onMounted(async () => {
     select-all
   />
 </template>`
-
-const multiSelectCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: multiSelectCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { SelectOption } from '@mfs-atomic/ui'
-
-export const capabilityOptions: SelectOption[] = [
-  { label: 'Responsive', value: 'responsive' },
-  { label: 'Accessible (a11y)', value: 'a11y' },
-  { label: 'Claymorphism', value: 'clay' },
-  { label: 'Glassmorphism', value: 'glass' }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { SelectOption } from '@mfs-atomic/ui'
-
-export async function fetchCapabilities(): Promise<SelectOption[]> {
-  const res = await fetch('/api/capabilities')
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
 
 const multiSelectApi: ApiSpec = {
   props: [
@@ -1221,8 +1172,14 @@ const radioButtonGroupCode = `<template>
 import { ref } from 'vue'
 import { RadioButtonGroup } from '@mfs-atomic/ui'
 
-const plan = ref('pro')
-const options = [
+interface Option {
+  label: string
+  value: string
+  disabled?: boolean
+}
+
+const plan = ref<string>('pro')
+const options: Option[] = [
   { label: 'Starter — Free', value: 'starter' },
   { label: 'Pro — $19/mo', value: 'pro' },
   { label: 'Enterprise (Contact Sales)', value: 'enterprise', disabled: true }
@@ -1291,22 +1248,37 @@ const onFormReset = () => {
 const formCode = `<script setup lang="ts">
 import { ref } from 'vue'
 import { Button, Form, FormField, Input, type MfsFormSubmitPayload } from '@mfs-atomic/ui'
-import { initialValues, profileResolver, type FormErrors } from './data'
-import { submitProfile } from './fetchApi'
+
+type FormErrors = Record<string, string | string[]>
+
+interface ProfileFormValues {
+  name: string
+  email: string
+}
+
+const initialValues = ref<ProfileFormValues>({
+  name: 'Alya Putri',
+  email: 'alya@example.com'
+})
 
 const serverErrors = ref<FormErrors>({})
 const submitting = ref(false)
+
+const profileResolver = (values: Record<string, unknown>) => {
+  const errs: Record<string, string | undefined> = {}
+  if (!String(values.name ?? '').trim()) errs.name = 'Full name is required.'
+  const email = String(values.email ?? '').trim()
+  if (!email || !email.includes('@')) errs.email = 'Valid work email is required.'
+  return errs
+}
 
 const onSubmit = async (payload: MfsFormSubmitPayload) => {
   if (!payload.valid) return
   submitting.value = true
   serverErrors.value = {}
-  try {
-    const result = await submitProfile(payload.values)
-    if (result.errors) serverErrors.value = result.errors
-  } finally {
+  setTimeout(() => {
     submitting.value = false
-  }
+  }, 300)
 }
 <\/script>
 
@@ -1331,54 +1303,6 @@ const onSubmit = async (payload: MfsFormSubmitPayload) => {
     <Button type="submit" variant="primary" :loading="submitting">Submit</Button>
   </Form>
 </template>`
-
-const formCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: formCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `export type FormErrors = Record<string, string | string[]>
-
-export interface ProfileFormValues {
-  name: string
-  email: string
-}
-
-export const initialValues: ProfileFormValues = {
-  name: 'Alya Putri',
-  email: 'alya@example.com'
-}
-
-export function profileResolver(values: Record<string, unknown>) {
-  const errs: Record<string, string | undefined> = {}
-  if (!String(values.name ?? '').trim()) errs.name = 'Full name is required.'
-  const email = String(values.email ?? '').trim()
-  if (!email || !email.includes('@')) errs.email = 'Valid work email is required.'
-  return errs
-}`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { FormErrors } from './data'
-
-export async function submitProfile(
-  values: Record<string, unknown>
-): Promise<{ ok: boolean; errors?: FormErrors }> {
-  const res = await fetch('/api/profile', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify(values)
-  })
-  if (res.status === 422) {
-    const body = await res.json()
-    return { ok: false, errors: body.errors }
-  }
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return { ok: true }
-}`
-  }
-]
 
 const formApi: ApiSpec = {
   props: [
@@ -1431,20 +1355,33 @@ const onMentionSelect = (option: MentionOption) => {
 
 const mentionsCode = `<script setup lang="ts">
 import { ref } from 'vue'
-import { Mentions, type MentionOption } from '@mfs-atomic/ui'
-import { mentionDirectory } from './data'
-import { searchMentions } from './fetchApi'
+import { Mentions } from '@mfs-atomic/ui'
+
+interface MentionOption {
+  label: string
+  value: string
+  description?: string
+}
+
+const directory: MentionOption[] = [
+  { label: 'Alya Putri', value: 'alya', description: 'Design Lead' },
+  { label: 'Bima Pratama', value: 'bima', description: 'Frontend Engineer' },
+  { label: 'Citra Lestari', value: 'citra', description: 'QA Specialist' }
+]
 
 const text = ref('Assigning review to ')
-const options = ref<MentionOption[]>(mentionDirectory)
+const options = ref<MentionOption[]>(directory)
 const loading = ref(false)
 let timer: ReturnType<typeof setTimeout> | undefined
 
 const onSearch = ({ query }: { trigger: string; query: string }) => {
   clearTimeout(timer)
   loading.value = true
-  timer = setTimeout(async () => {
-    options.value = await searchMentions(query)
+  timer = setTimeout(() => {
+    const q = query.trim().toLowerCase()
+    options.value = q
+      ? directory.filter((u) => u.label.toLowerCase().includes(q) || u.value.includes(q))
+      : directory
     loading.value = false
   }, 220)
 }
@@ -1453,33 +1390,6 @@ const onSearch = ({ query }: { trigger: string; query: string }) => {
 <template>
   <Mentions v-model="text" :options="options" :loading="loading" remote @search="onSearch" />
 </template>`
-
-const mentionsCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: mentionsCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { MentionOption } from '@mfs-atomic/ui'
-
-export const mentionDirectory: MentionOption[] = [
-  { label: 'Alya Putri', value: 'alya', description: 'Design Lead' },
-  { label: 'Bima Pratama', value: 'bima', description: 'Frontend Engineer' },
-  { label: 'Citra Lestari', value: 'citra', description: 'QA Specialist' }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { MentionOption } from '@mfs-atomic/ui'
-
-export async function searchMentions(query: string): Promise<MentionOption[]> {
-  const params = new URLSearchParams({ q: query })
-  const res = await fetch(\`/api/users/mentions?\${params.toString()}\`)
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
 
 const mentionsApi: ApiSpec = {
   props: [

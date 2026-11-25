@@ -176,7 +176,7 @@ function setLayout(next: DataViewLayout) {
   padding: 4px;
   border-radius: var(--radius-md, 12px);
   background: var(--surface-subtle);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--input-shadow);
 }
 
@@ -191,7 +191,7 @@ function setLayout(next: DataViewLayout) {
   background: transparent;
   color: var(--text-muted);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .data-view__toggle-btn svg {
@@ -231,7 +231,7 @@ function setLayout(next: DataViewLayout) {
   background: var(--surface);
   color: var(--text);
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   backdrop-filter: var(--backdrop-blur, none);
 }
 
@@ -242,7 +242,7 @@ function setLayout(next: DataViewLayout) {
   background: var(--surface);
   border-radius: var(--radius, 16px);
   box-shadow: var(--card-shadow);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   backdrop-filter: var(--backdrop-blur, none);
 }
 

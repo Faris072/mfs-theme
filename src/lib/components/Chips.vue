@@ -177,7 +177,7 @@ const handleBlur = () => {
 
 .mfs-chips-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .mfs-chips-wrapper--invalid .mfs-chips-box {

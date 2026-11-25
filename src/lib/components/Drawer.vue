@@ -186,7 +186,6 @@ onBeforeUnmount(() => {
 
 .mfs-drawer__close:hover {
   color: var(--text);
-  transform: scale(1.08);
 }
 
 .mfs-drawer__footer {

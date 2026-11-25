@@ -18,7 +18,7 @@
 
 .ig-wrapper:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.22), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 22%, transparent), var(--input-shadow);
 }
 
 .ig-wrapper :deep(> *) {

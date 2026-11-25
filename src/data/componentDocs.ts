@@ -865,6 +865,27 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     phase: 10,
     summary: 'Click-to-edit inline container toggling between display and edit views.'
   },
+  {
+    slug: 'sortable-list',
+    name: 'SortableList',
+    category: 'Data Advanced',
+    phase: 10,
+    status: 'Ready',
+    importSymbol: 'SortableList',
+    summary: 'Zero-dependency drag-and-drop sortable list with drag handles, cross-list Kanban transfer, and keyboard reordering.',
+    a11y: {
+      keyboard: [
+        'Space toggles grab state on focused item',
+        'ArrowUp / ArrowDown (or ArrowLeft / ArrowRight when horizontal) moves grabbed item',
+        'Alt+Arrow keys reorder focused item directly without grabbing',
+        'Escape cancels active grab'
+      ],
+      aria: [
+        'role="listitem" and aria-roledescription="sortable item" on items',
+        'aria-live="polite" region announces grab and move actions'
+      ]
+    }
+  },
 
   // Phase 11 (11)
   {

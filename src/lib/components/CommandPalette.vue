@@ -363,8 +363,6 @@ onBeforeUnmount(() => {
 .cmd-group-label {
   font-size: 0.72rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   padding: 4px 10px;
   color: var(--text-muted);
 }

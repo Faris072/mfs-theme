@@ -121,10 +121,10 @@ const handleChange = (e: Event) => {
   justify-content: center;
   border-radius: var(--radius-sm, 8px);
   background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--input-shadow);
   color: var(--primary-text, #ffffff);
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), border-color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .checkbox__input:focus-visible + .checkbox__box {
@@ -136,11 +136,10 @@ const handleChange = (e: Event) => {
   background-color: var(--primary);
   border-color: var(--primary);
   box-shadow: var(--clay-shadow);
-  transform: scale(1.04);
 }
 
 .checkbox__icon {
-  animation: check-bounce 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: check-bounce 0.2s cubic-bezier(0.2, 0, 0, 1);
 }
 
 @keyframes check-bounce {
@@ -149,7 +148,7 @@ const handleChange = (e: Event) => {
 }
 
 [data-theme="clay"] .checkbox__box--checked {
-  box-shadow: 3px 5px 12px rgba(124, 58, 237, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.5);
+  box-shadow: 3px 5px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset 2px 2px 4px rgba(255, 255, 255, 0.5);
 }
 
 [data-theme="glass"] .checkbox__box {
@@ -163,5 +162,10 @@ const handleChange = (e: Event) => {
 
 [data-theme="neo"] .checkbox__box--checked {
   box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.55), -3px -3px 6px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="brutalism"] .checkbox__box {
+  border-radius: var(--radius, 4px);
+  box-shadow: 2px 2px 0 var(--border);
 }
 </style>

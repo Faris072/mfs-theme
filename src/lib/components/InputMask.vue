@@ -78,7 +78,7 @@ const onInput = (e: Event) => {
 .mask-wrapper--disabled { opacity: 0.6; pointer-events: none; }
 .mask-label { font-size: 0.875rem; font-weight: 600; }
 .mask-box { display: flex; align-items: center; padding: 2px 14px; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.mask-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow); }
+.mask-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow); }
 .mask-input { flex: 1; width: 100%; background: transparent; border: none; outline: none; font-family: inherit; font-size: 0.95rem; padding: 10px 0; font-variant-numeric: tabular-nums; }
 .mask-input::placeholder { color: var(--text-muted); opacity: 0.7; }
 

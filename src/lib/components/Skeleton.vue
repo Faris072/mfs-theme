@@ -107,9 +107,9 @@ const getLineStyle = (index: number) => {
 
 /* Theme Overrides */
 [data-theme="clay"] .mfs-skeleton {
-  --sk-base: rgba(139, 92, 246, 0.12);
+  --sk-base: var(--surface-subtle);
   --sk-highlight: rgba(255, 255, 255, 0.75);
-  box-shadow: inset 2px 2px 4px rgba(109, 40, 217, 0.08);
+  box-shadow: var(--input-shadow);
 }
 
 [data-theme="glass"] .mfs-skeleton {
@@ -122,5 +122,14 @@ const getLineStyle = (index: number) => {
   --sk-base: #dce3ee;
   --sk-highlight: rgba(255, 255, 255, 0.65);
   box-shadow: var(--input-shadow);
+}
+
+[data-theme="brutalism"] .mfs-skeleton {
+  border: var(--border-width, 3px) solid var(--border);
+  box-shadow: 2px 2px 0 var(--border);
+}
+
+[data-theme="brutalism"] .mfs-skeleton--text {
+  border-radius: var(--radius, 4px);
 }
 </style>

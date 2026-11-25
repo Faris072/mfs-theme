@@ -151,7 +151,6 @@ const visibleToasts = computed(() => {
 
 .mfs-toast__close:hover {
   color: var(--text);
-  transform: scale(1.08);
 }
 
 /* Theme Overrides */
@@ -172,7 +171,7 @@ const visibleToasts = computed(() => {
 /* Transitions */
 .mfs-toast-enter-active,
 .mfs-toast-leave-active {
-  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.25s cubic-bezier(0.2, 0, 0, 1), transform 0.25s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .mfs-toast-enter-from,

@@ -68,7 +68,6 @@
     title="Breadcrumb"
     description="Hierarchical path trail with chevron or slash separators and clickable ancestors."
     :code="breadcrumbCode"
-    :code-tabs="breadcrumbCodeTabs"
     :api="breadcrumbApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -117,7 +116,6 @@
     title="Steps"
     description="Multi-step progress indicator for wizards and sequential workflows."
     :code="stepsCode"
-    :code-tabs="stepsCodeTabs"
     :api="stepsApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -206,66 +204,75 @@
   </ComponentPreview>
 
   <!-- CommandPalette -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'command-palette'"
-    title="CommandPalette"
-    description="Global ⌘K / Ctrl+K command modal with grouped actions, keyboard navigation, and optional remote search."
-    :code="commandPaletteCode"
-    :code-tabs="commandPaletteCodeTabs"
-    :api="commandPaletteApi"
-  >
-    <div class="mfs-stack mfs-w-full">
-      <Alert severity="info" title="Local Filter vs Remote Search">
-        <div class="mfs-stack mfs-gap-1 mfs-text-xs">
-          <span>
-            <strong>Local Filter (default):</strong> Pass all <code>:items</code> once and let <code>CommandPalette</code> filter by label, group, and description client-side — best for static navigation and small command lists.
-          </span>
-          <span>
-            <strong>Remote Search (<code>:remote="true"</code>):</strong> Disables local filtering so you can debounce <code>@search</code>, toggle <code>:loading</code>, and stream results from a server or API.
+  <div v-else-if="activeSlug === 'command-palette'" class="mfs-stack mfs-gap-6">
+    <!-- 1. Local Filter -->
+    <ComponentPreview
+      title="Local Filter"
+      description="Default client-side filtering on :items by label, group, and description — best for static navigation and small command lists."
+      :code="commandPaletteLocalCode"
+      :api="commandPaletteApi"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-3">
+          <Button variant="primary" size="sm" @click="cmdLocalOpen = true">
+            Open Local Palette (⌘K)
+          </Button>
+          <span class="mfs-text-xs mfs-text-muted">
+            Shortcut: <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">⌘K</kbd> / <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">Ctrl+K</kbd>
           </span>
         </div>
-      </Alert>
 
-      <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-3">
-        <div class="mfs-inline-flex mfs-items-center mfs-gap-2">
-          <Button variant="primary" size="sm" @click="cmdOpen = true">
-            Open Command Palette (⌘K)
-          </Button>
-          <Button
-            variant="surface"
-            size="sm"
-            @click="cmdRemoteMode = !cmdRemoteMode"
-          >
-            Mode: {{ cmdRemoteMode ? 'Remote Search' : 'Local Filter' }}
-          </Button>
-        </div>
-        <span class="mfs-text-xs mfs-text-muted">
-          Shortcut: <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">⌘K</kbd> / <kbd class="mfs-px-2 mfs-py-1 mfs-rounded-sm mfs-surface-subtle">Ctrl+K</kbd>
-        </span>
+        <CommandPalette
+          v-model="cmdLocalOpen"
+          :items="cmdAllItems"
+          placeholder="Search commands, pages, or actions..."
+          @select="onCmdLocalSelect"
+        />
+
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
+          Last executed: <strong>{{ lastCmdLocalLabel }}</strong>
+        </p>
       </div>
+    </ComponentPreview>
 
-      <CommandPalette
-        v-model="cmdOpen"
-        :items="cmdRemoteMode ? cmdRemoteItems : cmdAllItems"
-        :remote="cmdRemoteMode"
-        :loading="cmdLoading"
-        placeholder="Search commands, pages, or actions..."
-        @search="onCmdSearch"
-        @select="onCmdSelect"
-      />
+    <!-- 2. Remote Search -->
+    <ComponentPreview
+      title="Remote Search"
+      description="Enable :remote=&quot;true&quot; to disable local filtering, debounce @search, toggle :loading, and stream results from a server or API."
+      :code="commandPaletteRemoteCode"
+    >
+      <div class="mfs-stack mfs-w-full">
+        <div class="mfs-row mfs-items-center mfs-justify-between mfs-gap-3">
+          <Button variant="primary" size="sm" @click="cmdRemoteOpen = true">
+            Open Remote Palette
+          </Button>
+          <span class="mfs-text-xs mfs-text-muted">
+            Debounced <code>@search</code> + <code>:loading</code>
+          </span>
+        </div>
 
-      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
-        Last executed: <strong>{{ lastCmdLabel }}</strong>
-      </p>
-    </div>
-  </ComponentPreview>
+        <CommandPalette
+          v-model="cmdRemoteOpen"
+          :items="cmdRemoteItems"
+          :remote="true"
+          :loading="cmdLoading"
+          placeholder="Search remote commands..."
+          @search="onCmdSearch"
+          @select="onCmdRemoteSelect"
+        />
+
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
+          Last executed: <strong>{{ lastCmdRemoteLabel }}</strong>
+        </p>
+      </div>
+    </ComponentPreview>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
 import {
-  Alert,
   Breadcrumb,
   Button,
   ContextMenu,
@@ -312,13 +319,19 @@ const navbarCode = `<template>
 import { ref } from 'vue'
 import { Navbar, Button } from '@mfs-atomic/ui'
 
-const active = ref('Home')
-const navItems = [
+interface NavItem {
+  label: string
+  to?: string
+  active?: boolean
+}
+
+const active = ref<string>('Home')
+const navItems: NavItem[] = [
   { label: 'Home', active: true },
   { label: 'Components' },
   { label: 'Themes' }
 ]
-const onNavigate = (item: { label: string }) => {
+const onNavigate = (item: NavItem) => {
   active.value = item.label
 }
 <\/script>`
@@ -360,8 +373,14 @@ const tabsCode = `<template>
 import { ref } from 'vue'
 import { Tabs } from '@mfs-atomic/ui'
 
-const activeTab = ref('overview')
-const tabItems = [
+interface TabItem {
+  key: string
+  label: string
+  disabled?: boolean
+}
+
+const activeTab = ref<string>('overview')
+const tabItems: TabItem[] = [
   { key: 'overview', label: 'Overview' },
   { key: 'tokens', label: 'Tokens' },
   { key: 'accessibility', label: 'Accessibility' },
@@ -404,26 +423,21 @@ const breadcrumbCode = `<template>
 
 <script setup lang="ts">
 import { Breadcrumb } from '@mfs-atomic/ui'
-import { items } from './data'
 
-const onNavigate = (item: { label: string }) => console.log(item.label)
-<\/script>`
+interface BreadcrumbItem {
+  label: string
+  to?: string
+}
 
-const breadcrumbCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: breadcrumbCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { BreadcrumbItem } from '@mfs-atomic/ui'
-
-export const items: BreadcrumbItem[] = [
+const items: BreadcrumbItem[] = [
   { label: 'Home', to: '/' },
   { label: 'Components', to: '/components' },
   { label: 'Navigation', to: '/components/navigation' },
   { label: 'Breadcrumb' }
-]`
-  }
 ]
+
+const onNavigate = (item: BreadcrumbItem) => console.log(item.label)
+<\/script>`
 
 const breadcrumbApi = {
   props: [
@@ -539,26 +553,21 @@ const stepsCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Steps } from '@mfs-atomic/ui'
-import { stepItems } from './data'
 
-const currentStep = ref(1)
-<\/script>`
+interface StepItem {
+  label: string
+  description?: string
+  status?: 'wait' | 'process' | 'finish' | 'error'
+}
 
-const stepsCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: stepsCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { StepItem } from '@mfs-atomic/ui'
-
-export const stepItems: StepItem[] = [
+const currentStep = ref<number>(1)
+const stepItems: StepItem[] = [
   { label: 'Account', description: 'Create your credentials', status: 'finish' },
   { label: 'Profile', description: 'Add display name & theme', status: 'process' },
   { label: 'Preferences', description: 'Configure notifications' },
   { label: 'Confirm', description: 'Review and finish' }
-]`
-  }
 ]
+<\/script>`
 
 const stepsApi = {
   props: [
@@ -601,13 +610,19 @@ const contextMenuCode = `<template>
 <script setup lang="ts">
 import { ContextMenu } from '@mfs-atomic/ui'
 
-const items = [
+interface ContextMenuItem {
+  label?: string
+  divider?: boolean
+  danger?: boolean
+}
+
+const items: ContextMenuItem[] = [
   { label: 'Edit Item' },
   { label: 'Duplicate' },
   { divider: true },
   { label: 'Delete', danger: true }
 ]
-const onSelect = (item: { label?: string }) => console.log(item.label)
+const onSelect = (item: ContextMenuItem) => console.log(item.label)
 <\/script>`
 
 const contextMenuApi = {
@@ -665,10 +680,11 @@ const scrollTopApi = {
 }
 
 /* ---------- CommandPalette ---------- */
-const cmdOpen = ref(false)
-const cmdRemoteMode = ref(false)
+const cmdLocalOpen = ref(false)
+const cmdRemoteOpen = ref(false)
 const cmdLoading = ref(false)
-const lastCmdLabel = ref('None')
+const lastCmdLocalLabel = ref('None')
+const lastCmdRemoteLabel = ref('None')
 
 const cmdAllItems: CommandItem[] = [
   { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank workspace page', shortcut: '⌘N' },
@@ -680,7 +696,6 @@ const cmdRemoteItems = ref<CommandItem[]>(cmdAllItems)
 let cmdTimer: ReturnType<typeof setTimeout> | null = null
 
 const onCmdSearch = (q: string) => {
-  if (!cmdRemoteMode.value) return
   if (cmdTimer) clearTimeout(cmdTimer)
   cmdLoading.value = true
   const query = q.trim().toLowerCase()
@@ -692,18 +707,57 @@ const onCmdSearch = (q: string) => {
   }, 240)
 }
 
-const onCmdSelect = (item: CommandItem) => {
-  lastCmdLabel.value = `${item.label} (${item.id})`
+const onCmdLocalSelect = (item: CommandItem) => {
+  lastCmdLocalLabel.value = `${item.label} (${item.id})`
 }
 
-const commandPaletteCode = `<template>
+const onCmdRemoteSelect = (item: CommandItem) => {
+  lastCmdRemoteLabel.value = `${item.label} (${item.id})`
+}
+
+const commandPaletteLocalCode = `<template>
   <Button @click="open = true">Open (⌘K)</Button>
 
   <CommandPalette
     v-model="open"
+    :items="initialCommands"
+    placeholder="Search commands, pages, or actions..."
+    @select="onSelect"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, CommandPalette } from '@mfs-atomic/ui'
+
+interface CommandItem {
+  id: string
+  label: string
+  group?: string
+  description?: string
+  shortcut?: string
+  disabled?: boolean
+}
+
+const open = ref<boolean>(false)
+const initialCommands: CommandItem[] = [
+  { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank page', shortcut: '⌘N' },
+  { id: 'toggle-theme', label: 'Switch Theme', group: 'Actions', description: 'Cycle Clay, Glass, and Neo', shortcut: '⌘T' },
+  { id: 'go-users', label: 'Team Directory', group: 'Navigation', description: 'Jump to DataTable' },
+  { id: 'go-settings', label: 'Workspace Settings', group: 'Navigation', disabled: true }
+]
+const onSelect = (item: CommandItem) => console.log(item)
+<\/script>`
+
+const commandPaletteRemoteCode = `<template>
+  <Button @click="open = true">Open Remote Palette</Button>
+
+  <CommandPalette
+    v-model="open"
     :items="items"
+    :remote="true"
     :loading="loading"
-    remote
+    placeholder="Search remote commands..."
     @search="onSearch"
     @select="onSelect"
   />
@@ -711,54 +765,41 @@ const commandPaletteCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, CommandPalette, type CommandItem } from '@mfs-atomic/ui'
-import { initialCommands } from './data'
-import { searchCommands } from './fetchApi'
+import { Button, CommandPalette } from '@mfs-atomic/ui'
 
-const open = ref(false)
-const loading = ref(false)
-const items = ref<CommandItem[]>(initialCommands)
+interface CommandItem {
+  id: string
+  label: string
+  group?: string
+  description?: string
+  shortcut?: string
+  disabled?: boolean
+}
+
+const allCommands: CommandItem[] = [
+  { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank page', shortcut: '⌘N' },
+  { id: 'toggle-theme', label: 'Switch Theme', group: 'Actions', description: 'Cycle Clay, Glass, and Neo', shortcut: '⌘T' },
+  { id: 'go-users', label: 'Team Directory', group: 'Navigation', description: 'Jump to DataTable' },
+  { id: 'go-settings', label: 'Workspace Settings', group: 'Navigation', disabled: true }
+]
+
+const open = ref<boolean>(false)
+const loading = ref<boolean>(false)
+const items = ref<CommandItem[]>(allCommands)
 let timer: ReturnType<typeof setTimeout> | undefined
 
 const onSearch = (query: string) => {
   clearTimeout(timer)
   loading.value = true
-  timer = setTimeout(async () => {
-    items.value = await searchCommands(query)
+  timer = setTimeout(() => {
+    const q = query.trim().toLowerCase()
+    items.value = q ? allCommands.filter((item) => item.label.toLowerCase().includes(q)) : allCommands
     loading.value = false
   }, 250)
 }
 
 const onSelect = (item: CommandItem) => console.log(item)
 <\/script>`
-
-const commandPaletteCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: commandPaletteCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { CommandItem } from '@mfs-atomic/ui'
-
-export const initialCommands: CommandItem[] = [
-  { id: 'new-doc', label: 'New Document', group: 'Actions', description: 'Create a blank page', shortcut: '⌘N' },
-  { id: 'toggle-theme', label: 'Switch Theme', group: 'Actions', description: 'Cycle Clay, Glass, and Neo', shortcut: '⌘T' },
-  { id: 'go-users', label: 'Team Directory', group: 'Navigation', description: 'Jump to DataTable' },
-  { id: 'go-settings', label: 'Workspace Settings', group: 'Navigation', disabled: true }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { CommandItem } from '@mfs-atomic/ui'
-
-export async function searchCommands(query: string): Promise<CommandItem[]> {
-  const params = new URLSearchParams({ q: query })
-  const res = await fetch(\`/api/commands?\${params.toString()}\`)
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
 
 const commandPaletteApi = {
   props: [

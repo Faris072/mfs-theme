@@ -117,7 +117,7 @@ onBeforeUnmount(() => {
   border-radius: var(--radius, 16px);
   background-color: var(--surface);
   color: var(--text);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--card-shadow);
   backdrop-filter: var(--backdrop-blur, none);
 }
@@ -131,7 +131,7 @@ onBeforeUnmount(() => {
 /* Transition */
 .mfs-popover-enter-active,
 .mfs-popover-leave-active {
-  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .mfs-popover-enter-from,

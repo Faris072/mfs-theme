@@ -200,8 +200,6 @@ function toggleNode(node: TreeTableNode) {
   padding: 12px 16px;
   font-weight: 700;
   font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   background: var(--surface-subtle);
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.06));
   white-space: nowrap;

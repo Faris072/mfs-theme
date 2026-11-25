@@ -285,8 +285,6 @@ defineExpose({ open, close, toggle })
   padding: 8px 12px 4px;
   font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .menu__item {
@@ -336,7 +334,7 @@ defineExpose({ open, close, toggle })
 
 .menu-pop-enter-active,
 .menu-pop-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .menu-pop-enter-from,

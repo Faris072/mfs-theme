@@ -144,7 +144,7 @@ const toggle = (key: Key) => {
 
 .accordion__chevron {
   flex-shrink: 0;
-  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
 }
 
 .accordion__item.is-open .accordion__chevron {

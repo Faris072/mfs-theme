@@ -116,65 +116,102 @@
   </ComponentPreview>
 
   <!-- 4. Drawer -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'drawer'"
-    title="Drawer"
-    description="Edge-anchored slide-over panel with body scroll lock, Escape-to-close, and header/footer slots."
-    :code="drawerCode"
-    :api="drawerApi"
-  >
-    <div class="mfs-row">
-      <Button variant="primary" size="sm" @click="openDrawer('right')">Right Drawer</Button>
-      <Button variant="surface" size="sm" @click="openDrawer('left')">Left Drawer</Button>
-      <Button variant="surface" size="sm" @click="openDrawer('top')">Top Drawer</Button>
-      <Button variant="surface" size="sm" @click="openDrawer('bottom')">Bottom Drawer</Button>
-    </div>
-
-    <Drawer
-      v-model="drawerOpen"
-      :position="drawerPosition"
-      :size="drawerPosition === 'top' || drawerPosition === 'bottom' ? '240px' : '360px'"
-      :title="`Drawer (${drawerPosition})`"
+  <div v-else-if="activeSlug === 'drawer'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Right Drawer"
+      description="Edge-anchored slide-over panel from the right edge with body scroll lock, Escape-to-close, and header/footer slots."
+      :code="drawerRightCode"
+      :api="drawerApi"
     >
-      <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
-        This drawer slides in from the <strong>{{ drawerPosition }}</strong> edge. Press
-        <kbd>Esc</kbd> or click the backdrop to close it.
-      </p>
-      <template #footer>
-        <div class="mfs-row mfs-justify-end mfs-w-full">
-          <Button variant="surface" size="sm" @click="drawerOpen = false">Cancel</Button>
-          <Button variant="primary" size="sm" @click="drawerOpen = false">Done</Button>
-        </div>
-      </template>
-    </Drawer>
-  </ComponentPreview>
+      <Button variant="primary" size="sm" @click="drawerOpen.right = true">Right Drawer</Button>
+      <Drawer v-model="drawerOpen.right" position="right" size="360px" title="Drawer (right)">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+          This drawer slides in from the <strong>right</strong> edge. Press <kbd>Esc</kbd> or click
+          the backdrop to close it.
+        </p>
+        <template #footer>
+          <div class="mfs-row mfs-justify-end mfs-w-full">
+            <Button variant="surface" size="sm" @click="drawerOpen.right = false">Cancel</Button>
+            <Button variant="primary" size="sm" @click="drawerOpen.right = false">Done</Button>
+          </div>
+        </template>
+      </Drawer>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Left Drawer"
+      description="Slide-over panel anchored to the left edge, ideal for navigation menus."
+      :code="drawerLeftCode"
+    >
+      <Button variant="surface" size="sm" @click="drawerOpen.left = true">Left Drawer</Button>
+      <Drawer v-model="drawerOpen.left" position="left" size="360px" title="Drawer (left)">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+          This drawer slides in from the <strong>left</strong> edge. Press <kbd>Esc</kbd> or click
+          the backdrop to close it.
+        </p>
+        <template #footer>
+          <div class="mfs-row mfs-justify-end mfs-w-full">
+            <Button variant="surface" size="sm" @click="drawerOpen.left = false">Cancel</Button>
+            <Button variant="primary" size="sm" @click="drawerOpen.left = false">Done</Button>
+          </div>
+        </template>
+      </Drawer>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Top Drawer"
+      description="Slide-over panel anchored to the top edge with a compact vertical size."
+      :code="drawerTopCode"
+    >
+      <Button variant="surface" size="sm" @click="drawerOpen.top = true">Top Drawer</Button>
+      <Drawer v-model="drawerOpen.top" position="top" size="240px" title="Drawer (top)">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+          This drawer slides in from the <strong>top</strong> edge. Press <kbd>Esc</kbd> or click
+          the backdrop to close it.
+        </p>
+        <template #footer>
+          <div class="mfs-row mfs-justify-end mfs-w-full">
+            <Button variant="surface" size="sm" @click="drawerOpen.top = false">Cancel</Button>
+            <Button variant="primary" size="sm" @click="drawerOpen.top = false">Done</Button>
+          </div>
+        </template>
+      </Drawer>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Bottom Drawer"
+      description="Slide-over sheet anchored to the bottom edge for mobile-friendly actions."
+      :code="drawerBottomCode"
+    >
+      <Button variant="surface" size="sm" @click="drawerOpen.bottom = true">Bottom Drawer</Button>
+      <Drawer v-model="drawerOpen.bottom" position="bottom" size="240px" title="Drawer (bottom)">
+        <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+          This drawer slides in from the <strong>bottom</strong> edge. Press <kbd>Esc</kbd> or click
+          the backdrop to close it.
+        </p>
+        <template #footer>
+          <div class="mfs-row mfs-justify-end mfs-w-full">
+            <Button variant="surface" size="sm" @click="drawerOpen.bottom = false">Cancel</Button>
+            <Button variant="primary" size="sm" @click="drawerOpen.bottom = false">Done</Button>
+          </div>
+        </template>
+      </Drawer>
+    </ComponentPreview>
+  </div>
 
   <!-- 5. Popover -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'popover'"
-    title="Popover"
-    description="Click-triggered floating surface with outside-click dismissal and scoped trigger/close helpers."
-    :code="popoverCode"
-    :api="popoverApi"
-  >
-    <div class="mfs-stack mfs-w-full">
-      <div class="mfs-row">
-        <Button
-          v-for="pos in (['bottom', 'top', 'left', 'right'] as const)"
-          :key="pos"
-          size="sm"
-          :variant="popoverPlacement === pos ? 'primary' : 'surface'"
-          @click="popoverPlacement = pos"
-        >
-          {{ pos }}
-        </Button>
-      </div>
-
-      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6">
-        <Popover :placement="popoverPlacement">
+  <div v-else-if="activeSlug === 'popover'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Bottom Placement"
+      description="Click-triggered floating surface placed below the trigger with outside-click dismissal."
+      :code="popoverBottomCode"
+      :api="popoverApi"
+    >
+      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6 mfs-w-full">
+        <Popover placement="bottom">
           <template #trigger="{ open }">
             <Button variant="primary" size="sm">
-              {{ open ? 'Close Popover' : `Open (${popoverPlacement})` }}
+              {{ open ? 'Close Popover' : 'Open (bottom)' }}
             </Button>
           </template>
           <template #default="{ close }">
@@ -188,8 +225,83 @@
           </template>
         </Popover>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Top Placement"
+      description="Floating surface anchored above the trigger element."
+      :code="popoverTopCode"
+    >
+      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6 mfs-w-full">
+        <Popover placement="top">
+          <template #trigger="{ open }">
+            <Button variant="primary" size="sm">
+              {{ open ? 'Close Popover' : 'Open (top)' }}
+            </Button>
+          </template>
+          <template #default="{ close }">
+            <div class="mfs-flex mfs-flex-col mfs-gap-2">
+              <strong class="mfs-text-sm mfs-text">Quick Actions</strong>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Click outside, press Escape, or use the scoped close callback.
+              </p>
+              <Button variant="surface" size="sm" @click="close">Dismiss</Button>
+            </div>
+          </template>
+        </Popover>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Left Placement"
+      description="Floating surface anchored to the left of the trigger element."
+      :code="popoverLeftCode"
+    >
+      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6 mfs-w-full">
+        <Popover placement="left">
+          <template #trigger="{ open }">
+            <Button variant="primary" size="sm">
+              {{ open ? 'Close Popover' : 'Open (left)' }}
+            </Button>
+          </template>
+          <template #default="{ close }">
+            <div class="mfs-flex mfs-flex-col mfs-gap-2">
+              <strong class="mfs-text-sm mfs-text">Quick Actions</strong>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Click outside, press Escape, or use the scoped close callback.
+              </p>
+              <Button variant="surface" size="sm" @click="close">Dismiss</Button>
+            </div>
+          </template>
+        </Popover>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Right Placement"
+      description="Floating surface anchored to the right of the trigger element."
+      :code="popoverRightCode"
+    >
+      <div class="mfs-flex mfs-justify-center mfs-px-4 mfs-py-6 mfs-w-full">
+        <Popover placement="right">
+          <template #trigger="{ open }">
+            <Button variant="primary" size="sm">
+              {{ open ? 'Close Popover' : 'Open (right)' }}
+            </Button>
+          </template>
+          <template #default="{ close }">
+            <div class="mfs-flex mfs-flex-col mfs-gap-2">
+              <strong class="mfs-text-sm mfs-text">Quick Actions</strong>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Click outside, press Escape, or use the scoped close callback.
+              </p>
+              <Button variant="surface" size="sm" @click="close">Dismiss</Button>
+            </div>
+          </template>
+        </Popover>
+      </div>
+    </ComponentPreview>
+  </div>
 
   <!-- 6. Skeleton -->
   <ComponentPreview
@@ -364,15 +476,12 @@ const triggerToast = (
 const showClosableAlert = ref(true)
 
 // 4. Drawer
-const drawerOpen = ref(false)
-const drawerPosition = ref<'left' | 'right' | 'top' | 'bottom'>('right')
-const openDrawer = (pos: 'left' | 'right' | 'top' | 'bottom') => {
-  drawerPosition.value = pos
-  drawerOpen.value = true
-}
-
-// 5. Popover
-const popoverPlacement = ref<'top' | 'bottom' | 'left' | 'right'>('bottom')
+const drawerOpen = ref({
+  right: false,
+  left: false,
+  top: false,
+  bottom: false
+})
 
 // 6. Skeleton
 const skeletonAnimated = ref(true)
@@ -472,7 +581,7 @@ const disabled = ref(false)
   </Tooltip>
 </template>`
 
-const drawerCode = `<script setup lang="ts">
+const makeDrawerCode = (position: 'right' | 'left' | 'top' | 'bottom', size: string) => `<script setup lang="ts">
 import { ref } from 'vue'
 import { Button, Drawer } from '@mfs-atomic/ui'
 
@@ -480,9 +589,9 @@ const open = ref(false)
 <\/script>
 
 <template>
-  <Button @click="open = true">Open Drawer</Button>
+  <Button @click="open = true">Open ${position[0].toUpperCase() + position.slice(1)} Drawer</Button>
 
-  <Drawer v-model="open" position="right" size="360px" title="Details">
+  <Drawer v-model="open" position="${position}" size="${size}" title="Drawer (${position})">
     <p>Slide-over content here.</p>
     <template #footer>
       <Button variant="primary" @click="open = false">Done</Button>
@@ -490,17 +599,19 @@ const open = ref(false)
   </Drawer>
 </template>`
 
-const popoverCode = `<script setup lang="ts">
-import { ref } from 'vue'
-import { Button, Popover } from '@mfs-atomic/ui'
+const drawerRightCode = makeDrawerCode('right', '360px')
+const drawerLeftCode = makeDrawerCode('left', '360px')
+const drawerTopCode = makeDrawerCode('top', '240px')
+const drawerBottomCode = makeDrawerCode('bottom', '240px')
 
-const placement = ref<'top' | 'bottom' | 'left' | 'right'>('bottom')
+const makePopoverCode = (placement: 'bottom' | 'top' | 'left' | 'right') => `<script setup lang="ts">
+import { Button, Popover } from '@mfs-atomic/ui'
 <\/script>
 
 <template>
-  <Popover :placement="placement">
+  <Popover placement="${placement}">
     <template #trigger="{ open }">
-      <Button variant="primary">{{ open ? 'Close' : 'Open Popover' }}</Button>
+      <Button variant="primary">{{ open ? 'Close' : 'Open (${placement})' }}</Button>
     </template>
     <template #default="{ close }">
       <p>Click outside or press Escape to dismiss.</p>
@@ -508,6 +619,11 @@ const placement = ref<'top' | 'bottom' | 'left' | 'right'>('bottom')
     </template>
   </Popover>
 </template>`
+
+const popoverBottomCode = makePopoverCode('bottom')
+const popoverTopCode = makePopoverCode('top')
+const popoverLeftCode = makePopoverCode('left')
+const popoverRightCode = makePopoverCode('right')
 
 const skeletonCode = `<script setup lang="ts">
 import { ref } from 'vue'

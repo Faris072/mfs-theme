@@ -272,13 +272,13 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   font-size: 0.95rem;
   cursor: pointer;
   text-align: left;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .select-trigger:focus-visible {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .select-wrapper--error .select-trigger {
@@ -355,7 +355,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
 
 .select-option--active:not(:disabled),
 .select-option:hover:not(:disabled) {
-  background-color: var(--surface-subtle, rgba(139, 92, 246, 0.12));
+  background-color: var(--surface-subtle, color-mix(in srgb, var(--primary) 12%, transparent));
 }
 
 .select-option--selected {

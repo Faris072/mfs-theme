@@ -104,7 +104,7 @@ const onPaste = (idx: number, e: ClipboardEvent) => {
 .otp-wrapper { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .otp-wrapper--disabled { opacity: 0.55; pointer-events: none; }
 .otp-cell { width: 46px; height: 50px; text-align: center; font-family: inherit; font-size: 1.2rem; font-weight: 700; outline: none; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-.otp-cell:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow); }
+.otp-cell:focus { border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow); }
 
 [data-theme="glass"] .otp-cell { border-color: rgba(255, 255, 255, 0.25); }
 [data-theme="neo"] .otp-cell { box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8); }

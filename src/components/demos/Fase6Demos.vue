@@ -6,7 +6,6 @@
       title="Basic"
       description="Minimal DataTable displaying structured rows and columns with zero extra chrome."
       :code="basicCode"
-      :code-tabs="basicCodeTabs"
       :api="dataTableApi"
     >
       <DataTable :value="basicRows" :columns="basicCols">
@@ -225,7 +224,6 @@
     title="Interactive DataView"
     description="Toggle seamlessly between responsive Grid and List layouts using custom #grid and #list slots."
     :code="dataViewCode"
-    :code-tabs="dataViewCodeTabs"
     :api="dataViewApi"
   >
     <div class="mfs-stack">
@@ -284,68 +282,97 @@
   </ComponentPreview>
 
   <!-- Tree -->
-  <ComponentPreview
-    v-else-if="activeSlug === 'tree'"
-    title="Interactive Tree"
-    description="Expand or collapse hierarchical nodes, navigate with arrow keys, and switch between checkbox and single selection modes."
-    :code="treeCode"
-    :code-tabs="treeCodeTabs"
-    :api="treeApi"
-  >
-    <div class="mfs-stack">
-      <div class="mfs-row mfs-justify-between demo-controls">
-        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2">
-          <Button size="sm" variant="surface" @click="expandAllTree">Expand All</Button>
-          <Button size="sm" variant="surface" @click="treeExpanded = []">Collapse All</Button>
+  <div v-else-if="activeSlug === 'tree'" class="mfs-stack mfs-gap-6">
+    <!-- 1. Checkbox Selection -->
+    <ComponentPreview
+      title="Checkbox Selection"
+      description="Multi-select hierarchical nodes with checkboxes, plus Expand All and Collapse All controls."
+      :code="treeCheckboxCode"
+      :api="treeApi"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-row demo-controls">
+          <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2">
+            <Button size="sm" variant="surface" @click="expandAllTree">Expand All</Button>
+            <Button size="sm" variant="surface" @click="treeExpanded = []">Collapse All</Button>
+          </div>
         </div>
 
-        <div class="mfs-inline-flex mfs-flex-wrap mfs-items-center mfs-gap-2" role="group" aria-label="Tree selection mode">
-          <span class="mfs-text-xs mfs-font-semibold mfs-text-muted">Mode:</span>
-          <Button
-            size="sm"
-            :variant="treeSelectionMode === 'checkbox' ? 'primary' : 'surface'"
-            @click="setTreeMode('checkbox')"
-          >
-            Checkbox
-          </Button>
-          <Button
-            size="sm"
-            :variant="treeSelectionMode === 'single' ? 'primary' : 'surface'"
-            @click="setTreeMode('single')"
-          >
-            Single
-          </Button>
-          <Button
-            size="sm"
-            :variant="treeSelectionMode === 'none' ? 'primary' : 'surface'"
-            @click="setTreeMode('none')"
-          >
-            None
-          </Button>
+        <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-shadow-inset">
+          <Tree
+            v-model:expanded-keys="treeExpanded"
+            v-model:selected-keys="treeCheckboxSelected"
+            :nodes="treeNodes"
+            selection-mode="checkbox"
+            @node-click="(node) => (lastCheckboxNode = node.label)"
+          />
+        </div>
+
+        <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
+          <span>
+            <strong>Selected Keys:</strong>
+            {{ treeCheckboxSelected.length ? treeCheckboxSelected.join(', ') : 'None' }}
+          </span>
+          <span v-if="lastCheckboxNode">
+            <strong>Last Clicked:</strong> {{ lastCheckboxNode }}
+          </span>
         </div>
       </div>
+    </ComponentPreview>
 
-      <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-shadow-inset">
-        <Tree
-          v-model:expanded-keys="treeExpanded"
-          v-model:selected-keys="treeSelected"
-          :nodes="treeNodes"
-          :selection-mode="treeSelectionMode"
-          @node-click="onTreeNodeClick"
-        />
-      </div>
+    <!-- 2. Single Selection -->
+    <ComponentPreview
+      title="Single Selection"
+      description="Select one node at a time using selection-mode='single'."
+      :code="treeSingleCode"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-shadow-inset">
+          <Tree
+            v-model:expanded-keys="treeSingleExpanded"
+            v-model:selected-keys="treeSingleSelected"
+            :nodes="treeNodes"
+            selection-mode="single"
+            @node-click="(node) => (lastSingleNode = node.label)"
+          />
+        </div>
 
-      <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
-        <span>
-          <strong>Selected Keys:</strong>
-          {{ treeSelected.length ? treeSelected.join(', ') : 'None' }}
-        </span>
-        <span v-if="lastClickedNode">
-          <strong>Last Clicked:</strong> {{ lastClickedNode }}
-        </span>
+        <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
+          <span>
+            <strong>Selected Keys:</strong>
+            {{ treeSingleSelected.length ? treeSingleSelected.join(', ') : 'None' }}
+          </span>
+          <span v-if="lastSingleNode">
+            <strong>Last Clicked:</strong> {{ lastSingleNode }}
+          </span>
+        </div>
       </div>
-    </div>
-  </ComponentPreview>
+    </ComponentPreview>
+
+    <!-- 3. Read-Only (None) -->
+    <ComponentPreview
+      title="Read-Only (None)"
+      description="Browse and expand hierarchical nodes without selection using selection-mode='none'."
+      :code="treeNoneCode"
+    >
+      <div class="mfs-stack">
+        <div class="mfs-p-3 mfs-rounded-md mfs-surface-subtle mfs-shadow-inset">
+          <Tree
+            v-model:expanded-keys="treeNoneExpanded"
+            :nodes="treeNodes"
+            selection-mode="none"
+            @node-click="(node) => (lastNoneNode = node.label)"
+          />
+        </div>
+
+        <div class="mfs-row mfs-gap-4 mfs-px-3 mfs-py-2 mfs-rounded-sm mfs-surface-subtle mfs-text-xs mfs-text-muted demo-status-bar">
+          <span>
+            <strong>Last Clicked:</strong> {{ lastNoneNode || 'None' }}
+          </span>
+        </div>
+      </div>
+    </ComponentPreview>
+  </div>
 
   <!-- Column -->
   <ComponentPreview
@@ -380,7 +407,6 @@
     title="InfiniteScroll"
     description="IntersectionObserver sentinel container loading incremental batches with retryable error and finished states."
     :code="infiniteScrollCode"
-    :code-tabs="infiniteScrollCodeTabs"
     :api="infiniteScrollApi"
   >
     <div class="mfs-stack mfs-w-full">
@@ -581,18 +607,9 @@ const basicCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { Badge, DataTable } from '@mfs-atomic/ui'
-import { columns, rows } from './data'
-<\/script>`
+import { Badge, DataTable, type DataTableColumn } from '@mfs-atomic/ui'
 
-const basicCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: basicCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { DataTableColumn } from '@mfs-atomic/ui'
-
-export interface MemberRow {
+interface MemberRow {
   id: number
   name: string
   role: string
@@ -600,24 +617,23 @@ export interface MemberRow {
   score: number
 }
 
-export const columns: DataTableColumn[] = [
+const columns: DataTableColumn[] = [
   { key: 'name', label: 'Name' },
   { key: 'role', label: 'Role' },
   { key: 'status', label: 'Status' },
   { key: 'score', label: 'Score', align: 'right', width: '90px' }
 ]
 
-export const rows: MemberRow[] = [
+const rows: MemberRow[] = [
   { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
   { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 },
-  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 },
-  { id: 4, name: 'Dimas Wijaya', role: 'Backend Engineer', status: 'Offline', score: 82 }
-]`
-  }
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 }
 ]
+<\/script>`
 
 const searchPaginationCode = `<template>
   <DataTable
+    v-model:search-query="search"
     :value="rows"
     :columns="columns"
     searchable
@@ -625,7 +641,34 @@ const searchPaginationCode = `<template>
     :rows="5"
     :rows-per-page-options="[5, 10]"
   />
-</template>`
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { DataTable, type DataTableColumn } from '@mfs-atomic/ui'
+
+interface UserRow {
+  id: number
+  name: string
+  role: string
+  status: 'Active' | 'Review' | 'Offline'
+}
+
+const search = ref('')
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'role', label: 'Role', sortable: true },
+  { key: 'status', label: 'Status' }
+]
+
+const rows: UserRow[] = [
+  { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active' },
+  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active' },
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review' },
+  { id: 4, name: 'Dimas Wijaya', role: 'Backend Engineer', status: 'Offline' }
+]
+<\/script>`
 
 const multiSortCode = `<template>
   <DataTable
@@ -638,7 +681,26 @@ const multiSortCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
+import { DataTable, type DataTableColumn, type DataTableSortMeta } from '@mfs-atomic/ui'
+
+interface MemberRow {
+  id: number
+  name: string
+  status: 'Active' | 'Review' | 'Offline'
+  score: number
+}
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
+  { key: 'score', label: 'Score', align: 'right', sortable: true }
+]
+
+const rows: MemberRow[] = [
+  { id: 1, name: 'Alya Putri', status: 'Active', score: 96 },
+  { id: 2, name: 'Bima Pratama', status: 'Active', score: 91 },
+  { id: 3, name: 'Citra Lestari', status: 'Review', score: 88 }
+]
 
 const multiSortMeta = ref<DataTableSortMeta[]>([
   { key: 'status', order: 'asc' },
@@ -657,9 +719,28 @@ const selectionCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DataTable } from '@mfs-atomic/ui'
+import { DataTable, type DataTableColumn } from '@mfs-atomic/ui'
 
-const selected = ref([])
+interface MemberRow {
+  id: number
+  name: string
+  role: string
+  status: 'Active' | 'Review'
+}
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'role', label: 'Role' },
+  { key: 'status', label: 'Status' }
+]
+
+const rows: MemberRow[] = [
+  { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active' },
+  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active' },
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review' }
+]
+
+const selected = ref<MemberRow[]>([])
 <\/script>`
 
 const expansionCode = `<template>
@@ -680,9 +761,28 @@ const expansionCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Button, DataTable } from '@mfs-atomic/ui'
+import { Button, DataTable, type DataTableColumn } from '@mfs-atomic/ui'
 
-const expandedRows = ref([])
+interface MemberRow {
+  id: number
+  name: string
+  role: string
+  score: number
+}
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'role', label: 'Role' },
+  { key: 'score', label: 'Score', align: 'right' }
+]
+
+const rows: MemberRow[] = [
+  { id: 1, name: 'Alya Putri', role: 'Design Lead', score: 96 },
+  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', score: 91 },
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', score: 88 }
+]
+
+const expandedRows = ref<MemberRow[]>([])
 <\/script>`
 
 const columnToggleCode = `<template>
@@ -697,9 +797,30 @@ const columnToggleCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { DataTable } from '@mfs-atomic/ui'
+import { DataTable, type DataTableColumn } from '@mfs-atomic/ui'
 
-const visibleColumns = ref(['name', 'role', 'status', 'score'])
+interface MemberRow {
+  id: number
+  name: string
+  role: string
+  status: 'Active' | 'Review'
+  score: number
+}
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name' },
+  { key: 'role', label: 'Role' },
+  { key: 'status', label: 'Status' },
+  { key: 'score', label: 'Score', align: 'right' }
+]
+
+const rows: MemberRow[] = [
+  { id: 1, name: 'Alya Putri', role: 'Design Lead', status: 'Active', score: 96 },
+  { id: 2, name: 'Bima Pratama', role: 'Frontend Engineer', status: 'Active', score: 91 },
+  { id: 3, name: 'Citra Lestari', role: 'QA Specialist', status: 'Review', score: 88 }
+]
+
+const visibleColumns = ref<string[]>(['name', 'role', 'status', 'score'])
 <\/script>`
 
 const lazyCodeTabs = [
@@ -728,8 +849,15 @@ const lazyCodeTabs = [
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { DataTable, type DataTableSortMeta } from '@mfs-atomic/ui'
+import { DataTable, type DataTableColumn, type DataTableSortMeta } from '@mfs-atomic/ui'
 import { fetchUsers, type UserRow } from './fetchUsers'
+
+const columns: DataTableColumn[] = [
+  { key: 'name', label: 'Name', sortable: true },
+  { key: 'role', label: 'Role', sortable: true },
+  { key: 'status', label: 'Status', sortable: true },
+  { key: 'score', label: 'Score', align: 'right', sortable: true }
+]
 
 const page = ref(1)
 const rowsPerPage = ref(5)
@@ -897,48 +1025,24 @@ const dataViewCode = `<template>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { DataView, type DataViewLayout } from '@mfs-atomic/ui'
-import { presetItems, type PresetItem } from './data'
-import { fetchPresets } from './fetchApi'
 
-const layout = ref<DataViewLayout>('grid')
-const items = ref<PresetItem[]>(presetItems)
-
-onMounted(async () => {
-  items.value = await fetchPresets()
-})
-<\/script>`
-
-const dataViewCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: dataViewCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `export interface PresetItem {
+interface PresetItem {
   id: string
   name: string
   tag: string
   description: string
 }
 
-export const presetItems: PresetItem[] = [
-  { id: 'clay', name: 'Claymorphism', tag: 'Soft 3D', description: 'Soft 3D tactile surfaces' },
-  { id: 'glass', name: 'Glassmorphism', tag: 'Frosted', description: 'Frosted translucent layers' }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { PresetItem } from './data'
+const layout = ref<DataViewLayout>('grid')
 
-export async function fetchPresets(): Promise<PresetItem[]> {
-  const res = await fetch('/api/presets')
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
+const items = ref<PresetItem[]>([
+  { id: 'clay', name: 'Claymorphism', tag: 'Soft 3D', description: 'Soft 3D tactile surfaces' },
+  { id: 'glass', name: 'Glassmorphism', tag: 'Frosted', description: 'Frosted translucent layers' },
+  { id: 'neo', name: 'Neumorphism', tag: 'Extruded', description: 'Monochrome soft UI surfaces' }
+])
+<\/script>`
 
 const dataViewApi = {
   props: [
@@ -999,24 +1103,19 @@ const treeNodes: TreeNode[] = [
 ]
 
 const treeExpanded = ref<string[]>(['src', 'components'])
-const treeSelected = ref<string[]>(['Tree.vue'])
-const treeSelectionMode = ref<'none' | 'single' | 'checkbox'>('checkbox')
-const lastClickedNode = ref('')
+const treeCheckboxSelected = ref<string[]>(['Tree.vue'])
+const lastCheckboxNode = ref('')
+const treeSingleExpanded = ref<string[]>(['src', 'components'])
+const treeSingleSelected = ref<string[]>(['DataTable.vue'])
+const lastSingleNode = ref('')
+const treeNoneExpanded = ref<string[]>(['src', 'components'])
+const lastNoneNode = ref('')
 
 function expandAllTree() {
   treeExpanded.value = ['src', 'components', 'composables']
 }
 
-function setTreeMode(mode: 'none' | 'single' | 'checkbox') {
-  treeSelectionMode.value = mode
-  treeSelected.value = []
-}
-
-function onTreeNodeClick(node: TreeNode) {
-  lastClickedNode.value = node.label
-}
-
-const treeCode = `<template>
+const treeCheckboxCode = `<template>
   <Tree
     v-model:expanded-keys="expanded"
     v-model:selected-keys="selected"
@@ -1027,21 +1126,9 @@ const treeCode = `<template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Tree } from '@mfs-atomic/ui'
-import { nodes } from './data'
+import { Tree, type TreeNode } from '@mfs-atomic/ui'
 
-const expanded = ref<string[]>(['src', 'components'])
-const selected = ref<string[]>(['Tree.vue'])
-<\/script>`
-
-const treeCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: treeCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `import type { TreeNode } from '@mfs-atomic/ui'
-
-export const nodes: TreeNode[] = [
+const nodes: TreeNode[] = [
   {
     key: 'src',
     label: 'src',
@@ -1058,9 +1145,79 @@ export const nodes: TreeNode[] = [
   },
   { key: 'docs', label: 'docs (archived)', disabled: true },
   { key: 'package.json', label: 'package.json' }
-]`
-  }
 ]
+
+const expanded = ref<string[]>(['src', 'components'])
+const selected = ref<string[]>(['Tree.vue'])
+<\/script>`
+
+const treeSingleCode = `<template>
+  <Tree
+    v-model:expanded-keys="expanded"
+    v-model:selected-keys="selected"
+    :nodes="nodes"
+    selection-mode="single"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Tree, type TreeNode } from '@mfs-atomic/ui'
+
+const nodes: TreeNode[] = [
+  {
+    key: 'src',
+    label: 'src',
+    children: [
+      {
+        key: 'components',
+        label: 'components',
+        children: [
+          { key: 'DataTable.vue', label: 'DataTable.vue' },
+          { key: 'Tree.vue', label: 'Tree.vue' }
+        ]
+      }
+    ]
+  },
+  { key: 'package.json', label: 'package.json' }
+]
+
+const expanded = ref<string[]>(['src', 'components'])
+const selected = ref<string[]>(['DataTable.vue'])
+<\/script>`
+
+const treeNoneCode = `<template>
+  <Tree
+    v-model:expanded-keys="expanded"
+    :nodes="nodes"
+    selection-mode="none"
+  />
+</template>
+
+<script setup lang="ts">
+import { ref } from 'vue'
+import { Tree, type TreeNode } from '@mfs-atomic/ui'
+
+const nodes: TreeNode[] = [
+  {
+    key: 'src',
+    label: 'src',
+    children: [
+      {
+        key: 'components',
+        label: 'components',
+        children: [
+          { key: 'DataTable.vue', label: 'DataTable.vue' },
+          { key: 'Tree.vue', label: 'Tree.vue' }
+        ]
+      }
+    ]
+  },
+  { key: 'package.json', label: 'package.json' }
+]
+
+const expanded = ref<string[]>(['src', 'components'])
+<\/script>`
 
 const treeApi = {
   props: [
@@ -1116,8 +1273,14 @@ const columnCode = `<template>
 import { ref } from 'vue'
 import { Button, Column, DataTable } from '@mfs-atomic/ui'
 
+interface MemberRow {
+  name: string
+  role: string
+  status: 'Active' | 'Idle'
+}
+
 const hideRole = ref(false)
-const rows = [
+const rows: MemberRow[] = [
   { name: 'Ari Pratama', role: 'Maintainer', status: 'Active' },
   { name: 'Nadia Kusuma', role: 'Designer', status: 'Active' },
   { name: 'Raka Putra', role: 'Reviewer', status: 'Idle' }
@@ -1198,69 +1361,32 @@ const infiniteScrollCode = `<template>
 <script setup lang="ts">
 import { ref } from 'vue'
 import { InfiniteScroll } from '@mfs-atomic/ui'
-import { initialEvents, type ActivityItem } from './data'
-import { fetchActivityPage } from './fetchApi'
 
-const items = ref<ActivityItem[]>(initialEvents)
-const cursor = ref<string | null>('cursor_1')
-const loading = ref(false)
-const hasMore = ref(true)
-const error = ref<string | undefined>(undefined)
-
-const loadMore = async () => {
-  if (loading.value || !hasMore.value) return
-  loading.value = true
-  error.value = undefined
-  try {
-    const res = await fetchActivityPage(cursor.value)
-    items.value = [...items.value, ...res.items]
-    cursor.value = res.nextCursor
-    hasMore.value = res.nextCursor !== null
-  } catch (err) {
-    error.value = err instanceof Error ? err.message : 'Failed to load batch'
-  } finally {
-    loading.value = false
-  }
-}
-<\/script>`
-
-const infiniteScrollCodeTabs = [
-  { label: 'Example.vue', language: 'vue', code: infiniteScrollCode },
-  {
-    label: 'data.ts',
-    language: 'ts',
-    code: `export interface ActivityItem {
+interface ActivityItem {
   id: number
   title: string
   batch: number
 }
 
-export interface CursorPage<T> {
-  items: T[]
-  nextCursor: string | null
-}
-
-export const initialEvents: ActivityItem[] = [
+const items = ref<ActivityItem[]>([
   { id: 1, title: 'Activity Event #1', batch: 1 },
   { id: 2, title: 'Activity Event #2', batch: 1 }
-]`
-  },
-  {
-    label: 'fetchApi.ts',
-    language: 'ts',
-    code: `import type { ActivityItem, CursorPage } from './data'
+])
+const loading = ref(false)
+const hasMore = ref(true)
+const error = ref<string | undefined>(undefined)
 
-export async function fetchActivityPage(
-  cursor: string | null
-): Promise<CursorPage<ActivityItem>> {
-  const params = new URLSearchParams()
-  if (cursor) params.set('cursor', cursor)
-  const res = await fetch(\`/api/activity?\${params.toString()}\`)
-  if (!res.ok) throw new Error(\`HTTP \${res.status}\`)
-  return res.json()
-}`
-  }
-]
+const loadMore = () => {
+  if (loading.value || !hasMore.value) return
+  loading.value = true
+  setTimeout(() => {
+    const nextId = items.value.length + 1
+    items.value.push({ id: nextId, title: \`Activity Event #\${nextId}\`, batch: 2 })
+    hasMore.value = items.value.length < 6
+    loading.value = false
+  }, 300)
+}
+<\/script>`
 
 const infiniteScrollApi: { props: ApiRow[]; events: ApiRow[]; slots: ApiRow[] } = {
   props: [

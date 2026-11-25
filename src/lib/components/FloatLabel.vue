@@ -30,7 +30,7 @@ defineProps<{
   pointer-events: none;
   padding: 0 4px;
   border-radius: 4px;
-  transition: all 0.18s ease;
+  transition: top 0.18s ease, transform 0.18s ease, color 0.18s ease, background-color 0.18s ease;
 }
 
 .fl-wrapper:focus-within .fl-label,

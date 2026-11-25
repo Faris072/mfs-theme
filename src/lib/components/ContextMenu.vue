@@ -176,7 +176,7 @@ defineExpose({ open, close })
   background-color: var(--surface);
   color: var(--text);
   border-radius: var(--radius-md, 14px);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--card-shadow);
   backdrop-filter: var(--backdrop-blur, none);
 }
@@ -237,7 +237,7 @@ defineExpose({ open, close })
 
 .ctx-pop-enter-active,
 .ctx-pop-leave-active {
-  transition: opacity 0.14s ease, transform 0.14s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: opacity 0.14s ease, transform 0.14s cubic-bezier(0.2, 0, 0, 1);
   transform-origin: top left;
 }
 

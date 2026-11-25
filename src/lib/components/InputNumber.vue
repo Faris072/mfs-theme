@@ -167,12 +167,12 @@ const stepBy = (dir: 1 | -1) => {
 <style scoped>
 .num-box {
   padding: 4px 6px;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .num-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .num-wrapper--error .num-box {

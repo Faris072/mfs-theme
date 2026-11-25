@@ -199,7 +199,7 @@ onBeforeUnmount(stopAutoplay)
   width: 100%;
   border-radius: var(--radius, 20px);
   background-color: var(--surface);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   box-shadow: var(--card-shadow);
   backdrop-filter: var(--backdrop-blur, none);
   overflow: hidden;
@@ -243,7 +243,7 @@ onBeforeUnmount(stopAutoplay)
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   background-color: var(--surface);
   color: var(--text);
   box-shadow: var(--clay-shadow);
@@ -257,7 +257,8 @@ onBeforeUnmount(stopAutoplay)
 }
 
 .carousel__btn:hover:not(:disabled) {
-  transform: translateY(-50%) scale(1.08);
+  transform: translateY(-50%);
+  opacity: 0.9;
 }
 
 .carousel__btn:disabled {

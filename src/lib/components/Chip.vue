@@ -78,7 +78,7 @@ const handleClick = (event: Event) => {
   font-weight: 600;
   line-height: 1.2;
   border-radius: var(--radius-pill, 9999px);
-  border: 1px solid var(--border, transparent);
+  border: var(--border-width, 1px) solid var(--border, transparent);
   backdrop-filter: var(--backdrop-blur, none);
   user-select: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
@@ -153,11 +153,10 @@ const handleClick = (event: Event) => {
 
 .chip__remove:hover {
   background: rgba(0, 0, 0, 0.24);
-  transform: scale(1.1);
 }
 
 [data-theme="clay"] .chip {
-  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  box-shadow: var(--clay-shadow);
 }
 
 [data-theme="glass"] .chip {

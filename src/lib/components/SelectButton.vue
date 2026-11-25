@@ -69,12 +69,12 @@ const toggle = (opt: SelectButtonOption) => {
 <style scoped>
 .sb-group { display: inline-flex; flex-wrap: wrap; gap: 4px; padding: 4px; }
 .sb-group--disabled { opacity: 0.55; pointer-events: none; }
-.sb-btn { border: none; background: transparent; padding: 8px 16px; border-radius: calc(var(--radius, 14px) - 4px); font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.sb-btn { border: none; background: transparent; padding: 8px 16px; border-radius: calc(var(--radius, 14px) - 4px); font-family: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.2s cubic-bezier(0.2, 0, 0, 1); }
 .sb-btn:hover:not(:disabled):not(.sb-btn--active) { background-color: var(--surface-subtle); }
 .sb-btn--active { background-color: var(--primary); color: var(--primary-text, #ffffff); }
 .sb-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-[data-theme="clay"] .sb-btn--active { box-shadow: 3px 5px 12px rgba(124, 58, 237, 0.35), inset 2px 2px 4px rgba(255, 255, 255, 0.4); }
+[data-theme="clay"] .sb-btn--active { box-shadow: 3px 5px 12px color-mix(in srgb, var(--primary) 35%, transparent), inset 2px 2px 4px rgba(255, 255, 255, 0.4); }
 [data-theme="glass"] .sb-group { border-color: rgba(255, 255, 255, 0.25); }
 [data-theme="neo"] .sb-group { box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8); }
 [data-theme="neo"] .sb-btn--active { box-shadow: 3px 3px 6px rgba(163, 177, 198, 0.55), -3px -3px 6px rgba(255, 255, 255, 0.85); }

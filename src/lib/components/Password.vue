@@ -110,7 +110,7 @@ const strength = computed(() => {
   const map: Record<number, { label: string; color: string }> = {
     1: { label: 'Weak', color: 'var(--danger, #f43f5e)' },
     2: { label: 'Fair', color: 'var(--warning, #f59e0b)' },
-    3: { label: 'Good', color: 'var(--primary, #8b5cf6)' },
+    3: { label: 'Good', color: 'var(--primary)' },
     4: { label: 'Strong', color: 'var(--success, #10b981)' }
   }
   return { score, ...map[score] }
@@ -124,12 +124,12 @@ const strength = computed(() => {
 
 .pwd-box {
   padding: 2px 8px 2px 14px;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 .pwd-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), var(--input-shadow);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent), var(--input-shadow);
 }
 
 .pwd-wrapper--error .pwd-box {
@@ -180,9 +180,9 @@ const strength = computed(() => {
 }
 
 .pwd-bar {
-  height: 5px;
+  height: 6px;
   background-color: var(--surface-subtle, rgba(148, 163, 184, 0.3));
-  transition: background-color 0.25s ease;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .pwd-strength-label {
@@ -210,5 +210,37 @@ const strength = computed(() => {
 
 [data-theme="neo"] .pwd-box {
   box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="clay"] .pwd-bar {
+  height: 8px;
+  box-shadow: var(--input-shadow);
+}
+
+[data-theme="clay"] .pwd-bar--active {
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.14), inset 0 2px 3px rgba(255, 255, 255, 0.45), inset 0 -1px 2px rgba(0, 0, 0, 0.14);
+}
+
+[data-theme="neo"] .pwd-bar {
+  height: 7px;
+  box-shadow: inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="neo"] .pwd-bar--active {
+  box-shadow: 2px 2px 4px rgba(163, 177, 198, 0.45), -1px -1px 3px rgba(255, 255, 255, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+}
+
+[data-theme="glass"] .pwd-bar {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="brutalism"] .pwd-bar {
+  height: 8px;
+  border-radius: var(--radius, 4px);
+  border: 2px solid var(--border);
+}
+
+[data-theme="brutalism"] .pwd-bar--active {
+  box-shadow: 2px 2px 0 var(--border);
 }
 </style>

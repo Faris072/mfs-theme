@@ -69,15 +69,28 @@
         <li
           v-for="(item, index) in modelValue"
           :key="getItemKey(item, index, itemKey)"
+          :ref="(el) => setItemRef(el, index)"
           class="order-list__item mfs-rounded-sm"
-          :class="{ 'order-list__item--selected': selectedIndex === index }"
+          :class="{
+            'order-list__item--selected': selectedIndex === index,
+            'order-list__item--dragging': draggingIndex === index,
+            'order-list__item--drop-before': dropTargetIndex === index && dropPosition === 'before',
+            'order-list__item--drop-after': dropTargetIndex === index && dropPosition === 'after'
+          }"
           role="option"
           :aria-selected="selectedIndex === index"
           tabindex="0"
+          :draggable="draggable"
           @click="selectedIndex = index"
           @keydown.enter.prevent="selectedIndex = index"
           @keydown.space.prevent="selectedIndex = index"
+          @keydown="onItemKeyDown($event, index)"
+          @dragstart="onDragStart($event, item, index)"
+          @dragover="onDragOver($event, index)"
+          @drop="onDrop($event, index)"
+          @dragend="onDragEnd"
         >
+          <span v-if="draggable" class="order-list__grip" aria-hidden="true">⋮⋮</span>
           <slot name="item" :item="item" :index="index" :selected="selectedIndex === index">
             <span class="mfs-text">{{ item }}</span>
           </slot>
@@ -88,8 +101,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, nextTick, ref, type ComponentPublicInstance } from 'vue'
+import { dragState, endDrag, getDropPosition, reorderArray, startDrag } from '../composables/useDragDrop'
 import { getItemKey } from '../utils/itemKey'
+
+let uidCounter = 0
 
 const props = withDefaults(
   defineProps<{
@@ -98,12 +114,14 @@ const props = withDefaults(
     header?: string
     loading?: boolean
     emptyText?: string
+    draggable?: boolean
   }>(),
   {
     itemKey: 'id',
     header: '',
     loading: false,
-    emptyText: 'No items'
+    emptyText: 'No items',
+    draggable: true
   }
 )
 
@@ -119,7 +137,16 @@ defineSlots<{
   empty?: () => any
 }>()
 
+const listId = `order-list-${++uidCounter}`
 const selectedIndex = ref<number | null>(null)
+const draggingIndex = ref<number | null>(null)
+const dropTargetIndex = ref<number | null>(null)
+const dropPosition = ref<'before' | 'after' | null>(null)
+const itemRefs = ref<(HTMLElement | null)[]>([])
+
+function setItemRef(el: Element | ComponentPublicInstance | null, index: number) {
+  itemRefs.value[index] = el instanceof HTMLElement ? el : null
+}
 
 const canMoveUp = computed(
   () => selectedIndex.value !== null && selectedIndex.value > 0
@@ -167,6 +194,69 @@ function moveBottom() {
   const [item] = next.splice(idx, 1)
   next.push(item)
   updateOrder(next, next.length - 1)
+}
+
+function onDragStart(e: DragEvent, item: any, index: number) {
+  if (!props.draggable) {
+    e.preventDefault()
+    return
+  }
+  draggingIndex.value = index
+  startDrag(e, {
+    sourceId: listId,
+    group: '',
+    index,
+    item
+  })
+}
+
+function onDragOver(e: DragEvent, index: number) {
+  if (!props.draggable || !dragState.value || dragState.value.sourceId !== listId) return
+  e.preventDefault()
+  if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'
+  dropTargetIndex.value = index
+  dropPosition.value = getDropPosition(e, e.currentTarget as HTMLElement, 'vertical')
+}
+
+function onDrop(e: DragEvent, index: number) {
+  e.preventDefault()
+  if (!props.draggable || !dragState.value || dragState.value.sourceId !== listId) {
+    onDragEnd()
+    return
+  }
+  const fromIndex = dragState.value.index
+  const pos = dropPosition.value ?? getDropPosition(e, e.currentTarget as HTMLElement, 'vertical')
+  let targetIndex = pos === 'after' ? index + 1 : index
+  if (fromIndex < targetIndex) targetIndex -= 1
+  if (targetIndex !== fromIndex) {
+    const next = reorderArray(props.modelValue, fromIndex, targetIndex)
+    updateOrder(next, targetIndex)
+  }
+  onDragEnd()
+}
+
+function onDragEnd() {
+  draggingIndex.value = null
+  dropTargetIndex.value = null
+  dropPosition.value = null
+  endDrag()
+}
+
+function onItemKeyDown(e: KeyboardEvent, index: number) {
+  if (!props.draggable || !e.altKey) return
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return
+  const target = e.target as HTMLElement | null
+  if (target?.closest('input, textarea, select, button, a')) return
+
+  e.preventDefault()
+  const delta = e.key === 'ArrowUp' ? -1 : 1
+  const toIndex = index + delta
+  if (toIndex < 0 || toIndex >= props.modelValue.length) return
+  const next = reorderArray(props.modelValue, index, toIndex)
+  updateOrder(next, toIndex)
+  nextTick(() => {
+    itemRefs.value[toIndex]?.focus()
+  })
 }
 </script>
 
@@ -230,13 +320,54 @@ function moveBottom() {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .order-list__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 10px 12px;
   cursor: pointer;
-  transition: background-color 0.15s ease;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.order-list__grip {
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--text-muted, #94a3b8);
+  cursor: grab;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.order-list__item--dragging {
+  opacity: 0.45;
+}
+
+.order-list__item--drop-before::before,
+.order-list__item--drop-after::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 2px;
+  background: var(--primary);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.order-list__item--drop-before::before {
+  top: -2px;
+}
+
+.order-list__item--drop-after::after {
+  bottom: -2px;
+}
+
+.order-list__item:not(:last-child) {
+  border-bottom: 1px solid color-mix(in srgb, var(--text-muted, #94a3b8) 16%, transparent);
 }
 
 .order-list__item:hover {

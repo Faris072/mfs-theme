@@ -100,6 +100,7 @@ import OrganizationChart from './components/OrganizationChart.vue'
 import VirtualScroller from './components/VirtualScroller.vue'
 import MeterGroup from './components/MeterGroup.vue'
 import Inplace from './components/Inplace.vue'
+import SortableList from './components/SortableList.vue'
 // Fase 11
 import ConfirmPopup from './components/ConfirmPopup.vue'
 import InlineMessage from './components/InlineMessage.vue'
@@ -131,6 +132,7 @@ import { useToast } from './composables/useToast'
 import { useConfirm } from './composables/useConfirm'
 import { useDialog } from './composables/useDialog'
 import { useStyle } from './composables/useStyle'
+import { useDragDrop, type DragPayload } from './composables/useDragDrop'
 import { vRipple } from './directives/ripple'
 import { vTooltip } from './directives/tooltip'
 import { vFocusTrap } from './directives/focusTrap'
@@ -250,6 +252,8 @@ export {
   VirtualScroller,
   MeterGroup,
   Inplace,
+  SortableList,
+  SortableList as Draggable,
   ConfirmPopup,
   InlineMessage,
   BlockUI,
@@ -284,6 +288,8 @@ export {
   useConfirm,
   useDialog,
   useStyle,
+  useDragDrop,
+  type DragPayload,
   vRipple,
   vTooltip,
   vTooltip as TooltipDirective,
@@ -400,6 +406,8 @@ const components: Record<string, Component> = {
   VirtualScroller,
   MeterGroup,
   Inplace,
+  SortableList,
+  Draggable: SortableList,
   ConfirmPopup,
   InlineMessage,
   BlockUI,
