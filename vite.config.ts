@@ -10,5 +10,8 @@ export default defineConfig({
       '@': resolve(__dirname, './src'),
       'mfs-theme': resolve(__dirname, './src/lib/index.ts')
     }
+  },
+  preview: {
+    allowedHosts: ['ui.mfstechnology.co.id']
   }
 })
