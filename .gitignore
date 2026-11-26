@@ -33,8 +33,21 @@ src/**/*.d.ts
 *.sln
 *.sw?
 
-# AI agent instruction files
+# AI agent config and instruction files
 AGENTS.md
 TEAMWORK.md
 CLAUDE.md
+GEMINI.md
+SKILL.md
+.gemini/
+.claude/
+.agent/
+.cursor/
+.cursorrules
+.codex/
+.windsurf/
+.windsurfrules
+.aider*
+.mcp.json
+.github/copilot-instructions.md
 
