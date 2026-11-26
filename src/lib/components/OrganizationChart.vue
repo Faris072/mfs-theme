@@ -17,7 +17,7 @@
       <slot name="empty">{{ emptyText }}</slot>
     </div>
 
-    <template v-else-if="value">
+    <div v-else-if="value" class="org-chart__tree">
       <div class="org-chart__node-wrap">
         <div
           class="org-chart__node mfs-surface mfs-rounded mfs-shadow mfs-interactive mfs-focus-ring"
@@ -70,7 +70,7 @@
           </OrganizationChart>
         </div>
       </div>
-    </template>
+    </div>
   </div>
 </template>
 
@@ -169,13 +169,20 @@ function toggleExpand() {
 }
 
 .org-chart--root {
-  align-items: flex-start;
+  display: block;
   max-width: 100%;
   padding: 16px;
 }
 
-.org-chart--root > .org-chart__node-wrap,
-.org-chart--root > .org-chart__children {
+.org-chart__tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.org-chart--root > .org-chart__tree {
+  width: max-content;
+  min-width: 100%;
   margin-inline: auto;
 }
 

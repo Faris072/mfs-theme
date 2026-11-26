@@ -1,13 +1,17 @@
 <template>
-  <div
-    class="mfs-galleria mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
-    :class="{ 'mfs-galleria--fullscreen': isFullscreen }"
-    :aria-busy="loading || undefined"
-    tabindex="0"
-    @keydown.left.prevent="prev"
-    @keydown.right.prevent="next"
-    @keydown.escape="isFullscreen = false"
-  >
+  <Teleport to="body" :disabled="!isFullscreen">
+    <div
+      ref="rootRef"
+      class="mfs-galleria mfs-surface mfs-rounded mfs-shadow-card mfs-blur"
+      :class="{ 'mfs-galleria--fullscreen': isFullscreen }"
+      :aria-busy="loading || undefined"
+      :role="isFullscreen ? 'dialog' : undefined"
+      :aria-modal="isFullscreen || undefined"
+      tabindex="0"
+      @keydown.left.prevent="prev"
+      @keydown.right.prevent="next"
+      @keydown.escape="isFullscreen = false"
+    >
     <div class="mfs-galleria__stage">
       <div v-if="loading" class="mfs-loading-overlay" role="status" aria-live="polite">
         <slot name="loading">
@@ -86,10 +90,11 @@
       </button>
     </div>
   </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 
 export interface GalleriaImage {
   src: string
@@ -121,6 +126,7 @@ const emit = defineEmits<{
   (e: 'update:activeIndex', index: number): void
 }>()
 
+const rootRef = ref<HTMLElement | null>(null)
 const currentIndex = ref(props.activeIndex)
 const isFullscreen = ref(props.fullscreen)
 
@@ -130,6 +136,43 @@ watch(
     currentIndex.value = val
   }
 )
+
+watch(
+  () => props.fullscreen,
+  (val) => {
+    isFullscreen.value = val
+  }
+)
+
+const onWindowKeydown = (e: KeyboardEvent) => {
+  if (!isFullscreen.value) return
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    isFullscreen.value = false
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault()
+    prev()
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault()
+    next()
+  }
+}
+
+watch(isFullscreen, (val) => {
+  if (typeof window === 'undefined') return
+  if (val) {
+    window.addEventListener('keydown', onWindowKeydown)
+    nextTick(() => rootRef.value?.focus())
+  } else {
+    window.removeEventListener('keydown', onWindowKeydown)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('keydown', onWindowKeydown)
+  }
+})
 
 const currentImage = computed(() => props.images[currentIndex.value] ?? null)
 
@@ -155,7 +198,9 @@ const next = () => setIndex(currentIndex.value + 1)
 .mfs-galleria--fullscreen {
   position: fixed;
   inset: 0;
-  z-index: 10070;
+  width: 100vw;
+  height: 100dvh;
+  z-index: 9999;
   border-radius: 0 !important;
   background-color: rgba(2, 6, 23, 0.94) !important;
 }
@@ -173,7 +218,15 @@ const next = () => setIndex(currentIndex.value + 1)
 
 .mfs-galleria--fullscreen .mfs-galleria__stage {
   flex: 1;
+  min-height: 0;
   aspect-ratio: auto;
+}
+
+.mfs-galleria--fullscreen .mfs-galleria__nav,
+.mfs-galleria--fullscreen .mfs-galleria__fs {
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.65);
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .mfs-galleria__image {

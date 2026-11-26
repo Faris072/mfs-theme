@@ -1,6 +1,7 @@
 <template>
   <div :class="['speed-dial', `speed-dial--${direction}`, 'mfs-relative', 'mfs-inline-flex', 'mfs-items-center', 'mfs-justify-center']">
     <button
+      ref="triggerRef"
       type="button"
       class="speed-dial__fab mfs-inline-flex mfs-items-center mfs-justify-center mfs-border-none mfs-bg-primary mfs-pill mfs-shadow mfs-interactive mfs-focus-ring"
       :aria-expanded="isOpen"
@@ -19,34 +20,51 @@
       </svg>
     </button>
 
-    <ul v-if="isOpen" class="speed-dial__list mfs-absolute mfs-m-0 mfs-p-0 mfs-list-none mfs-flex mfs-gap-2-5" role="menu">
-      <li
-        v-for="(item, idx) in items"
-        :key="idx"
-        class="speed-dial__entry"
-        :style="itemStyle(idx)"
-        role="none"
+    <Teleport to="body">
+      <ul
+        v-if="isOpen"
+        ref="listRef"
+        :class="[
+          'speed-dial__list',
+          `speed-dial__list--${direction}`,
+          `speed-dial__list--${type}`,
+          'mfs-m-0',
+          'mfs-p-0',
+          'mfs-list-none',
+          'mfs-flex',
+          'mfs-gap-2-5'
+        ]"
+        :style="listStyle"
+        role="menu"
       >
-        <button
-          type="button"
-          role="menuitem"
-          :class="['speed-dial__item', 'mfs-inline-flex', 'mfs-items-center', 'mfs-justify-center', 'mfs-text-xs', 'mfs-font-bold', 'mfs-surface', 'mfs-pill', 'mfs-shadow', 'mfs-interactive', 'mfs-focus-ring', { 'mfs-disabled': item.disabled }]"
-          :title="item.label"
-          :aria-label="item.label"
-          :disabled="item.disabled"
-          @click="onSelect(item)"
+        <li
+          v-for="(item, idx) in items"
+          :key="idx"
+          class="speed-dial__entry"
+          :style="itemStyle(idx)"
+          role="none"
         >
-          <slot name="item" :item="item" :index="idx">
-            <span>{{ item.icon || item.label.slice(0, 2) }}</span>
-          </slot>
-        </button>
-      </li>
-    </ul>
+          <button
+            type="button"
+            role="menuitem"
+            :class="['speed-dial__item', 'mfs-inline-flex', 'mfs-items-center', 'mfs-justify-center', 'mfs-text-xs', 'mfs-font-bold', 'mfs-surface', 'mfs-pill', 'mfs-shadow', 'mfs-interactive', 'mfs-focus-ring', { 'mfs-disabled': item.disabled }]"
+            :title="item.label"
+            :aria-label="item.label"
+            :disabled="item.disabled"
+            @click="onSelect(item)"
+          >
+            <slot name="item" :item="item" :index="idx">
+              <span>{{ item.icon || item.label.slice(0, 2) }}</span>
+            </slot>
+          </button>
+        </li>
+      </ul>
+    </Teleport>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type CSSProperties } from 'vue'
 
 export interface SpeedDialItem {
   label: string
@@ -77,6 +95,30 @@ const emit = defineEmits<{
   (e: 'select', item: SpeedDialItem): void
 }>()
 
+const triggerRef = ref<HTMLElement | null>(null)
+const listRef = ref<HTMLElement | null>(null)
+const triggerRect = ref<{ top: number; left: number; right: number; bottom: number; width: number; height: number }>({
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  width: 0,
+  height: 0
+})
+
+const updatePosition = () => {
+  if (typeof window === 'undefined' || !triggerRef.value) return
+  const rect = triggerRef.value.getBoundingClientRect()
+  triggerRect.value = {
+    top: rect.top,
+    left: rect.left,
+    right: rect.right,
+    bottom: rect.bottom,
+    width: rect.width,
+    height: rect.height
+  }
+}
+
 const internalOpen = ref(false)
 watch(
   () => props.modelValue,
@@ -86,6 +128,87 @@ watch(
 )
 
 const isOpen = computed(() => (props.modelValue !== undefined ? props.modelValue : internalOpen.value))
+
+watch(isOpen, (open) => {
+  if (open) {
+    updatePosition()
+    nextTick(updatePosition)
+  }
+})
+
+const handleViewportChange = () => {
+  if (isOpen.value) {
+    updatePosition()
+  }
+}
+
+onMounted(() => {
+  if (typeof window === 'undefined') return
+  window.addEventListener('scroll', handleViewportChange, true)
+  window.addEventListener('resize', handleViewportChange)
+  if (isOpen.value) {
+    updatePosition()
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof window === 'undefined') return
+  window.removeEventListener('scroll', handleViewportChange, true)
+  window.removeEventListener('resize', handleViewportChange)
+})
+
+const listStyle = computed<CSSProperties>(() => {
+  const r = triggerRect.value
+  const cx = r.left + r.width / 2
+  const cy = r.top + r.height / 2
+  const gap = 12
+
+  if (props.type === 'radial') {
+    return {
+      position: 'fixed',
+      left: `${cx}px`,
+      top: `${cy}px`,
+      width: '0px',
+      height: '0px',
+      zIndex: 9500
+    }
+  }
+
+  if (props.direction === 'up') {
+    return {
+      position: 'fixed',
+      left: `${cx}px`,
+      top: `${r.top - gap}px`,
+      transform: 'translate(-50%, -100%)',
+      zIndex: 9500
+    }
+  }
+  if (props.direction === 'down') {
+    return {
+      position: 'fixed',
+      left: `${cx}px`,
+      top: `${r.bottom + gap}px`,
+      transform: 'translate(-50%, 0)',
+      zIndex: 9500
+    }
+  }
+  if (props.direction === 'left') {
+    return {
+      position: 'fixed',
+      left: `${r.left - gap}px`,
+      top: `${cy}px`,
+      transform: 'translate(-100%, -50%)',
+      zIndex: 9500
+    }
+  }
+  return {
+    position: 'fixed',
+    left: `${r.right + gap}px`,
+    top: `${cy}px`,
+    transform: 'translate(0, -50%)',
+    zIndex: 9500
+  }
+})
 
 const toggle = () => {
   const next = !isOpen.value
@@ -114,6 +237,8 @@ const itemStyle = (idx: number) => {
   const y = Math.round(Math.sin(rad) * props.radius)
   return {
     position: 'absolute' as const,
+    left: '-21px',
+    top: '-21px',
     transform: `translate(${x}px, ${y}px)`
   }
 }
@@ -135,26 +260,22 @@ const itemStyle = (idx: number) => {
 }
 
 .speed-dial__list {
-  z-index: 2;
+  z-index: 9500;
 }
 
-.speed-dial--up .speed-dial__list {
-  bottom: calc(100% + 12px);
+.speed-dial__list--up {
   flex-direction: column-reverse;
 }
 
-.speed-dial--down .speed-dial__list {
-  top: calc(100% + 12px);
+.speed-dial__list--down {
   flex-direction: column;
 }
 
-.speed-dial--left .speed-dial__list {
-  right: calc(100% + 12px);
+.speed-dial__list--left {
   flex-direction: row-reverse;
 }
 
-.speed-dial--right .speed-dial__list {
-  left: calc(100% + 12px);
+.speed-dial__list--right {
   flex-direction: row;
 }
 

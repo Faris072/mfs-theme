@@ -242,24 +242,21 @@
       v-if="paginator"
       class="data-table__paginator mfs-flex mfs-items-center mfs-justify-between mfs-flex-wrap mfs-gap-3 mfs-pt-3 mfs-border-t"
     >
-      <label
+      <div
         v-if="rowsPerPageOptions.length"
         class="data-table__per-page mfs-inline-flex mfs-items-center mfs-gap-2 mfs-text-sm mfs-text-muted"
       >
         <span>Show</span>
-        <select
-          class="data-table__per-page-select mfs-surface mfs-rounded-md mfs-shadow-inset mfs-text"
-          :value="effectiveRowsPerPage"
+        <Select
+          size="sm"
+          :model-value="effectiveRowsPerPage"
+          :options="rowsPerPageOptions"
           :disabled="loading"
           aria-label="Rows per page"
-          @change="onRowsPerPageChange"
-        >
-          <option v-for="opt in rowsPerPageOptions" :key="opt" :value="opt">
-            {{ opt }}
-          </option>
-        </select>
+          @update:model-value="onRowsPerPageSelect"
+        />
         <span>per page</span>
-      </label>
+      </div>
 
       <Pagination
         :model-value="currentPage"
@@ -283,6 +280,7 @@
 import { computed, nextTick, onBeforeUnmount, ref, useId, watch } from 'vue'
 import Checkbox from './Checkbox.vue'
 import Pagination from './Pagination.vue'
+import Select from './Select.vue'
 
 export interface DataTableColumn {
   key: string
@@ -410,7 +408,7 @@ watch(
 )
 
 const effectiveRowsPerPage = computed<number>(() =>
-  Math.max(1, typeof props.rows === 'number' ? props.rows : (props.rowsPerPage ?? localRowsPerPage.value))
+  Math.max(1, localRowsPerPage.value)
 )
 
 const localPage = ref<number>(
@@ -610,14 +608,14 @@ function onPageChange(nextPage: number) {
   emit('page', { page: clamped, first, rows, pageCount, rowsPerPage: rows })
 }
 
-function onRowsPerPageChange(e: Event) {
-  if (props.loading) return
-  const nextRows = Number((e.target as HTMLSelectElement).value)
+function onRowsPerPageSelect(val: string | number | null) {
+  if (props.loading || val === null) return
+  const nextRows = Number(val)
   if (!Number.isFinite(nextRows) || nextRows <= 0) return
   localRowsPerPage.value = nextRows
   const nextPageCount = Math.max(1, Math.ceil(effectiveTotalRecords.value / nextRows))
-  const nextPage = Math.min(currentPage.value, nextPageCount)
-  const nextFirst = (nextPage - 1) * nextRows
+  const nextPage = 1
+  const nextFirst = 0
   localPage.value = nextPage
   emit('update:rows', nextRows)
   emit('update:rowsPerPage', nextRows)
@@ -941,6 +939,11 @@ onBeforeUnmount(() => {
   transition: border-color 0.2s ease;
 }
 
+.data-table__search-input::placeholder {
+  color: var(--text-muted, #64748b);
+  opacity: 1;
+}
+
 .data-table__search-input:focus {
   border-color: var(--primary);
 }
@@ -1091,21 +1094,6 @@ input.data-table__checkbox {
   padding: 12px 18px 14px;
 }
 
-.data-table__per-page-select {
-  height: 36px;
-  padding: 0 10px;
-  border: var(--border-width, 1px) solid var(--border, transparent);
-  font-family: inherit;
-  font-size: 0.88rem;
-  outline: none;
-  cursor: pointer;
-}
-
-.data-table__per-page-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* Theme overrides */
 [data-theme="clay"] .data-table__th {
   background: var(--surface-subtle);
@@ -1129,6 +1117,11 @@ input.data-table__checkbox {
 
 /* Mobile Card Mode */
 @media (max-width: 640px) {
+  .data-table__paginator {
+    padding: 12px;
+    justify-content: center;
+  }
+
   .data-table__toolbar-actions {
     width: 100%;
     flex-wrap: wrap;

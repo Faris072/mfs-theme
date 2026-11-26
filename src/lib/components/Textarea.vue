@@ -137,8 +137,8 @@ onMounted(resize)
 }
 
 .textarea-field::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
+  color: var(--text-muted, #64748b);
+  opacity: 1;
 }
 
 .textarea-field:disabled {

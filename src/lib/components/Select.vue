@@ -1,5 +1,9 @@
 <template>
-  <div ref="rootRef" class="select-wrapper mfs-flex mfs-flex-col mfs-w-full" :class="{ 'select-wrapper--error': !!error, 'select-wrapper--disabled mfs-disabled': disabled }">
+  <div
+    ref="rootRef"
+    class="select-wrapper mfs-flex mfs-flex-col"
+    :class="[size === 'sm' ? 'select-wrapper--sm' : 'mfs-w-full', { 'select-wrapper--error': !!error, 'select-wrapper--disabled mfs-disabled': disabled }]"
+  >
     <label v-if="label" :for="triggerId" class="select-label mfs-text mfs-text-sm mfs-font-semibold mfs-flex mfs-items-center mfs-gap-1">
       {{ label }}
       <span v-if="required" class="mfs-text-danger">*</span>
@@ -9,7 +13,8 @@
       <button
         :id="triggerId"
         type="button"
-        class="select-trigger mfs-w-full mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-surface mfs-rounded mfs-shadow-inset"
+        class="select-trigger mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-surface mfs-rounded mfs-shadow-inset"
+        :class="[size === 'sm' ? 'select-trigger--sm' : 'mfs-w-full']"
         role="combobox"
         :aria-expanded="isOpen"
         :aria-controls="listboxId"
@@ -121,8 +126,9 @@ export interface SelectOption {
 
 const props = withDefaults(
   defineProps<{
-    modelValue?: any
-    options?: Array<string | SelectOption>
+    modelValue?: string | number | null
+    options?: Array<string | number | SelectOption>
+    size?: 'sm' | 'md'
     label?: string
     placeholder?: string
     hint?: string
@@ -137,6 +143,7 @@ const props = withDefaults(
   }>(),
   {
     options: () => [],
+    size: 'md',
     placeholder: 'Select an option',
     required: false,
     disabled: false,
@@ -171,7 +178,9 @@ const { overlayStyle, containsTarget } = useFloatingOverlay(triggerRef, overlayR
 })
 
 const normalizedOptions = computed<SelectOption[]>(() =>
-  props.options.map((o) => (typeof o === 'string' ? { label: o, value: o } : o))
+  props.options.map((o) =>
+    typeof o === 'string' || typeof o === 'number' ? { label: String(o), value: o } : o
+  )
 )
 
 const filteredOptions = computed(() => {
@@ -262,6 +271,10 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   gap: 6px;
 }
 
+.select-wrapper--sm {
+  width: auto;
+}
+
 .select-container {
   position: relative;
 }
@@ -273,6 +286,15 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', handleClickOutsi
   cursor: pointer;
   text-align: left;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.select-trigger--sm {
+  height: 36px;
+  min-height: 36px;
+  padding: 0 10px;
+  font-size: 0.88rem;
+  width: auto;
+  min-width: 72px;
 }
 
 .select-trigger:focus-visible {

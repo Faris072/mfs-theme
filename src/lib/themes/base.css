@@ -78,6 +78,12 @@ body.theme-root {
   outline-offset: 2px;
 }
 
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted, #64748b);
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

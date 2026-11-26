@@ -131,8 +131,8 @@ const handleInput = (e: Event) => {
 }
 
 .input-field::placeholder {
-  color: var(--text-muted);
-  opacity: 0.7;
+  color: var(--text-muted, #64748b);
+  opacity: 1;
 }
 
 .input-affix {
