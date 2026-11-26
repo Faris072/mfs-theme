@@ -897,10 +897,10 @@
   -webkit-backdrop-filter: var(--backdrop-blur);
 }
 
-[data-theme='liquid-glass'] .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-[data-theme='liquid-glass'] .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-.theme-liquid-glass .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-.theme-liquid-glass .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger) {
+[data-theme='liquid-glass'] .mfs-pill:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+[data-theme='liquid-glass'] .btn:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+.theme-liquid-glass .mfs-pill:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+.theme-liquid-glass .btn:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)) {
   background: rgba(255, 255, 255, 0.04);
   border-color: transparent;
   color: #ffffff;
@@ -1105,10 +1105,10 @@ body.theme-manga {
   -webkit-backdrop-filter: var(--backdrop-blur);
 }
 
-[data-theme='3d-glassmorphism'] .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-[data-theme='3d-glassmorphism'] .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-.theme-3d-glassmorphism .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
-.theme-3d-glassmorphism .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger) {
+[data-theme='3d-glassmorphism'] .mfs-pill:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+[data-theme='3d-glassmorphism'] .btn:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+.theme-3d-glassmorphism .mfs-pill:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)),
+.theme-3d-glassmorphism .btn:not(:where([class*="mfs-bg-"], [class*="mfs-soft-"], .btn--primary, .btn--secondary, .btn--success, .btn--warning, .btn--danger)) {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
   border-color: rgba(255, 255, 255, 0.30);
   color: #f8fafc;

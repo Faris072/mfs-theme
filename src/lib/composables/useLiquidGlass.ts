@@ -189,7 +189,11 @@ function createLiquidGlassController(el: HTMLElement, initialOpts: LiquidGlassOp
 
   const isEnabled = (): boolean => {
     const enabledVal = isRef(opts.enabled) ? opts.enabled.value : opts.enabled
-    return enabledVal !== false && currentTheme.value === 'liquid-glass' && !el.closest('.docs-sidebar')
+    if (enabledVal === false || currentTheme.value !== 'liquid-glass' || el.closest('.docs-sidebar')) {
+      return false
+    }
+    const scoped = el.closest('[data-theme]')
+    return !scoped || scoped.getAttribute('data-theme') === 'liquid-glass'
   }
 
   const cleanupFilter = () => {

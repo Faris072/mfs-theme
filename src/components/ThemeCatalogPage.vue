@@ -405,9 +405,25 @@ const filteredThemes = computed(() => {
   height: 150px;
 }
 
-.specimen-pill {
+.card-hero-preview .specimen-pill {
   padding: 10px 18px;
   max-width: 90%;
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-width, 1px) solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--backdrop-blur, none);
+  -webkit-backdrop-filter: var(--backdrop-blur, none);
+}
+
+.card-hero-preview .specimen-badge {
+  color: var(--primary);
+}
+
+.card-hero-preview .card-active-label {
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: transparent;
 }
 
 .specimen-icon {

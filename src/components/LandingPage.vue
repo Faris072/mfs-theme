@@ -108,7 +108,7 @@
             :key="t.id"
             :data-theme="t.id"
             class="pillar-card-wrap"
-            :style="isDarkTheme(t.id) ? { background: t.previewBg, borderRadius: 'var(--radius, 20px)' } : undefined"
+            :style="{ background: t.previewBg, borderRadius: 'var(--radius, 20px)' }"
           >
             <Card
               bordered
@@ -122,19 +122,20 @@
                 <div class="pillar-icon-box mfs-surface-subtle mfs-shadow-inset mfs-flex mfs-items-center mfs-justify-center mfs-text-primary">
                   <component :is="getThemeIcon(t)" :size="20" />
                 </div>
-                <Badge variant="surface" size="sm">
+                <Badge variant="surface" size="sm" class="pillar-badge">
                   {{ t.badge }}
                 </Badge>
               </div>
               <h3 class="pillar-title mfs-text">{{ t.name }}</h3>
               <p class="pillar-description mfs-text-muted mfs-flex-1">{{ t.tagline }}</p>
               <div class="pillar-mini-specimen mfs-flex mfs-items-center mfs-justify-between mfs-gap-2">
-                <Badge :variant="currentTheme === t.id ? 'primary' : 'surface'" size="sm">
+                <Badge :variant="currentTheme === t.id ? 'primary' : 'surface'" size="sm" class="pillar-badge">
                   {{ currentTheme === t.id ? 'Active' : 'Preview' }}
                 </Badge>
                 <Button
                   variant="surface"
                   size="sm"
+                  class="pillar-btn"
                   @click.stop="$emit('open-theme-detail', t.id)"
                 >
                   Specs
@@ -260,7 +261,7 @@ import {
   Copy,
   Check
 } from 'lucide-vue-next'
-import { isDarkTheme, THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
+import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
 
 const presetUrl = import.meta.env.VITE_PRESET_URL || 'https://preset-ui.mfstechnology.co.id'
 
@@ -466,26 +467,66 @@ const scrollToSection = (id: string) => {
   height: 100%;
 }
 
-.pillar-card.is-selected {
+.pillar-card-wrap .pillar-card {
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-width, 1px) solid var(--border);
+  border-radius: var(--radius, 20px);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: var(--backdrop-blur, none);
+  -webkit-backdrop-filter: var(--backdrop-blur, none);
+}
+
+.pillar-card-wrap .pillar-card.is-selected {
   border-color: var(--primary);
 }
 
-.pillar-icon-box {
+.pillar-card-wrap .pillar-icon-box {
   width: 40px;
   height: 40px;
   border-radius: var(--radius-md, 12px);
+  background: var(--surface-subtle);
+  color: var(--primary);
+  box-shadow: var(--inset-shadow);
 }
 
-.pillar-title {
+.pillar-card-wrap .pillar-title {
   font-size: 1.15rem;
   font-weight: 600;
   margin: 0 0 8px;
+  color: var(--text);
 }
 
-.pillar-description {
+.pillar-card-wrap .pillar-description {
   font-size: 0.86rem;
   line-height: 1.5;
   margin: 0 0 16px;
+  color: var(--text-muted);
+}
+
+.pillar-card-wrap .pillar-badge.badge--surface {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--border);
+  backdrop-filter: var(--backdrop-blur, none);
+  -webkit-backdrop-filter: var(--backdrop-blur, none);
+  box-shadow: var(--shadow, none);
+}
+
+.pillar-card-wrap .pillar-badge.badge--primary {
+  background: var(--primary);
+  color: var(--primary-text);
+  border-color: transparent;
+  box-shadow: var(--shadow, none);
+}
+
+.pillar-card-wrap .pillar-btn {
+  background: var(--surface);
+  color: var(--text);
+  border: var(--border-width, 1px) solid var(--border);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--backdrop-blur, none);
+  -webkit-backdrop-filter: var(--backdrop-blur, none);
 }
 
 .pillar-mini-specimen {
