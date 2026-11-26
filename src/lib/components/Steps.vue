@@ -14,7 +14,7 @@
       <button
         v-if="clickable"
         type="button"
-        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md"
+        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md mfs-w-full-mobile"
         @click="handleStepClick(index)"
       >
         <span class="steps__circle mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-bold mfs-surface mfs-shadow">
@@ -58,7 +58,7 @@
 
       <div
         v-else
-        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md"
+        class="steps__trigger mfs-inline-flex mfs-items-center mfs-border-none mfs-rounded-md mfs-w-full-mobile"
       >
         <span class="steps__circle mfs-inline-flex mfs-items-center mfs-justify-center mfs-font-bold mfs-surface mfs-shadow">
           <svg

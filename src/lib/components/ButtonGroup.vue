@@ -1,5 +1,5 @@
 <template>
-  <div class="mfs-btn-group mfs-inline-flex mfs-items-center" role="group">
+  <div class="mfs-btn-group mfs-inline-flex mfs-flex-wrap mfs-items-center" role="group">
     <slot />
   </div>
 </template>
@@ -8,6 +8,10 @@
 </script>
 
 <style scoped>
+.mfs-btn-group {
+  max-width: 100%;
+}
+
 .mfs-btn-group :deep(> *:not(:first-child)) {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;

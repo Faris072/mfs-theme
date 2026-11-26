@@ -18,7 +18,7 @@
 
       <Teleport to="body">
         <Transition name="cp-pop">
-          <div v-if="isOpen" ref="overlayRef" :style="overlayStyle" class="cp-popover mfs-surface mfs-overlay mfs-rounded mfs-blur mfs-shadow mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2-5" role="dialog" aria-label="Color picker">
+          <div v-if="isOpen" ref="overlayRef" :style="overlayStyle" class="cp-popover mfs-surface mfs-overlay mfs-popover-responsive mfs-rounded mfs-blur mfs-shadow mfs-p-3 mfs-flex mfs-flex-col mfs-gap-2-5" role="dialog" aria-label="Color picker">
           <div class="cp-native-row mfs-flex mfs-items-center mfs-gap-2">
             <input
               type="color"
@@ -37,7 +37,7 @@
             />
           </div>
 
-          <div class="cp-rgb mfs-grid mfs-grid-cols-3 mfs-gap-1-5">
+          <div class="cp-rgb mfs-grid mfs-grid-cols-3-fixed mfs-gap-1-5">
             <label class="cp-rgb-item mfs-flex mfs-flex-col mfs-font-semibold mfs-text-muted">
               <span>R</span>
               <input type="number" min="0" max="255" :value="rgb.r" @input="onRgbChange('r', $event)" />
@@ -52,7 +52,7 @@
             </label>
           </div>
 
-          <div v-if="presets.length" class="cp-presets mfs-grid mfs-grid-cols-4 mfs-gap-2">
+          <div v-if="presets.length" class="cp-presets mfs-grid mfs-grid-cols-4-fixed mfs-gap-2">
             <button
               v-for="color in presets"
               :key="color"

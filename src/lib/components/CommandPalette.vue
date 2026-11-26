@@ -7,7 +7,7 @@
         @click="close"
       >
         <div
-          class="cmd-dialog mfs-overlay mfs-surface mfs-rounded-lg mfs-shadow-card mfs-w-full mfs-flex mfs-flex-col mfs-overflow-hidden"
+          class="cmd-dialog mfs-overlay mfs-surface mfs-rounded-lg mfs-shadow-card mfs-dialog-responsive mfs-flex mfs-flex-col mfs-overflow-hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Command palette"
@@ -412,5 +412,12 @@ onBeforeUnmount(() => {
 .mfs-cmd-fade-enter-from,
 .mfs-cmd-fade-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .cmd-backdrop {
+    align-items: flex-start;
+    padding-top: 8vh;
+  }
 }
 </style>

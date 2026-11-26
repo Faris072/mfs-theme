@@ -756,4 +756,10 @@ defineExpose({
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+@media (max-width: 640px) {
+  .mfs-cropper__stage {
+    max-height: 55vh;
+  }
+}
 </style>

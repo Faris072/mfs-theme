@@ -270,4 +270,11 @@ onUnmounted(() => {
 [data-theme="brutalism"] .tab-menu__item {
   border-radius: var(--radius, 4px);
 }
+
+@media (max-width: 640px) {
+  .tab-menu__item {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
 </style>

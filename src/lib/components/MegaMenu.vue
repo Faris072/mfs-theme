@@ -94,7 +94,7 @@
         <div
           v-if="activeItem?.columns?.length"
           ref="panelRef"
-          class="mega-menu__panel mfs-card mfs-overlay mfs-blur mfs-p-4"
+          class="mega-menu__panel mfs-card mfs-overlay mfs-popover-responsive mfs-blur mfs-p-4"
           :style="panelStyle"
           role="menu"
           @mouseenter="cancelClose"
@@ -391,7 +391,7 @@ onUnmounted(() => {
 .mega-menu__panel {
   min-width: min(480px, calc(100vw - 16px));
   max-width: min(760px, calc(100vw - 16px));
-  max-height: calc(100vh - 16px);
+  max-height: calc(100dvh - 16px);
   overflow-y: auto;
 }
 
@@ -437,6 +437,12 @@ onUnmounted(() => {
 .mega-fade-leave-to {
   opacity: 0;
   transform: translateY(-4px);
+}
+
+@media (max-width: 768px) {
+  .mega-menu__columns {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 768px) {

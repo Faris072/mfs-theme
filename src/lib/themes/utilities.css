@@ -362,6 +362,28 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.mfs-grid-cols-3-fixed {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mfs-grid-cols-4-fixed {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.mfs-popover-responsive {
+  max-width: calc(100vw - 16px);
+}
+
+.mfs-dialog-responsive {
+  width: 100%;
+  max-height: calc(100dvh - 24px);
+}
+
+.mfs-show-tablet,
+.mfs-show-mobile {
+  display: none;
+}
+
 /* Typography */
 .mfs-font-sans {
   font-family: var(--font-sans);
@@ -427,6 +449,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.mfs-break-words {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mfs-title {
@@ -571,6 +598,13 @@
 
 .mfs-overflow-y-auto {
   overflow-y: auto;
+}
+
+.mfs-scroll-x {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .mfs-sr-only {
@@ -998,4 +1032,71 @@ body.theme-manga {
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-color: rgba(255, 255, 255, 0.28);
   color: #f8fafc;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 900px) {
+  .mfs-grid-cols-4,
+  .mfs-grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .mfs-container {
+    padding-inline: 16px;
+  }
+
+  .mfs-stack-tablet {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mfs-hide-tablet {
+    display: none !important;
+  }
+
+  .mfs-show-tablet {
+    display: flex;
+  }
+}
+
+@media (max-width: 640px) {
+  .mfs-container {
+    padding-inline: 12px;
+  }
+
+  .mfs-card {
+    padding: 16px;
+  }
+
+  .mfs-grid,
+  .mfs-grid-cols-2,
+  .mfs-grid-cols-3,
+  .mfs-grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .mfs-stack-mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mfs-w-full-mobile {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mfs-hide-mobile {
+    display: none !important;
+  }
+
+  .mfs-show-mobile {
+    display: flex;
+  }
+
+  .mfs-touch-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }

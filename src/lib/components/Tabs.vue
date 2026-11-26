@@ -255,4 +255,11 @@ onUnmounted(() => {
   border: 2px solid var(--border);
   box-shadow: 2px 2px 0 var(--border);
 }
+
+@media (max-width: 640px) {
+  .tabs__tab {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
 </style>

@@ -18,8 +18,8 @@
         </svg>
       </button>
 
-      <div class="num-input-area mfs-flex-1 mfs-flex mfs-items-center mfs-gap-1 mfs-min-w-0 mfs-px-1">
-        <span v-if="prefix" class="num-prefix mfs-text-muted mfs-font-semibold mfs-select-none">{{ prefix }}</span>
+      <div class="num-input-area mfs-flex-1 mfs-flex mfs-items-center mfs-gap-1 mfs-px-1">
+        <span v-if="prefix" class="num-prefix mfs-shrink-0 mfs-text-muted mfs-font-semibold mfs-select-none">{{ prefix }}</span>
         <input
           :id="inputId"
           type="text"
@@ -166,8 +166,15 @@ const stepBy = (dir: 1 | -1) => {
 
 <style scoped>
 .num-box {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: fit-content;
   padding: 4px 6px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.num-input-area {
+  min-width: 5ch;
 }
 
 .num-box:focus-within {
@@ -212,6 +219,9 @@ const stepBy = (dir: 1 | -1) => {
 }
 
 .num-field {
+  flex: 1 1 0%;
+  min-width: 4ch;
+  box-sizing: border-box;
   font-family: inherit;
   font-size: 0.95rem;
   font-variant-numeric: tabular-nums;

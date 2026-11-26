@@ -1,7 +1,7 @@
 <template>
   <div
     ref="containerRef"
-    :class="['splitter', `splitter--${layout}`, 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card']"
+    :class="['splitter', `splitter--${layout}`, 'mfs-flex', 'mfs-w-full', 'mfs-overflow-hidden', 'mfs-surface', 'mfs-rounded', 'mfs-shadow-card']"
   >
     <div class="splitter__pane" :style="firstPaneStyle">
       <slot name="first" />
@@ -182,5 +182,27 @@ const onKeyDown = (e: KeyboardEvent) => {
 
 [data-theme="neo"] .splitter__gutter {
   box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 640px) {
+  .splitter--horizontal {
+    flex-direction: column;
+  }
+
+  .splitter--horizontal .splitter__pane {
+    flex-basis: auto !important;
+    width: 100%;
+  }
+
+  .splitter--horizontal .splitter__gutter {
+    width: 100%;
+    height: 10px;
+    cursor: row-resize;
+  }
+
+  .splitter--horizontal .splitter__handle {
+    width: 28px;
+    height: 4px;
+  }
 }
 </style>

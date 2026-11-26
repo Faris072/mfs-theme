@@ -3,7 +3,7 @@
     <Transition name="modal-fade">
       <div v-if="modelValue" class="modal-backdrop mfs-backdrop mfs-flex mfs-items-center mfs-justify-center mfs-p-4" @click="handleBackdropClick">
         <div
-          class="modal-dialog mfs-card mfs-overlay mfs-w-full mfs-flex mfs-flex-col mfs-overflow-hidden mfs-p-0"
+          class="modal-dialog mfs-card mfs-overlay mfs-dialog-responsive mfs-flex mfs-flex-col mfs-overflow-hidden mfs-p-0"
           :class="[`modal--${size}`]"
           role="dialog"
           aria-modal="true"
@@ -22,7 +22,7 @@
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="modal-footer mfs-flex mfs-items-center mfs-justify-end mfs-gap-3">
+          <div v-if="$slots.footer" class="modal-footer mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-end mfs-gap-3">
             <slot name="footer" />
           </div>
         </div>
@@ -163,5 +163,19 @@ onBeforeUnmount(() => {
 @keyframes modal-pop {
   0% { transform: scale(0.92); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .modal-header {
+    padding: 16px 16px 12px;
+  }
+
+  .modal-body {
+    padding: 16px;
+  }
+
+  .modal-footer {
+    padding: 12px 16px;
+  }
 }
 </style>

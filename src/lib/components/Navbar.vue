@@ -299,4 +299,10 @@ onUnmounted(() => {
 [data-theme="neo"] .navbar__mobile-link--active {
   box-shadow: var(--clay-shadow);
 }
+
+@media (max-width: 640px) {
+  .navbar__inner {
+    padding: 10px 12px;
+  }
+}
 </style>

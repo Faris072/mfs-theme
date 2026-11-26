@@ -230,4 +230,16 @@ const handleSelect = (item: DockItem, index: number) => {
   opacity: 1;
   transform: translateY(0);
 }
+
+@media (max-width: 640px) {
+  .dock__list {
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  .dock__item {
+    width: 38px;
+    height: 38px;
+  }
+}
 </style>

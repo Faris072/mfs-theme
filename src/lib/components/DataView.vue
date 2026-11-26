@@ -1,6 +1,6 @@
 <template>
   <div class="data-view mfs-relative">
-    <div class="data-view__header">
+    <div class="data-view__header mfs-flex-wrap">
       <div class="data-view__header-left">
         <slot name="header" />
       </div>
@@ -279,6 +279,10 @@ function setLayout(next: DataViewLayout) {
 @media (max-width: 640px) {
   .data-view__body--grid {
     grid-template-columns: 1fr;
+  }
+
+  .data-view__empty {
+    padding: 24px 12px;
   }
 }
 </style>

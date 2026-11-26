@@ -4,7 +4,7 @@
       <div
         v-if="visible"
         ref="menuRef"
-        class="menu menu--popup mfs-surface mfs-overlay mfs-shadow-card mfs-rounded-md mfs-blur"
+        class="menu menu--popup mfs-surface mfs-overlay mfs-popover-responsive mfs-shadow-card mfs-rounded-md mfs-blur"
         role="menu"
         :style="{ left: `${position.x}px`, top: `${position.y}px` }"
         @keydown="onKeydown"
@@ -265,6 +265,7 @@ defineExpose({ open, close, toggle })
 <style scoped>
 .menu {
   min-width: 210px;
+  max-width: 100%;
   padding: 6px;
 }
 

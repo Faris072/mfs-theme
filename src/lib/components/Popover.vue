@@ -16,7 +16,7 @@
           v-if="isOpen"
           ref="overlayRef"
           :style="overlayStyle"
-          class="mfs-popover mfs-surface mfs-overlay mfs-rounded mfs-shadow-card mfs-blur"
+          class="mfs-popover mfs-surface mfs-overlay mfs-popover-responsive mfs-rounded mfs-shadow-card mfs-blur"
           :class="[`mfs-popover--${placement}`]"
           role="dialog"
         >

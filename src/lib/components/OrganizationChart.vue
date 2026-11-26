@@ -2,7 +2,7 @@
   <div
     class="org-chart mfs-relative"
     :class="{
-      'org-chart--root': level === 0,
+      'org-chart--root mfs-scroll-x': level === 0,
       'org-chart--loading-empty': level === 0 && loading && !value
     }"
     :aria-busy="level === 0 && loading ? true : undefined"
@@ -169,8 +169,14 @@ function toggleExpand() {
 }
 
 .org-chart--root {
-  overflow-x: auto;
+  align-items: flex-start;
+  max-width: 100%;
   padding: 16px;
+}
+
+.org-chart--root > .org-chart__node-wrap,
+.org-chart--root > .org-chart__children {
+  margin-inline: auto;
 }
 
 .org-chart__node-wrap {
@@ -278,5 +284,12 @@ function toggleExpand() {
 [data-theme="neo"] .org-chart__branch::before,
 [data-theme="neo"] .org-chart__branch::after {
   background: rgba(100, 116, 139, 0.3);
+}
+
+@media (max-width: 640px) {
+  .org-chart__node {
+    min-width: 110px;
+    padding: 10px 12px;
+  }
 }
 </style>

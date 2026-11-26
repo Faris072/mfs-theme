@@ -10,7 +10,7 @@
   >
     <!-- VSCode-style Header Bar -->
     <div class="mfs-code-editor__header">
-      <div class="mfs-code-editor__dots" aria-hidden="true">
+      <div class="mfs-code-editor__dots mfs-hide-mobile" aria-hidden="true">
         <span class="mfs-code-editor__dot mfs-code-editor__dot--red" />
         <span class="mfs-code-editor__dot mfs-code-editor__dot--yellow" />
         <span class="mfs-code-editor__dot mfs-code-editor__dot--green" />
@@ -907,5 +907,27 @@ const handleCopy = async () => {
 
 [data-theme="glass"] .mfs-code-editor {
   border-color: rgba(255, 255, 255, 0.22);
+}
+
+@media (max-width: 640px) {
+  .mfs-code-editor__header {
+    padding: 0 8px;
+  }
+
+  .mfs-code-editor__gutter {
+    min-width: 34px;
+    padding: 10px 6px;
+    font-size: 0.78rem;
+  }
+
+  .mfs-code-editor__highlight,
+  .mfs-code-editor__textarea {
+    padding: 10px 12px;
+    font-size: 0.78rem;
+  }
+
+  .mfs-code-editor__footer {
+    flex-wrap: wrap;
+  }
 }
 </style>

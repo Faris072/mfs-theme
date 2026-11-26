@@ -307,4 +307,23 @@ onBeforeUnmount(stopAutoplay)
 [data-theme="neo"] .carousel__btn {
   box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.14), -3px -3px 8px rgba(255, 255, 255, 0.75);
 }
+
+@media (max-width: 640px) {
+  .carousel__fallback {
+    padding: 24px 16px;
+  }
+
+  .carousel__btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .carousel__btn--prev {
+    left: 8px;
+  }
+
+  .carousel__btn--next {
+    right: 8px;
+  }
+}
 </style>

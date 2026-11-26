@@ -346,4 +346,11 @@ onBeforeUnmount(() => {
 [data-theme="neo"] .dp-trigger {
   box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 }
+
+@media (max-width: 360px) {
+  .dp-day {
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
 </style>

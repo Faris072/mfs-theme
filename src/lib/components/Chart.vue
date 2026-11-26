@@ -520,4 +520,10 @@ const showTip = (e: MouseEvent, text: string) => {
 [data-theme="cyberpunk"] .mfs-chart__line {
   filter: drop-shadow(0 0 6px color-mix(in srgb, var(--secondary) 55%, transparent));
 }
+
+@media (max-width: 640px) {
+  .mfs-chart {
+    padding: 12px;
+  }
+}
 </style>

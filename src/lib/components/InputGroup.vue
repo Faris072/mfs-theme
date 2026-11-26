@@ -1,5 +1,5 @@
 <template>
-  <div class="ig-wrapper mfs-surface mfs-rounded mfs-shadow-inset">
+  <div class="ig-wrapper mfs-flex mfs-w-full mfs-overflow-hidden mfs-surface mfs-rounded mfs-shadow-inset">
     <slot />
   </div>
 </template>
@@ -22,6 +22,7 @@
 }
 
 .ig-wrapper :deep(> *) {
+  min-width: 0;
   border-radius: 0 !important;
   box-shadow: none !important;
   border-top: none !important;

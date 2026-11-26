@@ -260,4 +260,12 @@ const next = () => setIndex(currentIndex.value + 1)
 [data-theme="neo"] .mfs-galleria {
   border: none;
 }
+
+@media (max-width: 640px) {
+  .mfs-galleria__nav,
+  .mfs-galleria__fs {
+    width: 32px;
+    height: 32px;
+  }
+}
 </style>

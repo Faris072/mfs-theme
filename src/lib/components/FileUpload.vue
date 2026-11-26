@@ -64,7 +64,7 @@
     <ul v-if="files.length > 0" class="mfs-upload__list mfs-m-0 mfs-p-0 mfs-flex mfs-flex-col mfs-gap-2">
       <li v-for="(file, idx) in files" :key="`${file.name}-${file.size}-${idx}`" class="mfs-upload__item mfs-surface-subtle mfs-rounded-sm mfs-flex mfs-items-center mfs-justify-between mfs-gap-2-5 mfs-py-2 mfs-px-3">
         <div class="mfs-upload__file-info mfs-flex mfs-flex-col mfs-min-w-0">
-          <span class="mfs-upload__file-name mfs-text mfs-font-semibold mfs-truncate">{{ file.name }}</span>
+          <span class="mfs-upload__file-name mfs-text mfs-font-semibold mfs-min-w-0 mfs-truncate">{{ file.name }}</span>
           <span class="mfs-upload__file-size mfs-caption">{{ formatSize(file.size) }}</span>
         </div>
         <button
@@ -346,5 +346,11 @@ const removeFile = (idx: number) => {
 
 [data-theme="neo"] .mfs-upload {
   border: none;
+}
+
+@media (max-width: 640px) {
+  .mfs-upload__dropzone {
+    padding: 18px 12px;
+  }
 }
 </style>

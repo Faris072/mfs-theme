@@ -1,6 +1,6 @@
 <template>
   <div class="tree-table mfs-relative mfs-surface mfs-rounded mfs-shadow-card">
-    <div class="tree-table__wrap">
+    <div class="tree-table__wrap mfs-scroll-x">
       <table class="tree-table__table">
         <thead>
           <tr>
@@ -272,5 +272,16 @@ function toggleNode(node: TreeTableNode) {
 
 [data-theme="glass"] .tree-table__row:hover {
   background: rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 640px) {
+  .tree-table__th,
+  .tree-table__td {
+    padding: 10px 12px;
+  }
+
+  .tree-table__empty {
+    padding: 24px 12px;
+  }
 }
 </style>

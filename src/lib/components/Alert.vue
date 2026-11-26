@@ -28,7 +28,7 @@
       </slot>
     </span>
 
-    <div class="mfs-alert__content">
+    <div class="mfs-alert__content mfs-flex-1 mfs-min-w-0 mfs-break-words">
       <div v-if="title" class="mfs-alert__title mfs-title">{{ title }}</div>
       <div class="mfs-alert__body mfs-text-muted">
         <slot />
@@ -159,5 +159,11 @@ const emit = defineEmits<{
   box-shadow: var(--clay-shadow);
   border: none;
   border-left: 4px solid var(--alert-accent);
+}
+
+@media (max-width: 640px) {
+  .mfs-alert {
+    padding: 12px;
+  }
 }
 </style>

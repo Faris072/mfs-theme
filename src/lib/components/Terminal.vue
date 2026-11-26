@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mfs-terminal mfs-surface mfs-font-mono mfs-rounded mfs-shadow-card mfs-blur mfs-p-4"
+    class="mfs-terminal mfs-w-full mfs-overflow-hidden mfs-surface mfs-font-mono mfs-rounded mfs-shadow-card mfs-blur mfs-p-4"
     @click="focusInput"
   >
     <div v-if="welcomeMessage" class="mfs-terminal__welcome mfs-text-muted">{{ welcomeMessage }}</div>
@@ -9,9 +9,9 @@
       <div v-for="(entry, idx) in entries" :key="idx" class="mfs-terminal__entry">
         <div class="mfs-flex mfs-gap-2">
           <span class="mfs-text-primary mfs-font-bold mfs-select-none">{{ prompt }}</span>
-          <span class="mfs-terminal__cmd">{{ entry.command }}</span>
+          <span class="mfs-terminal__cmd mfs-break-words">{{ entry.command }}</span>
         </div>
-        <div v-if="entry.response" class="mfs-terminal__response">{{ entry.response }}</div>
+        <div v-if="entry.response" class="mfs-terminal__response mfs-break-words">{{ entry.response }}</div>
       </div>
     </div>
 
@@ -155,5 +155,12 @@ defineExpose({ clear: () => { entries.value = [] } })
   color: inherit;
   font-family: inherit;
   font-size: inherit;
+}
+
+@media (max-width: 640px) {
+  .mfs-terminal {
+    font-size: 0.8rem;
+    padding: 12px;
+  }
 }
 </style>

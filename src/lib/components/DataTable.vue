@@ -1119,6 +1119,14 @@ input.data-table__checkbox {
   border-color: transparent;
 }
 
+/* Tablet density */
+@media (max-width: 900px) {
+  .data-table__th,
+  .data-table__td {
+    padding: 10px 12px;
+  }
+}
+
 /* Mobile Card Mode */
 @media (max-width: 640px) {
   .data-table__toolbar-actions {

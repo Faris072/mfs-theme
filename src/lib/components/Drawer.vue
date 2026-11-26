@@ -36,7 +36,7 @@
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="mfs-drawer__footer mfs-border-t mfs-flex mfs-justify-end mfs-gap-2-5">
+          <div v-if="$slots.footer" class="mfs-drawer__footer mfs-border-t mfs-flex mfs-flex-wrap mfs-justify-end mfs-gap-2-5">
             <slot name="footer" />
           </div>
         </aside>
@@ -232,6 +232,15 @@ onBeforeUnmount(() => {
   .mfs-drawer--left,
   .mfs-drawer--right {
     border-radius: 0;
+  }
+
+  .mfs-drawer__body {
+    padding: 16px;
+  }
+
+  .mfs-drawer__header,
+  .mfs-drawer__footer {
+    padding: 14px 16px;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="mfs-form-field mfs-flex mfs-flex-col mfs-gap-1-5">
+  <div class="mfs-form-field mfs-w-full mfs-min-w-0 mfs-flex mfs-flex-col mfs-gap-1-5">
     <label
       v-if="label"
       :for="name"

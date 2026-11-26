@@ -22,7 +22,7 @@
       <slot />
     </div>
 
-    <div v-if="$slots.footer" class="card__footer">
+    <div v-if="$slots.footer" class="card__footer mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-end mfs-gap-3">
       <slot name="footer" />
     </div>
   </div>
@@ -96,5 +96,13 @@ withDefaults(
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .card__header,
+  .card__body,
+  .card__footer {
+    padding: 16px;
+  }
 }
 </style>

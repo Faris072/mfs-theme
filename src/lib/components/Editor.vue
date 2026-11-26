@@ -116,4 +116,9 @@ const exec = (cmd: string) => {
 .ed-content :deep(li) { margin: 0.2rem 0; }
 .ed-content :deep(p) { margin: 0 0 0.5rem; }
 .ed-content :deep(p:last-child), .ed-content :deep(ul:last-child), .ed-content :deep(ol:last-child) { margin-bottom: 0; }
+
+@media (max-width: 640px) {
+  .ed-toolbar { padding: 6px 8px; }
+  .ed-content { padding: 12px; }
+}
 </style>

@@ -7,7 +7,7 @@
         @click="reject"
       >
         <div
-          class="mfs-confirm mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-w-full"
+          class="mfs-confirm mfs-overlay mfs-surface mfs-rounded mfs-shadow-card mfs-blur mfs-dialog-responsive"
           role="alertdialog"
           aria-modal="true"
           :aria-labelledby="titleId"
@@ -130,5 +130,11 @@ onBeforeUnmount(() => {
 .mfs-confirm-fade-enter-from,
 .mfs-confirm-fade-leave-to {
   opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .mfs-confirm {
+    padding: 16px;
+  }
 }
 </style>

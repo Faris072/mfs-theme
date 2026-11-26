@@ -70,7 +70,7 @@
       </button>
     </div>
 
-    <div v-if="perPageOptions.length || showJumpTo" class="pagination__extras">
+    <div v-if="perPageOptions.length || showJumpTo" class="pagination__extras mfs-flex-wrap">
       <label v-if="perPageOptions.length" class="pagination__per-page">
         <span class="pagination__label mfs-text-muted">Rows</span>
         <select

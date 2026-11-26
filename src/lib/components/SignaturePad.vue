@@ -239,6 +239,8 @@ defineExpose({
 
 .mfs-signature__canvas {
   display: block;
+  width: 100%;
+  max-width: 100%;
   height: auto;
   color: var(--text);
   cursor: crosshair;
@@ -253,5 +255,11 @@ defineExpose({
   justify-content: center;
   pointer-events: none;
   opacity: 0.6;
+}
+
+@media (max-width: 640px) {
+  .mfs-signature {
+    padding: 10px;
+  }
 }
 </style>
