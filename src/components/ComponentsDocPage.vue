@@ -69,7 +69,7 @@
 
           <p class="docs-summary mfs-text-muted mfs-mt-3 mfs-mb-0">{{ activeItem.summary }}</p>
 
-          <!-- OpenVue-style Import Bar -->
+          <!-- Component Import Bar -->
           <div class="mfs-mt-4 mfs-px-3 mfs-py-2 mfs-rounded-md mfs-surface-subtle mfs-border mfs-flex mfs-items-center mfs-justify-between mfs-gap-3">
             <div class="mfs-flex mfs-items-center mfs-gap-3 mfs-min-w-0 mfs-flex-1">
               <span class="docs-import-label mfs-text-xs mfs-font-bold mfs-text-muted mfs-surface mfs-border mfs-rounded-sm mfs-px-2 mfs-py-1 mfs-shrink-0">Import</span>
@@ -93,7 +93,7 @@
           </div>
         </Card>
 
-        <!-- Top-level OpenVue-style Documentation Tabs -->
+        <!-- Top-level Documentation Tabs -->
         <Tabs
           :model-value="activeTab"
           :items="docTabs"

@@ -1,11 +1,11 @@
-# Checklist & Benchmark Komponen UI (Referensi: OpenVue)
+# Checklist & Benchmark Komponen UI (Enterprise UI Benchmark)
 
 Dokumen ini berfungsi sebagai **benchmark acuan dan checklist pengayaan komponen** untuk library UI multi-tema (`mfs-theme`). 
 
 ---
 
 ## 📋 Pedoman & Standar Implementasi
-1. **Target Minimal**: Kelengkapan variasi komponen minimal setara dengan katalog OpenVue (`openvue.dev`).
+1. **Target Minimal**: Kelengkapan variasi komponen minimal setara dengan standar katalog Enterprise UI Benchmark.
 2. **Aturan Penamaan**: Nama komponen **seragam dan bersih tanpa prefix** (contoh: `<Button>`, `<Input>`, `<Card>`, `<Modal>`).
 3. **Multi-Theme Adaptability**: Logika komponen (props, emits, accessibility) adalah satu sumber kode, sedangkan tampilan visual beradaptasi 100% mengikuti tema aktif (`Claymorphism`, `Glassmorphism`, `Neumorphism`).
 4. **Responsif**: Setiap komponen wajib fleksibel dan berfungsi sempurna di layar mobile (touch friendly) hingga desktop.

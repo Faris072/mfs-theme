@@ -926,7 +926,7 @@ const dataTableApi = {
   props: [
     { name: 'columns', type: 'DataTableColumn[]', description: 'Column definitions ({ key, label, sortable?, width?, align? }).' },
     { name: 'rows', type: 'Record<string, any>[] | number', description: 'Array of row data objects, or rows-per-page count when using :value.' },
-    { name: 'value', type: 'Record<string, any>[]', description: 'OpenVue-compatible array of row data objects.' },
+    { name: 'value', type: 'Record<string, any>[]', description: 'Alias array of row data objects.' },
     { name: 'rowKey', type: 'string', default: "'id'", description: 'Unique property name used to key and track rows.' },
     { name: 'searchable', type: 'boolean', default: 'false', description: 'Shows a built-in search input in the toolbar.' },
     { name: 'searchQuery', type: 'string', default: "''", description: 'Controlled search query (supports v-model:search-query).' },
@@ -955,7 +955,7 @@ const dataTableApi = {
     { name: 'update:visibleColumns', type: '(keys: string[]) => void', description: 'Emitted when toggled visible column keys change.' },
     { name: 'update:searchQuery', type: '(value: string) => void', description: 'Emitted when the search input value changes.' },
     { name: 'update:page', type: '(page: number) => void', description: 'Emitted when the active page changes.' },
-    { name: 'update:rows', type: '(rows: number) => void', description: 'Emitted when rows per page changes (OpenVue alias).' },
+    { name: 'update:rows', type: '(rows: number) => void', description: 'Emitted when rows per page changes (rowsPerPage alias).' },
     { name: 'update:rowsPerPage', type: '(rowsPerPage: number) => void', description: 'Emitted when rows per page changes.' },
     { name: 'update:first', type: '(first: number) => void', description: 'Emitted with the new zero-based first row index.' },
     { name: 'update:multiSortMeta', type: '(meta: DataTableSortMeta[]) => void', description: 'Emitted when the active multi-column sort stack changes.' },
