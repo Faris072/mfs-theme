@@ -213,7 +213,7 @@ defineExpose({ open, close })
 .ctx-menu__item--danger:hover:not(:disabled),
 .ctx-menu__item--danger:focus-visible:not(:disabled) {
   background-color: var(--danger, #ef4444);
-  color: #ffffff;
+  color: var(--danger-text, #ffffff);
 }
 
 .ctx-menu__item--disabled {

@@ -1029,7 +1029,7 @@ onBeforeUnmount(() => {
   padding: 0 4px;
   border-radius: 9999px;
   background: var(--primary);
-  color: var(--primary-contrast, #fff);
+  color: var(--primary-text, #ffffff);
   font-size: 0.65rem;
   font-weight: 700;
   line-height: 1;

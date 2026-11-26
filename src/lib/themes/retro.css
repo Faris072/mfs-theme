@@ -2,8 +2,8 @@
 .theme-retro,
 [data-theme="retro"] {
   --theme-name: 'Retro 95';
-  --bg: #008080;
-  --bg-gradient: linear-gradient(180deg, #008080 0%, #006b6b 100%);
+  --bg: #209e9e;
+  --bg-gradient: linear-gradient(180deg, #209e9e 0%, #198787 100%);
   --text: #000000;
   --text-muted: #262626;
 
@@ -24,7 +24,7 @@
   --success: #005a00;
   --success-text: #ffffff;
   --warning: #808000;
-  --warning-text: #ffffff;
+  --warning-text: #000000;
   --danger: #800000;
 
   /* Typography & Layout */

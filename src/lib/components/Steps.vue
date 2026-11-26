@@ -215,12 +215,12 @@ const handleStepClick = (index: number) => {
 
 .steps__item--completed .steps__circle {
   background-color: var(--success, #10b981);
-  color: #ffffff;
+  color: var(--success-text, #ffffff);
 }
 
 .steps__item--error .steps__circle {
   background-color: var(--danger, #ef4444);
-  color: #ffffff;
+  color: var(--danger-text, #ffffff);
 }
 
 .steps__content {

@@ -508,25 +508,25 @@
 .mfs-soft-secondary {
   background-color: var(--surface-subtle);
   background-color: color-mix(in srgb, var(--secondary) 14%, transparent);
-  color: var(--secondary);
+  color: color-mix(in srgb, var(--secondary) 65%, var(--text));
 }
 
 .mfs-soft-success {
   background-color: var(--surface-subtle);
   background-color: color-mix(in srgb, var(--success) 14%, transparent);
-  color: var(--success);
+  color: color-mix(in srgb, var(--success) 65%, var(--text));
 }
 
 .mfs-soft-warning {
   background-color: var(--surface-subtle);
   background-color: color-mix(in srgb, var(--warning) 16%, transparent);
-  color: var(--warning);
+  color: color-mix(in srgb, var(--warning) 60%, var(--text));
 }
 
 .mfs-soft-danger {
   background-color: var(--surface-subtle);
   background-color: color-mix(in srgb, var(--danger) 14%, transparent);
-  color: var(--danger);
+  color: color-mix(in srgb, var(--danger) 65%, var(--text));
 }
 
 /* States & Structure */
