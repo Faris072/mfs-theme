@@ -544,7 +544,7 @@ const iftaProject = ref('mfs-theme')
 const iftaEnv = ref('production')
 
 // Editor
-const editorHtml = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</p>')
+const editorHtml = ref('<p><strong>MFS UI</strong> supports Clay, Glass, and Neo.</p>')
 
 // CodeEditor
 const codeEditorActiveTab = ref(0)
@@ -963,7 +963,7 @@ const editorCode = `<template>
 import { ref } from 'vue'
 import { Editor } from '@mfs-atomic/ui'
 
-const html = ref('<p><strong>MFS Theme</strong> supports Clay, Glass, and Neo.</p>')
+const html = ref('<p><strong>MFS UI</strong> supports Clay, Glass, and Neo.</p>')
 <\/script>`
 
 const codeEditorCode = `<template>

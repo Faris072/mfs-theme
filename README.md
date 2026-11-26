@@ -1,4 +1,4 @@
-# MFS Theme
+# MFS UI
 
 Adaptive multi-theme Vue 3 UI component library with runtime theme switching, 21 built-in visual themes, 91+ components, and zero runtime dependencies.
 
@@ -206,4 +206,4 @@ All 21 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
 
 Source code is licensed under the [MIT License](./LICENSE).
 
-The **MFS Atomic Technology** and **MFS Theme** names, logos (including `public/logo.svg`), and brand assets are proprietary to **MFS Atomic Technology** (not open-source) and are **excluded from the MIT License** (all rights reserved). They may not be used to imply endorsement or as your own brand without prior written permission.
+The **MFS Atomic Technology** and **MFS UI** names, logos (including `public/logo.svg`), and brand assets are proprietary to **MFS Atomic Technology** (not open-source) and are **excluded from the MIT License** (all rights reserved). They may not be used to imply endorsement or as your own brand without prior written permission.

@@ -628,7 +628,7 @@ const sampleCropperImage =
       <circle cx="480" cy="120" r="56" fill="#fde047" opacity="0.92"/>
       <path d="M0 360 L180 210 L320 310 L460 185 L640 330 L640 480 L0 480 Z" fill="#1e293b" opacity="0.72"/>
       <path d="M0 400 L140 295 L290 385 L430 270 L640 400 L640 480 L0 480 Z" fill="#0f172a" opacity="0.88"/>
-      <text x="36" y="64" fill="#ffffff" font-family="system-ui, sans-serif" font-size="28" font-weight="700">MFS Theme Sample</text>
+      <text x="36" y="64" fill="#ffffff" font-family="system-ui, sans-serif" font-size="28" font-weight="700">MFS UI Sample</text>
     </svg>`
   )
 
