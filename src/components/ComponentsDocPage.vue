@@ -406,31 +406,31 @@ const emit = defineEmits<{
 const searchQuery = ref('')
 
 const UtilitiesDemo = defineAsyncComponent(() => import('./demos/UtilitiesDemo.vue'))
-const Fase1Demos = defineAsyncComponent(() => import('./demos/Fase1Demos.vue'))
-const Fase2Demos = defineAsyncComponent(() => import('./demos/Fase2Demos.vue'))
-const Fase3Demos = defineAsyncComponent(() => import('./demos/Fase3Demos.vue'))
-const Fase4Demos = defineAsyncComponent(() => import('./demos/Fase4Demos.vue'))
-const Fase5Demos = defineAsyncComponent(() => import('./demos/Fase5Demos.vue'))
-const Fase6Demos = defineAsyncComponent(() => import('./demos/Fase6Demos.vue'))
-const Fase7Demos = defineAsyncComponent(() => import('./demos/Fase7Demos.vue'))
-const Fase8Demos = defineAsyncComponent(() => import('./demos/Fase8Demos.vue'))
-const Fase9Demos = defineAsyncComponent(() => import('./demos/Fase9Demos.vue'))
-const Fase10Demos = defineAsyncComponent(() => import('./demos/Fase10Demos.vue'))
-const Fase11Demos = defineAsyncComponent(() => import('./demos/Fase11Demos.vue'))
+const CoreDemos = defineAsyncComponent(() => import('./demos/CoreDemos.vue'))
+const FormDemos = defineAsyncComponent(() => import('./demos/FormDemos.vue'))
+const DisplayDemos = defineAsyncComponent(() => import('./demos/DisplayDemos.vue'))
+const OverlayDemos = defineAsyncComponent(() => import('./demos/OverlayDemos.vue'))
+const NavigationDemos = defineAsyncComponent(() => import('./demos/NavigationDemos.vue'))
+const AdvancedDataDemos = defineAsyncComponent(() => import('./demos/AdvancedDataDemos.vue'))
+const AdvancedInputDemos = defineAsyncComponent(() => import('./demos/AdvancedInputDemos.vue'))
+const PanelLayoutDemos = defineAsyncComponent(() => import('./demos/PanelLayoutDemos.vue'))
+const MenuDemos = defineAsyncComponent(() => import('./demos/MenuDemos.vue'))
+const MediaDemos = defineAsyncComponent(() => import('./demos/MediaDemos.vue'))
+const ChartDirectivesDemos = defineAsyncComponent(() => import('./demos/ChartDirectivesDemos.vue'))
 
 const phaseDemoMap = {
   0: UtilitiesDemo,
-  1: Fase1Demos,
-  2: Fase2Demos,
-  3: Fase3Demos,
-  4: Fase4Demos,
-  5: Fase5Demos,
-  6: Fase6Demos,
-  7: Fase7Demos,
-  8: Fase8Demos,
-  9: Fase9Demos,
-  10: Fase10Demos,
-  11: Fase11Demos
+  1: CoreDemos,
+  2: FormDemos,
+  3: DisplayDemos,
+  4: OverlayDemos,
+  5: NavigationDemos,
+  6: AdvancedDataDemos,
+  7: AdvancedInputDemos,
+  8: PanelLayoutDemos,
+  9: MenuDemos,
+  10: MediaDemos,
+  11: ChartDirectivesDemos
 } as const
 
 const activeItem = computed(() => getComponentBySlug(props.activeSlug))
