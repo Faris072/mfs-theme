@@ -466,7 +466,7 @@
           </Button>
         </div>
         <div class="mfs-overflow-hidden mfs-rounded-md">
-          <PageTransition name="fade">
+          <PageTransition variant="fade">
             <div :key="ptFadeView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
               <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
                 View {{ ptFadeView }} — Fade
@@ -492,7 +492,7 @@
           </Button>
         </div>
         <div class="mfs-overflow-hidden mfs-rounded-md">
-          <PageTransition name="slide-left">
+          <PageTransition variant="slide-left">
             <div :key="ptSlideLeftView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
               <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
                 View {{ ptSlideLeftView }} — Slide Left
@@ -518,7 +518,7 @@
           </Button>
         </div>
         <div class="mfs-overflow-hidden mfs-rounded-md">
-          <PageTransition name="scale">
+          <PageTransition variant="scale">
             <div :key="ptScaleView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
               <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
                 View {{ ptScaleView }} — Scale
@@ -1293,7 +1293,7 @@ const activeView = ref<'A' | 'B'>('A')
     Switch View
   </Button>
 
-  <PageTransition${preset ? ` name="${preset}"` : ''}>
+  <PageTransition${preset ? ` variant="${preset}"` : ''}>
     <div :key="activeView">View {{ activeView }}</div>
   </PageTransition>
 </template>`

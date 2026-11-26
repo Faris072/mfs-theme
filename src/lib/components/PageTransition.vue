@@ -1,6 +1,6 @@
 <template>
   <Transition
-    :name="`mfs-pt-${variant}`"
+    :name="`mfs-pt-${resolvedVariant}`"
     :mode="mode === 'default' ? undefined : mode"
     :style="{ '--mfs-pt-duration': `${duration}ms` }"
   >
@@ -9,21 +9,25 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+
 export type PageTransitionVariant = 'slide-up' | 'fade' | 'slide-left' | 'scale'
 export type PageTransitionMode = 'out-in' | 'in-out' | 'default'
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     variant?: PageTransitionVariant
+    name?: PageTransitionVariant
     mode?: PageTransitionMode
     duration?: number
   }>(),
   {
-    variant: 'slide-up',
     mode: 'out-in',
     duration: 220
   }
 )
+
+const resolvedVariant = computed(() => props.variant ?? props.name ?? 'slide-up')
 </script>
 
 <style>
