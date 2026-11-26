@@ -6,10 +6,10 @@
         <!-- Brand -->
         <router-link to="/" class="navbar__brand mfs-flex mfs-items-center mfs-gap-3">
           <div class="brand-logo mfs-surface-subtle mfs-rounded-md mfs-shadow mfs-flex mfs-items-center mfs-justify-center">
-            <img src="/logo.svg" alt="MFS Theme" class="brand-icon" />
+            <img src="/logo.svg" alt="MFS UI" class="brand-icon" />
           </div>
           <div>
-            <span class="brand-title mfs-font-bold mfs-text">MFS Theme</span>
+            <span class="brand-title mfs-font-bold mfs-text">MFS UI</span>
             <span class="brand-badge mfs-text-xs mfs-font-medium mfs-text-muted">Vue 3 UI Library</span>
           </div>
         </router-link>
@@ -184,7 +184,7 @@
     <!-- Footer -->
     <footer class="footer mfs-surface mfs-border-none mfs-border-t mfs-py-8 mfs-px-6 mfs-text-center">
       <div class="mfs-container mfs-text mfs-text-sm">
-        <p>MFS Theme, adaptive multi-theme Vue 3 component library.</p>
+        <p>MFS UI, adaptive multi-theme Vue 3 component library.</p>
         <p class="mfs-text-xs mfs-text-muted mfs-mt-1">
           Claymorphism, Glassmorphism, and Neumorphism depth models.
         </p>
