@@ -126,6 +126,10 @@ import Mentions, { type MentionOption } from './components/Mentions.vue'
 import SignaturePad, { type SignatureExportPayload } from './components/SignaturePad.vue'
 import Form, { type MfsFormSubmitPayload, type MfsFormContext } from './components/Form.vue'
 import FormField from './components/FormField.vue'
+import PageTransition, {
+  type PageTransitionVariant,
+  type PageTransitionMode
+} from './components/PageTransition.vue'
 
 import { useTheme, type ThemeType, THEME_OPTIONS } from './composables/useTheme'
 import { useToast } from './composables/useToast'
@@ -133,6 +137,12 @@ import { useConfirm } from './composables/useConfirm'
 import { useDialog } from './composables/useDialog'
 import { useStyle } from './composables/useStyle'
 import { useDragDrop, type DragPayload } from './composables/useDragDrop'
+import {
+  usePageProgress,
+  attachRouterProgress,
+  type PageProgressRouter,
+  type PageProgressOptions
+} from './composables/usePageProgress'
 import { vRipple } from './directives/ripple'
 import { vTooltip } from './directives/tooltip'
 import { vFocusTrap } from './directives/focusTrap'
@@ -283,6 +293,9 @@ export {
   type MfsFormSubmitPayload,
   type MfsFormContext,
   FormField,
+  PageTransition,
+  type PageTransitionVariant,
+  type PageTransitionMode,
   useTheme,
   useToast,
   useConfirm,
@@ -290,6 +303,10 @@ export {
   useStyle,
   useDragDrop,
   type DragPayload,
+  usePageProgress,
+  attachRouterProgress,
+  type PageProgressRouter,
+  type PageProgressOptions,
   vRipple,
   vTooltip,
   vTooltip as TooltipDirective,
@@ -430,7 +447,8 @@ const components: Record<string, Component> = {
   Mentions,
   SignaturePad,
   Form,
-  FormField
+  FormField,
+  PageTransition
 }
 
 const directives: Record<string, Directive> = {
@@ -445,6 +463,8 @@ const directives: Record<string, Directive> = {
 
 export interface ThemePluginOptions {
   defaultTheme?: ThemeType
+  router?: PageProgressRouter
+  pageProgress?: PageProgressOptions | false
 }
 
 const ThemePlugin: Plugin = {
@@ -460,6 +480,13 @@ const ThemePlugin: Plugin = {
     if (typeof window !== 'undefined') {
       const { initTheme } = useTheme()
       initTheme(options.defaultTheme || 'clay')
+
+      if (options.router && options.pageProgress !== false) {
+        attachRouterProgress(
+          options.router,
+          typeof options.pageProgress === 'object' ? options.pageProgress : undefined
+        )
+      }
     }
   }
 }

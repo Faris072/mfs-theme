@@ -1053,6 +1053,24 @@ export const COMPONENT_NAV: ComponentNavItem[] = [
     status: 'Ready',
     importSymbol: 'vKeyFilter',
     summary: 'Directive restricting keyboard and paste input to preset character classes or custom RegExp.'
+  },
+  {
+    slug: 'page-transition',
+    name: 'PageTransition',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    status: 'Ready',
+    importSymbol: 'PageTransition',
+    summary: 'Theme-aware route and view transition wrapper supporting slide-up, fade, slide-left, and scale presets.'
+  },
+  {
+    slug: 'use-page-progress',
+    name: 'usePageProgress',
+    category: 'Overlays, Media & Directives',
+    phase: 11,
+    status: 'Ready',
+    importSymbol: 'usePageProgress',
+    summary: 'Top-edge NProgress-style route and async loading bar composable with automatic Vue Router integration.'
   }
 ]
 

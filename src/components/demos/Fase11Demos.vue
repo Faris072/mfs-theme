@@ -423,12 +423,145 @@
       </div>
     </div>
   </ComponentPreview>
+
+  <!-- PageTransition -->
+  <div v-else-if="activeSlug === 'page-transition'" class="mfs-stack mfs-gap-6">
+    <ComponentPreview
+      title="Slide Up (Default)"
+      description="Smooth vertical slide-and-fade route transition using the default 'slide-up' preset."
+      :code="pageTransitionSlideUpCode"
+      :code-tabs="pageTransitionCodeTabs"
+      :api="pageTransitionApi"
+    >
+      <div class="mfs-stack mfs-w-full mfs-gap-3">
+        <div class="mfs-row mfs-gap-2">
+          <Button size="sm" variant="primary" @click="ptSlideUpView = ptSlideUpView === 'A' ? 'B' : 'A'">
+            Switch View ({{ ptSlideUpView }})
+          </Button>
+        </div>
+        <div class="mfs-overflow-hidden mfs-rounded-md">
+          <PageTransition>
+            <div :key="ptSlideUpView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
+              <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
+                View {{ ptSlideUpView }} — Slide Up
+              </h4>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Content enters upward and fades out smoothly on route or state change.
+              </p>
+            </div>
+          </PageTransition>
+        </div>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Fade"
+      description="Subtle opacity cross-fade transition for minimal layout shifts."
+      :code="pageTransitionFadeCode"
+    >
+      <div class="mfs-stack mfs-w-full mfs-gap-3">
+        <div class="mfs-row mfs-gap-2">
+          <Button size="sm" variant="primary" @click="ptFadeView = ptFadeView === 'A' ? 'B' : 'A'">
+            Switch View ({{ ptFadeView }})
+          </Button>
+        </div>
+        <div class="mfs-overflow-hidden mfs-rounded-md">
+          <PageTransition name="fade">
+            <div :key="ptFadeView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
+              <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
+                View {{ ptFadeView }} — Fade
+              </h4>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Pure opacity transition ideal for dashboards and detail views.
+              </p>
+            </div>
+          </PageTransition>
+        </div>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Slide Left"
+      description="Directional horizontal slide transition for step-by-step or drill-down navigation."
+      :code="pageTransitionSlideLeftCode"
+    >
+      <div class="mfs-stack mfs-w-full mfs-gap-3">
+        <div class="mfs-row mfs-gap-2">
+          <Button size="sm" variant="primary" @click="ptSlideLeftView = ptSlideLeftView === 'A' ? 'B' : 'A'">
+            Switch View ({{ ptSlideLeftView }})
+          </Button>
+        </div>
+        <div class="mfs-overflow-hidden mfs-rounded-md">
+          <PageTransition name="slide-left">
+            <div :key="ptSlideLeftView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
+              <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
+                View {{ ptSlideLeftView }} — Slide Left
+              </h4>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Slides horizontally along the X axis while respecting overflow bounds.
+              </p>
+            </div>
+          </PageTransition>
+        </div>
+      </div>
+    </ComponentPreview>
+
+    <ComponentPreview
+      title="Scale"
+      description="Zoom-and-fade transition for focused modal-like page switches."
+      :code="pageTransitionScaleCode"
+    >
+      <div class="mfs-stack mfs-w-full mfs-gap-3">
+        <div class="mfs-row mfs-gap-2">
+          <Button size="sm" variant="primary" @click="ptScaleView = ptScaleView === 'A' ? 'B' : 'A'">
+            Switch View ({{ ptScaleView }})
+          </Button>
+        </div>
+        <div class="mfs-overflow-hidden mfs-rounded-md">
+          <PageTransition name="scale">
+            <div :key="ptScaleView" class="mfs-p-4 mfs-rounded-md mfs-surface-subtle">
+              <h4 class="mfs-mt-0 mfs-mb-1 mfs-text-base mfs-font-bold mfs-text">
+                View {{ ptScaleView }} — Scale
+              </h4>
+              <p class="mfs-m-0 mfs-text-sm mfs-text-muted">
+                Scales gently into view for card or workspace transitions.
+              </p>
+            </div>
+          </PageTransition>
+        </div>
+      </div>
+    </ComponentPreview>
+  </div>
+
+  <!-- usePageProgress -->
+  <ComponentPreview
+    v-else-if="activeSlug === 'use-page-progress'"
+    title="usePageProgress"
+    description="Top-edge progress bar composable with manual start/set/done controls and one-line Vue Router integration."
+    :code="usePageProgressCode"
+    :code-tabs="usePageProgressCodeTabs"
+    :api="usePageProgressApi"
+  >
+    <div class="mfs-stack mfs-w-full mfs-gap-3">
+      <div class="mfs-row mfs-items-center mfs-flex-wrap mfs-gap-2">
+        <Button size="sm" variant="primary" @click="pageProgress.start()">start()</Button>
+        <Button size="sm" variant="secondary" @click="pageProgress.set(0.5)">set(0.5)</Button>
+        <Button size="sm" variant="surface" @click="pageProgress.done()">done()</Button>
+        <Badge :variant="pageProgress.isLoading.value ? 'primary' : 'surface'" size="sm">
+          isLoading: {{ pageProgress.isLoading.value }}
+        </Badge>
+      </div>
+      <p class="mfs-m-0 mfs-text-sm mfs-text-muted demo-status">
+        Trigger <strong>start()</strong> or <strong>set(0.5)</strong> to preview the top viewport progress bar, then <strong>done()</strong> to complete it.
+      </p>
+    </div>
+  </ComponentPreview>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import ComponentPreview from '../ComponentPreview.vue'
-import { Button } from '../../lib'
+import { Badge, Button } from '../../lib'
 import ConfirmPopup from '../../lib/components/ConfirmPopup.vue'
 import InlineMessage from '../../lib/components/InlineMessage.vue'
 import BlockUI from '../../lib/components/BlockUI.vue'
@@ -444,6 +577,8 @@ import { vTooltip } from '../../lib/directives/tooltip'
 import Portal from '../../lib/components/Portal.vue'
 import { vBadge } from '../../lib/directives/badgeDirective'
 import { vKeyFilter as vKeyfilter } from '../../lib/directives/keyFilter'
+import PageTransition from '../../lib/components/PageTransition.vue'
+import { usePageProgress } from '../../lib/composables/usePageProgress'
 
 defineProps<{ activeSlug: string }>()
 
@@ -1137,6 +1272,128 @@ const slugVal = ref('mfs-theme')
 const vKeyFilterApi = {
   props: [
     { name: 'v-keyfilter', type: "'int' | 'pint' | 'num' | 'pnum' | 'money' | 'hex' | 'alpha' | 'alphanum' | RegExp", default: '—', description: 'Preset character class or RegExp enforced on keypress and paste.' }
+  ]
+}
+
+/* ---------- PageTransition ---------- */
+const ptSlideUpView = ref<'A' | 'B'>('A')
+const ptFadeView = ref<'A' | 'B'>('A')
+const ptSlideLeftView = ref<'A' | 'B'>('A')
+const ptScaleView = ref<'A' | 'B'>('A')
+
+const makePageTransitionCode = (preset?: string) => `<script setup lang="ts">
+import { ref } from 'vue'
+import { Button, PageTransition } from '@mfs-atomic/ui'
+
+const activeView = ref<'A' | 'B'>('A')
+<\/script>
+
+<template>
+  <Button size="sm" @click="activeView = activeView === 'A' ? 'B' : 'A'">
+    Switch View
+  </Button>
+
+  <PageTransition${preset ? ` name="${preset}"` : ''}>
+    <div :key="activeView">View {{ activeView }}</div>
+  </PageTransition>
+</template>`
+
+const pageTransitionSlideUpCode = makePageTransitionCode()
+const pageTransitionFadeCode = makePageTransitionCode('fade')
+const pageTransitionSlideLeftCode = makePageTransitionCode('slide-left')
+const pageTransitionScaleCode = makePageTransitionCode('scale')
+
+const pageTransitionCodeTabs = [
+  {
+    label: 'Component',
+    filename: 'RouterView.vue',
+    code: `<script setup lang="ts">
+import { PageTransition } from '@mfs-atomic/ui'
+<\/script>
+
+<template>
+  <RouterView v-slot="{ Component, route }">
+    <PageTransition name="slide-up">
+      <component :is="Component" :key="route.path" />
+    </PageTransition>
+  </RouterView>
+</template>`
+  },
+  {
+    label: 'Data / TS',
+    filename: 'transitions.ts',
+    code: `export type PageTransitionPreset = 'slide-up' | 'fade' | 'slide-left' | 'scale'
+
+export const routeTransitions: Record<string, PageTransitionPreset> = {
+  '/': 'fade',
+  '/dashboard': 'slide-up',
+  '/settings': 'slide-left',
+  '/preview': 'scale'
+}`
+  },
+  {
+    label: 'Full Code',
+    filename: 'Example.vue',
+    code: pageTransitionSlideUpCode
+  }
+]
+
+const pageTransitionApi = {
+  props: [
+    { name: 'name', type: "'slide-up' | 'fade' | 'slide-left' | 'scale' | string", default: "'slide-up'", description: 'Built-in transition preset or custom CSS transition name.' },
+    { name: 'mode', type: "'out-in' | 'in-out' | 'default'", default: "'out-in'", description: 'Vue Transition timing mode between leaving and entering views.' },
+    { name: 'appear', type: 'boolean', default: 'false', description: 'Applies transition on initial mount.' }
+  ],
+  slots: [
+    { name: 'default', description: 'Route component or keyed element to animate.' }
+  ]
+}
+
+/* ---------- usePageProgress ---------- */
+const pageProgress = usePageProgress()
+
+const usePageProgressCode = `<script setup lang="ts">
+import { Badge, Button, usePageProgress } from '@mfs-atomic/ui'
+
+const { isLoading, start, set, done } = usePageProgress()
+<\/script>
+
+<template>
+  <Button size="sm" @click="start()">start()</Button>
+  <Button size="sm" @click="set(0.5)">set(0.5)</Button>
+  <Button size="sm" @click="done()">done()</Button>
+  <Badge :variant="isLoading ? 'primary' : 'surface'">
+    isLoading: {{ isLoading }}
+  </Badge>
+</template>`
+
+const usePageProgressCodeTabs = [
+  {
+    label: 'Example.vue',
+    filename: 'Example.vue',
+    code: usePageProgressCode
+  },
+  {
+    label: 'Router Setup',
+    filename: 'main.ts',
+    code: `import { createApp } from 'vue'
+import { MfsTheme } from '@mfs-atomic/ui'
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+app.use(MfsTheme, { defaultTheme: 'clay', router })
+app.mount('#app')`
+  }
+]
+
+const usePageProgressApi = {
+  props: [
+    { name: 'isLoading', type: 'Readonly<Ref<boolean>>', default: 'false', description: 'Reactive flag indicating whether progress bar is active.' },
+    { name: 'start()', type: '() => void', default: '—', description: 'Starts the top-edge progress bar and increments smoothly.' },
+    { name: 'set(value)', type: '(value: number) => void', default: '—', description: 'Sets progress to a specific ratio between 0 and 1.' },
+    { name: 'done()', type: '() => void', default: '—', description: 'Completes the bar to 100% and fades it out.' },
+    { name: 'MfsTheme ({ router })', type: 'ThemePluginOptions', default: 'undefined', description: 'Pass Vue Router instance to app.use(MfsTheme, { defaultTheme: \'clay\', router }) for automatic route progress.' }
   ]
 }
 </script>

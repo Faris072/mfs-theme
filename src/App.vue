@@ -171,7 +171,11 @@
 
     <!-- Main Content Routed View -->
     <main class="mfs-w-full mfs-flex-1">
-      <router-view />
+      <router-view v-slot="{ Component, route }">
+        <PageTransition>
+          <component :is="Component" :key="route.name === 'components' ? 'components' : route.path" />
+        </PageTransition>
+      </router-view>
     </main>
 
     <Toast />
@@ -218,7 +222,7 @@ import {
   Sunset,
   BookOpen
 } from 'lucide-vue-next'
-import { useTheme, Button, Select, Toast, ConfirmDialog, type ThemeType } from './lib'
+import { useTheme, Button, Select, Toast, ConfirmDialog, PageTransition, type ThemeType } from './lib'
 
 const route = useRoute()
 const router = useRouter()
