@@ -32,3 +32,9 @@ src/**/*.d.ts
 *.njsproj
 *.sln
 *.sw?
+
+# AI agent instruction files
+AGENTS.md
+TEAMWORK.md
+CLAUDE.md
+
