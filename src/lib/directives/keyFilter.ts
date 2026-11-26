@@ -22,8 +22,15 @@ const PRESET_RULES: Record<KeyFilterPreset, PresetRule> = {
 
 interface KeyFilterState {
   filter: KeyFilterBindingValue
+  target: HTMLElement
+  isComposing: boolean
+  isDispatching: boolean
   onKeyPress: (e: KeyboardEvent) => void
+  onBeforeInput: (e: InputEvent) => void
   onPaste: (e: ClipboardEvent) => void
+  onCompositionStart: () => void
+  onCompositionEnd: () => void
+  onInput: () => void
 }
 
 interface KeyFilterElement extends HTMLElement {
@@ -58,10 +65,83 @@ function isPasteAllowed(text: string, filter: KeyFilterBindingValue): boolean {
   return preset ? preset.pastePattern.test(text) : true
 }
 
+function resolveTargetElement(el: HTMLElement): HTMLElement {
+  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+    return el
+  }
+  return el.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea') ?? el
+}
+
+function applyInputMode(target: HTMLElement, filter: KeyFilterBindingValue): void {
+  if (filter === 'int' && target instanceof HTMLInputElement && !target.hasAttribute('inputmode')) {
+    target.setAttribute('inputmode', 'numeric')
+  }
+}
+
+function sanitizeValue(value: string, filter: KeyFilterBindingValue): string {
+  if (!filter || value === '') return value
+
+  if (filter === 'int' || filter === 'num' || filter === 'pnum') {
+    let out = ''
+    let hasDot = false
+    const allowSign = filter !== 'pnum'
+    const allowDot = filter !== 'int'
+
+    for (const ch of value) {
+      if (ch >= '0' && ch <= '9') {
+        out += ch
+      } else if (allowSign && ch === '-' && out.length === 0) {
+        out += ch
+      } else if (allowDot && ch === '.' && !hasDot) {
+        out += ch
+        hasDot = true
+      }
+    }
+    return out
+  }
+
+  return [...value].filter((ch) => isCharAllowed(ch, filter)).join('')
+}
+
+function sanitizeAndSync(target: HTMLElement, state: KeyFilterState): void {
+  if (!(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement)) return
+
+  const raw = target.value
+  const sanitized = sanitizeValue(raw, state.filter)
+  if (sanitized === raw) return
+
+  const selStart = target.selectionStart
+  const newPos = selStart !== null ? sanitizeValue(raw.slice(0, selStart), state.filter).length : null
+
+  target.value = sanitized
+
+  if (newPos !== null && document.activeElement === target) {
+    try {
+      const clamped = Math.min(newPos, sanitized.length)
+      target.setSelectionRange(clamped, clamped)
+    } catch {
+      // Some input types do not support setSelectionRange
+    }
+  }
+
+  state.isDispatching = true
+  try {
+    target.dispatchEvent(new Event('input', { bubbles: true }))
+  } finally {
+    state.isDispatching = false
+  }
+}
+
 export const vKeyFilter: Directive<KeyFilterElement, KeyFilterBindingValue> = {
   mounted(el, binding: DirectiveBinding<KeyFilterBindingValue>) {
+    const target = resolveTargetElement(el)
+    applyInputMode(target, binding.value)
+
     const state: KeyFilterState = {
       filter: binding.value,
+      target,
+      isComposing: false,
+      isDispatching: false,
       onKeyPress(e: KeyboardEvent) {
         if (e.ctrlKey || e.metaKey || e.altKey || e.key.length !== 1) {
           return
@@ -70,28 +150,64 @@ export const vKeyFilter: Directive<KeyFilterElement, KeyFilterBindingValue> = {
           e.preventDefault()
         }
       },
+      onBeforeInput(e: InputEvent) {
+        if (state.isComposing || e.isComposing || !e.data || e.inputType.startsWith('delete')) {
+          return
+        }
+        if (e.inputType === 'insertFromPaste') {
+          if (!isPasteAllowed(e.data, state.filter)) {
+            e.preventDefault()
+          }
+          return
+        }
+        if (![...e.data].every((ch) => isCharAllowed(ch, state.filter))) {
+          e.preventDefault()
+        }
+      },
       onPaste(e: ClipboardEvent) {
         const pasted = e.clipboardData?.getData('text') ?? ''
         if (!isPasteAllowed(pasted, state.filter)) {
           e.preventDefault()
         }
+      },
+      onCompositionStart() {
+        state.isComposing = true
+      },
+      onCompositionEnd() {
+        state.isComposing = false
+        sanitizeAndSync(target, state)
+      },
+      onInput() {
+        if (state.isDispatching) return
+        sanitizeAndSync(target, state)
       }
     }
 
     el.__mfsKeyFilterState = state
-    el.addEventListener('keypress', state.onKeyPress)
-    el.addEventListener('paste', state.onPaste)
+    target.addEventListener('keypress', state.onKeyPress)
+    target.addEventListener('beforeinput', state.onBeforeInput as EventListener)
+    target.addEventListener('paste', state.onPaste)
+    target.addEventListener('compositionstart', state.onCompositionStart)
+    target.addEventListener('compositionend', state.onCompositionEnd)
+    target.addEventListener('input', state.onInput)
   },
   updated(el, binding: DirectiveBinding<KeyFilterBindingValue>) {
-    if (el.__mfsKeyFilterState) {
-      el.__mfsKeyFilterState.filter = binding.value
+    const state = el.__mfsKeyFilterState
+    if (state) {
+      state.filter = binding.value
+      applyInputMode(state.target, binding.value)
     }
   },
   unmounted(el) {
     const state = el.__mfsKeyFilterState
     if (!state) return
-    el.removeEventListener('keypress', state.onKeyPress)
-    el.removeEventListener('paste', state.onPaste)
+    const { target } = state
+    target.removeEventListener('keypress', state.onKeyPress)
+    target.removeEventListener('beforeinput', state.onBeforeInput as EventListener)
+    target.removeEventListener('paste', state.onPaste)
+    target.removeEventListener('compositionstart', state.onCompositionStart)
+    target.removeEventListener('compositionend', state.onCompositionEnd)
+    target.removeEventListener('input', state.onInput)
     delete el.__mfsKeyFilterState
   }
 }
