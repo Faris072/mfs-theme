@@ -1,0 +1,93 @@
+/* 3D Glassmorphism Theme: Glassmorphism base backdrop with 3D extruded glass slabs & iridescent edges */
+.theme-3d-glassmorphism,
+[data-theme="3d-glassmorphism"] {
+  --theme-name: '3D Glassmorphism';
+  --bg: #0f172a;
+  --bg-gradient: radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 60%, #020617 100%);
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+
+  /* Surfaces */
+  --surface: rgba(255, 255, 255, 0.10);
+  --surface-subtle: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.28);
+  --border-width: 1px;
+  --radius: 20px;
+  --radius-pill: 9999px;
+  --backdrop-blur: blur(24px) saturate(165%);
+
+  /* Colors */
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --primary-text: #ffffff;
+  --secondary: #a855f7;
+  --secondary-text: #ffffff;
+  --success: #34d399;
+  --success-text: #042f2e;
+  --warning: #fbbf24;
+  --warning-text: #1c1917;
+  --danger: #fb7185;
+  --danger-text: #1c1917;
+  --tooltip-bg: rgba(11, 16, 32, 0.94);
+  --tooltip-text: #f8fafc;
+  --tooltip-border: rgba(255, 255, 255, 0.24);
+
+  /* Typography & Layout */
+  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+  --grid-gap: 16px;
+
+  /* 3D Extruded Glass Slab & Iridescent Rim Shadows */
+  --glow: 0 0 24px rgba(56, 189, 248, 0.26);
+  --bevel-light: rgba(255, 255, 255, 0.72);
+  --bevel-dark: rgba(2, 6, 23, 0.55);
+  --shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.72),
+    inset 1.5px 0 0 rgba(56, 189, 248, 0.42),
+    inset 0 0 20px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 10px rgba(168, 85, 247, 0.28),
+    0 4px 0 rgba(148, 163, 184, 0.22),
+    0 5px 0 rgba(56, 189, 248, 0.16),
+    2px 5px 0 rgba(168, 85, 247, 0.16),
+    0 20px 38px rgba(0, 0, 0, 0.48);
+
+  --clay-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.72),
+    inset 1.5px 0 0 rgba(56, 189, 248, 0.42),
+    inset 0 0 20px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 10px rgba(168, 85, 247, 0.28),
+    0 4px 0 rgba(148, 163, 184, 0.22),
+    0 5px 0 rgba(56, 189, 248, 0.16),
+    2px 5px 0 rgba(168, 85, 247, 0.16),
+    0 20px 38px rgba(0, 0, 0, 0.48);
+
+  --clay-shadow-hover:
+    inset 0 2px 0 rgba(255, 255, 255, 0.88),
+    inset 2px 0 0 rgba(56, 189, 248, 0.58),
+    inset 0 0 24px rgba(255, 255, 255, 0.18),
+    inset -2px -2px 12px rgba(168, 85, 247, 0.38),
+    0 6px 0 rgba(148, 163, 184, 0.26),
+    0 7px 0 rgba(56, 189, 248, 0.24),
+    2px 7px 0 rgba(168, 85, 247, 0.22),
+    0 24px 44px rgba(0, 0, 0, 0.54);
+
+  --clay-shadow-active:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 0 14px rgba(255, 255, 255, 0.10),
+    0 1px 0 rgba(148, 163, 184, 0.22),
+    0 2px 0 rgba(56, 189, 248, 0.16),
+    0 8px 18px rgba(0, 0, 0, 0.42);
+
+  --card-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.72),
+    inset 1.5px 0 0 rgba(56, 189, 248, 0.42),
+    inset 0 0 20px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 10px rgba(168, 85, 247, 0.28),
+    0 4px 0 rgba(148, 163, 184, 0.22),
+    0 5px 0 rgba(56, 189, 248, 0.16),
+    2px 5px 0 rgba(168, 85, 247, 0.16),
+    0 20px 38px rgba(0, 0, 0, 0.48);
+
+  --input-shadow:
+    inset 0 2px 5px rgba(2, 6, 23, 0.48),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.22);
+}

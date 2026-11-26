@@ -1,5 +1,6 @@
 <template>
   <div
+    v-liquid-glass
     :class="[
       'card',
       'mfs-card',
@@ -29,6 +30,8 @@
 </template>
 
 <script setup lang="ts">
+import { vLiquidGlass } from '../composables/useLiquidGlass'
+
 withDefaults(
   defineProps<{
     title?: string

@@ -1,26 +1,26 @@
-/* Liquid Glass Theme: Optical refractive crystal glass over dramatic cobalt/coral silk backdrop */
+/* Liquid Glass Theme: Water-droplet refractive crystal glass over rich cobalt/coral silk backdrop */
 .theme-liquid-glass,
 [data-theme="liquid-glass"] {
   --theme-name: 'Liquid Glass';
   --bg: #0b1020;
   --bg-gradient:
-    radial-gradient(at 15% 20%, rgba(37, 99, 235, 0.78) 0px, transparent 52%),
-    radial-gradient(at 82% 24%, rgba(234, 88, 12, 0.68) 0px, transparent 48%),
-    radial-gradient(at 52% 48%, rgba(254, 243, 199, 0.22) 0px, transparent 40%),
-    radial-gradient(at 78% 82%, rgba(29, 78, 216, 0.72) 0px, transparent 54%),
-    radial-gradient(at 18% 84%, rgba(249, 115, 22, 0.56) 0px, transparent 50%),
-    linear-gradient(140deg, #0b1020 0%, #131c38 50%, #1f1424 100%);
+    radial-gradient(at 15% 18%, rgba(56, 189, 248, 0.62) 0px, transparent 54%),
+    radial-gradient(at 84% 22%, rgba(249, 115, 22, 0.58) 0px, transparent 52%),
+    radial-gradient(at 50% 48%, rgba(37, 99, 235, 0.48) 0px, transparent 56%),
+    radial-gradient(at 78% 82%, rgba(59, 130, 246, 0.66) 0px, transparent 56%),
+    radial-gradient(at 18% 84%, rgba(251, 146, 60, 0.52) 0px, transparent 52%),
+    linear-gradient(140deg, #0d1633 0%, #15244d 50%, #26162e 100%);
   --text: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.78);
+  --text-muted: rgba(255, 255, 255, 0.82);
 
   /* Surfaces */
-  --surface: rgba(255, 255, 255, 0.09);
-  --surface-subtle: rgba(255, 255, 255, 0.05);
-  --border: rgba(255, 255, 255, 0.42);
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-subtle: rgba(255, 255, 255, 0.02);
+  --border: transparent;
   --border-width: 1px;
   --radius: 24px;
   --radius-pill: 9999px;
-  --backdrop-blur: blur(10px) saturate(175%) contrast(1.06);
+  --backdrop-blur: blur(16px) saturate(180%);
 
   /* Colors */
   --primary: #2563eb;
@@ -31,6 +31,7 @@
   --success: #34d399;
   --success-text: #042f2e;
   --warning: #fbbf24;
+  --warning-text: #1c1917;
   --danger: #fb7185;
   --danger-text: #1c1917;
   --tooltip-bg: rgba(11, 16, 32, 0.94);
@@ -41,44 +42,40 @@
   --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
   --grid-gap: 16px;
 
-  /* Optical Refractive Rim & Depth Shadows */
-  --glow: 0 0 24px rgba(255, 255, 255, 0.18);
+  /* Directional Specular Rim & Caustic Reflection Shadows */
+  --glow: none;
   --bevel-light: rgba(255, 255, 255, 0.85);
-  --bevel-dark: rgba(0, 0, 0, 0.28);
+  --bevel-dark: rgba(0, 0, 0, 0.30);
   --shadow:
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
-    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
-    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
-    0 10px 24px rgba(0, 0, 0, 0.28);
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.82),
+    inset -1.5px -1.5px 2px rgba(125, 211, 252, 0.28),
+    inset 0 -1px 2px rgba(253, 186, 116, 0.22),
+    0 12px 28px -6px rgba(0, 0, 0, 0.36);
 
   --clay-shadow:
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
-    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
-    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
-    0 10px 24px rgba(0, 0, 0, 0.28);
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.82),
+    inset -1.5px -1.5px 2px rgba(125, 211, 252, 0.28),
+    inset 0 -1px 2px rgba(253, 186, 116, 0.22),
+    0 12px 28px -6px rgba(0, 0, 0, 0.36);
 
   --clay-shadow-hover:
-    inset 0 2px 1.5px rgba(255, 255, 255, 0.95),
-    inset 1.5px 0 2px rgba(255, 255, 255, 0.55),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.25),
-    inset -1.5px 0 3px rgba(255, 255, 255, 0.3),
-    0 12px 26px rgba(0, 0, 0, 0.32);
+    inset 2px 2px 1.5px rgba(255, 255, 255, 0.92),
+    inset -2px -2px 2.5px rgba(125, 211, 252, 0.38),
+    inset 0 -1.5px 2.5px rgba(253, 186, 116, 0.30),
+    0 16px 34px -6px rgba(0, 0, 0, 0.42);
 
   --clay-shadow-active:
-    inset 0 2px 6px rgba(0, 0, 0, 0.35),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.45),
-    0 6px 16px rgba(0, 0, 0, 0.32);
+    inset 0 2px 5px rgba(0, 0, 0, 0.35),
+    inset -1px -1px 1.5px rgba(255, 255, 255, 0.42),
+    0 6px 14px -2px rgba(0, 0, 0, 0.30);
 
   --card-shadow:
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.85),
-    inset 1.5px 0 2px rgba(255, 255, 255, 0.45),
-    inset 0 -2px 4px rgba(0, 0, 0, 0.28),
-    inset -1.5px 0 3px rgba(255, 255, 255, 0.22),
-    0 10px 24px rgba(0, 0, 0, 0.28);
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.82),
+    inset -1.5px -1.5px 2px rgba(125, 211, 252, 0.28),
+    inset 0 -1px 2px rgba(253, 186, 116, 0.22),
+    0 12px 28px -6px rgba(0, 0, 0, 0.36);
 
   --input-shadow:
-    inset 0 2px 6px rgba(0, 0, 0, 0.32),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.35);
+    inset 0 1.5px 4px rgba(0, 0, 0, 0.32),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.36);
 }

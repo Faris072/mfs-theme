@@ -21,6 +21,7 @@ export type ThemeType =
   | 'aurora-gradient'
   | 'vaporwave'
   | 'manga'
+  | '3d-glassmorphism'
 
 export interface ThemeOption {
   id: ThemeType
@@ -170,6 +171,13 @@ export const THEME_OPTIONS: ThemeOption[] = [
     description: 'High-contrast black and white ink panels with halftone depth and crimson accents.',
     icon: 'BookOpen',
     previewBg: 'linear-gradient(135deg, #ffffff 0%, #f3f4f6 70%, #dc2626 100%)'
+  },
+  {
+    id: '3d-glassmorphism',
+    name: '3D Glassmorphism',
+    description: '3D extruded glass slabs with iridescent edges and interactive depth over Glassmorphism.',
+    icon: 'Box',
+    previewBg: 'radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 60%, #020617 100%)'
   }
 ]
 

@@ -1,10 +1,10 @@
 # MFS Theme
 
-Adaptive multi-theme Vue 3 UI component library with runtime theme switching, 20 built-in visual themes, 91+ components, and zero runtime dependencies.
+Adaptive multi-theme Vue 3 UI component library with runtime theme switching, 21 built-in visual themes, 91+ components, and zero runtime dependencies.
 
 ## Features
 
-- **20 Built-in Themes**: Switch between 20 distinct design systems at runtime (`clay`, `glass`, `neo`, `cyberpunk`, `liquid-glass`, and more).
+- **21 Built-in Themes**: Switch between 21 distinct design systems at runtime (`clay`, `glass`, `neo`, `cyberpunk`, `liquid-glass`, `3d-glassmorphism`, and more).
 - **91+ Vue 3 Components**: Comprehensive component suite covering forms, data display, overlays, navigation, menus, feedback, and charts—plus directives (`v-ripple`, `v-tooltip`, `v-focustrap`, `v-animateonscroll`, `v-styleclass`) and composables (`useTheme`, `useToast`, `useConfirm`).
 - **206 `.mfs-*` Utility Classes**: Theme-aware CSS utility classes for layout, surfaces, elevation, typography, and spacing.
 - **TypeScript Ready**: Full TypeScript declarations (`dist/index.d.ts`) bundled out of the box.
@@ -172,11 +172,11 @@ import { vAnimateOnScroll } from '@mfs-atomic/ui'
 
 ## Presets
 
-Looking for ready-made pages, dashboards, and UI blocks built with `@mfs-atomic/ui`? Explore **[MFS Presets](https://preset-ui.mfstechnology.co.id)** for copy-and-paste templates that adapt automatically to all 20 built-in themes.
+Looking for ready-made pages, dashboards, and UI blocks built with `@mfs-atomic/ui`? Explore **[MFS Presets](https://preset-ui.mfstechnology.co.id)** for copy-and-paste templates that adapt automatically to all 21 built-in themes.
 
 ## Built-in Themes
 
-All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
+All 21 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
 
 | Theme ID | Description |
 | --- | --- |
@@ -200,6 +200,7 @@ All 20 theme IDs supported by `ThemePlugin` (`defaultTheme`) and `setTheme(id)`:
 | `aurora-gradient` | Aurora Gradient — Luminous ambient meshes and soft glows |
 | `vaporwave` | Vaporwave — Pastel synth gradients and retro-futuristic contrast |
 | `manga` | Manga — High-contrast ink panels with halftone depth |
+| `3d-glassmorphism` | 3D Glassmorphism — Cosmic dark glass with 3D iridescent rim bevels |
 
 ## License & Trademarks
 

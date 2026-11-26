@@ -1,5 +1,6 @@
 <template>
   <button
+    v-liquid-glass
     :class="[
       'btn',
       `btn--${variant}`,
@@ -33,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+import { vLiquidGlass } from '../composables/useLiquidGlass'
+
 withDefaults(
   defineProps<{
     variant?: 'primary' | 'secondary' | 'surface' | 'success' | 'warning' | 'danger'

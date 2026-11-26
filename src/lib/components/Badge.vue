@@ -1,5 +1,6 @@
 <template>
   <span
+    v-liquid-glass
     :class="[
       'badge',
       `badge--${variant}`,
@@ -14,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { vLiquidGlass } from '../composables/useLiquidGlass'
+
 withDefaults(
   defineProps<{
     variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'surface'

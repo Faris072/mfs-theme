@@ -143,6 +143,11 @@ import {
   type PageProgressRouter,
   type PageProgressOptions
 } from './composables/usePageProgress'
+import {
+  useLiquidGlass,
+  vLiquidGlass,
+  type LiquidGlassOptions
+} from './composables/useLiquidGlass'
 import { vRipple } from './directives/ripple'
 import { vTooltip } from './directives/tooltip'
 import { vFocusTrap } from './directives/focusTrap'
@@ -307,6 +312,9 @@ export {
   attachRouterProgress,
   type PageProgressRouter,
   type PageProgressOptions,
+  useLiquidGlass,
+  vLiquidGlass,
+  type LiquidGlassOptions,
   vRipple,
   vTooltip,
   vTooltip as TooltipDirective,
@@ -458,7 +466,8 @@ const directives: Record<string, Directive> = {
   animateonscroll: vAnimateOnScroll,
   styleclass: vStyleClass,
   badge: vBadge,
-  keyfilter: vKeyFilter
+  keyfilter: vKeyFilter,
+  'liquid-glass': vLiquidGlass
 }
 
 export interface ThemePluginOptions {

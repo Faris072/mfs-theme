@@ -3,6 +3,7 @@
     <Transition name="modal-fade">
       <div v-if="modelValue" class="modal-backdrop mfs-backdrop mfs-flex mfs-items-center mfs-justify-center mfs-p-4" @click="handleBackdropClick">
         <div
+          v-liquid-glass
           class="modal-dialog mfs-card mfs-overlay mfs-dialog-responsive mfs-flex mfs-flex-col mfs-overflow-hidden mfs-p-0"
           :class="[`modal--${size}`]"
           role="dialog"
@@ -33,6 +34,7 @@
 
 <script setup lang="ts">
 import { watch, onMounted, onBeforeUnmount } from 'vue'
+import { vLiquidGlass } from '../composables/useLiquidGlass'
 
 const props = withDefaults(
   defineProps<{

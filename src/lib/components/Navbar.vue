@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar mfs-w-full mfs-surface mfs-shadow mfs-rounded" :class="{ 'navbar--sticky': sticky, 'mfs-border-none': !bordered }">
+  <header v-liquid-glass class="navbar mfs-w-full mfs-surface mfs-shadow mfs-rounded" :class="{ 'navbar--sticky': sticky, 'mfs-border-none': !bordered }">
     <div class="navbar__inner mfs-flex mfs-items-center mfs-justify-between mfs-gap-4">
       <div class="navbar__brand mfs-flex mfs-items-center mfs-font-bold">
         <slot name="brand" />
@@ -127,6 +127,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
 import { sanitizeHref } from '../utils/sanitize'
+import { vLiquidGlass } from '../composables/useLiquidGlass'
 
 export interface NavItem {
   label: string

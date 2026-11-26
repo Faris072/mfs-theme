@@ -7,7 +7,7 @@
       :disabled="disabled"
       @change="handleChange"
     />
-    <span class="switch__track mfs-pill mfs-shadow-inset">
+    <span v-liquid-glass class="switch__track mfs-pill mfs-shadow-inset">
       <span class="switch__thumb mfs-shadow"></span>
     </span>
     <span v-if="label || $slots.default" class="switch__label">
@@ -17,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+import { vLiquidGlass } from '../composables/useLiquidGlass'
+
 withDefaults(
   defineProps<{
     modelValue?: boolean

@@ -860,12 +860,26 @@
   box-shadow: var(--card-shadow), inset 0 1px 0 var(--bevel-light, rgba(255, 255, 255, 0.7)), inset 0 -1px 0 var(--bevel-dark, rgba(0, 0, 0, 0.15));
 }
 
+[data-theme='liquid-glass'] .mfs-lg-active,
+.theme-liquid-glass .mfs-lg-active {
+  backdrop-filter: var(--lg-filter, var(--backdrop-blur));
+  -webkit-backdrop-filter: var(--lg-filter, var(--backdrop-blur));
+}
+
+@supports not (backdrop-filter: url(#x)) {
+  [data-theme='liquid-glass'] .mfs-lg-active,
+  .theme-liquid-glass .mfs-lg-active {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+  }
+}
+
 [data-theme='liquid-glass'] .mfs-surface,
 [data-theme='liquid-glass'] .mfs-card,
 .theme-liquid-glass .mfs-surface,
 .theme-liquid-glass .mfs-card {
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 55%, rgba(255, 255, 255, 0.08) 100%);
-  border-color: rgba(255, 255, 255, 0.42);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: transparent;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
   box-shadow: var(--card-shadow);
@@ -873,8 +887,8 @@
 
 [data-theme='liquid-glass'] .mfs-inset,
 .theme-liquid-glass .mfs-inset {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: transparent;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
 }
@@ -883,15 +897,12 @@
 [data-theme='liquid-glass'] .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
 .theme-liquid-glass .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
 .theme-liquid-glass .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger) {
-  background-color: rgba(255, 255, 255, 0.11);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.04);
+  border-color: transparent;
+  color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
-  box-shadow:
-    inset 0 1.5px 1px rgba(255, 255, 255, 0.8),
-    inset 1px 0 2px rgba(255, 255, 255, 0.4),
-    inset 0 -1.5px 3px rgba(0, 0, 0, 0.25),
-    0 10px 24px rgba(0, 0, 0, 0.28);
+  box-shadow: var(--shadow);
 }
 
 [data-theme='liquid-glass'] .mfs-text-primary,
@@ -899,49 +910,74 @@
   color: #7dd3fc;
 }
 
+[data-theme='liquid-glass'] .mfs-soft-primary,
+.theme-liquid-glass .mfs-soft-primary {
+  color: #93c5fd;
+}
+
 [data-theme='liquid-glass'] .btn.btn--primary,
 .theme-liquid-glass .btn.btn--primary {
-  background-color: rgba(37, 99, 235, 0.45);
-  border-color: rgba(147, 197, 253, 0.65);
+  background: linear-gradient(170deg, rgba(147, 197, 253, 0.28) 0%, rgba(37, 99, 235, 0.24) 55%, rgba(56, 189, 248, 0.28) 100%);
+  border-color: transparent;
   color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1.5px -1.5px 2px rgba(147, 197, 253, 0.35),
+    0 10px 22px -4px rgba(37, 99, 235, 0.38);
 }
 
 [data-theme='liquid-glass'] .btn.btn--secondary,
 .theme-liquid-glass .btn.btn--secondary {
-  background-color: rgba(6, 182, 212, 0.38);
-  border-color: rgba(103, 232, 249, 0.6);
+  background: linear-gradient(170deg, rgba(253, 186, 116, 0.28) 0%, rgba(249, 115, 22, 0.24) 60%, rgba(234, 88, 12, 0.28) 100%);
+  border-color: transparent;
   color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1.5px -1.5px 2px rgba(253, 186, 116, 0.35),
+    0 10px 22px -4px rgba(234, 88, 12, 0.36);
 }
 
 [data-theme='liquid-glass'] .btn.btn--success,
 .theme-liquid-glass .btn.btn--success {
-  background-color: rgba(16, 185, 129, 0.4);
-  border-color: rgba(110, 231, 183, 0.6);
+  background: linear-gradient(170deg, rgba(110, 231, 183, 0.28) 0%, rgba(16, 185, 129, 0.24) 60%, rgba(5, 150, 105, 0.28) 100%);
+  border-color: transparent;
   color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1.5px -1.5px 2px rgba(110, 231, 183, 0.35),
+    0 10px 22px -4px rgba(16, 185, 129, 0.34);
 }
 
 [data-theme='liquid-glass'] .btn.btn--warning,
 .theme-liquid-glass .btn.btn--warning {
-  background-color: rgba(245, 158, 11, 0.45);
-  border-color: rgba(253, 224, 71, 0.65);
+  background: linear-gradient(170deg, rgba(253, 224, 71, 0.30) 0%, rgba(245, 158, 11, 0.24) 60%, rgba(217, 119, 6, 0.28) 100%);
+  border-color: transparent;
   color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1.5px -1.5px 2px rgba(253, 224, 71, 0.35),
+    0 10px 22px -4px rgba(245, 158, 11, 0.34);
 }
 
 [data-theme='liquid-glass'] .btn.btn--danger,
 .theme-liquid-glass .btn.btn--danger {
-  background-color: rgba(239, 68, 68, 0.45);
-  border-color: rgba(252, 165, 165, 0.65);
+  background: linear-gradient(170deg, rgba(253, 164, 175, 0.30) 0%, rgba(225, 29, 72, 0.24) 60%, rgba(190, 18, 60, 0.28) 100%);
+  border-color: transparent;
   color: #ffffff;
   backdrop-filter: var(--backdrop-blur);
   -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 1.5px 1.5px 1px rgba(255, 255, 255, 0.85),
+    inset -1.5px -1.5px 2px rgba(253, 164, 175, 0.35),
+    0 10px 22px -4px rgba(225, 29, 72, 0.36);
 }
 
 [data-theme='material-you'] .mfs-card,
@@ -1024,12 +1060,143 @@ body.theme-manga {
 }
 
 [data-theme='glass'] .mfs-overlay,
-.theme-glass .mfs-overlay,
-[data-theme='liquid-glass'] .mfs-overlay,
-.theme-liquid-glass .mfs-overlay {
+.theme-glass .mfs-overlay {
   background: rgba(11, 16, 32, 0.88);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.28);
+  color: #f8fafc;
+}
+
+[data-theme='liquid-glass'] .mfs-overlay,
+.theme-liquid-glass .mfs-overlay {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: var(--lg-filter, var(--backdrop-blur));
+  -webkit-backdrop-filter: var(--lg-filter, var(--backdrop-blur));
+  border-color: transparent;
+  box-shadow: var(--card-shadow);
+  color: var(--text);
+}
+
+[data-theme='3d-glassmorphism'] .mfs-surface,
+[data-theme='3d-glassmorphism'] .mfs-card,
+.theme-3d-glassmorphism .mfs-surface,
+.theme-3d-glassmorphism .mfs-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 48%, rgba(168, 85, 247, 0.08) 100%);
+  border-color: rgba(255, 255, 255, 0.28);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow: var(--card-shadow);
+}
+
+[data-theme='3d-glassmorphism'] .mfs-inset,
+.theme-3d-glassmorphism .mfs-inset {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.22);
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+}
+
+[data-theme='3d-glassmorphism'] .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
+[data-theme='3d-glassmorphism'] .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
+.theme-3d-glassmorphism .mfs-pill:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger),
+.theme-3d-glassmorphism .btn:not([class*="mfs-bg-"]):not([class*="mfs-soft-"]):not(.btn--primary):not(.btn--secondary):not(.btn--success):not(.btn--warning):not(.btn--danger) {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border-color: rgba(255, 255, 255, 0.30);
+  color: #f8fafc;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow: var(--clay-shadow);
+}
+
+[data-theme='3d-glassmorphism'] .btn:hover:not(:disabled),
+.theme-3d-glassmorphism .btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--clay-shadow-hover);
+}
+
+[data-theme='3d-glassmorphism'] .btn:active:not(:disabled),
+.theme-3d-glassmorphism .btn:active:not(:disabled) {
+  transform: translateY(3px);
+  box-shadow: var(--clay-shadow-active);
+}
+
+[data-theme='3d-glassmorphism'] .mfs-text-primary,
+.theme-3d-glassmorphism .mfs-text-primary {
+  color: #38bdf8;
+}
+
+[data-theme='3d-glassmorphism'] .btn.btn--primary,
+.theme-3d-glassmorphism .btn.btn--primary {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.52) 0%, rgba(14, 165, 233, 0.42) 55%, rgba(168, 85, 247, 0.48) 100%);
+  border-color: rgba(125, 211, 252, 0.62);
+  color: #ffffff;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.72),
+    inset 0 0 16px rgba(255, 255, 255, 0.16),
+    0 4px 0 rgba(14, 165, 233, 0.55),
+    0 14px 28px rgba(14, 165, 233, 0.32);
+}
+
+[data-theme='3d-glassmorphism'] .btn.btn--secondary,
+.theme-3d-glassmorphism .btn.btn--secondary {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.52) 0%, rgba(139, 92, 246, 0.44) 100%);
+  border-color: rgba(216, 180, 254, 0.58);
+  color: #ffffff;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.68),
+    0 4px 0 rgba(126, 34, 206, 0.55),
+    0 14px 28px rgba(168, 85, 247, 0.28);
+}
+
+[data-theme='3d-glassmorphism'] .btn.btn--success,
+.theme-3d-glassmorphism .btn.btn--success {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.48) 0%, rgba(16, 185, 129, 0.42) 100%);
+  border-color: rgba(110, 231, 183, 0.58);
+  color: #ffffff;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.68),
+    0 4px 0 rgba(5, 150, 105, 0.55),
+    0 14px 28px rgba(16, 185, 129, 0.28);
+}
+
+[data-theme='3d-glassmorphism'] .btn.btn--warning,
+.theme-3d-glassmorphism .btn.btn--warning {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.52) 0%, rgba(245, 158, 11, 0.44) 100%);
+  border-color: rgba(253, 224, 71, 0.60);
+  color: #ffffff;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.68),
+    0 4px 0 rgba(217, 119, 6, 0.58),
+    0 14px 28px rgba(245, 158, 11, 0.28);
+}
+
+[data-theme='3d-glassmorphism'] .btn.btn--danger,
+.theme-3d-glassmorphism .btn.btn--danger {
+  background: linear-gradient(135deg, rgba(251, 113, 133, 0.52) 0%, rgba(225, 29, 72, 0.44) 100%);
+  border-color: rgba(253, 164, 175, 0.60);
+  color: #ffffff;
+  backdrop-filter: var(--backdrop-blur);
+  -webkit-backdrop-filter: var(--backdrop-blur);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.68),
+    0 4px 0 rgba(190, 18, 60, 0.58),
+    0 14px 28px rgba(225, 29, 72, 0.28);
+}
+
+[data-theme='3d-glassmorphism'] .mfs-overlay,
+.theme-3d-glassmorphism .mfs-overlay {
+  background: rgba(15, 23, 42, 0.86);
+  backdrop-filter: blur(24px) saturate(165%);
+  -webkit-backdrop-filter: blur(24px) saturate(165%);
   border-color: rgba(255, 255, 255, 0.28);
   color: #f8fafc;
 }

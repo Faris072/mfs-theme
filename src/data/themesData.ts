@@ -330,10 +330,10 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
       'Kontras teks tajam di atas permukaan semi-transparan'
     ],
     designTokens: [
-      { name: '--surface', value: 'rgba(255, 255, 255, 0.55)', description: 'Lapisan kaca cair semi-transparan' },
-      { name: '--backdrop-blur', value: 'blur(24px) saturate(180%)', description: 'Pembiasan optik berintensitas tinggi' },
-      { name: '--radius', value: '20px', description: 'Kelengkungan organik kaca cair' },
-      { name: '--primary', value: '#0ea5e9', description: 'Biru kristal spekular' }
+      { name: '--surface', value: 'rgba(255, 255, 255, 0.08)', description: 'Lapisan kaca cair bening ultra-translusen' },
+      { name: '--backdrop-blur', value: 'blur(14px) saturate(210%) contrast(1.08) brightness(1.08)', description: 'Pembiasan optik lensa cair berintensitas tinggi' },
+      { name: '--radius', value: '24px', description: 'Kelengkungan organik kaca cair' },
+      { name: '--primary', value: '#2563eb', description: 'Biru kobalt spekular' }
     ],
     utilityClasses: [
       { className: '.mfs-card', description: 'Panel kaca cair dengan highlight spekular', example: '<div class="mfs-card">...</div>' },
@@ -591,6 +591,34 @@ export const THEMES_DATA: Record<ThemeType, ThemeDetailInfo> = {
       { className: '.mfs-card', description: 'Panel komik berbingkai tinta tebal', example: '<div class="mfs-card">...</div>' },
       { className: '.mfs-interactive', description: 'Tombol panel aksi dengan hard shadow', example: '<button class="mfs-interactive">Read</button>' }
     ]
+  },
+
+  '3d-glassmorphism': {
+    id: '3d-glassmorphism',
+    name: '3D Glassmorphism',
+    tagline: '3D Extruded Glass Slabs with Iridescent Edges over Glassmorphism',
+    badge: '3D Glass Slab',
+    icon: 'Box',
+    accentColor: '#38bdf8',
+    previewBg: 'radial-gradient(circle at 20% 20%, #1e1b4b 0%, #0f172a 60%, #020617 100%)',
+    description:
+      'Evolusi Glassmorphism dengan slab kaca 3D terekstrusi, bevel tepi iridesen cyan-violet, dan efek tekan kedalaman interaktif.',
+    keyFeatures: [
+      'Basis backdrop Glassmorphism gelap dengan saturasi kaca lebih tajam',
+      'Slab kaca 3D terekstrusi dengan ketebalan tepi bawah & kanan terlihat',
+      'Bevel iridesen cyan-violet dan kilau spekular putih tajam',
+      'Feedback hover angkat & tekan 3D yang responsif'
+    ],
+    designTokens: [
+      { name: '--surface', value: 'rgba(255, 255, 255, 0.10)', description: 'Lapisan slab kaca 3D translusen' },
+      { name: '--backdrop-blur', value: 'blur(24px) saturate(165%)', description: 'Blur kaca 3D berintensitas tinggi' },
+      { name: '--radius', value: '20px', description: 'Kelengkungan sudut slab kaca 3D' },
+      { name: '--primary', value: '#38bdf8', description: 'Biru cyan spekular' }
+    ],
+    utilityClasses: [
+      { className: '.mfs-card', description: 'Panel kaca 3D dengan bevel iridesen', example: '<div class="mfs-card">...</div>' },
+      { className: '.mfs-surface', description: 'Permukaan kaca kosmik dengan inner glow', example: '<div class="mfs-surface">...</div>' }
+    ]
   }
 }
 
@@ -598,6 +626,7 @@ export const DARK_THEMES = new Set<ThemeType>([
   'glass',
   'cyberpunk',
   'liquid-glass',
+  '3d-glassmorphism',
   'terminal',
   'pixel-art',
   'aurora-gradient',

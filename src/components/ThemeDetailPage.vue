@@ -278,7 +278,8 @@ const iconMap: Record<ThemeType, any> = {
   'pixel-art': Gamepad2,
   'aurora-gradient': Waves,
   vaporwave: Sunset,
-  manga: BookOpen
+  manga: BookOpen,
+  '3d-glassmorphism': Box
 }
 
 const currentIconComponent = computed(() => {

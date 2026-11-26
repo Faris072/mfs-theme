@@ -1,12 +1,12 @@
 <template>
-  <section class="component-preview mfs-surface mfs-rounded-lg mfs-shadow">
-    <header class="mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-py-5 mfs-px-6 mfs-surface-subtle mfs-border-none mfs-border-b">
+  <section v-liquid-glass class="component-preview mfs-surface mfs-rounded-lg mfs-shadow">
+    <header class="preview-header mfs-flex mfs-flex-wrap mfs-items-center mfs-justify-between mfs-gap-3 mfs-py-5 mfs-px-6 mfs-surface-subtle mfs-border-none mfs-border-b">
       <div class="preview-heading mfs-min-w-0">
         <h3 class="mfs-text-base mfs-font-bold mfs-text mfs-m-0">{{ title }}</h3>
         <p v-if="description" class="preview-desc mfs-text-muted mfs-mt-1">{{ description }}</p>
       </div>
 
-      <div class="mfs-flex mfs-items-center mfs-gap-2">
+      <div class="preview-controls mfs-flex mfs-flex-wrap mfs-items-center mfs-gap-2">
         <SelectButton
           v-model="tab"
           :options="previewModeOptions"
@@ -88,7 +88,7 @@
 <script setup lang="ts">
 import { computed, inject, onBeforeUnmount, ref, watch, type Ref } from 'vue'
 import { Check, Copy } from 'lucide-vue-next'
-import { Button, CodeEditor, SelectButton, type CodeEditorLanguage, type CodeEditorTab } from '../lib'
+import { Button, CodeEditor, SelectButton, vLiquidGlass, type CodeEditorLanguage, type CodeEditorTab } from '../lib'
 import type { ApiRow } from '../data/componentDocs'
 
 export type CodeTab = Omit<CodeEditorTab, 'language'> & {
@@ -303,6 +303,16 @@ const currentApiSection = computed(
 @media (max-width: 768px) {
   .preview-stage {
     padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .preview-header {
+    padding: 16px;
+  }
+  .preview-controls {
+    width: 100%;
+    justify-content: flex-start;
   }
 }
 

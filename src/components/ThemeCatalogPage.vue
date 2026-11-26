@@ -295,6 +295,7 @@ const THEME_GROUP_MAP: Record<string, string> = {
   'material-you': 'Tactile & 3D',
   glass: 'Glass & Glow',
   'liquid-glass': 'Glass & Glow',
+  '3d-glassmorphism': 'Glass & Glow',
   'aurora-gradient': 'Glass & Glow',
   minimalism: 'Minimal & Grid',
   bento: 'Minimal & Grid',
