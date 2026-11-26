@@ -1,6 +1,6 @@
 {
   "name": "@mfs-atomic/ui",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "Adaptive multi-theme Vue 3 UI component library with Claymorphism, Glassmorphism, and Neumorphism styles",
   "type": "module",
   "main": "./dist/mfs-theme.umd.cjs",

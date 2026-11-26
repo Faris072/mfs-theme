@@ -52,6 +52,10 @@
   </div>
 </template>
 
+<script lang="ts">
+let uidCounter = 0
+</script>
+
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, type ComponentPublicInstance } from 'vue'
 import {
@@ -75,8 +79,6 @@ interface ActivePointerDrag {
   started: boolean
   previewEl: HTMLElement | null
 }
-
-let uidCounter = 0
 
 const props = withDefaults(
   defineProps<{
