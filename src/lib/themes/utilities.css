@@ -791,6 +791,8 @@
 
 [data-theme='glass'] .mfs-surface,
 [data-theme='glass'] .mfs-card,
+.mfs-surface[data-theme='glass'],
+.mfs-card[data-theme='glass'],
 .theme-glass .mfs-surface,
 .theme-glass .mfs-card {
   border-color: rgba(255, 255, 255, 0.22);
@@ -876,6 +878,8 @@
 
 [data-theme='liquid-glass'] .mfs-surface,
 [data-theme='liquid-glass'] .mfs-card,
+.mfs-surface[data-theme='liquid-glass'],
+.mfs-card[data-theme='liquid-glass'],
 .theme-liquid-glass .mfs-surface,
 .theme-liquid-glass .mfs-card {
   background: rgba(255, 255, 255, 0.04);
@@ -1036,6 +1040,8 @@ body.theme-hand-drawn {
 
 [data-theme='aurora-gradient'] .mfs-surface,
 [data-theme='aurora-gradient'] .mfs-card,
+.mfs-surface[data-theme='aurora-gradient'],
+.mfs-card[data-theme='aurora-gradient'],
 .theme-aurora-gradient .mfs-surface,
 .theme-aurora-gradient .mfs-card {
   border-color: rgba(52, 211, 153, 0.28);
@@ -1080,6 +1086,8 @@ body.theme-manga {
 
 [data-theme='3d-glassmorphism'] .mfs-surface,
 [data-theme='3d-glassmorphism'] .mfs-card,
+.mfs-surface[data-theme='3d-glassmorphism'],
+.mfs-card[data-theme='3d-glassmorphism'],
 .theme-3d-glassmorphism .mfs-surface,
 .theme-3d-glassmorphism .mfs-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 48%, rgba(168, 85, 247, 0.08) 100%);

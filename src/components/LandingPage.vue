@@ -103,16 +103,20 @@
         </p>
 
         <div class="pillars-grid mfs-gap-6">
-          <Card
+          <div
             v-for="t in allThemes"
             :key="t.id"
             :data-theme="t.id"
-            bordered
-            hoverable
-            class="pillar-card mfs-h-full mfs-cursor-pointer"
-            :class="{ 'is-selected': currentTheme === t.id }"
-            @click="$emit('select-theme', t.id)"
+            class="pillar-card-wrap"
+            :style="isDarkTheme(t.id) ? { background: t.previewBg, borderRadius: 'var(--radius, 20px)' } : undefined"
           >
+            <Card
+              bordered
+              hoverable
+              class="pillar-card mfs-h-full mfs-cursor-pointer"
+              :class="{ 'is-selected': currentTheme === t.id }"
+              @click="$emit('select-theme', t.id)"
+            >
             <div class="mfs-flex mfs-flex-col mfs-h-full">
               <div class="mfs-flex mfs-items-center mfs-justify-between mfs-gap-2 mfs-mb-4">
                 <div class="pillar-icon-box mfs-surface-subtle mfs-shadow-inset mfs-flex mfs-items-center mfs-justify-center mfs-text-primary">
@@ -137,7 +141,8 @@
                 </Button>
               </div>
             </div>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
     </section>
@@ -255,7 +260,7 @@ import {
   Copy,
   Check
 } from 'lucide-vue-next'
-import { THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
+import { isDarkTheme, THEMES_DATA, type ThemeDetailInfo, type ThemeType } from '../data/themesData'
 
 const presetUrl = import.meta.env.VITE_PRESET_URL || 'https://preset-ui.mfstechnology.co.id'
 
@@ -455,6 +460,10 @@ const scrollToSection = (id: string) => {
 .pillars-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+
+.pillar-card-wrap {
+  height: 100%;
 }
 
 .pillar-card.is-selected {
